@@ -9,9 +9,13 @@ import androidx.navigation.NavOptions
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
-import com.paw.key.presentation.ui.dummy.navigation.Dummy
+import com.paw.key.presentation.ui.community.navigation.navigateCommunity
+import com.paw.key.presentation.ui.course.navigation.navigateCourse
 import com.paw.key.presentation.ui.dummy.navigation.navigateDummy
 import com.paw.key.presentation.ui.dummy.next.navigateDummyNext
+import com.paw.key.presentation.ui.home.navigation.Home
+import com.paw.key.presentation.ui.home.navigation.navigateHome
+import com.paw.key.presentation.ui.mypage.navigation.navigateMyPage
 
 class MainNavigator (
     val navController: NavHostController
@@ -20,7 +24,7 @@ class MainNavigator (
         @Composable get() = navController
             .currentBackStackEntryAsState().value?.destination
 
-    val startDestination = Dummy
+    val startDestination = Home
 
     val currentTab : MainTab?
         @Composable get() = MainTab.find { tab ->
@@ -40,9 +44,10 @@ class MainNavigator (
         }
 
         when (tab) {
-           /* MainTab.HOME -> navController.navigateToHome(navOptions)
-            MainTab.ACCOUNT -> navController.navigateToAccount(navOptions)*/
-            else -> {}
+            MainTab.HOME -> navController.navigateHome(navOptions)
+            MainTab.COURSE -> navController.navigateCourse(navOptions)
+            MainTab.COMMUNITY -> navController.navigateCommunity(navOptions)
+            MainTab.MYPAGE -> navController.navigateMyPage(navOptions)
         }
     }
 
