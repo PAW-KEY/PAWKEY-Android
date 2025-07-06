@@ -7,8 +7,12 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
+import com.paw.key.presentation.ui.community.navigation.communityNavGraph
+import com.paw.key.presentation.ui.course.navigation.courseNavGraph
 import com.paw.key.presentation.ui.dummy.navigation.dummyNavGraph
 import com.paw.key.presentation.ui.dummy.next.dummyNextNavGraph
+import com.paw.key.presentation.ui.home.navigation.homeNavGraph
+import com.paw.key.presentation.ui.mypage.navigation.myPageNavGraph
 
 @Composable
 fun PawKeyNavHost (
@@ -25,15 +29,35 @@ fun PawKeyNavHost (
         popEnterTransition = { EnterTransition.None },
         popExitTransition = { ExitTransition.None },
     ) {
-        /*
-        * homeGraph(
+        homeNavGraph (
             paddingValues = paddingValues,
             navigateUp = navigator.navController::navigateUp,
-            navigateNext = navigator.navController::navigateToCuration,
-            snackbarHostState = snackbarHostState,
+            navigateNext = navigator.navController::navigateUp,
+            snackBarHostState = snackbarHostState,
             modifier = modifier,
         )
-        * */
+
+        courseNavGraph(
+            paddingValues = paddingValues,
+            navigateUp = navigator::navigateUp,
+            navigateNext = navigator::navigateDummyNext,
+            snackBarHostState = snackbarHostState
+        )
+
+        communityNavGraph(
+            paddingValues = paddingValues,
+            navigateUp = navigator::navigateUp,
+            navigateNext = navigator::navigateDummyNext,
+            snackBarHostState = snackbarHostState
+        )
+
+        myPageNavGraph(
+            paddingValues = paddingValues,
+            navigateUp = navigator::navigateUp,
+            navigateNext = navigator::navigateDummyNext,
+            snackBarHostState = snackbarHostState
+        )
+
         dummyNavGraph(
             paddingValues = paddingValues,
             navigateUp = navigator::navigateUp,

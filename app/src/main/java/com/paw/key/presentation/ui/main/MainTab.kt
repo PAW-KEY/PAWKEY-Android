@@ -3,8 +3,18 @@ package com.paw.key.presentation.ui.main
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.runtime.Composable
+import com.paw.key.R
 import com.paw.key.core.navigation.MainTabRoute
+import com.paw.key.presentation.ui.home.navigation.Home
+import com.paw.key.presentation.ui.course.navigation.Course
+import com.paw.key.presentation.ui.community.navigation.Community
+import com.paw.key.presentation.ui.mypage.navigation.MyPage
+import com.paw.key.R.string.ic_home_description
+import com.paw.key.R.string.ic_course_description
+import com.paw.key.R.string.ic_community_description
+import com.paw.key.R.string.ic_mypage_description
 import com.paw.key.core.navigation.Route
+
 
 enum class MainTab(
     @DrawableRes val selectedIcon: Int,
@@ -12,41 +22,34 @@ enum class MainTab(
     @StringRes val contentDescription: Int,
     val route: MainTabRoute,
 ) {
-    ;
-    /*HOME(
+    // Todo : 아이콘 및 라벨 변경 예정
+    HOME(
         selectedIcon = R.drawable.baseline_home_filled_24,
         unselectedIcon = R.drawable.baseline_home_filled_24,
-        contentDescription = R.string.home,
+        contentDescription = ic_home_description,
         route = Home,
     ),
 
-    SEARCH(
-        selectedIcon = R.drawable.baseline_search_24,
-        unselectedIcon = R.drawable.baseline_search_24,
-        contentDescription = R.string.search,
-        route = Search,
+    COURSE(
+        selectedIcon = R.drawable.baseline_home_filled_24,
+        unselectedIcon = R.drawable.baseline_home_filled_24,
+        contentDescription = ic_course_description,
+        route = Course,
     ),
 
-    COUPON(
-        selectedIcon = R.drawable.coupon_icon,
-        unselectedIcon = R.drawable.coupon_icon,
-        contentDescription = R.string.coupon,
-        route = Coupon,
+    COMMUNITY(
+        selectedIcon = R.drawable.baseline_home_filled_24,
+        unselectedIcon = R.drawable.baseline_home_filled_24,
+        contentDescription = ic_community_description,
+        route = Community,
     ),
 
-    SCRAP(
-        selectedIcon = R.drawable.baseline_star_24,
-        unselectedIcon = R.drawable.baseline_star_24,
-        contentDescription = R.string.scrap,
-        route = Scrap,
-    ),
-
-    ACCOUNT(
-        selectedIcon = R.drawable.account_icon,
-        unselectedIcon = R.drawable.account_icon,
-        contentDescription = R.string.account,
-        route = Account,
-    );*/
+    MYPAGE(
+        selectedIcon = R.drawable.baseline_home_filled_24,
+        unselectedIcon = R.drawable.baseline_home_filled_24,
+        contentDescription = ic_mypage_description,
+        route = MyPage,
+    );
 
     companion object {
         @Composable
