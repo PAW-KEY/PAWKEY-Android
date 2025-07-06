@@ -3,6 +3,17 @@
     <string name="empty_string">데이터가 없습니다.</string>
     <string name="loading_string">로딩 중...</string>
 
-    <string name="profile">프로필</string>
+    <!-- Navigation -->
+    <!--Home-->
+    <string name="ic_home_description">home</string>
+
+    <!--Course-->
+    <string name="ic_course_description">course</string>
+
+    <!--Community-->
+    <string name="ic_community_description">community</string>
+
+    <!--MyPage-->
+    <string name="ic_mypage_description">mypage</string>
 
 </resources>
