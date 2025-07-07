@@ -1,202 +1,260 @@
 package com.paw.key.core.designsystem.theme
 
+import androidx.compose.runtime.Stable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
 
-val Purple80 = Color(0xFFD0BCFF)
-val PurpleGrey80 = Color(0xFFCCC2DC)
-val Pink80 = Color(0xFFEFB8C8)
-
-val Purple40 = Color(0xFF6650a4)
-val PurpleGrey40 = Color(0xFF625b71)
-val Pink40 = Color(0xFF7D5260)
-
-/*
-* // Primary
-val MainBlue = Color(0xFF3269FF)
-val LightBlue = Color(0xFFF3F4FF)
-
-// Point
-val Blue = Color(0xFF004BFB)
-val SkyBlue = Color(0xFF1ABFFB)
-val Lime = Color(0xFFDEFF4E)
-val Green = Color(0xFF34C759)
+// brand/iris
+val Beige50 = Color(0xFFFAF6F2)
+val Beige100 = Color(0xFFF4EBE0)
+val Beige200 = Color(0xFFE8D5C0)
+val Beige300 = Color(0xFFDDC0A2)
+val Beige400 = Color(0xFFC9976E)
+val Beige500 = Color(0xFFBE7E51)
+val Beige600 = Color(0xFFB06A46)
+val Beige700 = Color(0xFF93553B)
+val Beige800 = Color(0xFF774635)
+val Beige900 = Color(0xFF603B2E)
+val Beige950 = Color(0xFF331D17)
 
 // Gray Scale
-val White = Color(0xFFFFFFFF)
-val Gray01 = Color(0xFFF5F5FB)
-val Gray02 = Color(0xFFEEEEF4)
-val Gray03 = Color(0xFFE0E0E6)
-val Gray04 = Color(0xFFBDBDC3)
-val Gray05 = Color(0xFF9E9EA4)
-val Gray06 = Color(0xFF616167)
-val Gray07 = Color(0xFF424248)
-val Black = Color(0xFF000000)
-
-// Background
-val Background = Color(0x4D434343)
-
-// Alert
-val AlertRed = Color(0xFFFF4040)
-val LightRed = Color(0xFFFFEDED)
+val Gray0 = Color(0xFFFFFFFF)
+val Gray5 = Color(0xFFFCFCFC)
+val Gray25 = Color(0xFFF8F8F8)
+val Gray50 = Color(0xFFEBEBEB)
+val Gray100 = Color(0xFFDCDCDC)
+val Gray200 = Color(0xFFBDBDBD)
+val Gray300 = Color(0xFF989898)
+val Gray400 = Color(0xFF7C7C7C)
+val Gray500 = Color(0xFF656565)
+val Gray600 = Color(0xFF525252)
+val Gray700 = Color(0xFF464646)
+val Gray800 = Color(0xFF3D3D3D)
+val Gray900 = Color(0xFF292929)
+val Gray950 = Color(0xFF161616)
 
 @Stable
-class DoggyWalkerColors(
-    mainBlue: Color,
-    lightBlue: Color,
-    blue: Color,
-    skyBlue: Color,
-    lime: Color,
-    green: Color,
-    white: Color,
-    gray01: Color,
-    gray02: Color,
-    gray03: Color,
-    gray04: Color,
-    gray05: Color,
-    gray06: Color,
-    gray07: Color,
-    black: Color,
-    background: Color,
-    alertRed: Color,
-    lightRed: Color
-) {
+class PawKeyColors(
+    beige50: Color,
+    beige100: Color,
+    beige200: Color,
+    beige300: Color,
+    beige400: Color,
+    beige500: Color,
+    beige600: Color,
+    beige700: Color,
+    beige800: Color,
+    beige900: Color,
+    beige950: Color,
 
-    var mainBlue: Color by mutableStateOf(mainBlue)
+    gray0: Color,
+    gray5: Color,
+    gray25: Color,
+    gray50: Color,
+    gray100: Color,
+    gray200: Color,
+    gray300: Color,
+    gray400: Color,
+    gray500: Color,
+    gray600: Color,
+    gray700: Color,
+    gray800: Color,
+    gray900: Color,
+    gray950: Color,
+) {
+    var beige50: Color by mutableStateOf(beige50)
         private set
-    var lightBlue: Color by mutableStateOf(lightBlue)
+    var beige100: Color by mutableStateOf(beige100)
         private set
-    var blue: Color by mutableStateOf(blue)
+    var beige200: Color by mutableStateOf(beige200)
         private set
-    var skyBlue: Color by mutableStateOf(skyBlue)
+    var beige300: Color by mutableStateOf(beige300)
         private set
-    var lime: Color by mutableStateOf(lime)
+    var beige400: Color by mutableStateOf(beige400)
         private set
-    var green: Color by mutableStateOf(green)
+    var beige500: Color by mutableStateOf(beige500)
         private set
-    var white: Color by mutableStateOf(white)
+    var beige600: Color by mutableStateOf(beige600)
         private set
-    var gray01: Color by mutableStateOf(gray01)
+    var beige700: Color by mutableStateOf(beige700)
         private set
-    var gray02: Color by mutableStateOf(gray02)
+    var beige800: Color by mutableStateOf(beige800)
         private set
-    var gray03: Color by mutableStateOf(gray03)
+    var beige900: Color by mutableStateOf(beige900)
         private set
-    var gray04: Color by mutableStateOf(gray04)
+    var beige950: Color by mutableStateOf(beige950)
         private set
-    var gray05: Color by mutableStateOf(gray05)
+
+    var gray0: Color by mutableStateOf(gray0)
         private set
-    var gray06: Color by mutableStateOf(gray06)
+    var gray5: Color by mutableStateOf(gray5)
         private set
-    var gray07: Color by mutableStateOf(gray07)
+    var gray25: Color by mutableStateOf(gray25)
         private set
-    var black: Color by mutableStateOf(black)
+    var gray50: Color by mutableStateOf(gray50)
         private set
-    var background: Color by mutableStateOf(background)
+    var gray100: Color by mutableStateOf(gray100)
         private set
-    var alertRed: Color by mutableStateOf(alertRed)
+    var gray200: Color by mutableStateOf(gray200)
         private set
-    var lightRed: Color by mutableStateOf(lightRed)
+    var gray300: Color by mutableStateOf(gray300)
+        private set
+    var gray400: Color by mutableStateOf(gray400)
+        private set
+    var gray500: Color by mutableStateOf(gray500)
+        private set
+    var gray600: Color by mutableStateOf(gray600)
+        private set
+    var gray700: Color by mutableStateOf(gray700)
+        private set
+    var gray800: Color by mutableStateOf(gray800)
+        private set
+    var gray900: Color by mutableStateOf(gray900)
+        private set
+    var gray950: Color by mutableStateOf(gray950)
         private set
 
     fun copy(
-        mainBlue: Color = this.mainBlue,
-        lightBlue: Color = this.lightBlue,
-        blue: Color = this.blue,
-        skyBlue: Color = this.skyBlue,
-        lime: Color = this.lime,
-        green: Color = this.green,
-        white: Color = this.white,
-        gray01: Color = this.gray01,
-        gray02: Color = this.gray02,
-        gray03: Color = this.gray03,
-        gray04: Color = this.gray04,
-        gray05: Color = this.gray05,
-        gray06: Color = this.gray06,
-        gray07: Color = this.gray07,
-        black: Color = this.black,
-        background: Color = this.background,
-        alertRed: Color = this.alertRed,
-        lightRed: Color = this.lightRed
-    ): DoggyWalkerColors = DoggyWalkerColors(
-        mainBlue = mainBlue,
-        lightBlue = lightBlue,
-        blue = blue,
-        skyBlue = skyBlue,
-        lime = lime,
-        green = green,
-        white = white,
-        gray01 = gray01,
-        gray02 = gray02,
-        gray03 = gray03,
-        gray04 = gray04,
-        gray05 = gray05,
-        gray06 = gray06,
-        gray07 = gray07,
-        black = black,
-        background = background,
-        alertRed = alertRed,
-        lightRed = lightRed
+        beige50: Color = this.beige50,
+        beige100: Color = this.beige100,
+        beige200: Color = this.beige200,
+        beige300: Color = this.beige300,
+        beige400: Color = this.beige400,
+        beige500: Color = this.beige500,
+        beige600: Color = this.beige600,
+        beige700: Color = this.beige700,
+        beige800: Color = this.beige800,
+        beige900: Color = this.beige900,
+        beige950: Color = this.beige950,
+
+        gray0: Color = this.gray0,
+        gray5: Color = this.gray5,
+        gray25: Color = this.gray25,
+        gray50: Color = this.gray50,
+        gray100: Color = this.gray100,
+        gray200: Color = this.gray200,
+        gray300: Color = this.gray300,
+        gray400: Color = this.gray400,
+        gray500: Color = this.gray500,
+        gray600: Color = this.gray600,
+        gray700: Color = this.gray700,
+        gray800: Color = this.gray800,
+        gray900: Color = this.gray900,
+        gray950: Color = this.gray950,
+    ): PawKeyColors = PawKeyColors(
+        beige50 = beige50,
+        beige100 = beige100,
+        beige200 = beige200,
+        beige300 = beige300,
+        beige400 = beige400,
+        beige500 = beige500,
+        beige600 = beige600,
+        beige700 = beige700,
+        beige800 = beige800,
+        beige900 = beige900,
+        beige950 = beige950,
+
+        gray0 = gray0,
+        gray5 = gray5,
+        gray25 = gray25,
+        gray50 = gray50,
+        gray100 = gray100,
+        gray200 = gray200,
+        gray300 = gray300,
+        gray400 = gray400,
+        gray500 = gray500,
+        gray600 = gray600,
+        gray700 = gray700,
+        gray800 = gray800,
+        gray900 = gray900,
+        gray950 = gray950,
     )
 
-    fun update(other: DoggyWalkerColors) {
-        mainBlue = other.mainBlue
-        lightBlue = other.lightBlue
-        blue = other.blue
-        skyBlue = other.skyBlue
-        lime = other.lime
-        green = other.green
-        white = other.white
-        gray01 = other.gray01
-        gray02 = other.gray02
-        gray03 = other.gray03
-        gray04 = other.gray04
-        gray05 = other.gray05
-        gray06 = other.gray06
-        gray07 = other.gray07
-        black = other.black
-        background = other.background
-        alertRed = other.alertRed
-        lightRed = other.lightRed
+    fun update(other: PawKeyColors) {
+        beige50 = other.beige50
+        beige100 = other.beige100
+        beige200 = other.beige200
+        beige300 = other.beige300
+        beige400 = other.beige400
+        beige500 = other.beige500
+        beige600 = other.beige600
+        beige700 = other.beige700
+        beige800 = other.beige800
+        beige900 = other.beige900
+
+        gray0 = other.gray0
+        gray5 = other.gray5
+        gray25 = other.gray25
+        gray50 = other.gray50
+        gray100 = other.gray100
+        gray200 = other.gray200
+        gray300 = other.gray300
+        gray400 = other.gray400
+        gray500 = other.gray500
+        gray600 = other.gray600
+        gray700 = other.gray700
+        gray800 = other.gray800
+        gray900 = other.gray900
+        gray950 = other.gray950
     }
 }
 
-fun DoggyWalkerColors(
-    mainBlue: Color = MainBlue,
-    lightBlue: Color = LightBlue,
-    blue: Color = Blue,
-    skyBlue: Color = SkyBlue,
-    lime: Color = Lime,
-    green: Color = Green,
-    white: Color = White,
-    gray01: Color = Gray01,
-    gray02: Color = Gray02,
-    gray03: Color = Gray03,
-    gray04: Color = Gray04,
-    gray05: Color = Gray05,
-    gray06: Color = Gray06,
-    gray07: Color = Gray07,
-    black: Color = Black,
-    background: Color = Background,
-    alertRed: Color = AlertRed,
-    lightRed: Color = LightRed
-) = DoggyWalkerColors(
-    mainBlue,
-    lightBlue,
-    blue,
-    skyBlue,
-    lime,
-    green,
-    white,
-    gray01,
-    gray02,
-    gray03,
-    gray04,
-    gray05,
-    gray06,
-    gray07,
-    black,
-    background,
-    alertRed,
-    lightRed
+fun pawKeyColors(
+    beige50: Color = Beige50,
+    beige100: Color = Beige100,
+    beige200: Color = Beige200,
+    beige300: Color = Beige300,
+    beige400: Color = Beige400,
+    beige500: Color = Beige500,
+    beige600: Color = Beige600,
+    beige700: Color = Beige700,
+    beige800: Color = Beige800,
+    beige900: Color = Beige900,
+    beige950: Color = Beige950,
+
+    gray0: Color = Gray0,
+    gray5: Color = Gray5,
+    gray25: Color = Gray25,
+    gray50: Color = Gray50,
+    gray100: Color = Gray100,
+    gray200: Color = Gray200,
+    gray300: Color = Gray300,
+    gray400: Color = Gray400,
+    gray500: Color = Gray500,
+    gray600: Color = Gray600,
+    gray700: Color = Gray700,
+    gray800: Color = Gray800,
+    gray900: Color = Gray900,
+    gray950: Color = Gray950,
+
+) = PawKeyColors(
+    beige50 = beige50,
+    beige100 = beige100,
+    beige200 = beige200,
+    beige300 = beige300,
+    beige400 = beige400,
+    beige500 = beige500,
+    beige600 = beige600,
+    beige700 = beige700,
+    beige800 = beige800,
+    beige900 = beige900,
+    beige950 = beige950,
+
+    gray0 = gray0,
+    gray5 = gray5,
+    gray25 = gray25,
+    gray50 = gray50,
+    gray100 = gray100,
+    gray200 = gray200,
+    gray300 = gray300,
+    gray400 = gray400,
+    gray500 = gray500,
+    gray600 = gray600,
+    gray700 = gray700,
+    gray800 = gray800,
+    gray900 = gray900,
+    gray950 = gray950,
+
 )
-*/

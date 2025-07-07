@@ -1,47 +1,27 @@
 package com.paw.key.core.designsystem.theme
 
-import androidx.compose.material3.Typography
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.Stable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.LineHeightStyle
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.sp
+import com.paw.key.R
 
-// Set of Material typography styles to start with
-val Typography = Typography(
-    bodyLarge = TextStyle(
-        fontFamily = FontFamily.Default,
-        fontWeight = FontWeight.Normal,
-        fontSize = 16.sp,
-        lineHeight = 24.sp,
-        letterSpacing = 0.5.sp
-    )
-    /* Other default text styles to override
-    titleLarge = TextStyle(
-        fontFamily = FontFamily.Default,
-        fontWeight = FontWeight.Normal,
-        fontSize = 22.sp,
-        lineHeight = 28.sp,
-        letterSpacing = 0.sp
-    ),
-    labelSmall = TextStyle(
-        fontFamily = FontFamily.Default,
-        fontWeight = FontWeight.Medium,
-        fontSize = 11.sp,
-        lineHeight = 16.sp,
-        letterSpacing = 0.5.sp
-    )
-    */
-)
-/*
 val PretendardBold = FontFamily(Font(R.font.pretendard_bold, FontWeight.Bold))
 val PretendardSemiBold = FontFamily(Font(R.font.pretendard_semibold, FontWeight.SemiBold))
 val PretendardMedium = FontFamily(Font(R.font.pretendard_medium, FontWeight.Medium))
 val PretendardRegular = FontFamily(Font(R.font.pretendard_regular, FontWeight.Normal))
-*/
 
-/*
+// Todo : 네이밍과 함께 나중에 lineHeight 등 변경 예정
 @Stable
-class DoggyWalkerTypography internal constructor(
+class PawKeyTypography internal constructor(
     title1B17: TextStyle,
     title2Sb15: TextStyle,
     title3B15: TextStyle,
@@ -101,7 +81,7 @@ class DoggyWalkerTypography internal constructor(
         label2M11: TextStyle = this.label2M11,
         label3R11: TextStyle = this.label3R11,
         label4M9: TextStyle = this.label4M9
-    ): DoggyWalkerTypography = DoggyWalkerTypography(
+    ): PawKeyTypography = PawKeyTypography(
         title1B17,
         title2Sb15,
         title3B15,
@@ -115,10 +95,10 @@ class DoggyWalkerTypography internal constructor(
         label1B11,
         label2M11,
         label3R11,
-        label4M9
+        label4M9,
     )
 
-    fun update(other: DoggyWalkerTypography) {
+    fun update(other: PawKeyTypography) {
         title1B17 = other.title1B17
         title2Sb15 = other.title2Sb15
         title3B15 = other.title3B15
@@ -136,7 +116,7 @@ class DoggyWalkerTypography internal constructor(
     }
 }
 
-fun doggyWalkerTextStyle(
+fun pawKeyTextStyle(
     fontFamily: FontFamily,
     fontWeight: FontWeight,
     fontSize: TextUnit,
@@ -151,76 +131,76 @@ fun doggyWalkerTextStyle(
     lineHeightStyle = LineHeightStyle(
         alignment = LineHeightStyle.Alignment.Center,
         trim = LineHeightStyle.Trim.None
-    )
+    ),
 )
 
 @Composable
-fun DoggyWalkerTypography(): DoggyWalkerTypography {
-    return DoggyWalkerTypography(
-        title1B17 = doggyWalkerTextStyle(
+fun pawKeyTypography(): PawKeyTypography {
+    return PawKeyTypography(
+        title1B17 = pawKeyTextStyle(
             fontFamily = PretendardBold,
             fontWeight = FontWeight.Bold,
             fontSize = 17.sp,
             lineHeight = (17 * 1.3).sp,
             letterSpacing = TextUnit.Unspecified
         ),
-        title2Sb15 = doggyWalkerTextStyle(
+        title2Sb15 = pawKeyTextStyle(
             fontFamily = PretendardSemiBold,
             fontWeight = FontWeight.SemiBold,
             fontSize = 17.sp,
             lineHeight = (17 * 1.3).sp,
             letterSpacing = TextUnit.Unspecified
         ),
-        title3B15 = doggyWalkerTextStyle(
+        title3B15 = pawKeyTextStyle(
             fontFamily = PretendardBold,
             fontWeight = FontWeight.Bold,
             fontSize = 15.sp,
             lineHeight = (15 * 1.4).sp,
             letterSpacing = TextUnit.Unspecified
         ),
-        body1Sb15 = doggyWalkerTextStyle(
+        body1Sb15 = pawKeyTextStyle(
             fontFamily = PretendardSemiBold,
             fontWeight = FontWeight.SemiBold,
             fontSize = 15.sp,
             lineHeight = (15 * 1.4).sp,
             letterSpacing = TextUnit.Unspecified
         ),
-        body2M15 = doggyWalkerTextStyle(
+        body2M15 = pawKeyTextStyle(
             fontFamily = PretendardSemiBold,
             fontWeight = FontWeight.SemiBold,
             fontSize = 15.sp,
             lineHeight = (15 * 1.4).sp,
             letterSpacing = TextUnit.Unspecified
         ),
-        body3R15 = doggyWalkerTextStyle(
+        body3R15 = pawKeyTextStyle(
             fontFamily = PretendardRegular,
             fontWeight = FontWeight.Normal,
             fontSize = 15.sp,
             lineHeight = (15 * 1.4).sp,
             letterSpacing = TextUnit.Unspecified
         ),
-        body4B13 = doggyWalkerTextStyle(
+        body4B13 = pawKeyTextStyle(
             fontFamily = PretendardBold,
             fontWeight = FontWeight.Bold,
             fontSize = 13.sp,
             lineHeight = (13 * 1.4).sp,
             letterSpacing = TextUnit.Unspecified
         ),
-        body5Sb13 = doggyWalkerTextStyle(
+        body5Sb13 = pawKeyTextStyle(
             fontFamily = PretendardSemiBold,
             fontWeight = FontWeight.SemiBold,
             fontSize = 13.sp,
             lineHeight = (13 * 1.4).sp,
             letterSpacing = TextUnit.Unspecified
         ),
-        body6M13 = doggyWalkerTextStyle(
+        body6M13 = pawKeyTextStyle(
             fontFamily = PretendardMedium,
             fontWeight = FontWeight.Medium,
             fontSize = 13.sp,
             lineHeight = (13 * 1.4).sp,
             letterSpacing = TextUnit.Unspecified
         ),
-        body7R13 = doggyWalkerTextStyle(
+        body7R13 = pawKeyTextStyle(
             fontFamily = PretendardRegular,
             fontWeight = FontWeight.Normal,
             fontSize = 13.sp,
@@ -228,35 +208,33 @@ fun DoggyWalkerTypography(): DoggyWalkerTypography {
             letterSpacing = TextUnit.Unspecified
         ),
 
-        label1B11 = doggyWalkerTextStyle(
+        label1B11 = pawKeyTextStyle(
             fontFamily = PretendardBold,
             fontWeight = FontWeight.Bold,
             fontSize = 11.sp,
             lineHeight = (11 * 1.4).sp,
             letterSpacing = TextUnit.Unspecified
         ),
-        label2M11 = doggyWalkerTextStyle(
+        label2M11 = pawKeyTextStyle(
             fontFamily = PretendardMedium,
             fontWeight = FontWeight.Medium,
             fontSize = 11.sp,
             lineHeight = (11 * 1.4).sp,
             letterSpacing = TextUnit.Unspecified
         ),
-        label3R11 = doggyWalkerTextStyle(
+        label3R11 = pawKeyTextStyle(
             fontFamily = PretendardRegular,
             fontWeight = FontWeight.Normal,
             fontSize = 11.sp,
             lineHeight = (11 * 1.4).sp,
             letterSpacing = TextUnit.Unspecified
         ),
-        label4M9 = doggyWalkerTextStyle(
+        label4M9 = pawKeyTextStyle(
             fontFamily = PretendardMedium,
             fontWeight = FontWeight.Medium,
             fontSize = 9.sp,
             lineHeight = (9 * 1.4).sp,
             letterSpacing = TextUnit.Unspecified
-        )
+        ),
     )
 }
-
- */
