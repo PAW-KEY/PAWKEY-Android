@@ -2,12 +2,12 @@ package com.paw.key.presentation.ui.mypage
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Divider
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -16,9 +16,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.tooling.preview.Preview
 import com.paw.key.R
 import com.paw.key.core.designsystem.theme.PawKeyTheme
 import com.paw.key.presentation.ui.mypage.component.TagChip
@@ -59,7 +58,7 @@ fun MyPageScreen(
     ) {
         Text(
             text = "마이페이지",
-            style = PawKeyTheme.typography.title1B17,
+            style = PawKeyTheme.typography.head22B,
             modifier = Modifier.padding(start = 16.dp, top = 16.dp, bottom = 12.dp)
         )
 
@@ -94,10 +93,10 @@ fun OwnerCard(ownerName: String, role: String) {
             .padding(16.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Column {
-            Text(text = ownerName, style = PawKeyTheme.typography.title3B15)
-            Text(text = role, style = PawKeyTheme.typography.body6M13)
-        }
+        Text(text = ownerName, style = PawKeyTheme.typography.head20B2)
+        Spacer(Modifier.width(10.dp))
+        Text(text = role, style = PawKeyTheme.typography.body14M)
+
         Spacer(modifier = Modifier.weight(1f))
         Image(
             painter = painterResource(R.drawable.ic_arrow_right),
@@ -131,7 +130,7 @@ fun PetCard(
         ) {
             Text(
                 text = "반려견 프로필",
-                style = PawKeyTheme.typography.label2M11,
+                style = PawKeyTheme.typography.caption12Sb1,
                 color = Color.White
             )
             Spacer(modifier = Modifier.weight(1f))
@@ -150,8 +149,8 @@ fun PetCard(
             )
             Spacer(Modifier.width(16.dp))
             Column {
-                Text(name, style = PawKeyTheme.typography.title3B15)
-                Text("$age · $gender", style = PawKeyTheme.typography.body7R13)
+                Text(name, style = PawKeyTheme.typography.head20B2)
+                Text("$age · $gender", style = PawKeyTheme.typography.body14R)
                 Spacer(Modifier.height(4.dp))
                 Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
                     tags.forEach {
@@ -162,13 +161,14 @@ fun PetCard(
         }
 
         Row(modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp)) {
-            Column(modifier = Modifier.weight(1f)) {
-                Text("산책 횟수", style = PawKeyTheme.typography.label2M11)
-                Text(walkCount, style = PawKeyTheme.typography.body4B13, color = PawKeyTheme.colors.gray950)
+            Column(modifier = Modifier.weight(1f)
+            ) {
+                Text("산책 횟수", style = PawKeyTheme.typography.caption12Sb1)
+                Text(walkCount, style = PawKeyTheme.typography.body14Sb, color = PawKeyTheme.colors.gray950)
             }
             Column(modifier = Modifier.weight(1f)) {
-                Text("누적 거리", style = PawKeyTheme.typography.label2M11)
-                Text(totalDistance, style = PawKeyTheme.typography.body4B13, color = PawKeyTheme.colors.gray950)
+                Text("누적 거리", style = PawKeyTheme.typography.caption12Sb1)
+                Text(totalDistance, style = PawKeyTheme.typography.body14Sb, color = PawKeyTheme.colors.gray950)
             }
         }
     }
@@ -176,14 +176,21 @@ fun PetCard(
 
 @Composable
 fun WalkRouteList(routes: List<String>) {
-    Column(modifier = Modifier
-        .fillMaxWidth()
-        .background(Color.White))
-    {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(Color.White)
+            .padding(horizontal = 16.dp)
+    ) {
         Spacer(modifier = Modifier.height(16.dp))
-        Text("산책 루트 관리", style = PawKeyTheme.typography.label2M11, color = Color.Gray)
+        Text("산책 루트 관리", style = PawKeyTheme.typography.caption12Sb1, color = Color.Gray)
         Spacer(modifier = Modifier.height(8.dp))
-        routes.forEach { route ->
+
+        routes.forEachIndexed { index, route ->
+            if (index != 0) {
+                Divider(color = Color(0xFFE8E8E8), thickness = 1.dp)
+            }
+
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -193,7 +200,8 @@ fun WalkRouteList(routes: List<String>) {
                 Text(
                     text = route,
                     modifier = Modifier.weight(1f),
-                    style = PawKeyTheme.typography.body6M13
+                    style = PawKeyTheme.typography.body14M,
+                    color = PawKeyTheme.colors.gray950
                 )
                 Image(
                     painter = painterResource(R.drawable.ic_arrow_right),
