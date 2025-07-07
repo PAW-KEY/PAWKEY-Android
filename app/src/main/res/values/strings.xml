@@ -15,5 +15,6 @@
 
     <!--MyPage-->
     <string name="ic_mypage_description">mypage</string>
+    <string name="profile">profile</string>
 
 </resources>

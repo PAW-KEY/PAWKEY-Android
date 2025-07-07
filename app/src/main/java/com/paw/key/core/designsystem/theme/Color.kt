@@ -20,7 +20,6 @@ val Beige900 = Color(0xFF603B2E)
 val Beige950 = Color(0xFF331D17)
 
 // Gray Scale
-val Gray0 = Color(0xFFFFFFFF)
 val Gray5 = Color(0xFFFCFCFC)
 val Gray25 = Color(0xFFF8F8F8)
 val Gray50 = Color(0xFFEBEBEB)
@@ -34,6 +33,16 @@ val Gray700 = Color(0xFF464646)
 val Gray800 = Color(0xFF3D3D3D)
 val Gray900 = Color(0xFF292929)
 val Gray950 = Color(0xFF161616)
+
+//BW
+val White1 = Color(0xFFFFFFFF)
+val White2 = Color(0xFFF5F5F5)
+val Black = Color(0xFF1E1E1E)
+
+//System Color
+val System_red = Color(0xFFEB210F)
+val System_green = Color(0xFF40C927)
+
 
 @Stable
 class PawKeyColors(
@@ -49,7 +58,6 @@ class PawKeyColors(
     beige900: Color,
     beige950: Color,
 
-    gray0: Color,
     gray5: Color,
     gray25: Color,
     gray50: Color,
@@ -63,6 +71,13 @@ class PawKeyColors(
     gray800: Color,
     gray900: Color,
     gray950: Color,
+
+    white1: Color,
+    white2: Color,
+    black: Color,
+
+    system_red: Color,
+    system_green: Color,
 ) {
     var beige50: Color by mutableStateOf(beige50)
         private set
@@ -87,8 +102,7 @@ class PawKeyColors(
     var beige950: Color by mutableStateOf(beige950)
         private set
 
-    var gray0: Color by mutableStateOf(gray0)
-        private set
+
     var gray5: Color by mutableStateOf(gray5)
         private set
     var gray25: Color by mutableStateOf(gray25)
@@ -115,6 +129,17 @@ class PawKeyColors(
         private set
     var gray950: Color by mutableStateOf(gray950)
         private set
+    var white1: Color by mutableStateOf(white1)
+        private set
+    var white2: Color by mutableStateOf(white2)
+        private set
+    var black: Color by mutableStateOf(black)
+        private set
+    var system_red: Color by mutableStateOf(system_red)
+        private set
+    var system_green: Color by mutableStateOf(system_green)
+        private set
+
 
     fun copy(
         beige50: Color = this.beige50,
@@ -129,7 +154,6 @@ class PawKeyColors(
         beige900: Color = this.beige900,
         beige950: Color = this.beige950,
 
-        gray0: Color = this.gray0,
         gray5: Color = this.gray5,
         gray25: Color = this.gray25,
         gray50: Color = this.gray50,
@@ -143,7 +167,16 @@ class PawKeyColors(
         gray800: Color = this.gray800,
         gray900: Color = this.gray900,
         gray950: Color = this.gray950,
-    ): PawKeyColors = PawKeyColors(
+
+        white1: Color = this.white1,
+        white2: Color = this.white1,
+        black: Color = this.black,
+
+        system_red: Color = this.system_red,
+        system_green: Color = this.system_green,
+
+
+        ): PawKeyColors = PawKeyColors(
         beige50 = beige50,
         beige100 = beige100,
         beige200 = beige200,
@@ -156,7 +189,6 @@ class PawKeyColors(
         beige900 = beige900,
         beige950 = beige950,
 
-        gray0 = gray0,
         gray5 = gray5,
         gray25 = gray25,
         gray50 = gray50,
@@ -170,6 +202,13 @@ class PawKeyColors(
         gray800 = gray800,
         gray900 = gray900,
         gray950 = gray950,
+
+        white1 = white1,
+        white2 = white2,
+        black = black,
+
+        system_red = system_red,
+        system_green = system_green
     )
 
     fun update(other: PawKeyColors) {
@@ -184,7 +223,6 @@ class PawKeyColors(
         beige800 = other.beige800
         beige900 = other.beige900
 
-        gray0 = other.gray0
         gray5 = other.gray5
         gray25 = other.gray25
         gray50 = other.gray50
@@ -198,6 +236,13 @@ class PawKeyColors(
         gray800 = other.gray800
         gray900 = other.gray900
         gray950 = other.gray950
+
+        white1 = other.white1
+        white2 = other.white2
+        black = other.black
+
+        system_red = other.system_red
+        system_green = other.system_green
     }
 }
 
@@ -214,7 +259,6 @@ fun pawKeyColors(
     beige900: Color = Beige900,
     beige950: Color = Beige950,
 
-    gray0: Color = Gray0,
     gray5: Color = Gray5,
     gray25: Color = Gray25,
     gray50: Color = Gray50,
@@ -229,7 +273,15 @@ fun pawKeyColors(
     gray900: Color = Gray900,
     gray950: Color = Gray950,
 
-) = PawKeyColors(
+    white1: Color = White1,
+    white2: Color = White2,
+    black: Color = Black,
+
+    system_red: Color = System_red,
+    system_green: Color = System_green,
+
+
+    ) = PawKeyColors(
     beige50 = beige50,
     beige100 = beige100,
     beige200 = beige200,
@@ -242,7 +294,6 @@ fun pawKeyColors(
     beige900 = beige900,
     beige950 = beige950,
 
-    gray0 = gray0,
     gray5 = gray5,
     gray25 = gray25,
     gray50 = gray50,
@@ -256,5 +307,13 @@ fun pawKeyColors(
     gray800 = gray800,
     gray900 = gray900,
     gray950 = gray950,
+
+    white1 = white1,
+    white2 = white2,
+    black = black,
+
+    system_red = system_red,
+    system_green = system_green
+
 
 )
