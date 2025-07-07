@@ -1,13 +1,14 @@
 package com.paw.key.presentation.ui.home
 
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import com.paw.key.R
+import com.paw.key.presentation.ui.home.component.TopBar
 
 @Composable
 fun HomeRoute (
@@ -35,11 +36,17 @@ fun HomeScreen (
     snackBarHostState: SnackbarHostState,
     modifier: Modifier = Modifier
 ) {
-    // Todo : 변경 예정
-    Text(
-        text = stringResource(R.string.ic_home_description),
+
+    Column (
         modifier = modifier
-    )
+            .padding(paddingValues)
+            .fillMaxSize()
+
+    ){
+        TopBar(
+            location = "강남구 역삼동"
+        )
+    }
 }
 
 @Preview
