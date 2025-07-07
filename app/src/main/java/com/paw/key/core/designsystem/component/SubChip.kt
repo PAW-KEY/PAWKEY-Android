@@ -36,7 +36,8 @@ fun SubChip(
         Text(
             text = text,
             color = PawKeyTheme.colors.gray300,
-//            style = PawKeyTheme.typography.body7R13
+
+            style = PawKeyTheme.typography.body14M
         )
     }
 
