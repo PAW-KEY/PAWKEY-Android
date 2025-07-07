@@ -7,17 +7,17 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
 
 // brand/iris
-val Beige50 = Color(0xFFFAF6F2)
-val Beige100 = Color(0xFFF4EBE0)
-val Beige200 = Color(0xFFE8D5C0)
-val Beige300 = Color(0xFFDDC0A2)
-val Beige400 = Color(0xFFC9976E)
-val Beige500 = Color(0xFFBE7E51)
-val Beige600 = Color(0xFFB06A46)
-val Beige700 = Color(0xFF93553B)
-val Beige800 = Color(0xFF774635)
-val Beige900 = Color(0xFF603B2E)
-val Beige950 = Color(0xFF331D17)
+val Green50 = Color(0xFFEDFCE9)
+val Green100 = Color(0xFFD7F7D0)
+val Green200 = Color(0xFFB2F0A6)
+val Green300 = Color(0xFF83E472)
+val Green400 = Color(0xFF4CD137)
+val Green500 = Color(0xFF39BA28)
+val Green600 = Color(0xFF28941C)
+val Green700 = Color(0xFF22711A)
+val Green800 = Color(0xFF1F5A1A)
+val Green900 = Color(0xFF1D4D1A)
+val Green950 = Color(0xFF0A2A09)
 
 // Gray Scale
 val Gray5 = Color(0xFFFCFCFC)
@@ -46,17 +46,17 @@ val System_green = Color(0xFF40C927)
 
 @Stable
 class PawKeyColors(
-    beige50: Color,
-    beige100: Color,
-    beige200: Color,
-    beige300: Color,
-    beige400: Color,
-    beige500: Color,
-    beige600: Color,
-    beige700: Color,
-    beige800: Color,
-    beige900: Color,
-    beige950: Color,
+    green50: Color,
+    green100: Color,
+    green200: Color,
+    green300: Color,
+    green400: Color,
+    green500: Color,
+    green600: Color,
+    green700: Color,
+    green800: Color,
+    green900: Color,
+    green950: Color,
 
     gray5: Color,
     gray25: Color,
@@ -79,27 +79,27 @@ class PawKeyColors(
     system_red: Color,
     system_green: Color,
 ) {
-    var beige50: Color by mutableStateOf(beige50)
+    var green50: Color by mutableStateOf(green50)
         private set
-    var beige100: Color by mutableStateOf(beige100)
+    var green100: Color by mutableStateOf(green100)
         private set
-    var beige200: Color by mutableStateOf(beige200)
+    var green200: Color by mutableStateOf(green200)
         private set
-    var beige300: Color by mutableStateOf(beige300)
+    var green300: Color by mutableStateOf(green300)
         private set
-    var beige400: Color by mutableStateOf(beige400)
+    var green400: Color by mutableStateOf(green400)
         private set
-    var beige500: Color by mutableStateOf(beige500)
+    var green500: Color by mutableStateOf(green500)
         private set
-    var beige600: Color by mutableStateOf(beige600)
+    var green600: Color by mutableStateOf(green600)
         private set
-    var beige700: Color by mutableStateOf(beige700)
+    var green700: Color by mutableStateOf(green700)
         private set
-    var beige800: Color by mutableStateOf(beige800)
+    var green800: Color by mutableStateOf(green800)
         private set
-    var beige900: Color by mutableStateOf(beige900)
+    var green900: Color by mutableStateOf(green900)
         private set
-    var beige950: Color by mutableStateOf(beige950)
+    var green950: Color by mutableStateOf(green950)
         private set
 
 
@@ -142,17 +142,17 @@ class PawKeyColors(
 
 
     fun copy(
-        beige50: Color = this.beige50,
-        beige100: Color = this.beige100,
-        beige200: Color = this.beige200,
-        beige300: Color = this.beige300,
-        beige400: Color = this.beige400,
-        beige500: Color = this.beige500,
-        beige600: Color = this.beige600,
-        beige700: Color = this.beige700,
-        beige800: Color = this.beige800,
-        beige900: Color = this.beige900,
-        beige950: Color = this.beige950,
+        beige50: Color = this.green50,
+        beige100: Color = this.green100,
+        beige200: Color = this.green200,
+        beige300: Color = this.green300,
+        beige400: Color = this.green400,
+        beige500: Color = this.green500,
+        beige600: Color = this.green600,
+        beige700: Color = this.green700,
+        beige800: Color = this.green800,
+        beige900: Color = this.green900,
+        beige950: Color = this.green950,
 
         gray5: Color = this.gray5,
         gray25: Color = this.gray25,
@@ -177,17 +177,17 @@ class PawKeyColors(
 
 
         ): PawKeyColors = PawKeyColors(
-        beige50 = beige50,
-        beige100 = beige100,
-        beige200 = beige200,
-        beige300 = beige300,
-        beige400 = beige400,
-        beige500 = beige500,
-        beige600 = beige600,
-        beige700 = beige700,
-        beige800 = beige800,
-        beige900 = beige900,
-        beige950 = beige950,
+        green50 = green50,
+        green100 = green100,
+        green200 = green200,
+        green300 = green300,
+        green400 = green400,
+        green500 = green500,
+        green600 = green600,
+        green700 = green700,
+        green800 = green800,
+        green900 = green900,
+        green950 = green950,
 
         gray5 = gray5,
         gray25 = gray25,
@@ -212,16 +212,16 @@ class PawKeyColors(
     )
 
     fun update(other: PawKeyColors) {
-        beige50 = other.beige50
-        beige100 = other.beige100
-        beige200 = other.beige200
-        beige300 = other.beige300
-        beige400 = other.beige400
-        beige500 = other.beige500
-        beige600 = other.beige600
-        beige700 = other.beige700
-        beige800 = other.beige800
-        beige900 = other.beige900
+        green50 = other.green50
+        green100 = other.green100
+        green200 = other.green200
+        green300 = other.green300
+        green400 = other.green400
+        green500 = other.green500
+        green600 = other.green600
+        green700 = other.green700
+        green800 = other.green800
+        green900 = other.green900
 
         gray5 = other.gray5
         gray25 = other.gray25
@@ -247,17 +247,17 @@ class PawKeyColors(
 }
 
 fun pawKeyColors(
-    beige50: Color = Beige50,
-    beige100: Color = Beige100,
-    beige200: Color = Beige200,
-    beige300: Color = Beige300,
-    beige400: Color = Beige400,
-    beige500: Color = Beige500,
-    beige600: Color = Beige600,
-    beige700: Color = Beige700,
-    beige800: Color = Beige800,
-    beige900: Color = Beige900,
-    beige950: Color = Beige950,
+    green50: Color = Green50,
+    green100: Color = Green100,
+    green200: Color = Green200,
+    green300: Color = Green300,
+    green400: Color = Green400,
+    green500: Color = Green500,
+    green600: Color = Green600,
+    green700: Color = Green700,
+    green800: Color = Green800,
+    green900: Color = Green900,
+    green950: Color = Green950,
 
     gray5: Color = Gray5,
     gray25: Color = Gray25,
@@ -282,17 +282,17 @@ fun pawKeyColors(
 
 
     ) = PawKeyColors(
-    beige50 = beige50,
-    beige100 = beige100,
-    beige200 = beige200,
-    beige300 = beige300,
-    beige400 = beige400,
-    beige500 = beige500,
-    beige600 = beige600,
-    beige700 = beige700,
-    beige800 = beige800,
-    beige900 = beige900,
-    beige950 = beige950,
+    green50 = green50,
+    green100 = green100,
+    green200 = green200,
+    green300 = green300,
+    green400 = green400,
+    green500 = green500,
+    green600 = green600,
+    green700 = green700,
+    green800 = green800,
+    green900 = green900,
+    green950 = green950,
 
     gray5 = gray5,
     gray25 = gray25,

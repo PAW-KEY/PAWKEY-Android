@@ -97,7 +97,7 @@ fun DateChip(
     Box(
         modifier
             .background(
-                color = PawKeyTheme.colors.beige400,
+                color = PawKeyTheme.colors.green400,
                 shape = RoundedCornerShape(15.dp)
             )
             .padding(horizontal = 12.dp, vertical = 2.dp)
