@@ -50,7 +50,7 @@ fun PawkeyButton(
             .fillMaxWidth(),
         shape = RoundedCornerShape(8.dp),
         colors = ButtonDefaults.buttonColors(
-            containerColor = PawKeyTheme.colors.beige500,
+            containerColor = PawKeyTheme.colors.green500,
             contentColor = PawKeyTheme.colors.white1,
             disabledContainerColor = PawKeyTheme.colors.gray200,
             disabledContentColor = PawKeyTheme.colors.white1
