@@ -160,15 +160,43 @@ fun PetCard(
             }
         }
 
-        Row(modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp)) {
-            Column(modifier = Modifier.weight(1f)
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp, vertical = 12.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceEvenly
+        ) {
+            Column(
+                modifier = Modifier.weight(1f),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text("산책 횟수", style = PawKeyTheme.typography.caption12Sb1)
-                Text(walkCount, style = PawKeyTheme.typography.body14Sb, color = PawKeyTheme.colors.gray950)
+                Text(
+                    walkCount,
+                    style = PawKeyTheme.typography.body14Sb,
+                    color = PawKeyTheme.colors.beige500 // 초록색
+                )
             }
-            Column(modifier = Modifier.weight(1f)) {
+
+            // 가운데 구분선
+            Box(
+                modifier = Modifier
+                    .height(32.dp)
+                    .width(1.dp)
+                    .background(Color(0xFFE8E8E8))
+            )
+
+            Column(
+                modifier = Modifier.weight(1f),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
                 Text("누적 거리", style = PawKeyTheme.typography.caption12Sb1)
-                Text(totalDistance, style = PawKeyTheme.typography.body14Sb, color = PawKeyTheme.colors.gray950)
+                Text(
+                    totalDistance,
+                    style = PawKeyTheme.typography.body14Sb,
+                    color = PawKeyTheme.colors.beige500 // 초록색
+                )
             }
         }
     }

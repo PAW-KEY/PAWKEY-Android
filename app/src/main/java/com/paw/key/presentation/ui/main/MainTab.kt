@@ -22,31 +22,27 @@ enum class MainTab(
     @StringRes val contentDescription: Int,
     val route: MainTabRoute,
 ) {
-    // Todo : 아이콘 및 라벨 변경 예정
     HOME(
-        selectedIcon = R.drawable.baseline_home_filled_24,
-        unselectedIcon = R.drawable.baseline_home_filled_24,
+        selectedIcon = R.drawable.ic_home_fill,
+        unselectedIcon = R.drawable.ic_home_linear,
         contentDescription = ic_home_description,
         route = Home,
     ),
-
     COURSE(
-        selectedIcon = R.drawable.baseline_home_filled_24,
-        unselectedIcon = R.drawable.baseline_home_filled_24,
+        selectedIcon = R.drawable.ic_walk_fill,
+        unselectedIcon = R.drawable.ic_walk_linear,
         contentDescription = ic_course_description,
         route = Course,
     ),
-
     COMMUNITY(
-        selectedIcon = R.drawable.baseline_home_filled_24,
-        unselectedIcon = R.drawable.baseline_home_filled_24,
+        selectedIcon = R.drawable.ic_community_fill,
+        unselectedIcon = R.drawable.ic_community_linear,
         contentDescription = ic_community_description,
         route = Community,
     ),
-
     MYPAGE(
-        selectedIcon = R.drawable.baseline_home_filled_24,
-        unselectedIcon = R.drawable.baseline_home_filled_24,
+        selectedIcon = R.drawable.ic_mypage_fill,
+        unselectedIcon = R.drawable.ic_mypage_linear,
         contentDescription = ic_mypage_description,
         route = MyPage,
     );
