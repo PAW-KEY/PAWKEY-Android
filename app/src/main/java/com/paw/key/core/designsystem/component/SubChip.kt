@@ -7,13 +7,13 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.paw.key.core.designsystem.theme.PawKeyTheme
 
 @Preview
 @Composable
-fun PreviewSubChip() {
+private fun PreviewSubChip() {
     SubChip(
         text = "4km"
     )
@@ -26,16 +26,17 @@ fun SubChip(
     modifier: Modifier = Modifier,
 ) {
     Box(
-        Modifier
+        modifier
             .background(
-                color = Color.Gray,
+                color = PawKeyTheme.colors.white2,
                 shape = RoundedCornerShape(4.dp)
             )
-            .padding(6.dp, 4.dp)
+            .padding(horizontal = 6.dp, vertical = 4.dp)
     ) {
         Text(
             text = text,
-            color = Color.DarkGray
+            color = PawKeyTheme.colors.gray300,
+            style = PawKeyTheme.typography.body7R13
         )
     }
 
