@@ -86,7 +86,7 @@ fun HistoryTop(
         modifier = Modifier
             .fillMaxWidth()
             .height(41.dp)
-            .background(color=PawKeyTheme.colors.beige400)
+            .background(color=PawKeyTheme.colors.green400)
             .padding(horizontal = 16.dp)
             .clip(RoundedCornerShape(
                 topStart = 12.dp,
