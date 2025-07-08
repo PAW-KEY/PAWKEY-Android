@@ -1,4 +1,4 @@
-package com.paw.key.presentation.ui.mypage.navigation
+package com.paw.key.presentation.ui.owner.navigation
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.material3.SnackbarHostState
@@ -7,22 +7,23 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
 import com.paw.key.core.navigation.MainTabRoute
-import com.paw.key.presentation.ui.mypage.MyPageRoute
+import com.paw.key.presentation.ui.owner.OwnerRoute
 import kotlinx.serialization.Serializable
 
-fun NavController.navigateMyPage(
+fun NavController.navigateOwner(
     navOptions: NavOptions?
 ) {
-    navigate(MyPage, navOptions)
+    navigate(Owner, navOptions)
 }
-fun NavGraphBuilder.myPageNavGraph(
+
+fun NavGraphBuilder.ownerNavGraph(
     paddingValues: PaddingValues,
     navigateUp: () -> Unit,
     navigateNext: () -> Unit,
     snackBarHostState: SnackbarHostState
 ) {
-    composable<MyPage> {
-        MyPageRoute(
+    composable<Owner> {
+        OwnerRoute(
             paddingValues = paddingValues,
             navigateUp = navigateUp,
             navigateNext = navigateNext,
@@ -32,4 +33,4 @@ fun NavGraphBuilder.myPageNavGraph(
 }
 
 @Serializable
-data object MyPage : MainTabRoute
+data object Owner : MainTabRoute

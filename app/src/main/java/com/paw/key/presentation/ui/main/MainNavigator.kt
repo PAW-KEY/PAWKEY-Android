@@ -16,6 +16,8 @@ import com.paw.key.presentation.ui.dummy.next.navigateDummyNext
 import com.paw.key.presentation.ui.home.navigation.Home
 import com.paw.key.presentation.ui.home.navigation.navigateHome
 import com.paw.key.presentation.ui.mypage.navigation.navigateMyPage
+import com.paw.key.presentation.ui.owner.navigation.navigateOwner
+import com.paw.key.presentation.ui.pet.navigation.navigatePet
 
 class MainNavigator (
     val navController: NavHostController
@@ -50,7 +52,17 @@ class MainNavigator (
             MainTab.MYPAGE -> navController.navigateMyPage(navOptions)
         }
     }
+    fun navigateMyPage(navOptions: NavOptions? = null) {
+        navController.navigateMyPage(navOptions = navOptions)
+    }
+    fun navigatePet(navOptions: NavOptions? = null) {
+        navController.navigatePet(navOptions = navOptions)
+    }
 
+    fun navigateOwner(navOptions: NavOptions? = null) {
+        navController.navigateOwner(navOptions = navOptions)
+    }
+//
     // 더미용 Todo : 나중에 위에거로 교환예정
     fun navigateToDummy(navOptions: NavOptions? = null) {
         navController.navigateDummy(navOptions = navOptions)
