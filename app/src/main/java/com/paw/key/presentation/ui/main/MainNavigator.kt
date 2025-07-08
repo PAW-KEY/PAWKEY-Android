@@ -62,7 +62,11 @@ class MainNavigator (
     fun navigateOwner(navOptions: NavOptions? = null) {
         navController.navigateOwner(navOptions = navOptions)
     }
-//
+
+    fun navigateCourse(navOptions: NavOptions? = null) {
+        navController.navigatePet(navOptions = navOptions)
+    }
+
     // 더미용 Todo : 나중에 위에거로 교환예정
     fun navigateToDummy(navOptions: NavOptions? = null) {
         navController.navigateDummy(navOptions = navOptions)

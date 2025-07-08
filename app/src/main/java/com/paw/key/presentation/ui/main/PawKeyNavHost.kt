@@ -34,7 +34,7 @@ fun PawKeyNavHost (
         homeNavGraph (
             paddingValues = paddingValues,
             navigateUp = navigator.navController::navigateUp,
-            navigateNext = navigator.navController::navigateUp,
+            navigateNext = navigator::navigateCourse,
             snackBarHostState = snackbarHostState,
             modifier = modifier,
         )
