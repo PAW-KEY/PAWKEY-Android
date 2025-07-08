@@ -18,7 +18,6 @@ fun HomeRoute (
     snackBarHostState: SnackbarHostState,
     modifier: Modifier = Modifier
 ) {
-
     HomeScreen(
         paddingValues = paddingValues,
         navigateUp = navigateUp,
