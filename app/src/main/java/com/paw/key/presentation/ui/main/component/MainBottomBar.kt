@@ -43,7 +43,7 @@ fun MainBottomBar(
     modifier: Modifier = Modifier,
 ) {
     AnimatedVisibility (
-        visible = true,
+        visible = isVisible,
         enter = EnterTransition.None,
         exit = ExitTransition.None,
         modifier = modifier
