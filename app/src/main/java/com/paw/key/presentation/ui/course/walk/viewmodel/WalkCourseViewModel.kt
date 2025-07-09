@@ -1,0 +1,170 @@
+package com.paw.key.presentation.ui.course.walk.viewmodel
+
+import android.graphics.Bitmap
+import android.location.Location
+import android.util.Log
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.kakao.vectormap.LatLng
+import com.paw.key.domain.repository.BitmapRepository
+import com.paw.key.presentation.ui.course.walk.state.WalkCourseContract.WalkCourseSideEffect
+import com.paw.key.presentation.ui.course.walk.state.WalkCourseContract.WalkCourseState
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.collections.immutable.PersistentList
+import kotlinx.collections.immutable.toPersistentList
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
+import timber.log.Timber
+import javax.inject.Inject
+
+@HiltViewModel
+class WalkCourseViewModel @Inject constructor(
+    private val bitmapRepository: BitmapRepository
+) : ViewModel() {
+    private val _state = MutableStateFlow(WalkCourseState())
+    val state : StateFlow<WalkCourseState>
+        get() = _state.asStateFlow()
+
+    private val _sideEffect = MutableSharedFlow<WalkCourseSideEffect>()
+    val sideEffect: MutableSharedFlow<WalkCourseSideEffect>
+        get() = _sideEffect
+
+    private val _totalTime = MutableStateFlow(0L)
+    val totalTime: StateFlow<Long> = _totalTime.asStateFlow()
+
+    fun incrementTotalTime() {
+        _totalTime.update {
+            it + 1000L
+        }
+    }
+
+    fun addInitLocation(location: LatLng) {
+        val currentList = state.value.poiPoints.toMutableList()
+        currentList.add(location)
+        _state.value = _state.value.copy(
+            poiPoints = currentList.toPersistentList()
+        )
+    }
+
+    // Todo : = updateState 로 일관되게 정리하기
+    fun updateLocationAndCalculateDistance(newLocation: LatLng, accuracy: Float) {
+        // GPS 정확도가 너무 낮은 경우 (예: 10m 이상) 무시
+        val MIN_ACCURACY_THRESHOLD = 25f // 미터 단위 (이보다 높은 정확도일 때만 사용)
+        if (accuracy > MIN_ACCURACY_THRESHOLD) {
+            return
+        }
+
+        _state.update { currentUiState ->
+            val oldLocation = currentUiState.lastLocation
+            var distanceIncrement = 0f
+
+            if (oldLocation != null) {
+                val oldAndroidLocation = Location("prev_location").apply {
+                    latitude = oldLocation.latitude
+                    longitude = oldLocation.longitude
+                }
+
+                val newAndroidLocation = Location("current_location").apply {
+                    latitude = newLocation.latitude
+                    longitude = newLocation.longitude
+                }
+
+                val calculatedDistance = oldAndroidLocation.distanceTo(newAndroidLocation)
+
+                val MIN_DISTANCE_THRESHOLD = 1f // 미터 단위
+                if (calculatedDistance >= MIN_DISTANCE_THRESHOLD) {
+                    distanceIncrement = calculatedDistance
+                }
+            }
+
+            val newTotalDistance = currentUiState.totalDistance + distanceIncrement
+
+            val updatedPoiPoints: PersistentList<LatLng> = if (distanceIncrement > 0) {
+                currentUiState.poiPoints.add(newLocation)
+            } else {
+                currentUiState.poiPoints
+            }
+
+            currentUiState.copy(
+                lastLocation = newLocation,
+                currentLocation = newLocation,
+                totalDistance = newTotalDistance,
+                poiPoints = updatedPoiPoints
+            )
+        }
+    }
+
+    fun onSensorDataChanged(totalStepsFromSensor: Long) {
+        updateState {
+            val initial = initialSensorSteps
+            val currentCalculatedSteps: Long
+            val currentIsWalking: Boolean
+
+            if (initial == null) {
+                currentCalculatedSteps = 0L
+                currentIsWalking = false
+
+                copy(
+                    initialSensorSteps = totalStepsFromSensor,
+                    steps = currentCalculatedSteps,
+                    prevSteps = currentCalculatedSteps,
+                    isWalking = currentIsWalking
+                )
+            } else {
+                currentCalculatedSteps = totalStepsFromSensor - initial
+
+                currentIsWalking = if (currentCalculatedSteps > prevSteps) {
+                    true
+                } else if (currentCalculatedSteps == prevSteps && prevSteps > 0) {
+                    isWalking
+                } else {
+                    false
+                }
+
+                copy(
+                    steps = currentCalculatedSteps,
+                    prevSteps = currentCalculatedSteps, // 현재 걸음 수를 이전 걸음 수로 저장
+                    isWalking = currentIsWalking
+                )
+            }
+        }
+    }
+
+    fun updateState(reducer: WalkCourseState.() -> WalkCourseState) {
+        Log.e("updateState", "updateState called")
+        _state.update {
+            it.reducer()
+        }
+    }
+
+    fun mapCaptureCompleted() {
+        updateState {
+            copy(shouldCaptureMap = false)
+        }
+    }
+
+    fun onMapCaptured(bitmap: Bitmap?) {
+        if (bitmap == null) {
+            Log.e("WalkCourseViewModel", "Captured bitmap is null, cannot save.")
+            return
+        }
+
+        viewModelScope.launch {
+            try {
+                bitmapRepository.saveBitmap(bitmap)
+                _sideEffect.emit(WalkCourseSideEffect.ShowSnackBar("산책 지도 이미지가 저장되었습니다."))
+                Log.d("WalkCourseViewModel", "Map captured bitmap saved to DataStore.")
+            } catch (e: Exception) {
+                _sideEffect.emit(WalkCourseSideEffect.ShowSnackBar("산책 지도 이미지 저장 실패: ${e.localizedMessage}"))
+                Log.e("WalkCourseViewModel", "Error saving captured bitmap: ${e.localizedMessage}")
+            }  finally {
+                mapCaptureCompleted() // 캡처 시도 후, 성공/실패 여부와 관계없이 플래그 리셋
+            }
+        }
+    }
+}
