@@ -17,6 +17,8 @@ import com.paw.key.presentation.ui.dummy.navigation.dummyNavGraph
 import com.paw.key.presentation.ui.dummy.next.dummyNextNavGraph
 import com.paw.key.presentation.ui.home.navigation.homeNavGraph
 import com.paw.key.presentation.ui.mypage.navigation.myPageNavGraph
+import com.paw.key.presentation.ui.owner.navigation.ownerNavGraph
+import com.paw.key.presentation.ui.pet.navigation.petNavGraph
 
 @RequiresApi(Build.VERSION_CODES.Q)
 @Composable
@@ -37,7 +39,7 @@ fun PawKeyNavHost (
         homeNavGraph (
             paddingValues = paddingValues,
             navigateUp = navigator.navController::navigateUp,
-            navigateNext = navigator.navController::navigateUp,
+            navigateNext = navigator::navigateCourse,
             snackBarHostState = snackbarHostState,
             modifier = modifier,
         )
@@ -72,6 +74,20 @@ fun PawKeyNavHost (
         )
 
         myPageNavGraph(
+            paddingValues = paddingValues,
+            navigateUp = navigator::navigateUp,
+            navigateNext = navigator::navigateDummyNext,
+            snackBarHostState = snackbarHostState
+        )
+
+        ownerNavGraph(
+            paddingValues = paddingValues,
+            navigateUp = navigator::navigateUp,
+            navigateNext = navigator::navigateDummyNext,
+            snackBarHostState = snackbarHostState
+        )
+
+        petNavGraph(
             paddingValues = paddingValues,
             navigateUp = navigator::navigateUp,
             navigateNext = navigator::navigateDummyNext,

@@ -16,7 +16,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
-import com.paw.key.R.string.profile
+//import com.paw.key.R.string.profile
 import com.paw.key.core.designsystem.theme.PawKeyTheme
 import com.paw.key.core.util.noRippleClickable
 
@@ -36,7 +36,8 @@ fun DummyItem(
     ) {
         AsyncImage(
             model = profileUrl,
-            contentDescription = stringResource(profile),
+            contentDescription = "프로필 이미지",
+                //stringResource(profile),
             modifier = Modifier
                 .size(80.dp)
                 .clip(CircleShape)

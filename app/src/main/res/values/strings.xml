@@ -6,6 +6,7 @@
     <!-- Navigation -->
     <!--Home-->
     <string name="ic_home_description">home</string>
+    <string name="ic_home_topbar_text">연속산책</string>
 
     <!--Course-->
     <string name="ic_course_description">course</string>
@@ -15,6 +16,7 @@
 
     <!--MyPage-->
     <string name="ic_mypage_description">mypage</string>
+    <string name="profile">profile</string>
 
     <!--Course String-->
     <string name="course_tab_title_map">지도</string>

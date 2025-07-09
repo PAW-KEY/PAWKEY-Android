@@ -18,6 +18,8 @@ import com.paw.key.presentation.ui.dummy.next.navigateDummyNext
 import com.paw.key.presentation.ui.home.navigation.Home
 import com.paw.key.presentation.ui.home.navigation.navigateHome
 import com.paw.key.presentation.ui.mypage.navigation.navigateMyPage
+import com.paw.key.presentation.ui.owner.navigation.navigateOwner
+import com.paw.key.presentation.ui.pet.navigation.navigatePet
 
 class MainNavigator (
     val navController: NavHostController
@@ -54,6 +56,20 @@ class MainNavigator (
             MainTab.COMMUNITY -> navController.navigateCommunity(navOptions)
             MainTab.MYPAGE -> navController.navigateMyPage(navOptions)
         }
+    }
+    fun navigateMyPage(navOptions: NavOptions? = null) {
+        navController.navigateMyPage(navOptions = navOptions)
+    }
+    fun navigatePet(navOptions: NavOptions? = null) {
+        navController.navigatePet(navOptions = navOptions)
+    }
+
+    fun navigateOwner(navOptions: NavOptions? = null) {
+        navController.navigateOwner(navOptions = navOptions)
+    }
+
+    fun navigateCourse(navOptions: NavOptions? = null) {
+        navController.navigatePet(navOptions = navOptions)
     }
 
     fun setOnVisibleRecord(visible: Boolean) {
