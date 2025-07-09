@@ -43,7 +43,7 @@ fun MainBottomBar(
     modifier: Modifier = Modifier,
 ) {
     AnimatedVisibility (
-        visible = true,
+        visible = isVisible,
         enter = EnterTransition.None,
         exit = ExitTransition.None,
         modifier = modifier
@@ -56,7 +56,7 @@ fun MainBottomBar(
             contentAlignment = Alignment.Center
         ) {
             Surface(
-                color = Color.Black,
+                color = PawKeyTheme.colors.gray950,
                 shape = RoundedCornerShape(200.dp),
                 shadowElevation = 10.dp,
                 modifier = Modifier
