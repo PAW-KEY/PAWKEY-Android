@@ -1,5 +1,7 @@
 package com.paw.key.presentation.ui.main
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
@@ -17,6 +19,7 @@ import androidx.compose.ui.Modifier
 import com.paw.key.presentation.ui.main.component.MainBottomBar
 import kotlinx.collections.immutable.toImmutableList
 
+@RequiresApi(Build.VERSION_CODES.Q)
 @Composable
 fun MainScreen(
     navigator: MainNavigator = rememberMainNavigator(),
@@ -29,6 +32,7 @@ fun MainScreen(
     )
 }
 
+@RequiresApi(Build.VERSION_CODES.Q)
 @Composable
 private fun MainScreenContent(
     navigator: MainNavigator,
