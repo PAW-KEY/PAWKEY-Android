@@ -16,4 +16,12 @@
     <!--MyPage-->
     <string name="ic_mypage_description">mypage</string>
 
+    <!--Course String-->
+    <string name="course_tab_title_map">지도</string>
+    <string name="course_tab_title_list">리스트</string>
+
+    <string name="course_record_distance">거리 (km)</string>
+    <string name="course_record_time">시간 (분)</string>
+    <string name="course_record_step">걸음 수 (걸음)</string>
+
 </resources>
