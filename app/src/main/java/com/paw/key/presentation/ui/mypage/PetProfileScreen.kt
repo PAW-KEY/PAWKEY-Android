@@ -1,6 +1,5 @@
-package com.paw.key.presentation.ui.pet
+package com.paw.key.presentation.ui.mypage
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -13,7 +12,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -21,14 +19,14 @@ import com.paw.key.R
 import com.paw.key.core.designsystem.theme.PawKeyTheme
 
 @Composable
-fun PetRoute(
+fun PetProfileRoute(
     paddingValues: PaddingValues,
     navigateUp: () -> Unit,
     navigateNext: () -> Unit,
     snackBarHostState: SnackbarHostState,
     modifier: Modifier = Modifier,
 ) {
-    PetScreen(
+    PetProfileScreen(
         paddingValues = paddingValues,
         navigateUp = navigateUp,
         navigateNext = navigateNext,
@@ -38,7 +36,7 @@ fun PetRoute(
 }
 
 @Composable
-fun PetScreen(
+fun PetProfileScreen(
     paddingValues: PaddingValues,
     navigateUp: () -> Unit,
     navigateNext: () -> Unit,
@@ -90,7 +88,7 @@ fun PetScreen(
         PetProfileItem(label = "나이", value = age)
 
         Column {
-            PetProfileItem(label = "성향", value = "") // 상단 타이틀만 필요하다면 value는 빈 값으로
+            PetProfileItem(label = "성향", value = "")
 
             Spacer(modifier = Modifier.height(8.dp))
 
@@ -148,9 +146,9 @@ fun PetProfileItem(label: String, value: String, modifier: Modifier = Modifier) 
 
 @Preview(showBackground = true)
 @Composable
-fun PetScreenPreview() {
+fun PetProfileScreenPreview() {
     PawKeyTheme {
-        PetScreen(
+        PetProfileScreen(
             paddingValues = PaddingValues(),
             navigateUp = {},
             navigateNext = {},

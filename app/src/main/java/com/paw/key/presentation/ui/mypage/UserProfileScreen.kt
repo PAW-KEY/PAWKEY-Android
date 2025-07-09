@@ -1,4 +1,4 @@
-package com.paw.key.presentation.ui.owner
+package com.paw.key.presentation.ui.mypage
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -7,7 +7,6 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -17,14 +16,14 @@ import com.paw.key.R
 import com.paw.key.core.designsystem.theme.PawKeyTheme
 
 @Composable
-fun OwnerRoute(
+fun UserProfileRoute(
     paddingValues: PaddingValues,
     navigateUp: () -> Unit,
     navigateNext: () -> Unit,
     snackBarHostState: SnackbarHostState,
     modifier: Modifier = Modifier,
 ) {
-    OwnerScreen(
+    UserProfileScreen(
         paddingValues = paddingValues,
         navigateUp = navigateUp,
         navigateNext = navigateNext,
@@ -34,7 +33,7 @@ fun OwnerRoute(
 }
 
 @Composable
-fun OwnerScreen(
+fun UserProfileScreen(
     paddingValues: PaddingValues,
     navigateUp: () -> Unit,
     navigateNext: () -> Unit,
@@ -94,8 +93,8 @@ fun ProfileItem(label: String, value: String) {
 
 @Preview(showBackground = true)
 @Composable
-fun OwnerScreenPreview() {
-    OwnerScreen(
+fun UserProfileScreenPreview() {
+    UserProfileScreen(
         paddingValues = PaddingValues(),
         navigateUp = {},
         navigateNext = {},
