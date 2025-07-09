@@ -49,9 +49,20 @@ coil = "2.6.0"
 # Timber
 timber = "5.0.1"
 
+# Kakao
+kakaoMaps = "2.9.5"
+v2All = "2.20.1"
+
+# ServiceLocation
+playServicesLocation = "21.3.0"
+
+# DataStore
+datastorePreferences = "1.1.7"
+
 [libraries]
 # Test
 accompanist-systemuicontroller = { module = "com.google.accompanist:accompanist-systemuicontroller", version.ref = "accompanistSystemuicontroller" }
+androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastorePreferences" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
@@ -81,6 +92,7 @@ androidx-core-splashscreen = { module = "androidx.core:core-splashscreen", versi
 okhttp-bom = { group = "com.squareup.okhttp3", name = "okhttp-bom", version.ref = "okhttp" }
 okhttp = { group = "com.squareup.okhttp3", name = "okhttp" }
 okhttp-logging-interceptor = { group = "com.squareup.okhttp3", name = "logging-interceptor" }
+play-services-location = { module = "com.google.android.gms:play-services-location", version.ref = "playServicesLocation" }
 retrofit = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
 retrofit-kotlin-serialization-converter = { group = "com.jakewharton.retrofit", name = "retrofit2-kotlinx-serialization-converter", version.ref = "retrofitKotlinSerializationConverter" }
 
@@ -99,6 +111,10 @@ material = { group = "com.google.android.material", name = "material", version.r
 
 # Timber
 timber = { group = "com.jakewharton.timber", name = "timber", version.ref = "timber" }
+
+# Kakao
+kakaoMaps = { group = "com.kakao.maps.open", name = "android", version.ref = "kakaoMaps" }
+v2-all = { module = "com.kakao.sdk:v2-all", version.ref = "v2All" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
