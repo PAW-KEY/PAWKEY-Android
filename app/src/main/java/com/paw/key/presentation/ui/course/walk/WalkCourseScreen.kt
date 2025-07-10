@@ -70,6 +70,7 @@ import com.kakao.vectormap.LatLng
 import com.kakao.vectormap.MapView
 import com.kakao.vectormap.graphics.gl.GLSurfaceView
 import com.paw.key.core.designsystem.component.LoadingScreen
+import com.paw.key.core.designsystem.component.PawkeyButton
 import com.paw.key.core.designsystem.theme.PawKeyTheme
 import com.paw.key.core.util.UiState
 import com.paw.key.core.util.noRippleClickable
@@ -105,6 +106,7 @@ fun WalkCourseRoute(
     navigateNext: () -> Unit,
     snackBarHostState: SnackbarHostState,
     modifier: Modifier = Modifier,
+    isSharedWalk : Boolean = false,
     viewModel: WalkCourseViewModel = hiltViewModel(),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -298,7 +300,11 @@ fun WalkCourseRoute(
                 context = context,
                 onLabelClick = { _, _ -> },
                 currentUserLocation = state.currentLocation,
-                poiPoints = state.poiPoints,
+                poiPoints = if (isSharedWalk) {
+                    listOf()
+                } else {
+                    state.poiPoints
+                },
                 isTrackingEnabled = state.isTrackingEnabled,
                 isPauseTracking = state.isRecording, // true = 잠시 중단, false = 시작
                 isStopTracking = state.isLocationTracking, // true = 진짜 중단
@@ -427,7 +433,6 @@ fun WalkCourseScreen(
                     .align(Alignment.Center)
             )
 
-            // Todo : 공통컴포넌트용
             Column (
                 modifier = modifier
                     .fillMaxSize(),
@@ -453,25 +458,26 @@ fun WalkCourseScreen(
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.Center
                     ) {
+                        // Todo : 텍스트 스타일 24b로 변경 예쩡
                         Text(
                             text = "산책이 중단되었어요!",
-                            fontSize = 20.sp,
                             textAlign = TextAlign.Center,
-                            color = Color.White,
+                            style = PawKeyTheme.typography.head22B,
+                            color = PawKeyTheme.colors.white1,
                             modifier = Modifier.fillMaxWidth()
                         )
 
                         Text(
-                            text = "산책을 정말 종료?",
+                            text = "산책을 정말 종료하시겠어요?",
                             fontSize = 12.sp,
                             textAlign = TextAlign.Center,
-                            color = Color.White,
+                            style = PawKeyTheme.typography.body16M,
+                            color = PawKeyTheme.colors.white2,
                             modifier = Modifier.fillMaxWidth()
                         )
                     }
                 }
 
-                // Todo : 나중에 버튼 들어갈자리
                 Column (
                     modifier = Modifier
                         .fillMaxWidth()
@@ -499,7 +505,9 @@ fun WalkCourseScreen(
                     }
 
                     if (isTracking) {
-                        Button(
+                        PawkeyButton(
+                            text = "산책 기록 종료",
+                            enabled = true,
                             onClick = {
                                 onPauseTracking()
 
@@ -519,9 +527,7 @@ fun WalkCourseScreen(
                                     }
                                 }
                             }
-                        ) {
-                            Text(text = "산책 기록 종료")
-                        }
+                        )
                     } else {
                         Row (
                             modifier = Modifier
@@ -541,7 +547,7 @@ fun WalkCourseScreen(
                                     }
                                     .border(
                                         width = 1.dp,
-                                        color = Color(0xFF00C853),
+                                        color = PawKeyTheme.colors.green500,
                                         shape = RoundedCornerShape(8.dp)
                                     )
                                     .padding(horizontal = 24.dp, vertical = 16.dp)
@@ -554,15 +560,15 @@ fun WalkCourseScreen(
                                 modifier = Modifier
                                     .clip(RoundedCornerShape(8.dp))
                                     .background(
-                                        Color(0xFF00C853),
-                                        RoundedCornerShape(8.dp)
+                                        color = PawKeyTheme.colors.green500,
+                                        shape = RoundedCornerShape(8.dp)
                                     )
                                     .noRippleClickable {
                                         navigateNext()
                                         onStopTracking()
                                     }
                                     .padding(horizontal = 24.dp, vertical = 16.dp),
-                                color = Color.White
+                                color = PawKeyTheme.colors.white1
                             )
                         }
                     }
@@ -615,7 +621,7 @@ private fun createBitmapFromGLSurface(x: Int, y: Int, w: Int, h: Int, gl: GL10):
     val fullBitmap = Bitmap.createBitmap(bitmapSource, w, h, Bitmap.Config.ARGB_8888)
 
     // 화면의 aspectRatio 계산 (Modifier.aspectRatio(340f / 150f) 와 동일하게)
-    val targetAspectRatio = 16f / 11f // 사용하고자 하는 화면의 aspectRatio를 여기에 설정합니다.
+    val targetAspectRatio = 16f / 9f // 사용하고자 하는 화면의 aspectRatio를 여기에 설정합니다.
 
     var cropWidth: Int
     var cropHeight: Int
