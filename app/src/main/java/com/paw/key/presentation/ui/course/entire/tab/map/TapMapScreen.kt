@@ -4,19 +4,13 @@ import android.os.Looper
 import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
@@ -31,7 +25,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -46,13 +43,14 @@ import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
 import com.kakao.vectormap.LatLng
 import com.kakao.vectormap.MapView
+import com.paw.key.R
 import com.paw.key.core.designsystem.component.LoadingScreen
+import com.paw.key.core.designsystem.theme.PawKeyTheme
 import com.paw.key.core.util.UiState
 import com.paw.key.core.util.noRippleClickable
 import com.paw.key.presentation.ui.course.entire.tab.map.component.tapMapView
 import com.paw.key.presentation.ui.course.entire.tab.map.viewmodel.TapMapViewModel
 import com.paw.key.presentation.ui.course.walk.getCurrentLocation
-import timber.log.Timber
 
 @Composable
 fun TapMapRoute(
@@ -77,15 +75,12 @@ fun TapMapRoute(
             override fun onLocationResult(locationResult: LocationResult) {
                 locationResult.lastLocation?.let { location ->
                     val newLocation = LatLng.from(location.latitude, location.longitude)
-                    //viewModel.updateCurrentLocation(newLocation) // ViewModel의 상태 업데이트
                     viewModel.updateState {
                         copy(
                             currentLocation = newLocation
                         )
                     }
-
-                    Log.d("TapMapRoute", "Updated location: ${newLocation.latitude}, ${newLocation.longitude}, accuracy: ${location.accuracy}")
-                }
+               }
             }
         }
     }
@@ -121,7 +116,6 @@ fun TapMapRoute(
                     locationCallback,
                     Looper.getMainLooper()
                 )
-                Log.d("TapMapRoute", "Location updates requested.")
             } catch (e: SecurityException) {
                 snackBarHostState.showSnackbar("위치 권한이 필요합니다.")
 
@@ -212,52 +206,52 @@ fun TapMapScreen(
                     .background(Color.White)
                     .border(
                         width = 1.dp,
-                        color = Color(0xFF00C853),
+                        color = PawKeyTheme.colors.gray50,
                         shape = RoundedCornerShape(36.dp)
                     )
                     .padding(horizontal = 16.dp, vertical = 8.dp),
-                color = Color(0xFF00C853),
-                fontSize = 16.sp,
+                color = PawKeyTheme.colors.green500,
+                style = PawKeyTheme.typography.body14Sb,
                 textAlign = TextAlign.Center,
             )
 
-            Row(
-                modifier = Modifier
+            Box(
+                modifier = modifier
                     .fillMaxWidth()
+                    .navigationBarsPadding()
                     .align(Alignment.BottomCenter)
-                    .padding(bottom = 100.dp)
-                    .navigationBarsPadding(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Center
+                    .padding(horizontal = 16.dp)
+                    .padding(bottom = 100.dp),
+                contentAlignment = Alignment.BottomCenter
             ) {
-                Box(
+                Text(
+                    text = "산책 기록 시작하기",
+                    color = PawKeyTheme.colors.white1,
+                    fontSize = 16.sp,
                     modifier = Modifier
-                        .padding(horizontal = 10.dp)
+                        .clip(RoundedCornerShape(12.dp))
+                        .background(
+                            color = PawKeyTheme.colors.green500
+                        )
+                        .padding(vertical = 16.dp, horizontal = 20.dp)
                         .noRippleClickable {
                             navigateNext()
-                        }
-                ) {
-                    Text(
-                        text = "산책 기록 시작하기",
-                        color = Color.White,
-                        fontSize = 16.sp,
-                        modifier = Modifier
-                            .clip(RoundedCornerShape(12.dp))
-                            .background(Color(0xFF00C73C))
-                            .padding(vertical = 16.dp, horizontal = 20.dp),
-                        textAlign = TextAlign.Center
-                    )
-                }
+                        },
+                    textAlign = TextAlign.Center,
+                    style = PawKeyTheme.typography.body16Sb
+                )
 
                 FloatingActionButton(
                     onClick = onClickTracking,
                     shape = CircleShape,
-                    containerColor = Color.White
+                    containerColor = PawKeyTheme.colors.gray50,
+                    modifier = Modifier
+                        .align(Alignment.BottomEnd)
                 ) {
                     Icon(
-                        imageVector = Icons.Default.LocationOn,
-                        contentDescription = "내 위치",
-                        tint = Color.Black
+                        imageVector = ImageVector.vectorResource(R.drawable.ic_course_map_tap_location_on),
+                        contentDescription = stringResource(R.string.course_tap_location_description),
+                        tint = Color.Unspecified
                     )
                 }
             }
