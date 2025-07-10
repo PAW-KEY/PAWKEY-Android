@@ -15,22 +15,25 @@ import com.paw.key.presentation.ui.course.entire.tab.map.navigation.navigateWalk
 import com.paw.key.presentation.ui.course.walkcomplete.navigation.navigateWalkCompletion
 import com.paw.key.presentation.ui.course.walkrecord.navigation.navigateWalkReview
 import com.paw.key.presentation.ui.dummy.next.navigateDummyNext
-import com.paw.key.presentation.ui.home.navigation.Home
 import com.paw.key.presentation.ui.home.navigation.navigateHome
+import com.paw.key.presentation.ui.login.navigation.navigateLogin
 import com.paw.key.presentation.ui.mypage.navigation.navigateMyPage
 import com.paw.key.presentation.ui.owner.navigation.navigateOwner
 import com.paw.key.presentation.ui.pet.navigation.navigatePet
+import com.paw.key.presentation.ui.signup.navigation.navigateSignUp
+import com.paw.key.presentation.ui.splash.navigation.Splash
+import com.paw.key.presentation.ui.splash.navigation.navigateSplash
 
-class MainNavigator (
-    val navController: NavHostController
+class MainNavigator(
+    val navController: NavHostController,
 ) {
-    private val currentDestination : NavDestination?
+    private val currentDestination: NavDestination?
         @Composable get() = navController
             .currentBackStackEntryAsState().value?.destination
 
-    val startDestination = Home
+    val startDestination = Splash
 
-    val currentTab : MainTab?
+    val currentTab: MainTab?
         @Composable get() = MainTab.find { tab ->
             currentDestination?.hasRoute(tab::class) == true
         }
@@ -57,9 +60,15 @@ class MainNavigator (
             MainTab.MYPAGE -> navController.navigateMyPage(navOptions)
         }
     }
+    
+    fun setOnVisibleRecord(visible: Boolean) {
+        isRecordVisible = visible
+    }
+    
     fun navigateMyPage(navOptions: NavOptions? = null) {
         navController.navigateMyPage(navOptions = navOptions)
     }
+
     fun navigatePet(navOptions: NavOptions? = null) {
         navController.navigatePet(navOptions = navOptions)
     }
@@ -96,6 +105,18 @@ class MainNavigator (
 
     fun navigateUp() {
         navController.navigateUp()
+    }
+
+    fun navigateSplash(navOptions: NavOptions? = null) {
+        navController.navigateSplash(navOptions = navOptions)
+    }
+
+    fun navigateLogin(navOptions: NavOptions? = null) {
+        navController.navigateLogin(navOptions = navOptions)
+    }
+
+    fun navigateSignUp(navOptions: NavOptions? = null) {
+        navController.navigateSignUp(navOptions = navOptions)
     }
 
     @Composable

@@ -17,17 +17,20 @@ import com.paw.key.presentation.ui.course.walkrecord.navigation.walkReviewNavGra
 import com.paw.key.presentation.ui.dummy.navigation.dummyNavGraph
 import com.paw.key.presentation.ui.dummy.next.dummyNextNavGraph
 import com.paw.key.presentation.ui.home.navigation.homeNavGraph
+import com.paw.key.presentation.ui.login.navigation.loginNavGraph
 import com.paw.key.presentation.ui.mypage.navigation.myPageNavGraph
 import com.paw.key.presentation.ui.owner.navigation.ownerNavGraph
 import com.paw.key.presentation.ui.pet.navigation.petNavGraph
+import com.paw.key.presentation.ui.signup.navigation.signupNavGraph
+import com.paw.key.presentation.ui.splash.navigation.splashNavGraph
 
 @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
 @Composable
-fun PawKeyNavHost (
+fun PawKeyNavHost(
     navigator: MainNavigator,
     paddingValues: PaddingValues,
     snackbarHostState: SnackbarHostState,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     NavHost(
         navController = navigator.navController,
@@ -37,7 +40,7 @@ fun PawKeyNavHost (
         popEnterTransition = { EnterTransition.None },
         popExitTransition = { ExitTransition.None },
     ) {
-        homeNavGraph (
+        homeNavGraph(
             paddingValues = paddingValues,
             navigateUp = navigator.navController::navigateUp,
             navigateNext = navigator::navigateCourse,
@@ -110,6 +113,30 @@ fun PawKeyNavHost (
 
         dummyNextNavGraph(
             paddingValues = paddingValues
+        )
+
+        splashNavGraph(
+            paddingValues = paddingValues,
+            navigateUp = navigator::navigateUp,
+            navigateNext = navigator::navigateDummyNext,
+            navigateLogin = navigator::navigateLogin,
+            snackBarHostState = snackbarHostState
+        )
+
+        loginNavGraph(
+            paddingValues = paddingValues,
+            navigateUp = navigator::navigateUp,
+            navigateNext = navigator::navigateDummyNext,
+            navigateSignUp = navigator::navigateSignUp,
+            snackBarHostState = snackbarHostState
+        )
+
+        signupNavGraph(
+            paddingValues = paddingValues,
+            navigateUp = navigator::navigateUp,
+            navigateNext = navigator::navigateDummyNext,
+            navigateLogin = navigator::navigateLogin,
+            snackBarHostState = snackbarHostState
         )
     }
 }
