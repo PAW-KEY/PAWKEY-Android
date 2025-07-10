@@ -1,5 +1,6 @@
 package com.paw.key.core.designsystem.component
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -21,16 +22,36 @@ import com.paw.key.core.designsystem.theme.PawKeyTheme
 private fun PreviewPawkeyButton() {
     PawKeyTheme {
         Column {
+            // 초록색 버튼
             PawkeyButton(
                 text = "신규 계정으로 회원가입",
                 enabled = true,
                 onClick = {}
             )
+
             Spacer(modifier = Modifier.height(12.dp))
+
+            // 회색 버튼
             PawkeyButton(
                 text = "신규 계정으로 회원가입",
                 enabled = false,
                 onClick = {}
+            )
+
+            // 활성화 - 빈 상자
+            PawkeyButton(
+                text = "신규 계정으로 회원가입",
+                enabled = true,
+                onClick = {},
+                isBackGround = true
+            )
+
+            // 비활성화 - 빈 상자
+            PawkeyButton(
+                text = "신규 계정으로 회원가입",
+                enabled = false,
+                onClick = {},
+                isBackGround = true
             )
         }
     }
@@ -41,27 +62,46 @@ fun PawkeyButton(
     text: String,
     enabled: Boolean,
     onClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    isBackGround: Boolean = false,
 ) {
+    val backgroundColor = when {
+        enabled && !isBackGround -> PawKeyTheme.colors.green500
+        enabled && isBackGround -> PawKeyTheme.colors.white1
+        !enabled && isBackGround -> PawKeyTheme.colors.white1
+        else -> PawKeyTheme.colors.gray200
+    }
+
+    val contentColor = when {
+        enabled && !isBackGround -> PawKeyTheme.colors.white1
+        enabled && isBackGround -> PawKeyTheme.colors.green500
+        !enabled && isBackGround -> PawKeyTheme.colors.gray100
+        else -> PawKeyTheme.colors.white1
+    }
+
+    val borderColor = when {
+        enabled && isBackGround -> PawKeyTheme.colors.green500
+        !enabled && isBackGround -> PawKeyTheme.colors.gray200
+        else -> PawKeyTheme.colors.white1
+    }
+
     Button(
         onClick = onClick,
         enabled = enabled,
-        modifier = modifier
-            .fillMaxWidth(),
+        modifier = modifier.fillMaxWidth(),
         shape = RoundedCornerShape(8.dp),
         colors = ButtonDefaults.buttonColors(
-            containerColor = PawKeyTheme.colors.green500,
-            contentColor = PawKeyTheme.colors.white1,
-            disabledContainerColor = PawKeyTheme.colors.gray200,
-            disabledContentColor = PawKeyTheme.colors.white1
-        )
+            containerColor = backgroundColor,
+            contentColor = contentColor,
+            disabledContainerColor = backgroundColor,
+            disabledContentColor = contentColor
+        ),
+        border = if (isBackGround) BorderStroke(3.dp, borderColor) else null
     ) {
         Text(
             text = text,
-            modifier = Modifier
-                .padding(vertical = 18.dp),
+            modifier = Modifier.padding(vertical = 18.dp),
             style = PawKeyTheme.typography.body16Sb
         )
     }
 }
-
