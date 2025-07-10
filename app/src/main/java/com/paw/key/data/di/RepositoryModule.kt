@@ -1,6 +1,8 @@
 package com.paw.key.data.di
 
+import com.paw.key.data.repositoryimpl.BitmapRepositoryImpl
 import com.paw.key.data.repositoryimpl.DummyRepositoryImpl
+import com.paw.key.domain.repository.BitmapRepository
 import com.paw.key.domain.repository.DummyRepository
 import dagger.Binds
 import dagger.Module
@@ -15,5 +17,10 @@ interface RepositoryModule {
     fun bindsDummyRepository(
         dummyRepositoryImpl: DummyRepositoryImpl
     ): DummyRepository
+
+    @Binds
+    fun bindsBitmapRepository(
+        bitmapRepositoryImpl: BitmapRepositoryImpl
+    ): BitmapRepository
 
 }

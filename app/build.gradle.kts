@@ -26,6 +26,10 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         buildConfigField("String", "BASE_URL", properties["base.url"].toString())
+        buildConfigField("String", "KAKAO_NATIVE_KEY", properties["kakao.native.key"].toString())
+        buildConfigField("String", "KAKAO_REST_API_KEY", properties["kakao.rest.api"].toString())
+
+        manifestPlaceholders["KAKAO_NATIVE_KEY"] = properties["kakao.native.key"].toString()
     }
 
     buildTypes {
@@ -79,4 +83,13 @@ dependencies {
     implementation(libs.timber)
 
     implementation(libs.accompanist.systemuicontroller)
+
+    implementation(libs.androidx.datastore.preferences)
+
+    //카카오
+    implementation(libs.kakaoMaps)
+    implementation(libs.v2.all)
+
+    //실시간 위치
+    implementation(libs.play.services.location)
 }

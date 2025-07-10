@@ -10,7 +10,9 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
 import com.paw.key.presentation.ui.community.navigation.navigateCommunity
-import com.paw.key.presentation.ui.course.navigation.navigateCourse
+import com.paw.key.presentation.ui.course.entire.navigation.navigateCourse
+import com.paw.key.presentation.ui.course.entire.tab.map.navigation.navigateWalkCourse
+import com.paw.key.presentation.ui.course.walkcomplete.navigation.navigateWalkCompletion
 import com.paw.key.presentation.ui.dummy.navigation.navigateDummy
 import com.paw.key.presentation.ui.dummy.next.navigateDummyNext
 import com.paw.key.presentation.ui.home.navigation.navigateHome
@@ -36,6 +38,9 @@ class MainNavigator(
             currentDestination?.hasRoute(tab::class) == true
         }
 
+    var isRecordVisible: Boolean = false
+        private set
+
     fun navigate(tab: MainTab) {
         val navOptions = navOptions {
             navController.currentDestination?.route?.let {
@@ -55,7 +60,11 @@ class MainNavigator(
             MainTab.MYPAGE -> navController.navigateMyPage(navOptions)
         }
     }
-
+    
+    fun setOnVisibleRecord(visible: Boolean) {
+        isRecordVisible = visible
+    }
+    
     fun navigateMyPage(navOptions: NavOptions? = null) {
         navController.navigateMyPage(navOptions = navOptions)
     }
@@ -81,6 +90,14 @@ class MainNavigator(
         navController.navigateDummyNext(navOptions = navOptions)
     }
 
+    fun navigateWalkCourse(navOptions: NavOptions? = null) {
+        navController.navigateWalkCourse(navOptions = navOptions)
+    }
+
+    fun navigateWalkCompletion(navOptions: NavOptions? = null) {
+        navController.navigateWalkCompletion(navOptions = navOptions)
+    }
+
     fun navigateUp() {
         navController.navigateUp()
     }
@@ -100,7 +117,7 @@ class MainNavigator(
     @Composable
     fun showBottomBar() = MainTab.contains {
         currentDestination?.hasRoute(it::class) == true
-    }
+    } && !isRecordVisible
 }
 
 @Composable
