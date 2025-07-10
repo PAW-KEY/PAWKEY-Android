@@ -42,7 +42,6 @@ fun CourseDetail(
     LazyColumn(
         modifier = modifier
             .fillMaxWidth()
-            .background(Color(0xFFF7F7F7))
     ) {
         item {
             //상단의 헤더바
@@ -63,7 +62,7 @@ fun CourseDetail(
                 ) {
                     Text(
                         text = "저장한 산책 루트",
-                        style = PawKeyTheme.typography.head22B
+                        style = PawKeyTheme.typography.body16Sb
                     )
                 }
                 Spacer(modifier = Modifier.width(24.dp))
@@ -138,7 +137,7 @@ fun CourseDetail(
                                 modifier = Modifier
                                     .width(100.dp)
                                     .height(100.dp)
-                                    .background(Color.LightGray)
+                                    .background(Color.LightGray) //어차피 사진 들어갈거임
                             )
                         }
                     }
@@ -151,14 +150,14 @@ fun CourseDetail(
                     Text(
                         text = "본인 위치에서의 거리",
                         style = PawKeyTheme.typography.caption12Sb1,
-                        color = Color.Gray
+                        color = PawKeyTheme.colors.gray200
                     )
                     Divider(modifier = Modifier.padding(10.dp))
 
                     Text(
                         text = "이런 점이 좋았어요",
                         style = PawKeyTheme.typography.head18Sb,
-                        color = PawKeyTheme.colors.gray300,
+                        color = PawKeyTheme.colors.black,
                         modifier = Modifier.padding(vertical = 16.dp)
                     )
                     // 서버에서 전달받은 옵션이 없을 경우

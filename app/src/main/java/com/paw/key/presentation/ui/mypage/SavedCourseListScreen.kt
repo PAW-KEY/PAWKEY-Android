@@ -21,7 +21,6 @@ import androidx.compose.ui.unit.dp
 import com.paw.key.R
 import com.paw.key.core.designsystem.component.CourseCard
 import com.paw.key.core.designsystem.theme.PawKeyTheme
-import com.paw.key.presentation.ui.mypage.component.TagChip
 
 // 코스 카드에서 사용할 데이터 모델
 data class CourseCardData(
@@ -61,7 +60,6 @@ fun SavedCourseListScreen(
         modifier = modifier
             .fillMaxWidth()
             .padding(vertical = 16.dp)
-            .background(Color(0xFFF7F7F7))
     ) {
         //상단의 헤더바
         Row(

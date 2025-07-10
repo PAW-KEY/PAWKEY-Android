@@ -59,7 +59,7 @@ fun PawkeyButton(
         Text(
             text = text,
             modifier = Modifier
-                .padding(vertical = 18.dp),
+                .padding(vertical = 14.dp),
             style = PawKeyTheme.typography.body16Sb
         )
     }
