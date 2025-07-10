@@ -1,14 +1,11 @@
 package com.paw.key.presentation.ui.course.walkrecord.viewmodel
 
 import android.net.Uri
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.paw.key.core.util.UiState
-import com.paw.key.domain.repository.BitmapRepository
 import com.paw.key.presentation.ui.course.walkrecord.state.WalkReviewContract.WalkReviewFeedbackData
-import com.paw.key.presentation.ui.course.walkrecord.state.WalkReviewContract.WalkReviewState
 import com.paw.key.presentation.ui.course.walkrecord.state.WalkReviewContract.WalkReviewSideEffect
+import com.paw.key.presentation.ui.course.walkrecord.state.WalkReviewContract.WalkReviewState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -18,16 +15,13 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class WalkReviewViewModel @Inject constructor(
-    private val bitMapRepository: BitmapRepository
 ) : ViewModel() {
     private val _state = MutableStateFlow(WalkReviewState())
     val state : StateFlow<WalkReviewState>
@@ -50,16 +44,6 @@ class WalkReviewViewModel @Inject constructor(
         SharingStarted.WhileSubscribed(5000),
         false
     )
-
-    init {
-        viewModelScope.launch {
-            bitMapRepository.getSavedBitmap().collectLatest { bitmap ->
-                _state.value = _state.value.copy(
-                    bitMap = UiState.Success(bitmap)
-                )
-            }
-        }
-    }
 
     private fun handleFeedbackSelection(
         currentSelected: WalkReviewFeedbackData?,

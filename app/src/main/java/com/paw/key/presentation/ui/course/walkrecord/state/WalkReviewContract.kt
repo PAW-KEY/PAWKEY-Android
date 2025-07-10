@@ -1,9 +1,7 @@
 package com.paw.key.presentation.ui.course.walkrecord.state
 
-import android.graphics.Bitmap
 import android.net.Uri
 import androidx.compose.runtime.Immutable
-import com.paw.key.core.util.UiState
 import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.persistentListOf
 
@@ -11,7 +9,6 @@ class WalkReviewContract {
     @Immutable
     data class WalkReviewState(
         val images: PersistentList<Uri> = persistentListOf(),
-        val bitMap : UiState<Bitmap?> = UiState.Loading,
 
         val location : String = "",
         val date : String = "",

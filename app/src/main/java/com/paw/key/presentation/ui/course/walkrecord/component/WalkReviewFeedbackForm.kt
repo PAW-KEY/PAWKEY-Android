@@ -1,22 +1,19 @@
 package com.paw.key.presentation.ui.course.walkrecord.component
 
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.paw.key.core.designsystem.component.FeedbackItem
 import com.paw.key.core.designsystem.theme.PawKeyTheme
-import com.paw.key.core.util.noRippleClickable
 import com.paw.key.presentation.ui.course.walkrecord.state.WalkReviewContract
 
 @OptIn(ExperimentalLayoutApi::class)
@@ -59,21 +56,11 @@ fun WalkReviewFeedbackForm(
             val textColor = if (isSelected) PawKeyTheme.colors.green500 else PawKeyTheme.colors.gray400
             val borderColor = if (isSelected) PawKeyTheme.colors.green500 else PawKeyTheme.colors.gray50
 
-            Text(
-                text = it,
-                style = PawKeyTheme.typography.body14R,
-                color = textColor,
-                modifier = Modifier
-                    .clip(RoundedCornerShape(4.dp))
-                    .border(
-                        width = 1.dp,
-                        color = borderColor,
-                        shape = RoundedCornerShape(4.dp)
-                    )
-                    .padding(horizontal = 12.dp, vertical = 8.dp)
-                    .noRippleClickable {
-                        onClickFeedback(it)
-                    }
+            FeedbackItem(
+                item = it,
+                textColor = textColor,
+                borderColor = borderColor,
+                onClickFeedback = onClickFeedback
             )
         }
     }

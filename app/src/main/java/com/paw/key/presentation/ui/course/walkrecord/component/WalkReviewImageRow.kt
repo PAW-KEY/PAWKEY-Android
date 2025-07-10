@@ -1,6 +1,5 @@
 package com.paw.key.presentation.ui.course.walkrecord.component
 
-import android.graphics.Bitmap
 import android.net.Uri
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -17,11 +16,10 @@ fun WalkReviewImageRow (
     imageList : List<Uri?>,
     onClickCard: (Int, Uri?) -> Unit,
     onImageDelete : (Uri?) -> Unit,
-    bitMap : Bitmap?,
     modifier: Modifier = Modifier
 ) {
-    val maxImages = 6
-    val totalCardCount = (imageList.size + 1).coerceAtMost(maxImages)
+    val maxImages = 5
+    val totalCardCount = (imageList.size).coerceAtMost(maxImages)
 
     LazyRow (
         modifier = modifier
@@ -30,45 +28,24 @@ fun WalkReviewImageRow (
         horizontalArrangement = Arrangement.spacedBy(10.dp),
     ) {
         items(totalCardCount) { index ->
-            val currentImageUri = imageList.getOrNull(index - if (bitMap != null) 1 else 0)
+            val currentImageUri = imageList.getOrNull(index)
 
-            if (index == 0) {
-                WalkReviewItem(
-                    image = null, // if (bitMap != null) null else currentImageUri,
-                    bitMap = bitMap,
-                    isRepresent = true,
-                    onClickCard = {
-                        onClickCard(index, currentImageUri)
-                    },
-                    onImageDelete = {
-
-                    },
-                    modifier = Modifier
-                )
-            } else {
-                val imageListIndex = index - if (bitMap != null) 1 else 0
-
-                WalkReviewItem(
-                    image = imageList.getOrNull(imageListIndex),
-                    bitMap = null,
-                    isRepresent = false,
-                    onClickCard = {
-                        onClickCard(index, currentImageUri)
-                    },
-                    onImageDelete = {
-                        onImageDelete(currentImageUri)
-                    },
-                    modifier = Modifier
-                )
-            }
+            WalkReviewItem(
+                image = imageList.getOrNull(index),
+                onClickCard = {
+                    onClickCard(index, currentImageUri)
+                },
+                onImageDelete = {
+                    onImageDelete(currentImageUri)
+                },
+                modifier = Modifier
+            )
         }
 
         if (imageList.size < maxImages) {
             item {
                 WalkReviewItem(
                     image = null,
-                    bitMap = null,
-                    isRepresent = false,
                     onClickCard = {
                         onClickCard(6, null)
                     },
@@ -90,7 +67,6 @@ private fun WalkReviewImageRowPreview() {
         WalkReviewImageRow(
             imageList = imageList,
             onClickCard = { _, _ -> },
-            bitMap = null,
             onImageDelete = {
 
             }

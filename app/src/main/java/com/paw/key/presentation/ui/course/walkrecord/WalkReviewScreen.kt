@@ -1,6 +1,5 @@
 package com.paw.key.presentation.ui.course.walkrecord
 
-import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Build
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -33,7 +32,6 @@ import com.paw.key.R
 import com.paw.key.core.designsystem.component.PawkeyButton
 import com.paw.key.core.designsystem.component.SubChip
 import com.paw.key.core.designsystem.theme.PawKeyTheme
-import com.paw.key.core.util.UiState
 import com.paw.key.presentation.ui.course.walkrecord.component.WalkReviewFeedbackForm
 import com.paw.key.presentation.ui.course.walkrecord.component.WalkReviewFeedbackHeader
 import com.paw.key.presentation.ui.course.walkrecord.component.WalkReviewImageRow
@@ -98,7 +96,6 @@ fun WalkReviewRoute(
         },
         isFormValid = isFormValid,
         imageList = state.images,
-        bitMap = state.bitMap,
         petName = state.petName,
         titleText = state.title,
         contentText = state.content,
@@ -132,7 +129,6 @@ fun WalkReviewScreen(
     onClickImage : () -> Unit,
     onImageDelete : (Uri?) -> Unit,
     imageList: List<Uri>,
-    bitMap: UiState<Bitmap?>,
     isFormValid : Boolean,
     petName : String,
     titleText : String,
@@ -140,12 +136,6 @@ fun WalkReviewScreen(
     feedbackState : WalkReviewContract.WalkReviewFeedbackState,
     modifier: Modifier = Modifier,
 ) {
-    val currentBitmap = when (bitMap) {
-        is UiState.Success -> bitMap.data
-        is UiState.Loading -> null
-        else -> null
-    }
-
     LazyColumn (
         modifier = modifier
             .fillMaxSize()
@@ -166,7 +156,6 @@ fun WalkReviewScreen(
                 modifier = Modifier
                     .padding(start = 16.dp, end = 16.dp)
                     .background(PawKeyTheme.colors.white1),
-                bitMap = currentBitmap,
             )
         }
 

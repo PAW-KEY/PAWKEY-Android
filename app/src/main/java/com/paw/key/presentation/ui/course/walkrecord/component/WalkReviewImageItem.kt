@@ -1,8 +1,6 @@
 package com.paw.key.presentation.ui.course.walkrecord.component
 
-import android.graphics.Bitmap
 import android.net.Uri
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -16,13 +14,11 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
@@ -38,11 +34,9 @@ import com.paw.key.core.util.noRippleClickable
 @Composable
 fun WalkReviewItem(
     image : Uri?,
-    isRepresent : Boolean,
     onClickCard: () -> Unit,
     onImageDelete : (Uri?) -> Unit,
     modifier: Modifier = Modifier,
-    bitMap : Bitmap? = null,
 ) {
     Card(
         shape = RoundedCornerShape(16.dp),
@@ -63,15 +57,6 @@ fun WalkReviewItem(
                 .clip(RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp))
         ) {
             when {
-                isRepresent && bitMap != null -> {
-                    Image(
-                        bitmap = bitMap.asImageBitmap(),
-                        contentDescription = stringResource(R.string.course_review_image_description),
-                        modifier = Modifier.fillMaxSize(),
-                        contentScale = ContentScale.Crop
-                    )
-                }
-
                 image != null -> {
                     AsyncImage(
                         model = image,
@@ -93,7 +78,7 @@ fun WalkReviewItem(
                 }
             }
 
-            if (image != null || (isRepresent && bitMap != null)) {
+            if (image != null) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier
@@ -102,35 +87,18 @@ fun WalkReviewItem(
                         .padding(8.dp)
                         .background(color = Color.Transparent)
                 ) {
-                    if (isRepresent) {
-                        Text(
-                            text = "대표",
-                            modifier = Modifier
-                                .background(
-                                    color = PawKeyTheme.colors.green500,
-                                    shape = RoundedCornerShape(4.dp)
-                                )
-                                .clip(RoundedCornerShape(36.dp))
-                                .padding(horizontal = 6.dp, vertical = 4.dp),
-                            color = PawKeyTheme.colors.white1,
-                            style = PawKeyTheme.typography.caption12M
-                        )
-                    }
-
                     Spacer(modifier = Modifier.weight(1f))
 
-                    if (!isRepresent) {
-                        Icon(
-                            imageVector = ImageVector.vectorResource(R.drawable.ic_walk_review_cancel),
-                            tint = Color.Unspecified,
-                            contentDescription = null,
-                            modifier = Modifier
-                                .size(24.dp)
-                                .noRippleClickable {
-                                    onImageDelete(image)
-                                }
-                        )
-                    }
+                    Icon(
+                        imageVector = ImageVector.vectorResource(R.drawable.ic_walk_review_cancel),
+                        tint = Color.Unspecified,
+                        contentDescription = null,
+                        modifier = Modifier
+                            .size(24.dp)
+                            .noRippleClickable {
+                                onImageDelete(image)
+                            }
+                    )
                 }
             }
         }
@@ -143,8 +111,6 @@ private fun WalkReviewItemPreview() {
     PawKeyTheme {
         WalkReviewItem(
             image = null,
-            bitMap = null,
-            isRepresent = true,
             onClickCard = {},
             onImageDelete = {}
         )
