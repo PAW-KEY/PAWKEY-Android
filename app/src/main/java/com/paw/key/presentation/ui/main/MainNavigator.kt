@@ -17,10 +17,12 @@ import com.paw.key.presentation.ui.course.walkrecord.navigation.navigateWalkRevi
 import com.paw.key.presentation.ui.dummy.next.navigateDummyNext
 import com.paw.key.presentation.ui.home.navigation.navigateHome
 import com.paw.key.presentation.ui.login.navigation.navigateLogin
+import com.paw.key.presentation.ui.mypage.navigation.navigateArchivedCourse
 import com.paw.key.presentation.ui.mypage.navigation.navigateMyPage
-import com.paw.key.presentation.ui.owner.navigation.navigateOwner
-import com.paw.key.presentation.ui.pet.navigation.navigatePet
-import com.paw.key.presentation.ui.signup.navigation.navigateSignUp
+import com.paw.key.presentation.ui.mypage.navigation.navigatePetProfile
+import com.paw.key.presentation.ui.mypage.navigation.navigateSavedCourse
+import com.paw.key.presentation.ui.mypage.navigation.navigateUserProfile
+//mport com.paw.key.presentation.ui.signup.navigation.navigateSignUp
 import com.paw.key.presentation.ui.splash.navigation.Splash
 import com.paw.key.presentation.ui.splash.navigation.navigateSplash
 
@@ -60,25 +62,30 @@ class MainNavigator(
             MainTab.MYPAGE -> navController.navigateMyPage(navOptions)
         }
     }
-    
-    fun setOnVisibleRecord(visible: Boolean) {
-        isRecordVisible = visible
-    }
-    
+
+
     fun navigateMyPage(navOptions: NavOptions? = null) {
         navController.navigateMyPage(navOptions = navOptions)
     }
 
-    fun navigatePet(navOptions: NavOptions? = null) {
-        navController.navigatePet(navOptions = navOptions)
+    fun navigateUserProfile(navOptions: NavOptions? = null) {
+        navController.navigateUserProfile(navOptions = navOptions)
     }
 
-    fun navigateOwner(navOptions: NavOptions? = null) {
-        navController.navigateOwner(navOptions = navOptions)
+    fun navigatePetProfile(navOptions: NavOptions? = null) {
+        navController.navigatePetProfile(navOptions = navOptions)
+    }
+
+    fun navigateSavedCourse(navOptions: NavOptions? = null) {
+        navController.navigateSavedCourse(navOptions = navOptions)
+    }
+
+    fun navigateArchivedCourse(navOptions: NavOptions? = null) {
+        navController.navigateArchivedCourse(navOptions = navOptions)
     }
 
     fun navigateCourse(navOptions: NavOptions? = null) {
-        navController.navigatePet(navOptions = navOptions)
+        navController.navigateCourse(navOptions = navOptions)
     }
 
     fun navigateWalkCourse(navOptions: NavOptions? = null) {
@@ -92,7 +99,6 @@ class MainNavigator(
     fun navigateWalkReview(navOptions: NavOptions? = null) {
         navController.navigateWalkReview(navOptions = navOptions)
     }
-
 
 
     fun setOnVisibleRecord(visible: Boolean) {
@@ -115,9 +121,10 @@ class MainNavigator(
         navController.navigateLogin(navOptions = navOptions)
     }
 
-    fun navigateSignUp(navOptions: NavOptions? = null) {
-        navController.navigateSignUp(navOptions = navOptions)
-    }
+//    fun navigateSignUp(navOptions: NavOptions? = null) {
+//        navController.navigateSignUp(navOptions = navOptions)
+//    }
+
 
     @Composable
     fun showBottomBar() = MainTab.contains {
@@ -131,3 +138,4 @@ fun rememberMainNavigator(
 ): MainNavigator = remember(navController) {
     MainNavigator(navController)
 }
+

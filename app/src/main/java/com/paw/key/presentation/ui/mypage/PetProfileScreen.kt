@@ -5,7 +5,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -20,27 +19,18 @@ import com.paw.key.core.designsystem.theme.PawKeyTheme
 
 @Composable
 fun PetProfileRoute(
-    paddingValues: PaddingValues,
-    navigateUp: () -> Unit,
-    navigateNext: () -> Unit,
-    snackBarHostState: SnackbarHostState,
+    navigateUp : () -> Unit,
     modifier: Modifier = Modifier,
-) {
+    ) {
     PetProfileScreen(
-        paddingValues = paddingValues,
         navigateUp = navigateUp,
-        navigateNext = navigateNext,
-        snackBarHostState = snackBarHostState,
-        modifier = modifier
+        modifier =modifier
     )
 }
 
 @Composable
 fun PetProfileScreen(
-    paddingValues: PaddingValues,
     navigateUp: () -> Unit,
-    navigateNext: () -> Unit,
-    snackBarHostState: SnackbarHostState,
     name: String = "포비",
     gender: String = "남아",
     breed: String = "미니어처 슈나우저",
@@ -149,10 +139,7 @@ fun PetProfileItem(label: String, value: String, modifier: Modifier = Modifier) 
 fun PetProfileScreenPreview() {
     PawKeyTheme {
         PetProfileScreen(
-            paddingValues = PaddingValues(),
             navigateUp = {},
-            navigateNext = {},
-            snackBarHostState = SnackbarHostState()
         )
     }
 }

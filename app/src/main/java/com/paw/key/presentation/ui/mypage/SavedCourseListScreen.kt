@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -18,9 +19,13 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavGraphBuilder
+import androidx.navigation.compose.composable
 import com.paw.key.R
 import com.paw.key.core.designsystem.component.CourseCard
 import com.paw.key.core.designsystem.theme.PawKeyTheme
+import com.paw.key.presentation.ui.mypage.navigation.SavedCourse
+import com.paw.key.presentation.ui.mypage.navigation.UserProfile
 
 // 코스 카드에서 사용할 데이터 모델
 data class CourseCardData(
@@ -31,6 +36,22 @@ data class CourseCardData(
     val distance: String,
     val time: String
 )
+
+@Composable
+fun SavedCourseRoute(
+    paddingValues: PaddingValues,
+    navigateUp: () -> Unit,
+    navigateNext: () -> Unit,
+    snackBarHostState: SnackbarHostState,
+    modifier: Modifier = Modifier,
+) {
+    SavedCourseListScreen(
+        navigateUp = navigateUp,
+//        navigateNext = navigateNext,
+//        snackBarHostState = snackBarHostState,
+        modifier = modifier
+    )
+}
 
 @Composable
 fun SavedCourseListScreen(

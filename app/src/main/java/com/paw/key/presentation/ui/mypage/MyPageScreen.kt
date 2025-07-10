@@ -1,6 +1,5 @@
 package com.paw.key.presentation.ui.mypage
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -20,23 +19,30 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.tooling.preview.Preview
 import com.paw.key.R
+import com.paw.key.core.designsystem.component.SubChip
 import com.paw.key.core.designsystem.theme.PawKeyTheme
-import com.paw.key.presentation.ui.mypage.component.TagChip
 
 @Composable
 fun MyPageRoute(
     paddingValues: PaddingValues,
     navigateUp: () -> Unit,
-    navigateNext: () -> Unit,
+    navigateUserProfile: () -> Unit,
+    navigatePetProfile: () -> Unit,
+    navigateArchivedCourse: () -> Unit,
+    navigateSavedCourse: () -> Unit,
     snackBarHostState: SnackbarHostState,
-    modifier: Modifier = Modifier,
+    modifier: Modifier = Modifier
 ) {
     MyPageScreen(
         paddingValues = paddingValues,
         navigateUp = navigateUp,
-        navigateNext = navigateNext,
+        navigateUserProfile = navigateUserProfile,
+        navigatePetProfile = navigatePetProfile,
+        navigateArchivedCourse = navigateArchivedCourse,
+        navigateSavedCourse = navigateSavedCourse,
         snackBarHostState = snackBarHostState,
         modifier = modifier
+
     )
 }
 
@@ -44,7 +50,10 @@ fun MyPageRoute(
 fun MyPageScreen(
     paddingValues: PaddingValues,
     navigateUp: () -> Unit,
-    navigateNext: () -> Unit,
+    navigateUserProfile: () -> Unit,
+    navigatePetProfile: () -> Unit,
+    navigateArchivedCourse: () -> Unit,
+    navigateSavedCourse : () -> Unit,
     snackBarHostState: SnackbarHostState,
     modifier: Modifier = Modifier
 ) {
@@ -175,7 +184,7 @@ fun PetCard(
                 horizontalArrangement = Arrangement.spacedBy(4.dp)
             ) {
                 tags.forEach {
-                    TagChip(text = it)
+                    SubChip(text = it)
                 }
             }
         }
@@ -267,7 +276,10 @@ private fun MyPageScreenPreview() {
         MyPageScreen(
             paddingValues = PaddingValues(),
             navigateUp = {},
-            navigateNext = {},
+            navigateUserProfile = {},
+            navigatePetProfile = {},
+            navigateArchivedCourse = {},
+            navigateSavedCourse = {},
             snackBarHostState = SnackbarHostState()
         )
     }
