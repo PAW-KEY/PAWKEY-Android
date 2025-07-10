@@ -214,7 +214,7 @@ fun courseMapView(
     LaunchedEffect(isPauseTracking) {
         if (!isPauseTracking) {
             mapView.isClickable = false
-            dimScreenLayer?.setColor(Color.LightGray.copy(alpha = 0.5f).toArgb())
+            dimScreenLayer?.setColor(Color.Black.copy(alpha = 0.5f).toArgb())
             dimScreenLayer?.setVisible(true)
         } else {
             mapView.isClickable = true
