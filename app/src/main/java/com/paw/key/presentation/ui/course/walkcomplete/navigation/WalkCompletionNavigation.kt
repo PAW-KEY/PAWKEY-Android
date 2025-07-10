@@ -9,8 +9,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
 import com.paw.key.core.navigation.Route
-import com.paw.key.presentation.ui.course.walk.WalkCourseRoute
-import com.paw.key.presentation.ui.course.walkcomplete.WalkCompleteRoute
+import com.paw.key.presentation.ui.course.walkcomplete.WalkCompletionRoute
 import kotlinx.serialization.Serializable
 
 fun NavController.navigateWalkCompletion(
@@ -27,7 +26,7 @@ fun NavGraphBuilder.walkCompletionNavGraph(
     snackBarHostState: SnackbarHostState,
 ) {
     composable<WalkCompletion> {
-        WalkCompleteRoute(
+        WalkCompletionRoute(
             paddingValues = paddingValues,
             navigateUp = navigateUp,
             navigateNext = navigateNext,
