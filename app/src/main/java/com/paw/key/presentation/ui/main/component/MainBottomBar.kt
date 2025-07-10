@@ -91,10 +91,7 @@ private fun MainNavigationBarItem(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    //Todo : 색상 교환예정
     val iconRes = if (selected) tab.selectedIcon else tab.unselectedIcon
-
-    val iconColor = if (selected) Color.Green else Color.White
 
     val backGroundColor = if (selected) Color.White else Color.Transparent
 
@@ -109,10 +106,10 @@ private fun MainNavigationBarItem(
         Icon(
             imageVector = ImageVector.vectorResource(iconRes),
             contentDescription = stringResource(tab.contentDescription),
-            tint = iconColor,
             modifier = Modifier
                 .padding(12.dp)
                 .size(24.dp),
+            tint = Color.Unspecified
         )
     }
 }

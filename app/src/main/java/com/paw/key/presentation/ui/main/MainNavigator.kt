@@ -13,7 +13,7 @@ import com.paw.key.presentation.ui.community.navigation.navigateCommunity
 import com.paw.key.presentation.ui.course.entire.navigation.navigateCourse
 import com.paw.key.presentation.ui.course.entire.tab.map.navigation.navigateWalkCourse
 import com.paw.key.presentation.ui.course.walkcomplete.navigation.navigateWalkCompletion
-import com.paw.key.presentation.ui.dummy.navigation.navigateDummy
+import com.paw.key.presentation.ui.course.walkrecord.navigation.navigateWalkReview
 import com.paw.key.presentation.ui.dummy.next.navigateDummyNext
 import com.paw.key.presentation.ui.home.navigation.Home
 import com.paw.key.presentation.ui.home.navigation.navigateHome
@@ -72,20 +72,26 @@ class MainNavigator (
         navController.navigatePet(navOptions = navOptions)
     }
 
-    fun setOnVisibleRecord(visible: Boolean) {
-        isRecordVisible = visible
-    }
-
-    fun navigateDummyNext(navOptions: NavOptions? = null) {
-        navController.navigateDummyNext(navOptions = navOptions)
-    }
-
     fun navigateWalkCourse(navOptions: NavOptions? = null) {
         navController.navigateWalkCourse(navOptions = navOptions)
     }
 
     fun navigateWalkCompletion(navOptions: NavOptions? = null) {
         navController.navigateWalkCompletion(navOptions = navOptions)
+    }
+
+    fun navigateWalkReview(navOptions: NavOptions? = null) {
+        navController.navigateWalkReview(navOptions = navOptions)
+    }
+
+
+
+    fun setOnVisibleRecord(visible: Boolean) {
+        isRecordVisible = visible
+    }
+
+    fun navigateDummyNext(navOptions: NavOptions? = null) {
+        navController.navigateDummyNext(navOptions = navOptions)
     }
 
     fun navigateUp() {
