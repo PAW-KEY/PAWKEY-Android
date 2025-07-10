@@ -22,97 +22,103 @@ val PretendardRegular = FontFamily(Font(R.font.pretendard_regular, FontWeight.No
 // Todo : 네이밍과 함께 나중에 lineHeight 등 변경 예정
 @Stable
 class PawKeyTypography internal constructor(
-    title1B17: TextStyle,
-    title2Sb15: TextStyle,
-    title3B15: TextStyle,
-    body1Sb15: TextStyle,
-    body2M15: TextStyle,
-    body3R15: TextStyle,
-    body4B13: TextStyle,
-    body5Sb13: TextStyle,
-    body6M13: TextStyle,
-    body7R13: TextStyle,
-    label1B11: TextStyle,
-    label2M11: TextStyle,
-    label3R11: TextStyle,
-    label4M9: TextStyle,
+    head22B: TextStyle,
+    head22Sb: TextStyle,
+    head20B1: TextStyle,
+    head20B2: TextStyle,
+    head20Sb: TextStyle,
+    head18Sb: TextStyle,
+    body16Sb: TextStyle,
+    body16M: TextStyle,
+    body14Sb: TextStyle,
+    body14M: TextStyle,
+    body14R: TextStyle,
+    caption12Sb1: TextStyle,
+    caption12Sb2: TextStyle,
+    caption12M: TextStyle,
+    caption12R: TextStyle
 ) {
-    var title1B17: TextStyle by mutableStateOf(title1B17)
+    var head22B: TextStyle by mutableStateOf(head22B)
         private set
-    var title2Sb15: TextStyle by mutableStateOf(title2Sb15)
+    var head22Sb: TextStyle by mutableStateOf(head22Sb)
         private set
-    var title3B15: TextStyle by mutableStateOf(title3B15)
+    var head20B1: TextStyle by mutableStateOf(head20B1)
         private set
-    var body1Sb15: TextStyle by mutableStateOf(body1Sb15)
+    var head20B2: TextStyle by mutableStateOf(head20B2)
         private set
-    var body2M15: TextStyle by mutableStateOf(body2M15)
+    var head20Sb: TextStyle by mutableStateOf(head20Sb)
         private set
-    var body3R15: TextStyle by mutableStateOf(body3R15)
+    var head18Sb: TextStyle by mutableStateOf(head18Sb)
         private set
-    var body4B13: TextStyle by mutableStateOf(body4B13)
+    var body16Sb: TextStyle by mutableStateOf(body16Sb)
         private set
-    var body5Sb13: TextStyle by mutableStateOf(body5Sb13)
+    var body16M: TextStyle by mutableStateOf(body16M)
         private set
-    var body6M13: TextStyle by mutableStateOf(body6M13)
+    var body14Sb: TextStyle by mutableStateOf(body14Sb)
         private set
-    var body7R13: TextStyle by mutableStateOf(body7R13)
+    var body14M: TextStyle by mutableStateOf(body14M)
         private set
-    var label1B11: TextStyle by mutableStateOf(label1B11)
+    var body14R: TextStyle by mutableStateOf(body14R)
         private set
-    var label2M11: TextStyle by mutableStateOf(label2M11)
+    var caption12Sb1: TextStyle by mutableStateOf(caption12Sb1)
         private set
-    var label3R11: TextStyle by mutableStateOf(label3R11)
+    var caption12Sb2: TextStyle by mutableStateOf(caption12Sb2)
         private set
-    var label4M9: TextStyle by mutableStateOf(label4M9)
+    var caption12M: TextStyle by mutableStateOf(caption12M)
+        private set
+    var caption12R: TextStyle by mutableStateOf(caption12R)
         private set
 
     fun copy(
-        title1B17: TextStyle = this.title1B17,
-        title2Sb15: TextStyle = this.title2Sb15,
-        title3B15: TextStyle = this.title3B15,
-        body1Sb15: TextStyle = this.body1Sb15,
-        body2M15: TextStyle = this.body2M15,
-        body3R15: TextStyle = this.body3R15,
-        body4B13: TextStyle = this.body4B13,
-        body5Sb13: TextStyle = this.body5Sb13,
-        body6M13: TextStyle = this.body6M13,
-        body7R13: TextStyle = this.body7R13,
-        label1B11: TextStyle = this.label1B11,
-        label2M11: TextStyle = this.label2M11,
-        label3R11: TextStyle = this.label3R11,
-        label4M9: TextStyle = this.label4M9
+        head22B: TextStyle = this.head22B,
+        head22Sb: TextStyle = this.head22Sb,
+        head20B1: TextStyle = this.head20B1,
+        head20B2: TextStyle = this.head20B2,
+        head20Sb: TextStyle = this.head20Sb,
+        head18Sb: TextStyle = this.head18Sb,
+        body16Sb: TextStyle = this.body16Sb,
+        body16M: TextStyle = this.body16M,
+        body14Sb: TextStyle = this.body14Sb,
+        body14M: TextStyle = this.body14M,
+        body14R: TextStyle = this.body14R,
+        caption12Sb1: TextStyle = this.caption12Sb1,
+        caption12Sb2: TextStyle = this.caption12Sb2,
+        caption12M: TextStyle = this.caption12M,
+        caption12R: TextStyle = this.caption12R
     ): PawKeyTypography = PawKeyTypography(
-        title1B17,
-        title2Sb15,
-        title3B15,
-        body1Sb15,
-        body2M15,
-        body3R15,
-        body4B13,
-        body5Sb13,
-        body6M13,
-        body7R13,
-        label1B11,
-        label2M11,
-        label3R11,
-        label4M9,
+        head22B,
+        head22Sb,
+        head20B1,
+        head20B2,
+        head20Sb,
+        head18Sb,
+        body16Sb,
+        body16M,
+        body14Sb,
+        body14M,
+        body14R,
+        caption12Sb1,
+        caption12Sb2,
+        caption12M,
+        caption12R
     )
 
     fun update(other: PawKeyTypography) {
-        title1B17 = other.title1B17
-        title2Sb15 = other.title2Sb15
-        title3B15 = other.title3B15
-        body1Sb15 = other.body1Sb15
-        body2M15 = other.body2M15
-        body3R15 = other.body3R15
-        body4B13 = other.body4B13
-        body5Sb13 = other.body5Sb13
-        body6M13 = other.body6M13
-        body7R13 = other.body7R13
-        label1B11 = other.label1B11
-        label2M11 = other.label2M11
-        label3R11 = other.label3R11
-        label4M9 = other.label4M9
+        head22B = other.head22B
+        head22Sb = other.head22Sb
+        head20B1 = other.head20B1
+        head20B2 = other.head20B2
+        head20Sb = other.head20Sb
+        head18Sb = other.head18Sb
+        body16Sb = other.body16Sb
+        body16M = other.body16M
+        body14Sb = other.body14Sb
+        body14M = other.body14M
+        body14R = other.body14R
+        caption12Sb1 = other.caption12Sb1
+        caption12Sb2 = other.caption12Sb2
+        caption12M = other.caption12M
+        caption12R = other.caption12R
     }
 }
 
@@ -137,103 +143,110 @@ fun pawKeyTextStyle(
 @Composable
 fun pawKeyTypography(): PawKeyTypography {
     return PawKeyTypography(
-        title1B17 = pawKeyTextStyle(
+        head22B = pawKeyTextStyle(
             fontFamily = PretendardBold,
             fontWeight = FontWeight.Bold,
-            fontSize = 17.sp,
-            lineHeight = (17 * 1.3).sp,
+            fontSize = 22.sp,
+            lineHeight = (22 * 1.6).sp,
             letterSpacing = TextUnit.Unspecified
         ),
-        title2Sb15 = pawKeyTextStyle(
+        head22Sb = pawKeyTextStyle(
             fontFamily = PretendardSemiBold,
             fontWeight = FontWeight.SemiBold,
-            fontSize = 17.sp,
-            lineHeight = (17 * 1.3).sp,
+            fontSize = 22.sp,
+            lineHeight = (22 * 1.6).sp,
             letterSpacing = TextUnit.Unspecified
         ),
-        title3B15 = pawKeyTextStyle(
+        head20B1 = pawKeyTextStyle(
             fontFamily = PretendardBold,
             fontWeight = FontWeight.Bold,
-            fontSize = 15.sp,
-            lineHeight = (15 * 1.4).sp,
+            fontSize = 20.sp,
+            lineHeight = (20 * 1.5).sp,
             letterSpacing = TextUnit.Unspecified
         ),
-        body1Sb15 = pawKeyTextStyle(
-            fontFamily = PretendardSemiBold,
-            fontWeight = FontWeight.SemiBold,
-            fontSize = 15.sp,
-            lineHeight = (15 * 1.4).sp,
-            letterSpacing = TextUnit.Unspecified
-        ),
-        body2M15 = pawKeyTextStyle(
-            fontFamily = PretendardSemiBold,
-            fontWeight = FontWeight.SemiBold,
-            fontSize = 15.sp,
-            lineHeight = (15 * 1.4).sp,
-            letterSpacing = TextUnit.Unspecified
-        ),
-        body3R15 = pawKeyTextStyle(
-            fontFamily = PretendardRegular,
-            fontWeight = FontWeight.Normal,
-            fontSize = 15.sp,
-            lineHeight = (15 * 1.4).sp,
-            letterSpacing = TextUnit.Unspecified
-        ),
-        body4B13 = pawKeyTextStyle(
+        head20B2 = pawKeyTextStyle(
             fontFamily = PretendardBold,
             fontWeight = FontWeight.Bold,
-            fontSize = 13.sp,
-            lineHeight = (13 * 1.4).sp,
+            fontSize = 20.sp,
+            lineHeight = (20 * 1.1).sp,
             letterSpacing = TextUnit.Unspecified
         ),
-        body5Sb13 = pawKeyTextStyle(
+        head20Sb = pawKeyTextStyle(
             fontFamily = PretendardSemiBold,
             fontWeight = FontWeight.SemiBold,
-            fontSize = 13.sp,
-            lineHeight = (13 * 1.4).sp,
+            fontSize = 20.sp,
+            lineHeight = (20 * 1.5).sp,
             letterSpacing = TextUnit.Unspecified
         ),
-        body6M13 = pawKeyTextStyle(
+        head18Sb = pawKeyTextStyle(
+            fontFamily = PretendardSemiBold,
+            fontWeight = FontWeight.SemiBold,
+            fontSize = 18.sp,
+            lineHeight = (18 * 1.6).sp,
+            letterSpacing = TextUnit.Unspecified
+        ),
+        body16Sb = pawKeyTextStyle(
+            fontFamily = PretendardSemiBold,
+            fontWeight = FontWeight.SemiBold,
+            fontSize = 16.sp,
+            lineHeight = (16 * 1.5).sp,
+            letterSpacing = TextUnit.Unspecified
+        ),
+        body16M = pawKeyTextStyle(
             fontFamily = PretendardMedium,
             fontWeight = FontWeight.Medium,
-            fontSize = 13.sp,
-            lineHeight = (13 * 1.4).sp,
+            fontSize = 16.sp,
+            lineHeight = (16 * 1.5).sp,
             letterSpacing = TextUnit.Unspecified
         ),
-        body7R13 = pawKeyTextStyle(
-            fontFamily = PretendardRegular,
-            fontWeight = FontWeight.Normal,
-            fontSize = 13.sp,
-            lineHeight = (13 * 1.4).sp,
+        body14Sb = pawKeyTextStyle(
+            fontFamily = PretendardSemiBold,
+            fontWeight = FontWeight.SemiBold,
+            fontSize = 14.sp,
+            lineHeight = (14 * 1.6).sp,
+            letterSpacing = TextUnit.Unspecified
+        ),
+        body14M = pawKeyTextStyle(
+            fontFamily = PretendardMedium,
+            fontWeight = FontWeight.Medium,
+            fontSize = 14.sp,
+            lineHeight = (14 * 1.6).sp,
             letterSpacing = TextUnit.Unspecified
         ),
 
-        label1B11 = pawKeyTextStyle(
-            fontFamily = PretendardBold,
-            fontWeight = FontWeight.Bold,
-            fontSize = 11.sp,
-            lineHeight = (11 * 1.4).sp,
-            letterSpacing = TextUnit.Unspecified
-        ),
-        label2M11 = pawKeyTextStyle(
-            fontFamily = PretendardMedium,
-            fontWeight = FontWeight.Medium,
-            fontSize = 11.sp,
-            lineHeight = (11 * 1.4).sp,
-            letterSpacing = TextUnit.Unspecified
-        ),
-        label3R11 = pawKeyTextStyle(
+        body14R = pawKeyTextStyle(
             fontFamily = PretendardRegular,
             fontWeight = FontWeight.Normal,
-            fontSize = 11.sp,
-            lineHeight = (11 * 1.4).sp,
+            fontSize = 14.sp,
+            lineHeight = (14 * 1.5).sp,
             letterSpacing = TextUnit.Unspecified
         ),
-        label4M9 = pawKeyTextStyle(
+        caption12Sb1 = pawKeyTextStyle(
+            fontFamily = PretendardSemiBold,
+            fontWeight = FontWeight.SemiBold,
+            fontSize = 12.sp,
+            lineHeight = (12 * 1.5).sp,
+            letterSpacing = TextUnit.Unspecified
+        ),
+        caption12Sb2 = pawKeyTextStyle(
+            fontFamily = PretendardSemiBold,
+            fontWeight = FontWeight.SemiBold,
+            fontSize = 12.sp,
+            lineHeight = (12 * 1.2).sp,
+            letterSpacing = TextUnit.Unspecified
+        ),
+        caption12M = pawKeyTextStyle(
             fontFamily = PretendardMedium,
             fontWeight = FontWeight.Medium,
-            fontSize = 9.sp,
-            lineHeight = (9 * 1.4).sp,
+            fontSize = 12.sp,
+            lineHeight = (12 * 1.5).sp,
+            letterSpacing = TextUnit.Unspecified
+        ),
+        caption12R = pawKeyTextStyle(
+            fontFamily = PretendardRegular,
+            fontWeight = FontWeight.Normal,
+            fontSize = 12.sp,
+            lineHeight = (12 * 1.2).sp,
             letterSpacing = TextUnit.Unspecified
         ),
     )
