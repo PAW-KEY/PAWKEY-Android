@@ -17,10 +17,11 @@ import com.paw.key.presentation.ui.course.walkrecord.navigation.navigateWalkRevi
 import com.paw.key.presentation.ui.dummy.next.navigateDummyNext
 import com.paw.key.presentation.ui.home.navigation.navigateHome
 import com.paw.key.presentation.ui.login.navigation.navigateLogin
+import com.paw.key.presentation.ui.region.navigation.navigateRegional
 import com.paw.key.presentation.ui.mypage.navigation.navigateMyPage
 import com.paw.key.presentation.ui.owner.navigation.navigateOwner
 import com.paw.key.presentation.ui.pet.navigation.navigatePet
-import com.paw.key.presentation.ui.signup.navigation.navigateSignUp
+//import com.paw.key.presentation.ui.signup.navigation.navigateSignUp
 import com.paw.key.presentation.ui.splash.navigation.Splash
 import com.paw.key.presentation.ui.splash.navigation.navigateSplash
 
@@ -61,10 +62,6 @@ class MainNavigator(
         }
     }
     
-    fun setOnVisibleRecord(visible: Boolean) {
-        isRecordVisible = visible
-    }
-    
     fun navigateMyPage(navOptions: NavOptions? = null) {
         navController.navigateMyPage(navOptions = navOptions)
     }
@@ -93,8 +90,6 @@ class MainNavigator(
         navController.navigateWalkReview(navOptions = navOptions)
     }
 
-
-
     fun setOnVisibleRecord(visible: Boolean) {
         isRecordVisible = visible
     }
@@ -115,9 +110,10 @@ class MainNavigator(
         navController.navigateLogin(navOptions = navOptions)
     }
 
-    fun navigateSignUp(navOptions: NavOptions? = null) {
-        navController.navigateSignUp(navOptions = navOptions)
+    fun navigateRegional(navOptions: NavOptions? = null) {
+        navController.navigateRegional(navOptions = navOptions)
     }
+
 
     @Composable
     fun showBottomBar() = MainTab.contains {
