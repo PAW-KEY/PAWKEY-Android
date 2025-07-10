@@ -96,7 +96,7 @@ fun courseMapView(
 
             val routeLineStyle = RouteLineStyle.from(
                 12f,
-                ContextCompat.getColor(context, R.color.teal_200)
+                ContextCompat.getColor(context, R.color.green_500)
             )
 
             val routeStylesSet = RouteLineStylesSet.from(routeLineStyle)
@@ -110,12 +110,6 @@ fun courseMapView(
 
             currentDrawnRouteLine = kakaoMap.routeLineManager?.layer?.addRouteLine(routeLineOptions)
             currentDrawnRouteLine?.show()
-
-            /*kakaoMap.moveCamera(
-                CameraUpdateFactory.fitMapPoints(
-                    pointsToDraw.toTypedArray(), 100
-                )
-            )*/
         }
     }
 
