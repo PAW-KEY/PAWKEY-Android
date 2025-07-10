@@ -10,28 +10,36 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
 import com.paw.key.presentation.ui.community.navigation.navigateCommunity
-import com.paw.key.presentation.ui.course.navigation.navigateCourse
-import com.paw.key.presentation.ui.dummy.navigation.navigateDummy
+import com.paw.key.presentation.ui.course.entire.navigation.navigateCourse
+import com.paw.key.presentation.ui.course.entire.tab.map.navigation.navigateWalkCourse
+import com.paw.key.presentation.ui.course.walkcomplete.navigation.navigateWalkCompletion
+import com.paw.key.presentation.ui.course.walkrecord.navigation.navigateWalkReview
 import com.paw.key.presentation.ui.dummy.next.navigateDummyNext
-import com.paw.key.presentation.ui.home.navigation.Home
 import com.paw.key.presentation.ui.home.navigation.navigateHome
+import com.paw.key.presentation.ui.login.navigation.navigateLogin
 import com.paw.key.presentation.ui.mypage.navigation.navigateMyPage
 import com.paw.key.presentation.ui.owner.navigation.navigateOwner
 import com.paw.key.presentation.ui.pet.navigation.navigatePet
+import com.paw.key.presentation.ui.signup.navigation.navigateSignUp
+import com.paw.key.presentation.ui.splash.navigation.Splash
+import com.paw.key.presentation.ui.splash.navigation.navigateSplash
 
-class MainNavigator (
-    val navController: NavHostController
+class MainNavigator(
+    val navController: NavHostController,
 ) {
-    private val currentDestination : NavDestination?
+    private val currentDestination: NavDestination?
         @Composable get() = navController
             .currentBackStackEntryAsState().value?.destination
 
-    val startDestination = Home
+    val startDestination = Splash
 
-    val currentTab : MainTab?
+    val currentTab: MainTab?
         @Composable get() = MainTab.find { tab ->
             currentDestination?.hasRoute(tab::class) == true
         }
+
+    var isRecordVisible: Boolean = false
+        private set
 
     fun navigate(tab: MainTab) {
         val navOptions = navOptions {
@@ -52,9 +60,15 @@ class MainNavigator (
             MainTab.MYPAGE -> navController.navigateMyPage(navOptions)
         }
     }
+    
+    fun setOnVisibleRecord(visible: Boolean) {
+        isRecordVisible = visible
+    }
+    
     fun navigateMyPage(navOptions: NavOptions? = null) {
         navController.navigateMyPage(navOptions = navOptions)
     }
+
     fun navigatePet(navOptions: NavOptions? = null) {
         navController.navigatePet(navOptions = navOptions)
     }
@@ -67,9 +81,22 @@ class MainNavigator (
         navController.navigatePet(navOptions = navOptions)
     }
 
-    // 더미용 Todo : 나중에 위에거로 교환예정
-    fun navigateToDummy(navOptions: NavOptions? = null) {
-        navController.navigateDummy(navOptions = navOptions)
+    fun navigateWalkCourse(navOptions: NavOptions? = null) {
+        navController.navigateWalkCourse(navOptions = navOptions)
+    }
+
+    fun navigateWalkCompletion(navOptions: NavOptions? = null) {
+        navController.navigateWalkCompletion(navOptions = navOptions)
+    }
+
+    fun navigateWalkReview(navOptions: NavOptions? = null) {
+        navController.navigateWalkReview(navOptions = navOptions)
+    }
+
+
+
+    fun setOnVisibleRecord(visible: Boolean) {
+        isRecordVisible = visible
     }
 
     fun navigateDummyNext(navOptions: NavOptions? = null) {
@@ -80,10 +107,22 @@ class MainNavigator (
         navController.navigateUp()
     }
 
+    fun navigateSplash(navOptions: NavOptions? = null) {
+        navController.navigateSplash(navOptions = navOptions)
+    }
+
+    fun navigateLogin(navOptions: NavOptions? = null) {
+        navController.navigateLogin(navOptions = navOptions)
+    }
+
+    fun navigateSignUp(navOptions: NavOptions? = null) {
+        navController.navigateSignUp(navOptions = navOptions)
+    }
+
     @Composable
     fun showBottomBar() = MainTab.contains {
         currentDestination?.hasRoute(it::class) == true
-    }
+    } && !isRecordVisible
 }
 
 @Composable

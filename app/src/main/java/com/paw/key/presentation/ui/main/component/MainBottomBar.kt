@@ -43,7 +43,7 @@ fun MainBottomBar(
     modifier: Modifier = Modifier,
 ) {
     AnimatedVisibility (
-        visible = true,
+        visible = isVisible,
         enter = EnterTransition.None,
         exit = ExitTransition.None,
         modifier = modifier
@@ -56,7 +56,7 @@ fun MainBottomBar(
             contentAlignment = Alignment.Center
         ) {
             Surface(
-                color = Color.Black,
+                color = PawKeyTheme.colors.gray950,
                 shape = RoundedCornerShape(200.dp),
                 shadowElevation = 10.dp,
                 modifier = Modifier
@@ -91,10 +91,7 @@ private fun MainNavigationBarItem(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    //Todo : 색상 교환예정
     val iconRes = if (selected) tab.selectedIcon else tab.unselectedIcon
-
-    val iconColor = if (selected) Color.Green else Color.White
 
     val backGroundColor = if (selected) Color.White else Color.Transparent
 
@@ -109,10 +106,10 @@ private fun MainNavigationBarItem(
         Icon(
             imageVector = ImageVector.vectorResource(iconRes),
             contentDescription = stringResource(tab.contentDescription),
-            tint = iconColor,
             modifier = Modifier
                 .padding(12.dp)
                 .size(24.dp),
+            tint = Color.Unspecified
         )
     }
 }

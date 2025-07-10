@@ -3,6 +3,8 @@
     <string name="empty_string">데이터가 없습니다.</string>
     <string name="loading_string">로딩 중...</string>
 
+    <!--Splas-->
+    <string name="ic_logo">PAWKEY</string>
     <!-- Navigation -->
     <!--Home-->
     <string name="ic_home_description">home</string>
@@ -10,6 +12,19 @@
 
     <!--Course-->
     <string name="ic_course_description">course</string>
+    <string name="course_complete_button_text">산책 기록하기</string>
+
+    <string name="course_review_image_description">산책 리뷰 이미지</string>
+    <string name="course_review_location_icon_description">위치 정보 표시용 아이콘</string>
+    <string name="course_review_time_icon_description">시간 정보 표시용 아이콘</string>
+
+    <string name="course_tab_title_map">지도</string>
+    <string name="course_tab_title_list">리스트</string>
+
+    <string name="course_record_distance">거리 (km)</string>
+    <string name="course_record_time">시간 (분)</string>
+    <string name="course_record_step">걸음 수 (걸음)</string>
+    <string name="course_tap_location_description">내 위치</string>
 
     <!--Community-->
     <string name="ic_community_description">community</string>
@@ -17,5 +32,7 @@
     <!--MyPage-->
     <string name="ic_mypage_description">mypage</string>
     <string name="profile">profile</string>
+
+
 
 </resources>

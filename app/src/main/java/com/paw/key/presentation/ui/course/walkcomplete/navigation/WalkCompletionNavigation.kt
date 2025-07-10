@@ -1,29 +1,32 @@
-package com.paw.key.presentation.ui.course.navigation
+package com.paw.key.presentation.ui.course.walkcomplete.navigation
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.material3.SnackbarHostState
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
-import com.paw.key.core.navigation.MainTabRoute
-import com.paw.key.presentation.ui.course.CourseRoute
+import com.paw.key.core.navigation.Route
+import com.paw.key.presentation.ui.course.walkcomplete.WalkCompletionRoute
 import kotlinx.serialization.Serializable
 
-fun NavController.navigateCourse(
+fun NavController.navigateWalkCompletion(
     navOptions: NavOptions?
 ) {
-    navigate(Course, navOptions)
+    navigate(WalkCompletion, navOptions)
 }
 
-fun NavGraphBuilder.courseNavGraph(
+@RequiresApi(Build.VERSION_CODES.Q)
+fun NavGraphBuilder.walkCompletionNavGraph(
     paddingValues: PaddingValues,
     navigateUp: () -> Unit,
     navigateNext: () -> Unit,
     snackBarHostState: SnackbarHostState,
 ) {
-    composable<Course> {
-        CourseRoute(
+    composable<WalkCompletion> {
+        WalkCompletionRoute(
             paddingValues = paddingValues,
             navigateUp = navigateUp,
             navigateNext = navigateNext,
@@ -33,4 +36,4 @@ fun NavGraphBuilder.courseNavGraph(
 }
 
 @Serializable
-data object Course : MainTabRoute
+data object WalkCompletion : Route
