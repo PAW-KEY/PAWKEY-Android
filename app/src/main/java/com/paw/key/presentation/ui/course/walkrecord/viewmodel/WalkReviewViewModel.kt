@@ -54,7 +54,6 @@ class WalkReviewViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             bitMapRepository.getSavedBitmap().collectLatest { bitmap ->
-                Log.d("TAG", "WalkReviewViewModel: $bitmap")
                 _state.value = _state.value.copy(
                     bitMap = UiState.Success(bitmap)
                 )
