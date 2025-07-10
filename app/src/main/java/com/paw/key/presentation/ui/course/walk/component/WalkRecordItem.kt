@@ -9,11 +9,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.paw.key.R
 import com.paw.key.core.designsystem.theme.PawKeyTheme
 
@@ -31,16 +29,16 @@ fun WalkRecordItem(
     ) {
         Text(
             text = stringResource(recordTitle),
-            fontSize = 14.sp,
-            color = Color.Black
+            color = PawKeyTheme.colors.gray500,
+            style = PawKeyTheme.typography.caption12Sb2
         )
 
         Spacer(modifier = Modifier.height(4.dp))
 
         Text(
             text = recordContent,
-            fontSize = 20.sp,
-            color = Color(0xFF00C853)
+            color = PawKeyTheme.colors.green500,
+            style = PawKeyTheme.typography.head20B2
         )
     }
 }

@@ -1,33 +1,30 @@
-package com.paw.key.presentation.ui.course.walkcomplete.navigation
+package com.paw.key.presentation.ui.course.walkrecord.navigation
 
 import android.os.Build
 import androidx.annotation.RequiresApi
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.material3.SnackbarHostState
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
 import com.paw.key.core.navigation.Route
-import com.paw.key.presentation.ui.course.walkcomplete.WalkCompletionRoute
+import com.paw.key.presentation.ui.course.walkrecord.WalkReviewRoute
 import kotlinx.serialization.Serializable
 
-fun NavController.navigateWalkCompletion(
+fun NavController.navigateWalkReview(
     navOptions: NavOptions?
 ) {
-    navigate(WalkCompletion, navOptions)
+    navigate(WalkReview, navOptions)
 }
 
-@RequiresApi(Build.VERSION_CODES.Q)
-fun NavGraphBuilder.walkCompletionNavGraph(
-    paddingValues: PaddingValues,
+@RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
+fun NavGraphBuilder.walkReviewNavGraph(
     navigateUp: () -> Unit,
     navigateNext: () -> Unit,
     snackBarHostState: SnackbarHostState,
 ) {
-    composable<WalkCompletion> {
-        WalkCompletionRoute(
-            paddingValues = paddingValues,
+    composable<WalkReview> {
+        WalkReviewRoute(
             navigateUp = navigateUp,
             navigateNext = navigateNext,
             snackBarHostState = snackBarHostState,
@@ -36,4 +33,4 @@ fun NavGraphBuilder.walkCompletionNavGraph(
 }
 
 @Serializable
-data object WalkCompletion : Route
+data object WalkReview : Route

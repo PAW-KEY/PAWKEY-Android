@@ -11,6 +11,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.paw.key.core.designsystem.theme.PawKeyTheme
 import com.paw.key.presentation.ui.course.walk.state.WalkCourseContract.WalkCourseRecord.DistanceRecord
 import com.paw.key.presentation.ui.course.walk.state.WalkCourseContract.WalkCourseRecord.StepsRecord
 import com.paw.key.presentation.ui.course.walk.state.WalkCourseContract.WalkCourseRecord.TimeRecord
@@ -29,7 +30,7 @@ fun WalkRecordRow(
             .background(Color.White, shape = RoundedCornerShape(8.dp))
             .border(
                 width = 1.dp,
-                color = Color(0xFF00C853),
+                color = PawKeyTheme.colors.green500,
                 shape = RoundedCornerShape(8.dp)
             )
             .padding(horizontal = 16.dp),

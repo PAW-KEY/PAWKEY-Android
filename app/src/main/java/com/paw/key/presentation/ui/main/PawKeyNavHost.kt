@@ -13,6 +13,7 @@ import com.paw.key.presentation.ui.community.navigation.communityNavGraph
 import com.paw.key.presentation.ui.course.entire.navigation.courseNavGraph
 import com.paw.key.presentation.ui.course.entire.tab.map.navigation.walkCourseNavGraph
 import com.paw.key.presentation.ui.course.walkcomplete.navigation.walkCompletionNavGraph
+import com.paw.key.presentation.ui.course.walkrecord.navigation.walkReviewNavGraph
 import com.paw.key.presentation.ui.dummy.navigation.dummyNavGraph
 import com.paw.key.presentation.ui.dummy.next.dummyNextNavGraph
 import com.paw.key.presentation.ui.home.navigation.homeNavGraph
@@ -23,7 +24,7 @@ import com.paw.key.presentation.ui.pet.navigation.petNavGraph
 import com.paw.key.presentation.ui.signup.navigation.signupNavGraph
 import com.paw.key.presentation.ui.splash.navigation.splashNavGraph
 
-@RequiresApi(Build.VERSION_CODES.Q)
+@RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
 @Composable
 fun PawKeyNavHost(
     navigator: MainNavigator,
@@ -64,6 +65,12 @@ fun PawKeyNavHost(
 
         walkCompletionNavGraph(
             paddingValues = paddingValues,
+            navigateUp = navigator::navigateUp,
+            navigateNext = navigator::navigateWalkReview,
+            snackBarHostState = snackbarHostState
+        )
+
+        walkReviewNavGraph(
             navigateUp = navigator::navigateUp,
             navigateNext = navigator::navigateDummyNext,
             snackBarHostState = snackbarHostState
