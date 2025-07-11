@@ -7,24 +7,25 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
 import com.paw.key.core.navigation.MainTabRoute
-import com.paw.key.presentation.ui.home.HomeRoute
+import com.paw.key.presentation.ui.home.HomeLocationSettingRoute
 import kotlinx.serialization.Serializable
 
-fun NavController.navigateHome(
-    navOptions: NavOptions?,
+
+fun NavController.navigateHomeLocationSetting(
+    navOptions: NavOptions?
 ) {
-    navigate(Home, navOptions)
+    navigate(HomeLocationSetting, navOptions)
 }
 
-fun NavGraphBuilder.homeNavGraph(
+fun NavGraphBuilder.homeLocationSettingNavGraph(
     paddingValues: PaddingValues,
     navigateUp: () -> Unit,
     navigateNext: () -> Unit,
     navigateHomeLocationSetting: () -> Unit,
-    modifier: Modifier = Modifier,
+    modifier: Modifier = Modifier
 ) {
-    composable<Home> {
-        HomeRoute(
+    composable<HomeLocationSetting> {
+        HomeLocationSettingRoute(
             paddingValues = paddingValues,
             navigateUp = navigateUp,
             navigateNext = navigateNext,
@@ -35,4 +36,4 @@ fun NavGraphBuilder.homeNavGraph(
 }
 
 @Serializable
-data object Home : MainTabRoute
+data object HomeLocationSetting : MainTabRoute

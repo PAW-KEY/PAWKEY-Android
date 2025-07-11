@@ -11,6 +11,8 @@
     <!--Login-->
     <string name="ic_login_new">신규계정으로 회원가입</string>
     <string name="ic_login_old">기존 계정으로 회원가입</string>
+    <!--Home-->
+    <string name="ic_home_current_word">최근 산책</string>
     <!--Onboarding-->
     <string name="ic_onboarding_signup">회원가입</string>
     <string name="ic_onboarding_signup_button">다음으로</string>

@@ -16,6 +16,7 @@ import com.paw.key.presentation.ui.course.walkcomplete.navigation.navigateWalkCo
 import com.paw.key.presentation.ui.course.walkrecord.navigation.navigateWalkReview
 import com.paw.key.presentation.ui.dummy.next.navigateDummyNext
 import com.paw.key.presentation.ui.home.navigation.navigateHome
+import com.paw.key.presentation.ui.home.navigation.navigateHomeLocationSetting
 import com.paw.key.presentation.ui.login.navigation.navigateLogin
 import com.paw.key.presentation.ui.mypage.navigation.navigateArchivedCourse
 import com.paw.key.presentation.ui.mypage.navigation.navigateArchivedDetail
@@ -88,8 +89,7 @@ class MainNavigator(
     fun navigateSignUp(navOptions: NavOptions? = null) {
         navController.navigateSignUp(navOptions = navOptions)
     }
-    
-  
+
     fun navigateMyPage(navOptions: NavOptions? = null) {
         navController.navigateMyPage(navOptions = navOptions)
     }
@@ -123,6 +123,10 @@ class MainNavigator(
 
     fun navigateHome(navOptions: NavOptions? = null) {
         navController.navigateHome(navOptions = navOptions)
+    }
+
+    fun navigateHomeLocationSetting(navOptions: NavOptions? = null) {
+        navController.navigateHomeLocationSetting(navOptions = navOptions)
     }
 
     /*메인 탭 산택 기준 - 산책하기, 완료, 리뷰*/
@@ -165,7 +169,6 @@ class MainNavigator(
     fun navigateSignUpLevel(navOptions: NavOptions? = null) {
         navController.navigateSignLevel(navOptions = navOptions)
     }
-
 
 
     @Composable

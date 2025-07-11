@@ -1,7 +1,7 @@
 package com.paw.key.presentation.ui.home.viewmodel
 
 import androidx.lifecycle.ViewModel
-import com.paw.key.presentation.ui.home.state.HomeState
+import com.paw.key.presentation.ui.home.state.HomeContract
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -11,8 +11,9 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeViewModel @Inject constructor() : ViewModel() {
 
-    private val _state = MutableStateFlow(HomeState())
-    val state: StateFlow<HomeState> = _state.asStateFlow()
+    private val _state = MutableStateFlow(HomeContract.HomeState())
+    val state: StateFlow<HomeContract.HomeState>
+        get() = _state.asStateFlow()
 
     fun toggleLocationMenu() {
         _state.value = _state.value.copy(
@@ -20,15 +21,9 @@ class HomeViewModel @Inject constructor() : ViewModel() {
         )
     }
 
-    fun hideLocationMenu() {
+    fun selectLocation(location: String) {
         _state.value = _state.value.copy(
-            isLocationMenuVisible = false
-        )
-    }
-
-    fun toggleVisible() {
-        _state.value = _state.value.copy(
-            isVisible = !_state.value.isVisible
+            selectedLocation = location
         )
     }
 }
