@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -152,7 +153,7 @@ fun CourseDetail(
                         style = PawKeyTheme.typography.caption12Sb1,
                         color = PawKeyTheme.colors.gray200
                     )
-                    Divider(modifier = Modifier.padding(10.dp))
+                    HorizontalDivider(modifier = Modifier.padding(10.dp))
 
                     Text(
                         text = "이런 점이 좋았어요",

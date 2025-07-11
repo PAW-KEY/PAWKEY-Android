@@ -14,7 +14,6 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -31,14 +30,11 @@ import com.paw.key.presentation.ui.splash.viewmodel.SplashViewModel
 
 @Preview(showBackground = true)
 @Composable
-fun PreviewSplashScreen() {
+private fun PreviewSplashScreen() {
     PawKeyTheme {
         SplashScreen(
             paddingValues = PaddingValues(),
-            navigateUp = {},
-            navigateNext = {},
-            navigateLogin = {},
-            snackBarHostState = SnackbarHostState()
+            modifier = Modifier
         )
     }
 }
@@ -46,10 +42,7 @@ fun PreviewSplashScreen() {
 @Composable
 fun SplashRoute(
     paddingValues: PaddingValues,
-    navigateUp: () -> Unit,
-    navigateNext: () -> Unit,
     navigateLogin: () -> Unit,
-    snackBarHostState: SnackbarHostState,
     modifier: Modifier = Modifier,
     viewModel: SplashViewModel = hiltViewModel(),
 ) {
@@ -65,10 +58,6 @@ fun SplashRoute(
 
     SplashScreen(
         paddingValues = paddingValues,
-        navigateUp = navigateUp,
-        navigateNext = navigateNext,
-        navigateLogin = navigateLogin,
-        snackBarHostState = snackBarHostState,
         modifier = modifier
     )
 }
@@ -77,10 +66,6 @@ fun SplashRoute(
 @Composable
 fun SplashScreen(
     paddingValues: PaddingValues,
-    navigateUp: () -> Unit,
-    navigateNext: () -> Unit,
-    navigateLogin: () -> Unit,
-    snackBarHostState: SnackbarHostState,
     modifier: Modifier = Modifier,
 ) {
     Box(

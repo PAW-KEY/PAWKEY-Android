@@ -7,6 +7,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
@@ -117,7 +118,6 @@ fun OwnerCard(
         Spacer(modifier = Modifier.weight(1f))
         Icon(
             imageVector = ImageVector.vectorResource(id = R.drawable.ic_arrow_right),
-            modifier = modifier.clickable { navigateUserProfile() },
             contentDescription = "견주 프로필 이동"
         )
     }
@@ -259,7 +259,7 @@ fun WalkRouteList(
 
         routes.forEachIndexed { index, route ->
             if (index != 0) {
-                Divider(color = PawKeyTheme.colors.gray50, thickness = 1.dp)
+                HorizontalDivider(thickness = 1.dp, color = PawKeyTheme.colors.gray50)
             }
             Row(
                 modifier = Modifier

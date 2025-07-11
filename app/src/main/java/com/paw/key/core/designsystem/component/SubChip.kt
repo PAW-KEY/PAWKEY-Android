@@ -17,7 +17,6 @@ private fun PreviewSubChip() {
     SubChip(
         text = "4km"
     )
-
 }
 
 @Composable
@@ -36,9 +35,7 @@ fun SubChip(
         Text(
             text = text,
             color = PawKeyTheme.colors.gray300,
-
             style = PawKeyTheme.typography.body14M
         )
     }
-
 }

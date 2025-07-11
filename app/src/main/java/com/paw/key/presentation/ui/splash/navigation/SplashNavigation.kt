@@ -19,20 +19,13 @@ fun NavController.navigateSplash(
 
 fun NavGraphBuilder.splashNavGraph(
     paddingValues: PaddingValues,
-    navigateUp: () -> Unit,
-    navigateNext: () -> Unit,
-    //TODO: 안쓰는 navigate 처리는 그냥 지워도 되는지
     navigateLogin: () -> Unit,
-    snackBarHostState: SnackbarHostState,
     modifier: Modifier = Modifier,
 ) {
     composable<Splash> {
         SplashRoute(
             paddingValues = paddingValues,
-            navigateUp = navigateUp,
-            navigateNext = navigateNext,
             navigateLogin = navigateLogin,
-            snackBarHostState = snackBarHostState,
             modifier = modifier
         )
     }

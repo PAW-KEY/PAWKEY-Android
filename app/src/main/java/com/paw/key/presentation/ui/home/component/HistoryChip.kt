@@ -22,7 +22,7 @@ private fun PreviewHistoryChip() {
 }
 
 @Composable
-internal fun HistoryChip(
+fun HistoryChip(
     text: String,
     modifier: Modifier = Modifier,
 ) {

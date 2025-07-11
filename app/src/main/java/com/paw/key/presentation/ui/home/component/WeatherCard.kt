@@ -34,7 +34,7 @@ private fun PreviewWeatherCard() {
 }
 
 @Composable
-internal fun WeatherCard(
+fun WeatherCard(
     weathertitle: String,
     weathersub1: String,
     weathersub2: String,
@@ -63,12 +63,12 @@ internal fun WeatherCard(
             style = PawKeyTheme.typography.head22B.copy(
                 fontSize = 24.sp
             ),
-            modifier = modifier.padding(start = 4.dp),
+            modifier = Modifier.padding(start = 4.dp),
         )
 
         Row(
             verticalAlignment = Alignment.CenterVertically,
-            modifier = modifier.padding(start = 8.dp),
+            modifier = Modifier.padding(start = 8.dp),
         ) {
             Text(
                 text = weathersub1,
@@ -79,7 +79,7 @@ internal fun WeatherCard(
                 text = weathersub2,
                 style = PawKeyTheme.typography.body14R,
                 color = PawKeyTheme.colors.black.copy(alpha = 0.5f),
-                modifier = modifier.padding(start = 6.dp),
+                modifier = Modifier.padding(start = 6.dp),
             )
         }
 

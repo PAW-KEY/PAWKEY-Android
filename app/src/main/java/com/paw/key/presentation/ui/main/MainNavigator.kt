@@ -25,7 +25,12 @@ import com.paw.key.presentation.ui.mypage.navigation.navigateUserProfile
 import com.paw.key.presentation.ui.region.navigation.navigateRegional
 import com.paw.key.presentation.ui.mypage.navigation.navigateMyPage
 import com.paw.key.presentation.ui.onboard.navigation.navigateOnboarding
+import com.paw.key.presentation.ui.signup.navigation.navigateSignLevel
+import com.paw.key.presentation.ui.signup.navigation.navigateSignUp
+import com.paw.key.presentation.ui.signup.navigation.navigateSignUpActivity
+import com.paw.key.presentation.ui.signup.navigation.navigateSignUpDog
 import com.paw.key.presentation.ui.splash.navigation.Splash
+import com.paw.key.presentation.ui.splash.navigation.navigateSplash
 
 class MainNavigator(
     val navController: NavHostController,
@@ -77,14 +82,14 @@ class MainNavigator(
         navController.navigateLogin(navOptions = navOptions)
     }
 
+    fun navigateSignUp(navOptions: NavOptions? = null) {
+        navController.navigateSignUp(navOptions = navOptions)
+    }
     /*메인 탭 이동*/
     fun navigateMyPage(navOptions: NavOptions? = null) {
         navController.navigateMyPage(navOptions = navOptions)
     }
-    
-    fun navigateMyPage(navOptions: NavOptions? = null) {
-        navController.navigateMyPage(navOptions = navOptions)
-    }
+
 
     fun navigateUserProfile(navOptions: NavOptions? = null) {
         navController.navigateUserProfile(navOptions = navOptions)
@@ -135,13 +140,23 @@ class MainNavigator(
         navController.navigateSplash(navOptions = navOptions)
     }
 
-    fun navigateLogin(navOptions: NavOptions? = null) {
-        navController.navigateLogin(navOptions = navOptions)
-    }
-
     fun navigateRegional(navOptions: NavOptions? = null) {
         navController.navigateRegional(navOptions = navOptions)
     }
+
+    fun navigateSignUpActivity(navOptions: NavOptions? = null) {
+        navController.navigateSignUpActivity(navOptions = navOptions)
+    }
+
+    fun navigateSignUpDog(navOptions: NavOptions? = null) {
+        navController.navigateSignUpDog(navOptions = navOptions)
+    }
+
+    fun navigateSignUpLevel(navOptions: NavOptions? = null) {
+        navController.navigateSignLevel(navOptions = navOptions)
+    }
+
+
 
     @Composable
     fun showBottomBar() = MainTab.contains {
@@ -155,4 +170,3 @@ fun rememberMainNavigator(
 ): MainNavigator = remember(navController) {
     MainNavigator(navController)
 }
-
