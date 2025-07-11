@@ -81,9 +81,30 @@ class MainNavigator(
     fun navigateMyPage(navOptions: NavOptions? = null) {
         navController.navigateMyPage(navOptions = navOptions)
     }
-    
-    fun navigateMyPage(navOptions: NavOptions? = null) {
-        navController.navigateMyPage(navOptions = navOptions)
+
+    fun navigateCourse(navOptions: NavOptions? = null) {
+        navController.navigateCourse(navOptions = navOptions)
+    }
+
+    fun navigateHome(navOptions: NavOptions? = null) {
+        navController.navigateHome(navOptions = navOptions)
+    }
+
+    /*메인 탭 산택 기준 - 산책하기, 완료, 리뷰*/
+    fun navigateRegional(navOptions: NavOptions? = null) {
+        navController.navigateRegional(navOptions = navOptions)
+    }
+
+    fun navigateWalkCourse(navOptions: NavOptions? = null) {
+        navController.navigateWalkCourse(navOptions = navOptions)
+    }
+
+    fun navigateWalkCompletion(navOptions: NavOptions? = null) {
+        navController.navigateWalkCompletion(navOptions = navOptions)
+    }
+
+    fun navigateWalkReview(navOptions: NavOptions? = null) {
+        navController.navigateWalkReview(navOptions = navOptions)
     }
 
     fun navigateUserProfile(navOptions: NavOptions? = null) {
@@ -102,45 +123,12 @@ class MainNavigator(
         navController.navigateArchivedCourse(navOptions = navOptions)
     }
 
-    fun navigateCourse(navOptions: NavOptions? = null) {
-        navController.navigateCourse(navOptions = navOptions)
-    }
-
-    fun navigateHome(navOptions: NavOptions? = null) {
-        navController.navigateHome(navOptions = navOptions)
-    }
-
-    /*메인 탭 산택 기준 - 산책하기, 완료, 리뷰*/
-    fun navigateWalkCourse(navOptions: NavOptions? = null) {
-        navController.navigateWalkCourse(navOptions = navOptions)
-    }
-
-    fun navigateWalkCompletion(navOptions: NavOptions? = null) {
-        navController.navigateWalkCompletion(navOptions = navOptions)
-    }
-
-    fun navigateWalkReview(navOptions: NavOptions? = null) {
-        navController.navigateWalkReview(navOptions = navOptions)
-    }
-
     fun navigateDummyNext(navOptions: NavOptions? = null) {
         navController.navigateDummyNext(navOptions = navOptions)
     }
 
     fun navigateUp() {
         navController.navigateUp()
-    }
-
-    fun navigateSplash(navOptions: NavOptions? = null) {
-        navController.navigateSplash(navOptions = navOptions)
-    }
-
-    fun navigateLogin(navOptions: NavOptions? = null) {
-        navController.navigateLogin(navOptions = navOptions)
-    }
-
-    fun navigateRegional(navOptions: NavOptions? = null) {
-        navController.navigateRegional(navOptions = navOptions)
     }
 
     @Composable
