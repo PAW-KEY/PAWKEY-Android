@@ -1,4 +1,4 @@
-package com.paw.key.presentation.ui.course.walkrecord
+package com.paw.key.presentation.ui.course.walkreview
 
 import android.net.Uri
 import android.os.Build
@@ -32,13 +32,13 @@ import com.paw.key.R
 import com.paw.key.core.designsystem.component.PawkeyButton
 import com.paw.key.core.designsystem.component.SubChip
 import com.paw.key.core.designsystem.theme.PawKeyTheme
-import com.paw.key.presentation.ui.course.walkrecord.component.WalkReviewFeedbackForm
-import com.paw.key.presentation.ui.course.walkrecord.component.WalkReviewFeedbackHeader
-import com.paw.key.presentation.ui.course.walkrecord.component.WalkReviewImageRow
-import com.paw.key.presentation.ui.course.walkrecord.component.WalkReviewInfoHolder
-import com.paw.key.presentation.ui.course.walkrecord.component.WalkReviewTextField
-import com.paw.key.presentation.ui.course.walkrecord.state.WalkReviewContract
-import com.paw.key.presentation.ui.course.walkrecord.viewmodel.WalkReviewViewModel
+import com.paw.key.presentation.ui.course.walkreview.component.WalkReviewFeedbackForm
+import com.paw.key.presentation.ui.course.walkreview.component.WalkReviewFeedbackHeader
+import com.paw.key.presentation.ui.course.walkreview.component.WalkReviewImageRow
+import com.paw.key.presentation.ui.course.walkreview.component.WalkReviewInfoHolder
+import com.paw.key.presentation.ui.course.walkreview.component.WalkReviewTextField
+import com.paw.key.presentation.ui.course.walkreview.state.WalkReviewContract
+import com.paw.key.presentation.ui.course.walkreview.viewmodel.WalkReviewViewModel
 
 @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
 @Composable

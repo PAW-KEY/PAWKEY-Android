@@ -1,4 +1,4 @@
-package com.paw.key.presentation.ui.course.walkrecord.state
+package com.paw.key.presentation.ui.course.walkreview.state
 
 import android.net.Uri
 import androidx.compose.runtime.Immutable

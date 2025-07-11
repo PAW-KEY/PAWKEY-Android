@@ -1,4 +1,4 @@
-package com.paw.key.presentation.ui.course.walkrecord.component
+package com.paw.key.presentation.ui.course.walkreview.component
 
 import android.net.Uri
 import androidx.compose.foundation.background
@@ -42,7 +42,7 @@ fun WalkReviewItem(
         shape = RoundedCornerShape(16.dp),
         modifier = modifier
             .width(LocalConfiguration.current.screenHeightDp.dp * 0.2f)
-            .height(LocalConfiguration.current.screenHeightDp.dp * 0.3f)
+            .height(LocalConfiguration.current.screenHeightDp.dp * 0.2f)
             .noRippleClickable {
                 if (image == null) {
                     onClickCard()
