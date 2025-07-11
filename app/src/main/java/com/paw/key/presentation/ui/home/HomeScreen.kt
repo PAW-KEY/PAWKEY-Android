@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package com.paw.key.presentation.ui.home
 
 import android.app.Activity
@@ -14,15 +16,17 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalView
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.view.ViewCompat
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -37,21 +41,28 @@ import com.paw.key.presentation.ui.home.component.TrackingCard
 import com.paw.key.presentation.ui.home.component.WeatherCard
 import com.paw.key.presentation.ui.home.viewmodel.HomeViewModel
 
+@Preview
+@Composable
+private fun HomeScreenPreview() {
+    PawKeyTheme {
+        HomeScreen(
+            paddingValues = PaddingValues(),
+            navigateNext = {},)
+    }
+
+}
+
 @Composable
 fun HomeRoute(
     paddingValues: PaddingValues,
-    navigateUp: () -> Unit,
     navigateNext: () -> Unit,
-    snackBarHostState: SnackbarHostState,
     modifier: Modifier = Modifier,
     viewModel: HomeViewModel = hiltViewModel(),
 ) {
 
     HomeScreen(
         paddingValues = paddingValues,
-        navigateUp = navigateUp,
         navigateNext = navigateNext,
-        snackBarHostState = snackBarHostState,
         modifier = modifier,
         viewModel = viewModel
     )
@@ -60,13 +71,11 @@ fun HomeRoute(
 @Composable
 fun HomeScreen(
     paddingValues: PaddingValues,
-    navigateUp: () -> Unit,
     navigateNext: () -> Unit,
-    snackBarHostState: SnackbarHostState,
     modifier: Modifier = Modifier,
-    viewModel: HomeViewModel,
+    viewModel: HomeViewModel = hiltViewModel(),
 ) {
-    val isLocationMenuVisible = viewModel.isLocationMenuVisible
+    val state by viewModel.state.collectAsState()
     val view = LocalView.current
     val window = (view.context as? Activity)?.window
 
@@ -113,7 +122,7 @@ fun HomeScreen(
 
                 Spacer(modifier = Modifier.width(12.dp))
 
-                TrackingCard(onClick = {navigateNext()})
+                TrackingCard(onClick = { navigateNext() })
             }
 
             Spacer(modifier = Modifier.height(12.dp))
@@ -124,7 +133,7 @@ fun HomeScreen(
         }
 
     }
-    if (isLocationMenuVisible) {
+    if (state.isLocationMenuVisible) {
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -146,20 +155,3 @@ fun HomeScreen(
         }
     }
 }
-
-//@Preview
-//@Composable
-//private fun HomeScreenPreview() {
-//    PawKeyTheme {
-//        HomeScreen(
-//            paddingValues = PaddingValues(),
-//            navigateUp = {},
-//            navigateNext = {},
-//            snackBarHostState = SnackbarHostState(),
-//
-//            )
-//
-//    }
-//
-//}
-// viewmodel 을 파라미터로 넣으면 못본다! 알고싶지않았음
