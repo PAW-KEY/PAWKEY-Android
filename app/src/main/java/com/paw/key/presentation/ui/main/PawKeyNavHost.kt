@@ -20,9 +20,14 @@ import com.paw.key.presentation.ui.dummy.next.dummyNextNavGraph
 import com.paw.key.presentation.ui.home.navigation.homeNavGraph
 import com.paw.key.presentation.ui.home.navigation.navigateHome
 import com.paw.key.presentation.ui.login.navigation.loginNavGraph
+import com.paw.key.presentation.ui.mypage.navigation.archivedCourseNavGraph
+import com.paw.key.presentation.ui.mypage.navigation.myPageNavGraph
+import com.paw.key.presentation.ui.mypage.navigation.petProfileNavGraph
+import com.paw.key.presentation.ui.mypage.navigation.savedCourseNavGraph
+import com.paw.key.presentation.ui.mypage.navigation.userProfileNavGraph
+import com.paw.key.presentation.ui.region.navigation.regionalNavGraph
 import com.paw.key.presentation.ui.mypage.navigation.myPageNavGraph
 import com.paw.key.presentation.ui.onboard.navigation.onboardingNavGraph
-import com.paw.key.presentation.ui.splash.navigation.Splash
 import com.paw.key.presentation.ui.splash.navigation.splashNavGraph
 
 @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
@@ -86,23 +91,36 @@ fun PawKeyNavHost(
         myPageNavGraph(
             paddingValues = paddingValues,
             navigateUp = navigator::navigateUp,
-            navigateNext = navigator::navigateDummyNext,
+            navigateUserProfile = navigator::navigateUserProfile,
+            navigatePetProfile = navigator::navigatePetProfile,
+            navigateArchivedCourse = navigator::navigateArchivedCourse,
+            navigateSavedCourse = navigator::navigateSavedCourse,
             snackBarHostState = snackbarHostState
         )
 
-        /*ownerNavGraph(
+        savedCourseNavGraph(
             paddingValues = paddingValues,
             navigateUp = navigator::navigateUp,
             navigateNext = navigator::navigateDummyNext,
             snackBarHostState = snackbarHostState
         )
 
-        petNavGraph(
-            paddingValues = paddingValues,
+        archivedCourseNavGraph(
             navigateUp = navigator::navigateUp,
+            modifier = modifier
+        )
+
+        userProfileNavGraph(
+            paddingValues = paddingValues,
+            navigateUp = navigator::navigateMyPage,
             navigateNext = navigator::navigateDummyNext,
             snackBarHostState = snackbarHostState
-        )*/
+        )
+
+        petProfileNavGraph(
+            navigateUp = navigator::navigateUp,
+            modifier = modifier
+        )
 
         dummyNavGraph(
             paddingValues = paddingValues,
@@ -147,12 +165,12 @@ fun PawKeyNavHost(
             snackBarHostState = snackbarHostState
         )
 
-        /*signupNavGraph(
+        regionalNavGraph(
             paddingValues = paddingValues,
             navigateUp = navigator::navigateUp,
             navigateNext = navigator::navigateDummyNext,
-            navigateLogin = navigator::navigateLogin,
+            navigateSignUp = navigator::navigateMyPage,
             snackBarHostState = snackbarHostState
-        )*/
+        )
     }
 }

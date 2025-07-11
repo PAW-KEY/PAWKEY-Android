@@ -2,39 +2,34 @@ package com.paw.key.presentation.ui.mypage.navigation
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
-import com.paw.key.core.navigation.MainTabRoute
-import com.paw.key.presentation.ui.mypage.MyPageRoute
+import com.paw.key.core.navigation.Route
+import com.paw.key.presentation.ui.mypage.SavedCourseRoute
 import kotlinx.serialization.Serializable
 
-fun NavController.navigateMyPage(
+fun NavController.navigateSavedCourse(
     navOptions: NavOptions?
 ) {
-    navigate(MyPage, navOptions)
+    navigate(SavedCourse, navOptions)
 }
 
-fun NavGraphBuilder.myPageNavGraph(
+fun NavGraphBuilder.savedCourseNavGraph(
     paddingValues: PaddingValues,
     navigateUp: () -> Unit,
-    navigateUserProfile: () -> Unit,
-    navigatePetProfile: () -> Unit,
-    navigateArchivedCourse: () -> Unit,
-    navigateSavedCourse: () -> Unit,
+    navigateNext: () -> Unit,
     snackBarHostState: SnackbarHostState,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
-    composable<MyPage> {
-        MyPageRoute(
+    composable<SavedCourse> {
+        SavedCourseRoute(
             paddingValues = paddingValues,
             navigateUp = navigateUp,
-            navigateUserProfile = navigateUserProfile,
-            navigatePetProfile = navigatePetProfile,
-            navigateArchivedCourse = navigateArchivedCourse,
-            navigateSavedCourse = navigateSavedCourse,
+            navigateNext = navigateNext,
             snackBarHostState = snackBarHostState,
             modifier = modifier
         )
@@ -42,4 +37,4 @@ fun NavGraphBuilder.myPageNavGraph(
 }
 
 @Serializable
-data object MyPage : MainTabRoute
+data object SavedCourse : Route

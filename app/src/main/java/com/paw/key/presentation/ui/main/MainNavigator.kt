@@ -17,6 +17,12 @@ import com.paw.key.presentation.ui.course.walkrecord.navigation.navigateWalkRevi
 import com.paw.key.presentation.ui.dummy.next.navigateDummyNext
 import com.paw.key.presentation.ui.home.navigation.navigateHome
 import com.paw.key.presentation.ui.login.navigation.navigateLogin
+import com.paw.key.presentation.ui.mypage.navigation.navigateArchivedCourse
+import com.paw.key.presentation.ui.mypage.navigation.navigateMyPage
+import com.paw.key.presentation.ui.mypage.navigation.navigatePetProfile
+import com.paw.key.presentation.ui.mypage.navigation.navigateSavedCourse
+import com.paw.key.presentation.ui.mypage.navigation.navigateUserProfile
+import com.paw.key.presentation.ui.region.navigation.navigateRegional
 import com.paw.key.presentation.ui.mypage.navigation.navigateMyPage
 import com.paw.key.presentation.ui.onboard.navigation.navigateOnboarding
 import com.paw.key.presentation.ui.splash.navigation.Splash
@@ -57,7 +63,7 @@ class MainNavigator(
             MainTab.MYPAGE -> navController.navigateMyPage(navOptions)
         }
     }
-    
+
     fun setOnVisibleRecord(visible: Boolean) {
         isRecordVisible = visible
     }
@@ -74,6 +80,26 @@ class MainNavigator(
     /*메인 탭 이동*/
     fun navigateMyPage(navOptions: NavOptions? = null) {
         navController.navigateMyPage(navOptions = navOptions)
+    }
+    
+    fun navigateMyPage(navOptions: NavOptions? = null) {
+        navController.navigateMyPage(navOptions = navOptions)
+    }
+
+    fun navigateUserProfile(navOptions: NavOptions? = null) {
+        navController.navigateUserProfile(navOptions = navOptions)
+    }
+
+    fun navigatePetProfile(navOptions: NavOptions? = null) {
+        navController.navigatePetProfile(navOptions = navOptions)
+    }
+
+    fun navigateSavedCourse(navOptions: NavOptions? = null) {
+        navController.navigateSavedCourse(navOptions = navOptions)
+    }
+
+    fun navigateArchivedCourse(navOptions: NavOptions? = null) {
+        navController.navigateArchivedCourse(navOptions = navOptions)
     }
 
     fun navigateCourse(navOptions: NavOptions? = null) {
@@ -105,6 +131,18 @@ class MainNavigator(
         navController.navigateUp()
     }
 
+    fun navigateSplash(navOptions: NavOptions? = null) {
+        navController.navigateSplash(navOptions = navOptions)
+    }
+
+    fun navigateLogin(navOptions: NavOptions? = null) {
+        navController.navigateLogin(navOptions = navOptions)
+    }
+
+    fun navigateRegional(navOptions: NavOptions? = null) {
+        navController.navigateRegional(navOptions = navOptions)
+    }
+
     @Composable
     fun showBottomBar() = MainTab.contains {
         currentDestination?.hasRoute(it::class) == true
@@ -117,3 +155,4 @@ fun rememberMainNavigator(
 ): MainNavigator = remember(navController) {
     MainNavigator(navController)
 }
+

@@ -19,7 +19,8 @@ import androidx.compose.ui.Modifier
 import com.paw.key.presentation.ui.main.component.MainBottomBar
 import kotlinx.collections.immutable.toImmutableList
 
-@RequiresApi(Build.VERSION_CODES.Q)
+
+@RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
 @Composable
 fun MainScreen(
     navigator: MainNavigator = rememberMainNavigator(),
@@ -32,7 +33,7 @@ fun MainScreen(
     )
 }
 
-@RequiresApi(Build.VERSION_CODES.Q)
+@RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
 @Composable
 private fun MainScreenContent(
     navigator: MainNavigator,
