@@ -68,7 +68,6 @@ fun PawKeyNavHost(
             paddingValues = paddingValues,
             navigateUp = navigator::navigateUp,
             navigateNext = navigator::navigateWalkReview,
-            snackBarHostState = snackbarHostState
         )
 
         walkReviewNavGraph(
@@ -122,7 +121,7 @@ fun PawKeyNavHost(
             navigateNext = navigator::navigateDummyNext,
             navigateLogin =  {
                 val options = navOptions {
-                    popUpTo(Splash) {
+                    popUpTo(0) {
                         inclusive = true
                     }
                     launchSingleTop = true
