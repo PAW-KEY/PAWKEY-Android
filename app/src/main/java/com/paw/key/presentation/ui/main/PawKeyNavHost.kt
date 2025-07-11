@@ -17,17 +17,25 @@ import com.paw.key.presentation.ui.course.walkcomplete.navigation.walkCompletion
 import com.paw.key.presentation.ui.course.walkrecord.navigation.walkReviewNavGraph
 import com.paw.key.presentation.ui.dummy.navigation.dummyNavGraph
 import com.paw.key.presentation.ui.dummy.next.dummyNextNavGraph
+import com.paw.key.presentation.ui.home.navigation.homeLocationSettingNavGraph
 import com.paw.key.presentation.ui.home.navigation.homeNavGraph
-import com.paw.key.presentation.ui.home.navigation.navigateHome
 import com.paw.key.presentation.ui.login.navigation.loginNavGraph
 import com.paw.key.presentation.ui.mypage.navigation.archivedCourseNavGraph
+import com.paw.key.presentation.ui.mypage.navigation.archivedDetailNavGraph
 import com.paw.key.presentation.ui.mypage.navigation.myPageNavGraph
 import com.paw.key.presentation.ui.mypage.navigation.petProfileNavGraph
 import com.paw.key.presentation.ui.mypage.navigation.savedCourseNavGraph
 import com.paw.key.presentation.ui.mypage.navigation.userProfileNavGraph
-import com.paw.key.presentation.ui.region.navigation.regionalNavGraph
-import com.paw.key.presentation.ui.mypage.navigation.myPageNavGraph
 import com.paw.key.presentation.ui.onboard.navigation.onboardingNavGraph
+import com.paw.key.presentation.ui.region.navigation.regionalNavGraph
+
+import com.paw.key.presentation.ui.mypage.navigation.myPageNavGraph
+import com.paw.key.presentation.ui.mypage.navigation.savedDetailNavGraph
+
+import com.paw.key.presentation.ui.signup.navigation.signupLevelNavGraph
+import com.paw.key.presentation.ui.signup.navigation.signupNavGraph
+import com.paw.key.presentation.ui.signup.navigation.signupactivityNavGraph
+import com.paw.key.presentation.ui.signup.navigation.signupdogNavGraph
 import com.paw.key.presentation.ui.splash.navigation.splashNavGraph
 
 @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
@@ -48,9 +56,17 @@ fun PawKeyNavHost(
     ) {
         homeNavGraph(
             paddingValues = paddingValues,
-            navigateUp = navigator.navController::navigateUp,
+            navigateUp = navigator::navigateUp,
             navigateNext = navigator::navigateCourse,
-            snackBarHostState = snackbarHostState,
+            navigateHomeLocationSetting = navigator::navigateHomeLocationSetting,
+            modifier = modifier,
+        )
+
+        homeLocationSettingNavGraph(
+            paddingValues = paddingValues,
+            navigateUp = navigator::navigateUp,
+            navigateNext = navigator::navigateCourse,
+            navigateHomeLocationSetting = navigator::navigateHomeLocationSetting,
             modifier = modifier,
         )
 
@@ -73,6 +89,7 @@ fun PawKeyNavHost(
             paddingValues = paddingValues,
             navigateUp = navigator::navigateUp,
             navigateNext = navigator::navigateWalkReview,
+            snackBarHostState = snackbarHostState
         )
 
         walkReviewNavGraph(
@@ -101,13 +118,22 @@ fun PawKeyNavHost(
         savedCourseNavGraph(
             paddingValues = paddingValues,
             navigateUp = navigator::navigateUp,
-            navigateNext = navigator::navigateDummyNext,
+            navigateNext = navigator::navigateSavedDetail,
             snackBarHostState = snackbarHostState
         )
 
         archivedCourseNavGraph(
             navigateUp = navigator::navigateUp,
+            navigateNext = navigator::navigateArchivedDetail,
             modifier = modifier
+        )
+        savedDetailNavGraph(
+            navigateUp = navigator::navigateUp,
+            snackBarHostState = snackbarHostState
+        )
+
+        archivedDetailNavGraph(
+            navigateUp = navigator::navigateUp
         )
 
         userProfileNavGraph(
@@ -135,9 +161,7 @@ fun PawKeyNavHost(
 
         splashNavGraph(
             paddingValues = paddingValues,
-            navigateUp = navigator::navigateUp,
-            navigateNext = navigator::navigateDummyNext,
-            navigateLogin =  {
+            navigateLogin = {
                 val options = navOptions {
                     popUpTo(0) {
                         inclusive = true
@@ -147,8 +171,7 @@ fun PawKeyNavHost(
                 navigator.navigateOnboarding(navOptions = options)
             },
 
-            snackBarHostState = snackbarHostState
-        )
+            )
 
         onboardingNavGraph(
             paddingValues = paddingValues,
@@ -160,8 +183,8 @@ fun PawKeyNavHost(
 
         loginNavGraph(
             paddingValues = paddingValues,
-            navigateUp = navigator::navigateUp,
-            navigateNext = navigator::navigateHome,
+            navigateUp = navigator::navigateHome,
+            navigateNext = navigator::navigateSignUp,
             snackBarHostState = snackbarHostState
         )
 
@@ -169,8 +192,25 @@ fun PawKeyNavHost(
             paddingValues = paddingValues,
             navigateUp = navigator::navigateUp,
             navigateNext = navigator::navigateDummyNext,
-            navigateSignUp = navigator::navigateMyPage,
+            navigateSignUp = navigator::navigateSignUp,
             snackBarHostState = snackbarHostState
         )
+
+        signupNavGraph(
+            navigateSignUpActivity = navigator::navigateSignUpActivity,
+        )
+
+        signupactivityNavGraph(
+            navigateSignUpDog = navigator::navigateSignUpDog,
+        )
+
+        signupdogNavGraph(
+            navigateNext = navigator::navigateSignUpLevel,
+        )
+
+        signupLevelNavGraph(
+            navigateNext = navigator::navigateHome,
+
+            )
     }
 }

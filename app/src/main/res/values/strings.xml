@@ -11,6 +11,32 @@
 
     <!--Splash-->
     <string name="ic_logo">PAWKEY</string>
+    <!--Login-->
+    <string name="ic_login_new">신규계정으로 회원가입</string>
+    <string name="ic_login_old">기존 계정으로 회원가입</string>
+    <!--Home-->
+    <string name="ic_home_current_word">최근 산책</string>
+    <!--Onboarding-->
+    <string name="ic_onboarding_signup">회원가입</string>
+    <string name="ic_onboarding_signup_button">다음으로</string>
+    <string name="ic_onboarding_signup_subtitle_step1">견주님에 대해 알려주세요</string>
+    <string name="ic_onboarding_signup_subtitle_step2">활동 범위가 어떻게 되시나요?</string>
+    <string name="ic_onboarding_signup_subtitle_step3">견주님의 반려견이 궁금해요!</string>
+    <string name="ic_onboarding_signup_subtitle_step4">반려견 성향은 어떤가요?</string>
+
+    <string name="ic_onboarding_signup_name">이름</string>
+    <string name="ic_onboarding_signup_gender">성별</string>
+    <string name="ic_onboarding_signup_age">나이</string>
+    <string name="ic_onboarding_signup_age_known">나이 알고 있음</string>
+    <string name="ic_onboarding_signup_main_location">지역구</string>
+    <string name="ic_onboarding_signup_sub_location">법정동</string>
+
+    <string name="ic_onboarding_signup_dog_name">반려견 이름</string>
+    <string name="ic_onboarding_signup_dog_breed">견종</string>
+
+    <string name="ic_onboarding_signup_energy_level">활동성</string>
+    <string name="ic_onboarding_signup_social_level">친밀도</string>
+
     <!-- Navigation -->
     <!--Home-->
     <string name="ic_home_description">home</string>

@@ -22,6 +22,8 @@ val PretendardRegular = FontFamily(Font(R.font.pretendard_regular, FontWeight.No
 // Todo : 네이밍과 함께 나중에 lineHeight 등 변경 예정
 @Stable
 class PawKeyTypography internal constructor(
+    head24B: TextStyle,
+    head24Sb: TextStyle,
     head22B: TextStyle,
     head22Sb: TextStyle,
     head20B1: TextStyle,
@@ -38,6 +40,10 @@ class PawKeyTypography internal constructor(
     caption12M: TextStyle,
     caption12R: TextStyle
 ) {
+    var head24B: TextStyle by mutableStateOf(head24B)
+        private set
+    var head24Sb: TextStyle by mutableStateOf(head24B)
+        private set
     var head22B: TextStyle by mutableStateOf(head22B)
         private set
     var head22Sb: TextStyle by mutableStateOf(head22Sb)
@@ -70,6 +76,8 @@ class PawKeyTypography internal constructor(
         private set
 
     fun copy(
+        head24B: TextStyle = this.head24B,
+        head24Sb: TextStyle = this.head24Sb,
         head22B: TextStyle = this.head22B,
         head22Sb: TextStyle = this.head22Sb,
         head20B1: TextStyle = this.head20B1,
@@ -86,6 +94,8 @@ class PawKeyTypography internal constructor(
         caption12M: TextStyle = this.caption12M,
         caption12R: TextStyle = this.caption12R
     ): PawKeyTypography = PawKeyTypography(
+        head24B,
+        head24Sb,
         head22B,
         head22Sb,
         head20B1,
@@ -104,6 +114,8 @@ class PawKeyTypography internal constructor(
     )
 
     fun update(other: PawKeyTypography) {
+        head24B = other.head24B
+        head24Sb = other.head24Sb
         head22B = other.head22B
         head22Sb = other.head22Sb
         head20B1 = other.head20B1
@@ -143,6 +155,20 @@ fun pawKeyTextStyle(
 @Composable
 fun pawKeyTypography(): PawKeyTypography {
     return PawKeyTypography(
+        head24B = pawKeyTextStyle(
+            fontFamily = PretendardBold,
+            fontWeight = FontWeight.Bold,
+            fontSize = 24.sp,
+            lineHeight = (24 * 1.0).sp,
+            letterSpacing = TextUnit.Unspecified
+        ),
+        head24Sb = pawKeyTextStyle(
+            fontFamily = PretendardSemiBold,
+            fontWeight = FontWeight.SemiBold,
+            fontSize = 24.sp,
+            lineHeight = (24 * 1.4).sp,
+            letterSpacing = TextUnit.Unspecified
+        ),
         head22B = pawKeyTextStyle(
             fontFamily = PretendardBold,
             fontWeight = FontWeight.Bold,

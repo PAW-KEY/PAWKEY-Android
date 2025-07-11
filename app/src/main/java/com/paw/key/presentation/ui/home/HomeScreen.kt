@@ -11,25 +11,29 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
-import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalView
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.view.ViewCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.paw.key.R
 import com.paw.key.core.designsystem.theme.PawKeyTheme
+import com.paw.key.core.util.noRippleClickable
 import com.paw.key.presentation.ui.home.component.DaytimeCard
-import com.paw.key.presentation.ui.home.component.HistoryCard
 import com.paw.key.presentation.ui.home.component.RowCalendar
 import com.paw.key.presentation.ui.home.component.SettingButton
 import com.paw.key.presentation.ui.home.component.TopBar
@@ -37,12 +41,27 @@ import com.paw.key.presentation.ui.home.component.TrackingCard
 import com.paw.key.presentation.ui.home.component.WeatherCard
 import com.paw.key.presentation.ui.home.viewmodel.HomeViewModel
 
+
+@Preview
+@Composable
+private fun HomeScreenPreview() {
+    PawKeyTheme {
+        HomeScreen(
+            paddingValues = PaddingValues(),
+            navigateUp = {},
+            navigateNext = {},
+            navigateHomeLocationSetting = {}
+        )
+    }
+
+}
+
 @Composable
 fun HomeRoute(
     paddingValues: PaddingValues,
     navigateUp: () -> Unit,
     navigateNext: () -> Unit,
-    snackBarHostState: SnackbarHostState,
+    navigateHomeLocationSetting: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: HomeViewModel = hiltViewModel(),
 ) {
@@ -51,7 +70,7 @@ fun HomeRoute(
         paddingValues = paddingValues,
         navigateUp = navigateUp,
         navigateNext = navigateNext,
-        snackBarHostState = snackBarHostState,
+        navigateHomeLocationSetting = navigateHomeLocationSetting,
         modifier = modifier,
         viewModel = viewModel
     )
@@ -62,11 +81,11 @@ fun HomeScreen(
     paddingValues: PaddingValues,
     navigateUp: () -> Unit,
     navigateNext: () -> Unit,
-    snackBarHostState: SnackbarHostState,
+    navigateHomeLocationSetting: () -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: HomeViewModel,
+    viewModel: HomeViewModel = hiltViewModel(),
 ) {
-    val isLocationMenuVisible = viewModel.isLocationMenuVisible
+    val state by viewModel.state.collectAsState()
     val view = LocalView.current
     val window = (view.context as? Activity)?.window
 
@@ -82,15 +101,16 @@ fun HomeScreen(
     Column(
         modifier = modifier
             .padding(paddingValues)
+            .background(color = PawKeyTheme.colors.white2)
             .fillMaxSize()
-            .background(color = PawKeyTheme.colors.white1)
     ) {
         TopBar(location = "강남구 역삼동", onLocationClick = { viewModel.toggleLocationMenu() })
 
         Column(
             verticalArrangement = Arrangement.spacedBy(12.dp),
             modifier = Modifier
-                .padding(horizontal = 16.dp),
+                .padding(horizontal = 16.dp)
+                .background(color = PawKeyTheme.colors.white2),
         ) {
             Spacer(modifier = Modifier.height(13.dp))
 
@@ -103,28 +123,35 @@ fun HomeScreen(
             )
 
             Row(
-                horizontalArrangement = Arrangement.spacedBy(12.dp),
-                modifier = Modifier.padding(horizontal = 16.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
             ) {
                 DaytimeCard(
                     daytime = "05:06",
                     daystate = "일출",
                 )
 
-                Spacer(modifier = Modifier.width(12.dp))
+                Spacer(modifier = Modifier.weight(1F))
 
-                TrackingCard(onClick = {navigateNext()})
+                TrackingCard(onClick = { navigateNext() })
             }
 
             Spacer(modifier = Modifier.height(12.dp))
 
             RowCalendar(date = "7월")
 
-            HistoryCard()
+            // Todo : 이거 공통 컴포넌트로 변경
+//            HistoryCard()
+            Spacer(modifier = Modifier.height(17.dp))
+            Text(
+                text = stringResource(R.string.ic_home_current_word),
+                color = PawKeyTheme.colors.black,
+                style = PawKeyTheme.typography.head18Sb,
+            )
         }
 
     }
-    if (isLocationMenuVisible) {
+    if (state.isLocationMenuVisible) {
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -133,7 +160,7 @@ fun HomeScreen(
                     indication = null,
                     interactionSource = remember { MutableInteractionSource() }
                 ) {
-                    viewModel.hideLocationMenu()
+                    viewModel.toggleLocationMenu()
                 }
         )
 
@@ -142,24 +169,13 @@ fun HomeScreen(
             modifier = Modifier
                 .padding(top = 97.dp, start = 250.dp),
         ) {
-            SettingButton()
+            SettingButton(
+                modifier = Modifier
+                    .noRippleClickable {
+                        viewModel.toggleLocationMenu()
+                        navigateHomeLocationSetting()
+                    },
+            )
         }
     }
 }
-
-//@Preview
-//@Composable
-//private fun HomeScreenPreview() {
-//    PawKeyTheme {
-//        HomeScreen(
-//            paddingValues = PaddingValues(),
-//            navigateUp = {},
-//            navigateNext = {},
-//            snackBarHostState = SnackbarHostState(),
-//
-//            )
-//
-//    }
-//
-//}
-// viewmodel 을 파라미터로 넣으면 못본다! 알고싶지않았음
