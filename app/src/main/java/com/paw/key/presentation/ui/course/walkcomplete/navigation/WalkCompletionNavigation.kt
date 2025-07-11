@@ -23,14 +23,12 @@ fun NavGraphBuilder.walkCompletionNavGraph(
     paddingValues: PaddingValues,
     navigateUp: () -> Unit,
     navigateNext: () -> Unit,
-    snackBarHostState: SnackbarHostState,
 ) {
     composable<WalkCompletion> {
         WalkCompletionRoute(
             paddingValues = paddingValues,
             navigateUp = navigateUp,
             navigateNext = navigateNext,
-            snackBarHostState = snackBarHostState,
         )
     }
 }
