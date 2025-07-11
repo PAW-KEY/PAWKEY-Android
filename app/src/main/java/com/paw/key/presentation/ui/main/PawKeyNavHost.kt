@@ -27,6 +27,10 @@ import com.paw.key.presentation.ui.mypage.navigation.savedCourseNavGraph
 import com.paw.key.presentation.ui.mypage.navigation.userProfileNavGraph
 import com.paw.key.presentation.ui.region.navigation.regionalNavGraph
 import com.paw.key.presentation.ui.mypage.navigation.myPageNavGraph
+import com.paw.key.presentation.ui.signup.navigation.signupLevelNavGraph
+import com.paw.key.presentation.ui.signup.navigation.signupNavGraph
+import com.paw.key.presentation.ui.signup.navigation.signupactivityNavGraph
+import com.paw.key.presentation.ui.signup.navigation.signupdogNavGraph
 import com.paw.key.presentation.ui.onboard.navigation.onboardingNavGraph
 import com.paw.key.presentation.ui.splash.navigation.splashNavGraph
 
@@ -48,9 +52,7 @@ fun PawKeyNavHost(
     ) {
         homeNavGraph(
             paddingValues = paddingValues,
-            navigateUp = navigator.navController::navigateUp,
-            navigateNext = navigator::navigateCourse,
-            snackBarHostState = snackbarHostState,
+            navigateNext = navigator::navigateWalkCourse,
             modifier = modifier,
         )
 
@@ -73,6 +75,7 @@ fun PawKeyNavHost(
             paddingValues = paddingValues,
             navigateUp = navigator::navigateUp,
             navigateNext = navigator::navigateWalkReview,
+            snackBarHostState = snackbarHostState
         )
 
         walkReviewNavGraph(
@@ -135,8 +138,6 @@ fun PawKeyNavHost(
 
         splashNavGraph(
             paddingValues = paddingValues,
-            navigateUp = navigator::navigateUp,
-            navigateNext = navigator::navigateDummyNext,
             navigateLogin =  {
                 val options = navOptions {
                     popUpTo(0) {
@@ -147,7 +148,6 @@ fun PawKeyNavHost(
                 navigator.navigateOnboarding(navOptions = options)
             },
 
-            snackBarHostState = snackbarHostState
         )
 
         onboardingNavGraph(
@@ -160,8 +160,8 @@ fun PawKeyNavHost(
 
         loginNavGraph(
             paddingValues = paddingValues,
-            navigateUp = navigator::navigateUp,
-            navigateNext = navigator::navigateHome,
+            navigateUp = navigator::navigateHome,
+            navigateNext = navigator::navigateSignUp,
             snackBarHostState = snackbarHostState
         )
 
@@ -169,8 +169,25 @@ fun PawKeyNavHost(
             paddingValues = paddingValues,
             navigateUp = navigator::navigateUp,
             navigateNext = navigator::navigateDummyNext,
-            navigateSignUp = navigator::navigateMyPage,
+            navigateSignUp = navigator::navigateSignUp,
             snackBarHostState = snackbarHostState
+        )
+
+        signupNavGraph(
+            navigateSignUpActivity = navigator::navigateSignUpActivity,
+        )
+
+        signupactivityNavGraph(
+            navigateSignUpDog = navigator::navigateSignUpDog,
+        )
+
+        signupdogNavGraph(
+            navigateNext = navigator::navigateSignUpLevel,
+        )
+
+        signupLevelNavGraph(
+            navigateNext = navigator::navigateHome,
+
         )
     }
 }
