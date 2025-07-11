@@ -1,6 +1,7 @@
 package com.paw.key.presentation.ui.mypage
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
@@ -69,7 +70,7 @@ fun MyPageScreen(
                 style = PawKeyTheme.typography.head22B,
                 modifier = Modifier.padding(start = 16.dp, top = 16.dp, bottom = 12.dp)
             )
-            OwnerCard(ownerName = "김도기님", role = "견주")
+            OwnerCard(ownerName = "김도기님", role = "견주", navigateUserProfile = navigateUserProfile)
 
             Spacer(modifier = Modifier.height(19.dp))
 
@@ -79,12 +80,15 @@ fun MyPageScreen(
                 gender = "여아",
                 tags = listOf("조금 느긋해요", "#오토바이소리", "#대형견"),
                 walkCount = "7회",
-                totalDistance = "14km"
+                totalDistance = "14km",
+                navigatePetProfile = navigatePetProfile
             )
             Spacer(modifier = Modifier.height(12.dp))
 
             WalkRouteList(
-                routes = listOf("저장한 산책 루트", "내가 기록한 산책 루트")
+                routes = listOf("저장한 산책 루트", "내가 기록한 산책 루트"),
+                navigateSavedCourse = navigateSavedCourse,
+                navigateArchivedCourse = navigateArchivedCourse
             )
         }
     }
@@ -94,6 +98,7 @@ fun MyPageScreen(
 fun OwnerCard(
     ownerName: String,
     role: String,
+    navigateUserProfile: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Row(
@@ -112,6 +117,7 @@ fun OwnerCard(
         Spacer(modifier = Modifier.weight(1f))
         Icon(
             imageVector = ImageVector.vectorResource(id = R.drawable.ic_arrow_right),
+            modifier = modifier.clickable { navigateUserProfile() },
             contentDescription = "견주 프로필 이동"
         )
     }
@@ -125,6 +131,7 @@ fun PetCard(
     tags: List<String>,
     walkCount: String,
     totalDistance: String,
+    navigatePetProfile: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -157,6 +164,7 @@ fun PetCard(
             Spacer(modifier = Modifier.weight(1f))
             Icon(
                 imageVector = ImageVector.vectorResource(id = R.drawable.ic_arrow_right),
+                modifier = modifier.clickable { navigatePetProfile() },
                 contentDescription = "반려견 프로필 이동",
                 tint = Color.White
             )
@@ -231,8 +239,11 @@ fun PetCard(
 }
 
 @Composable
-fun WalkRouteList(routes: List<String>,
-                  modifier: Modifier = Modifier
+fun WalkRouteList(
+    routes: List<String>,
+    navigateSavedCourse: () -> Unit,
+    navigateArchivedCourse: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
     Column(
         modifier = Modifier
@@ -262,6 +273,9 @@ fun WalkRouteList(routes: List<String>,
                 )
                 Icon(
                     imageVector = ImageVector.vectorResource(id = R.drawable.ic_arrow_right),
+                    modifier = modifier.clickable {
+                        if (index == 0) navigateSavedCourse() else navigateArchivedCourse()
+                    },
                     contentDescription = "산책루트 메뉴 이동"
                 )
             }
