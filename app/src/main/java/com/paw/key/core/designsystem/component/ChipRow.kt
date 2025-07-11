@@ -1,7 +1,5 @@
 package com.paw.key.core.designsystem.component
 
-import android.util.Log
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
@@ -27,7 +25,6 @@ fun ChipRow(
     }
 
     LaunchedEffect(isExpanded) {
-        Log.e("lauaua", "$isExpanded")
     }
 
     val visibleTags = when {
@@ -36,22 +33,28 @@ fun ChipRow(
         else -> tags.take(3) //아니라면 3개만 뽑아서 보여줌
     }
 
-    val hiddenCount = tags.size - visibleTags.size //가려진 칩 개수
+    val hiddenCount = tags.size - 3 //가려진 칩 개수
 
     FlowRow(
         modifier = modifier,
         horizontalArrangement = Arrangement.spacedBy(8.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        SubChip(
-            text = "+$hiddenCount",
-            isActionChip = isExpanded, // 회색칩으로 표시!
-            modifier = modifier,
-            onClick = {
-                Log.e("clcicc", "$isExpanded")
-                isExpanded = !isExpanded
-            }
-        )
+        // 초록칩 보여주기
+        visibleTags.forEach { tag ->
+            SubChip(text = tag)
+        }
+
+        // 회색칩 조건 분기
+        if (!isExpanded && tags.size > 3) {
+            SubChip(
+                text = "+$hiddenCount",
+                isActionChip = true,
+                onClick = {
+                    isExpanded = true // 클릭되면 전체 보여줌
+                }
+            )
+        }
     }
 }
 
@@ -65,9 +68,7 @@ fun ChipRowPreview() {
                 "배변 쓰레기통",
                 "쉼터",
                 "CCTV 있음",
-                "물그릇 비치","이륜차 거의 없음",
-                "배변 쓰레기통",
-                "쉼터",
+                "물그릇 비치"
             )
         )
     }

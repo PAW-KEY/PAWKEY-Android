@@ -2,8 +2,7 @@ package com.paw.key.core.designsystem.component
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -18,6 +17,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import com.paw.key.R
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -28,9 +28,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
 import com.paw.key.core.designsystem.theme.PawKeyTheme
 import kotlin.String
 
@@ -39,15 +43,13 @@ fun CourseCard(
     title: String,
     petName:String,
     date: String,
-    location: String,
-    distance: String,
-    time: String,
     modifier: Modifier = Modifier
 ) {
     Column(
         modifier = modifier
             .padding(8.dp)
             .fillMaxWidth()
+            .size(width = 328.dp , height = 240.dp)
             .background(Color.White, shape = RoundedCornerShape(20.dp))
     ) {
         // 지도 썸네일
@@ -81,17 +83,23 @@ fun CourseCard(
                     )
             )
 
-            // 프로필 + 텍스트
+            // 프로필 + 제목
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier
                     .align(Alignment.BottomStart)
                     .padding(start = 16.dp, bottom = 16.dp)
             ) {
-                Box(
+                AsyncImage(
+                    model = ImageRequest.Builder(LocalContext.current)
+                        .data("https://pawkey-server.com/image.jpg") // ← 서버에서 받은 이미지 URL 넣깅
+                        .crossfade(true)
+                        .build(),
+                    contentDescription = null,
                     modifier = Modifier
                         .size(40.dp)
-                        .background(Color.Gray, CircleShape)
+                        .clip(CircleShape), // 원형 크롭
+                    contentScale = ContentScale.Crop
                 )
                 Spacer(modifier = Modifier.width(10.dp))
                 Column {
@@ -115,6 +123,14 @@ fun CourseCard(
                         )
                     }
                 }
+                Spacer(modifier = Modifier.width(120.dp))
+
+                Icon(
+                    imageVector = ImageVector.vectorResource(id = R.drawable.ic_heart_default),
+                    modifier = modifier.clickable { },
+                    tint = PawKeyTheme.colors.white1,
+                    contentDescription = "찜하기"
+                )
             }
         }
 
@@ -141,9 +157,6 @@ fun CourseCardPreview() {
             title = "홍대 주변 좋은 산책 코스",
             petName = "반려견 이름",
             date = "2025/05/17",
-            location = "홍대입구역",
-            distance = "3km",
-            time = "1시간 소요",
         )
     }
 }
