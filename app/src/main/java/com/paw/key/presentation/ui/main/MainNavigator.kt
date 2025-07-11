@@ -27,6 +27,10 @@ import com.paw.key.presentation.ui.region.navigation.navigateRegional
 import com.paw.key.presentation.ui.mypage.navigation.navigateMyPage
 import com.paw.key.presentation.ui.mypage.navigation.navigateSavedDetail
 import com.paw.key.presentation.ui.onboard.navigation.navigateOnboarding
+import com.paw.key.presentation.ui.signup.navigation.navigateSignLevel
+import com.paw.key.presentation.ui.signup.navigation.navigateSignUp
+import com.paw.key.presentation.ui.signup.navigation.navigateSignUpActivity
+import com.paw.key.presentation.ui.signup.navigation.navigateSignUpDog
 import com.paw.key.presentation.ui.splash.navigation.Splash
 import com.paw.key.presentation.ui.splash.navigation.navigateSplash
 
@@ -80,10 +84,16 @@ class MainNavigator(
         navController.navigateLogin(navOptions = navOptions)
     }
 
-    // 마이페이지 이동
+
+    fun navigateSignUp(navOptions: NavOptions? = null) {
+        navController.navigateSignUp(navOptions = navOptions)
+    }
+    
+  
     fun navigateMyPage(navOptions: NavOptions? = null) {
         navController.navigateMyPage(navOptions = navOptions)
     }
+
 
     fun navigateUserProfile(navOptions: NavOptions? = null) {
         navController.navigateUserProfile(navOptions = navOptions)
@@ -144,6 +154,20 @@ class MainNavigator(
         navController.navigateRegional(navOptions = navOptions)
     }
 
+    fun navigateSignUpActivity(navOptions: NavOptions? = null) {
+        navController.navigateSignUpActivity(navOptions = navOptions)
+    }
+
+    fun navigateSignUpDog(navOptions: NavOptions? = null) {
+        navController.navigateSignUpDog(navOptions = navOptions)
+    }
+
+    fun navigateSignUpLevel(navOptions: NavOptions? = null) {
+        navController.navigateSignLevel(navOptions = navOptions)
+    }
+
+
+
     @Composable
     fun showBottomBar() = MainTab.contains {
         currentDestination?.hasRoute(it::class) == true
@@ -156,4 +180,3 @@ fun rememberMainNavigator(
 ): MainNavigator = remember(navController) {
     MainNavigator(navController)
 }
-
