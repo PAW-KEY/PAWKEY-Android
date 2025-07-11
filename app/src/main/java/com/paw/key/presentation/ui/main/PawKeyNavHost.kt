@@ -9,6 +9,7 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
+import androidx.navigation.navOptions
 import com.paw.key.presentation.ui.community.navigation.communityNavGraph
 import com.paw.key.presentation.ui.course.entire.navigation.courseNavGraph
 import com.paw.key.presentation.ui.course.entire.tab.map.navigation.walkCourseNavGraph
@@ -17,11 +18,11 @@ import com.paw.key.presentation.ui.course.walkrecord.navigation.walkReviewNavGra
 import com.paw.key.presentation.ui.dummy.navigation.dummyNavGraph
 import com.paw.key.presentation.ui.dummy.next.dummyNextNavGraph
 import com.paw.key.presentation.ui.home.navigation.homeNavGraph
+import com.paw.key.presentation.ui.home.navigation.navigateHome
 import com.paw.key.presentation.ui.login.navigation.loginNavGraph
 import com.paw.key.presentation.ui.mypage.navigation.myPageNavGraph
-import com.paw.key.presentation.ui.owner.navigation.ownerNavGraph
-import com.paw.key.presentation.ui.pet.navigation.petNavGraph
-import com.paw.key.presentation.ui.signup.navigation.signupNavGraph
+import com.paw.key.presentation.ui.onboard.navigation.onboardingNavGraph
+import com.paw.key.presentation.ui.splash.navigation.Splash
 import com.paw.key.presentation.ui.splash.navigation.splashNavGraph
 
 @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
@@ -90,7 +91,7 @@ fun PawKeyNavHost(
             snackBarHostState = snackbarHostState
         )
 
-        ownerNavGraph(
+        /*ownerNavGraph(
             paddingValues = paddingValues,
             navigateUp = navigator::navigateUp,
             navigateNext = navigator::navigateDummyNext,
@@ -102,7 +103,7 @@ fun PawKeyNavHost(
             navigateUp = navigator::navigateUp,
             navigateNext = navigator::navigateDummyNext,
             snackBarHostState = snackbarHostState
-        )
+        )*/
 
         dummyNavGraph(
             paddingValues = paddingValues,
@@ -119,24 +120,40 @@ fun PawKeyNavHost(
             paddingValues = paddingValues,
             navigateUp = navigator::navigateUp,
             navigateNext = navigator::navigateDummyNext,
-            navigateLogin = navigator::navigateLogin,
+            navigateLogin =  {
+                val options = navOptions {
+                    popUpTo(Splash) {
+                        inclusive = true
+                    }
+                    launchSingleTop = true
+                }
+                navigator.navigateOnboarding(navOptions = options)
+            },
+
+            snackBarHostState = snackbarHostState
+        )
+
+        onboardingNavGraph(
+            paddingValues = paddingValues,
+            navigateUp = navigator::navigateUp,
+            navigateNext = navigator::navigateDummyNext,
+            navigateSignUp = navigator::navigateLogin,
             snackBarHostState = snackbarHostState
         )
 
         loginNavGraph(
             paddingValues = paddingValues,
             navigateUp = navigator::navigateUp,
-            navigateNext = navigator::navigateDummyNext,
-            navigateSignUp = navigator::navigateSignUp,
+            navigateNext = navigator::navigateHome,
             snackBarHostState = snackbarHostState
         )
 
-        signupNavGraph(
+        /*signupNavGraph(
             paddingValues = paddingValues,
             navigateUp = navigator::navigateUp,
             navigateNext = navigator::navigateDummyNext,
             navigateLogin = navigator::navigateLogin,
             snackBarHostState = snackbarHostState
-        )
+        )*/
     }
 }
