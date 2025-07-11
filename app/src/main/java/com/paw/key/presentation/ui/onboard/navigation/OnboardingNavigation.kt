@@ -1,39 +1,41 @@
-package com.paw.key.presentation.ui.login.navigation
+package com.paw.key.presentation.ui.onboard.navigation
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
 import com.paw.key.core.navigation.Route
-import com.paw.key.presentation.ui.login.LoginRoute
+import com.paw.key.presentation.ui.onboard.OnboardingRoute
 import kotlinx.serialization.Serializable
 
-fun NavController.navigateLogin(
-    navOptions: NavOptions?
+fun NavController.navigateOnboarding(
+    navOptions: NavOptions?,
 ) {
-    navigate(Login, navOptions)
+    navigate(Onboarding, navOptions)
 }
 
-@RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
-fun NavGraphBuilder.loginNavGraph(
+fun NavGraphBuilder.onboardingNavGraph(
     paddingValues: PaddingValues,
     navigateUp: () -> Unit,
     navigateNext: () -> Unit,
+    navigateSignUp: () -> Unit,
     snackBarHostState: SnackbarHostState,
+    modifier: Modifier = Modifier,
 ) {
-    composable<Login> {
-        LoginRoute(
+    composable<Onboarding> {
+        OnboardingRoute(
+            paddingValues = paddingValues,
             navigateUp = navigateUp,
             navigateNext = navigateNext,
+            navigateSignUp = navigateSignUp,
             snackBarHostState = snackBarHostState,
-            paddingValues = paddingValues
+            modifier = modifier
         )
     }
 }
 
 @Serializable
-data object Login : Route
+data object Onboarding : Route

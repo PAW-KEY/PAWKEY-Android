@@ -3,7 +3,10 @@
     <string name="empty_string">데이터가 없습니다.</string>
     <string name="loading_string">로딩 중...</string>
 
-    <!--Splas-->
+    <!--바텀 바 애니메이션 라벨-->
+    <string name="main_bottom_bar_animation_label">바텀 바 라벨</string>
+
+    <!--Splash-->
     <string name="ic_logo">PAWKEY</string>
     <!-- Navigation -->
     <!--Home-->

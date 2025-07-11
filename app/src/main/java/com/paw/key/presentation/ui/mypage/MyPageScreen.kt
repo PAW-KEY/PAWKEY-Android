@@ -192,7 +192,9 @@ fun PetCard(
                 horizontalArrangement = Arrangement.spacedBy(4.dp)
             ) {
                 tags.forEach {
-                    SubChip(text = it)
+                    SubChip(
+                        text = it
+                    )
                 }
             }
         }
@@ -246,7 +248,7 @@ fun WalkRouteList(
     modifier: Modifier = Modifier
 ) {
     Column(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .background(Color.White)
             .padding(horizontal = 16.dp)

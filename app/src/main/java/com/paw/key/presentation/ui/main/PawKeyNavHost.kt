@@ -9,6 +9,7 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
+import androidx.navigation.navOptions
 import com.paw.key.presentation.ui.community.navigation.communityNavGraph
 import com.paw.key.presentation.ui.course.entire.navigation.courseNavGraph
 import com.paw.key.presentation.ui.course.entire.tab.map.navigation.walkCourseNavGraph
@@ -17,6 +18,7 @@ import com.paw.key.presentation.ui.course.walkrecord.navigation.walkReviewNavGra
 import com.paw.key.presentation.ui.dummy.navigation.dummyNavGraph
 import com.paw.key.presentation.ui.dummy.next.dummyNextNavGraph
 import com.paw.key.presentation.ui.home.navigation.homeNavGraph
+import com.paw.key.presentation.ui.home.navigation.navigateHome
 import com.paw.key.presentation.ui.login.navigation.loginNavGraph
 import com.paw.key.presentation.ui.mypage.navigation.archivedCourseNavGraph
 import com.paw.key.presentation.ui.mypage.navigation.myPageNavGraph
@@ -25,6 +27,7 @@ import com.paw.key.presentation.ui.mypage.navigation.savedCourseNavGraph
 import com.paw.key.presentation.ui.mypage.navigation.userProfileNavGraph
 import com.paw.key.presentation.ui.region.navigation.regionalNavGraph
 import com.paw.key.presentation.ui.mypage.navigation.myPageNavGraph
+import com.paw.key.presentation.ui.onboard.navigation.onboardingNavGraph
 import com.paw.key.presentation.ui.splash.navigation.splashNavGraph
 
 @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
@@ -70,7 +73,6 @@ fun PawKeyNavHost(
             paddingValues = paddingValues,
             navigateUp = navigator::navigateUp,
             navigateNext = navigator::navigateWalkReview,
-            snackBarHostState = snackbarHostState
         )
 
         walkReviewNavGraph(
@@ -135,15 +137,31 @@ fun PawKeyNavHost(
             paddingValues = paddingValues,
             navigateUp = navigator::navigateUp,
             navigateNext = navigator::navigateDummyNext,
-            navigateLogin = navigator::navigateLogin,
+            navigateLogin =  {
+                val options = navOptions {
+                    popUpTo(0) {
+                        inclusive = true
+                    }
+                    launchSingleTop = true
+                }
+                navigator.navigateOnboarding(navOptions = options)
+            },
+
+            snackBarHostState = snackbarHostState
+        )
+
+        onboardingNavGraph(
+            paddingValues = paddingValues,
+            navigateUp = navigator::navigateUp,
+            navigateNext = navigator::navigateDummyNext,
+            navigateSignUp = navigator::navigateLogin,
             snackBarHostState = snackbarHostState
         )
 
         loginNavGraph(
             paddingValues = paddingValues,
             navigateUp = navigator::navigateUp,
-            navigateNext = navigator::navigateRegional,
-            navigateSignUp = navigator::navigateRegional,
+            navigateNext = navigator::navigateHome,
             snackBarHostState = snackbarHostState
         )
 

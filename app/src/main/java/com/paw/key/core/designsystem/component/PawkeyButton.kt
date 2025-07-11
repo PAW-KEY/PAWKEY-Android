@@ -12,6 +12,7 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.paw.key.core.designsystem.theme.PawKeyTheme
@@ -53,6 +54,15 @@ private fun PreviewPawkeyButton() {
                 onClick = {},
                 isBackGround = true
             )
+
+            // 투명 border
+            PawkeyButton(
+                text = "신규 계정으로 회원가입",
+                enabled = true,
+                onClick = {},
+                isBorder = true,
+                isBackGround = true
+            )
         }
     }
 }
@@ -64,6 +74,7 @@ fun PawkeyButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     isBackGround: Boolean = false,
+    isBorder: Boolean = false
 ) {
     val backgroundColor = when {
         enabled && !isBackGround -> PawKeyTheme.colors.green500
@@ -80,6 +91,7 @@ fun PawkeyButton(
     }
 
     val borderColor = when {
+        isBorder -> Color.Transparent
         enabled && isBackGround -> PawKeyTheme.colors.green500
         !enabled && isBackGround -> PawKeyTheme.colors.gray200
         else -> PawKeyTheme.colors.white1
