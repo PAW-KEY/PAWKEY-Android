@@ -46,7 +46,7 @@ fun WeatherCard(
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier
             .background(
-                color = PawKeyTheme.colors.white2,
+                color = PawKeyTheme.colors.white1,
                 shape = RoundedCornerShape(size = 15.dp),
             )
             .padding(vertical = 12.dp, horizontal = 12.dp),
@@ -100,7 +100,8 @@ fun WeatherCard(
 
         Text(
             text = "ml",
-            style = PawKeyTheme.typography.body14Sb, modifier = modifier
+            style = PawKeyTheme.typography.body14Sb,
+            modifier = modifier
                 .padding(top = 4.dp),
         )
     }
