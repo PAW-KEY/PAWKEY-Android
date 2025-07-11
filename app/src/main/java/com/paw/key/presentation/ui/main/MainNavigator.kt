@@ -18,11 +18,8 @@ import com.paw.key.presentation.ui.dummy.next.navigateDummyNext
 import com.paw.key.presentation.ui.home.navigation.navigateHome
 import com.paw.key.presentation.ui.login.navigation.navigateLogin
 import com.paw.key.presentation.ui.mypage.navigation.navigateMyPage
-import com.paw.key.presentation.ui.owner.navigation.navigateOwner
-import com.paw.key.presentation.ui.pet.navigation.navigatePet
-import com.paw.key.presentation.ui.signup.navigation.navigateSignUp
+import com.paw.key.presentation.ui.onboard.navigation.navigateOnboarding
 import com.paw.key.presentation.ui.splash.navigation.Splash
-import com.paw.key.presentation.ui.splash.navigation.navigateSplash
 
 class MainNavigator(
     val navController: NavHostController,
@@ -64,23 +61,30 @@ class MainNavigator(
     fun setOnVisibleRecord(visible: Boolean) {
         isRecordVisible = visible
     }
-    
+
+    /*온보딩, 로그인, */
+    fun navigateOnboarding(navOptions: NavOptions? = null) {
+        navController.navigateOnboarding(navOptions = navOptions)
+    }
+
+    fun navigateLogin(navOptions: NavOptions? = null) {
+        navController.navigateLogin(navOptions = navOptions)
+    }
+
+    /*메인 탭 이동*/
     fun navigateMyPage(navOptions: NavOptions? = null) {
         navController.navigateMyPage(navOptions = navOptions)
     }
 
-    fun navigatePet(navOptions: NavOptions? = null) {
-        navController.navigatePet(navOptions = navOptions)
-    }
-
-    fun navigateOwner(navOptions: NavOptions? = null) {
-        navController.navigateOwner(navOptions = navOptions)
-    }
-
     fun navigateCourse(navOptions: NavOptions? = null) {
-        navController.navigatePet(navOptions = navOptions)
+        navController.navigateCourse(navOptions = navOptions)
     }
 
+    fun navigateHome(navOptions: NavOptions? = null) {
+        navController.navigateHome(navOptions = navOptions)
+    }
+
+    /*메인 탭 산택 기준 - 산책하기, 완료, 리뷰*/
     fun navigateWalkCourse(navOptions: NavOptions? = null) {
         navController.navigateWalkCourse(navOptions = navOptions)
     }
@@ -93,30 +97,12 @@ class MainNavigator(
         navController.navigateWalkReview(navOptions = navOptions)
     }
 
-
-
-    fun setOnVisibleRecord(visible: Boolean) {
-        isRecordVisible = visible
-    }
-
     fun navigateDummyNext(navOptions: NavOptions? = null) {
         navController.navigateDummyNext(navOptions = navOptions)
     }
 
     fun navigateUp() {
         navController.navigateUp()
-    }
-
-    fun navigateSplash(navOptions: NavOptions? = null) {
-        navController.navigateSplash(navOptions = navOptions)
-    }
-
-    fun navigateLogin(navOptions: NavOptions? = null) {
-        navController.navigateLogin(navOptions = navOptions)
-    }
-
-    fun navigateSignUp(navOptions: NavOptions? = null) {
-        navController.navigateSignUp(navOptions = navOptions)
     }
 
     @Composable
