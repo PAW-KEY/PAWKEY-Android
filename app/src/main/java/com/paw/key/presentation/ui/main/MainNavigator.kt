@@ -18,12 +18,14 @@ import com.paw.key.presentation.ui.dummy.next.navigateDummyNext
 import com.paw.key.presentation.ui.home.navigation.navigateHome
 import com.paw.key.presentation.ui.login.navigation.navigateLogin
 import com.paw.key.presentation.ui.mypage.navigation.navigateArchivedCourse
+import com.paw.key.presentation.ui.mypage.navigation.navigateArchivedDetail
 import com.paw.key.presentation.ui.mypage.navigation.navigateMyPage
 import com.paw.key.presentation.ui.mypage.navigation.navigatePetProfile
 import com.paw.key.presentation.ui.mypage.navigation.navigateSavedCourse
 import com.paw.key.presentation.ui.mypage.navigation.navigateUserProfile
 import com.paw.key.presentation.ui.region.navigation.navigateRegional
 import com.paw.key.presentation.ui.mypage.navigation.navigateMyPage
+import com.paw.key.presentation.ui.mypage.navigation.navigateSavedDetail
 import com.paw.key.presentation.ui.onboard.navigation.navigateOnboarding
 import com.paw.key.presentation.ui.signup.navigation.navigateSignLevel
 import com.paw.key.presentation.ui.signup.navigation.navigateSignUp
@@ -82,10 +84,12 @@ class MainNavigator(
         navController.navigateLogin(navOptions = navOptions)
     }
 
+
     fun navigateSignUp(navOptions: NavOptions? = null) {
         navController.navigateSignUp(navOptions = navOptions)
     }
-    /*메인 탭 이동*/
+    
+  
     fun navigateMyPage(navOptions: NavOptions? = null) {
         navController.navigateMyPage(navOptions = navOptions)
     }
@@ -102,7 +106,13 @@ class MainNavigator(
     fun navigateSavedCourse(navOptions: NavOptions? = null) {
         navController.navigateSavedCourse(navOptions = navOptions)
     }
+    fun navigateSavedDetail(navOptions: NavOptions? = null) {
+        navController.navigateSavedDetail(navOptions = navOptions)
+    }
 
+    fun navigateArchivedDetail(navOptions: NavOptions? = null) {
+        navController.navigateArchivedDetail(navOptions = navOptions)
+    }
     fun navigateArchivedCourse(navOptions: NavOptions? = null) {
         navController.navigateArchivedCourse(navOptions = navOptions)
     }
