@@ -16,6 +16,7 @@
     <!--Course-->
     <string name="ic_course_description">course</string>
     <string name="course_complete_button_text">산책 기록하기</string>
+    <string name="course_shared_complete_button_text">후기 작성하기</string>
 
     <string name="course_review_image_description">산책 리뷰 이미지</string>
     <string name="course_review_location_icon_description">위치 정보 표시용 아이콘</string>
