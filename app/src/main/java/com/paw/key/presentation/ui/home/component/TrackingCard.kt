@@ -25,7 +25,7 @@ private fun PreviewTrackingCard() {
 }
 
 @Composable
-internal fun TrackingCard(
+fun TrackingCard(
     onClick: () -> Unit,
 ) {
     Box(
