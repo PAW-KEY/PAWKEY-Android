@@ -18,10 +18,11 @@ import com.paw.key.presentation.ui.dummy.navigation.dummyNavGraph
 import com.paw.key.presentation.ui.dummy.next.dummyNextNavGraph
 import com.paw.key.presentation.ui.home.navigation.homeNavGraph
 import com.paw.key.presentation.ui.login.navigation.loginNavGraph
+import com.paw.key.presentation.ui.region.navigation.regionalNavGraph
 import com.paw.key.presentation.ui.mypage.navigation.myPageNavGraph
 import com.paw.key.presentation.ui.owner.navigation.ownerNavGraph
 import com.paw.key.presentation.ui.pet.navigation.petNavGraph
-import com.paw.key.presentation.ui.signup.navigation.signupNavGraph
+//import com.paw.key.presentation.ui.signup.navigation.signupNavGraph
 import com.paw.key.presentation.ui.splash.navigation.splashNavGraph
 
 @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
@@ -126,17 +127,25 @@ fun PawKeyNavHost(
         loginNavGraph(
             paddingValues = paddingValues,
             navigateUp = navigator::navigateUp,
-            navigateNext = navigator::navigateDummyNext,
-            navigateSignUp = navigator::navigateSignUp,
+            navigateNext = navigator::navigateRegional,
+            navigateSignUp = navigator::navigateRegional,
             snackBarHostState = snackbarHostState
         )
 
-        signupNavGraph(
+        regionalNavGraph(
+            paddingValues = paddingValues,
+            navigateUp = navigator::navigateUp,
+            navigateNext = navigator::navigateDummyNext,
+            navigateSignUp = navigator::navigateUp,
+            snackBarHostState = snackbarHostState
+        )
+
+        /*signupNavGraph(
             paddingValues = paddingValues,
             navigateUp = navigator::navigateUp,
             navigateNext = navigator::navigateDummyNext,
             navigateLogin = navigator::navigateLogin,
             snackBarHostState = snackbarHostState
-        )
+        )*/
     }
 }
