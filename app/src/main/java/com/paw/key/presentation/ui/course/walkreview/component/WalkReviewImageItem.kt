@@ -41,8 +41,8 @@ fun WalkReviewItem(
     Card(
         shape = RoundedCornerShape(16.dp),
         modifier = modifier
-            .width(LocalConfiguration.current.screenHeightDp.dp * 0.2f)
-            .height(LocalConfiguration.current.screenHeightDp.dp * 0.2f)
+            .width(LocalConfiguration.current.screenHeightDp.dp * 0.25f)
+            .height(LocalConfiguration.current.screenHeightDp.dp * 0.25f)
             .noRippleClickable {
                 if (image == null) {
                     onClickCard()
