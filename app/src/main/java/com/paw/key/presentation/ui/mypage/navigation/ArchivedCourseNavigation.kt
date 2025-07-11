@@ -17,11 +17,13 @@ fun NavController.navigateArchivedCourse(
 
 fun NavGraphBuilder.archivedCourseNavGraph(
     navigateUp: () -> Unit,
+    navigateNext: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     composable<ArchivedCourse> {
         ArchivedCourseRoute(
             navigateUp = navigateUp,
+            navigateNext = navigateNext,
             modifier = modifier
         )
     }

@@ -1,6 +1,7 @@
 package com.paw.key.core.designsystem.component
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -15,7 +16,8 @@ import com.paw.key.core.designsystem.theme.PawKeyTheme
 @Composable
 private fun PreviewSubChip() {
     SubChip(
-        text = "4km"
+        text = "4km",
+        onClick = {}
     )
 }
 
@@ -23,19 +25,22 @@ private fun PreviewSubChip() {
 fun SubChip(
     text: String,
     modifier: Modifier = Modifier,
+    onClick : () -> Unit = {},
+    isActionChip: Boolean = false, //true -> 회색
 ) {
     Box(
-        modifier
+        modifier = modifier
             .background(
-                color = PawKeyTheme.colors.white2,
-                shape = RoundedCornerShape(4.dp)
+                color = if (isActionChip) PawKeyTheme.colors.white2 else PawKeyTheme.colors.green50,
+                shape = RoundedCornerShape(20.dp)
             )
-            .padding(horizontal = 6.dp, vertical = 4.dp)
+            .clickable(onClick = onClick)
+            .padding(horizontal = 10.dp, vertical = 4.dp)
     ) {
         Text(
             text = text,
-            color = PawKeyTheme.colors.gray300,
-            style = PawKeyTheme.typography.body14M
+            color = if (isActionChip) PawKeyTheme.colors.gray700 else PawKeyTheme.colors.green600,
+            style = PawKeyTheme.typography.caption12R
         )
     }
 }

@@ -21,12 +21,17 @@ import com.paw.key.presentation.ui.home.navigation.homeLocationSettingNavGraph
 import com.paw.key.presentation.ui.home.navigation.homeNavGraph
 import com.paw.key.presentation.ui.login.navigation.loginNavGraph
 import com.paw.key.presentation.ui.mypage.navigation.archivedCourseNavGraph
+import com.paw.key.presentation.ui.mypage.navigation.archivedDetailNavGraph
 import com.paw.key.presentation.ui.mypage.navigation.myPageNavGraph
 import com.paw.key.presentation.ui.mypage.navigation.petProfileNavGraph
 import com.paw.key.presentation.ui.mypage.navigation.savedCourseNavGraph
 import com.paw.key.presentation.ui.mypage.navigation.userProfileNavGraph
 import com.paw.key.presentation.ui.onboard.navigation.onboardingNavGraph
 import com.paw.key.presentation.ui.region.navigation.regionalNavGraph
+
+import com.paw.key.presentation.ui.mypage.navigation.myPageNavGraph
+import com.paw.key.presentation.ui.mypage.navigation.savedDetailNavGraph
+
 import com.paw.key.presentation.ui.signup.navigation.signupLevelNavGraph
 import com.paw.key.presentation.ui.signup.navigation.signupNavGraph
 import com.paw.key.presentation.ui.signup.navigation.signupactivityNavGraph
@@ -113,13 +118,22 @@ fun PawKeyNavHost(
         savedCourseNavGraph(
             paddingValues = paddingValues,
             navigateUp = navigator::navigateUp,
-            navigateNext = navigator::navigateDummyNext,
+            navigateNext = navigator::navigateSavedDetail,
             snackBarHostState = snackbarHostState
         )
 
         archivedCourseNavGraph(
             navigateUp = navigator::navigateUp,
+            navigateNext = navigator::navigateArchivedDetail,
             modifier = modifier
+        )
+        savedDetailNavGraph(
+            navigateUp = navigator::navigateUp,
+            snackBarHostState = snackbarHostState
+        )
+
+        archivedDetailNavGraph(
+            navigateUp = navigator::navigateUp
         )
 
         userProfileNavGraph(
