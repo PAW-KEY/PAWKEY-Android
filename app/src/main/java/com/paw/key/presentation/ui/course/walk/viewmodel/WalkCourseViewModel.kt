@@ -1,15 +1,18 @@
 package com.paw.key.presentation.ui.course.walk.viewmodel
 
+import android.content.Context
 import android.graphics.Bitmap
 import android.location.Location
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.kakao.vectormap.LatLng
+import com.paw.key.core.util.PreferenceDataStore
 import com.paw.key.domain.repository.BitmapRepository
 import com.paw.key.presentation.ui.course.walk.state.WalkCourseContract.WalkCourseSideEffect
 import com.paw.key.presentation.ui.course.walk.state.WalkCourseContract.WalkCourseState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.delay
@@ -24,7 +27,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class WalkCourseViewModel @Inject constructor(
-    private val bitmapRepository: BitmapRepository
+    @ApplicationContext private val context: Context,
+    private val bitmapRepository: BitmapRepository,
 ) : ViewModel() {
     private val _state = MutableStateFlow(WalkCourseState())
     val state : StateFlow<WalkCourseState>
@@ -164,6 +168,36 @@ class WalkCourseViewModel @Inject constructor(
                 Log.e("WalkCourseViewModel", "Error saving captured bitmap: ${e.localizedMessage}")
             }  finally {
                 mapCaptureCompleted() // 캡처 시도 후, 성공/실패 여부와 관계없이 플래그 리셋
+            }
+        }
+    }
+
+    fun onStopTrackingEvent() {
+        viewModelScope.launch {
+            val currentWalkState = _state.value
+
+            try {
+                PreferenceDataStore.saveWalkSummary(
+                    context = context,
+                    points = currentWalkState.poiPoints.toList(),
+                    totalDistance = currentWalkState.totalDistance,
+                    totalTime = _totalTime.value,
+                    totalSteps = currentWalkState.steps.toInt()
+                )
+                Log.d("WalkCourseViewModel", "All walk summary data saved successfully using PreferenceDataStore.")
+                Log.e("WalkCourseViewModel", PreferenceDataStore.getTotalTime(context).toString())
+                _sideEffect.emit(WalkCourseSideEffect.ShowSnackBar("산책 기록이 성공적으로 저장되었습니다."))
+            } catch (e: Exception) {
+                Log.e("WalkCourseViewModel", "Error saving all walk summary data: ${e.message}", e)
+                _sideEffect.emit(WalkCourseSideEffect.ShowSnackBar("산책 기록 저장 실패: ${e.localizedMessage}"))
+            } finally {
+                PreferenceDataStore.saveWalkSummary(
+                    context = context,
+                    points = currentWalkState.poiPoints.toList(),
+                    totalDistance = currentWalkState.totalDistance,
+                    totalTime = _totalTime.value,
+                    totalSteps = currentWalkState.steps.toInt()
+                )
             }
         }
     }
