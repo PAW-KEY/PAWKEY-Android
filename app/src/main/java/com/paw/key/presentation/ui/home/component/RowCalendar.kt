@@ -52,11 +52,12 @@ private fun PreviewRowCalendar() {
 }
 
 @Composable
-internal fun RowCalendar(
+fun RowCalendar(
     date: String,
+    modifier: Modifier = Modifier,
 ) {
     Box(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .height(103.dp)
             .border(
@@ -100,11 +101,12 @@ internal fun RowCalendar(
 private fun CalendarItem(
     date: String,
     day: String,
+    modifier: Modifier = Modifier,
     state: Boolean = false,
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier
+        modifier = modifier
             .width(42.dp)
             .height(74.dp),
     ) {

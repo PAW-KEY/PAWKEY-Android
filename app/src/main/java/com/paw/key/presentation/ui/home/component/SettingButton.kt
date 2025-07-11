@@ -30,7 +30,7 @@ private fun PreviewSettingButton() {
 }
 
 @Composable
-internal fun SettingButton(){
+fun SettingButton(){
     Box(
         modifier = Modifier
             .height(64.dp)

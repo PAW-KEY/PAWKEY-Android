@@ -20,19 +20,20 @@ import com.paw.key.core.designsystem.theme.PawKeyTheme
 
 @Preview(showBackground = true)
 @Composable
-private fun previewDaytimeCard() {
+private fun PreviewDaytimeCard() {
     PawKeyTheme {
         DaytimeCard(daytime = "05:06", daystate = "일출")
     }
 }
 
 @Composable
-internal fun DaytimeCard(
+fun DaytimeCard(
     daytime: String,
     daystate: String,
+    modifier: Modifier = Modifier,
 ) {
     Box(
-        modifier = Modifier
+        modifier = modifier
             .width(81.dp)
             .height(110.dp)
             .background(color = PawKeyTheme.colors.white1)
@@ -42,7 +43,6 @@ internal fun DaytimeCard(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(31.dp),
             modifier = Modifier
-                .fillMaxWidth()
                 .fillMaxWidth()
                 .padding(horizontal = 11.dp, vertical = 12.dp),
         ) {
