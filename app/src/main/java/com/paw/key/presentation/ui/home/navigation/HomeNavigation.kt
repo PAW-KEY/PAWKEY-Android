@@ -11,20 +11,24 @@ import com.paw.key.presentation.ui.home.HomeRoute
 import kotlinx.serialization.Serializable
 
 fun NavController.navigateHome(
-    navOptions: NavOptions?
+    navOptions: NavOptions?,
 ) {
     navigate(Home, navOptions)
 }
 
 fun NavGraphBuilder.homeNavGraph(
     paddingValues: PaddingValues,
+    navigateUp: () -> Unit,
     navigateNext: () -> Unit,
-    modifier: Modifier = Modifier
+    navigateHomeLocationSetting: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     composable<Home> {
         HomeRoute(
             paddingValues = paddingValues,
+            navigateUp = navigateUp,
             navigateNext = navigateNext,
+            navigateHomeLocationSetting = navigateHomeLocationSetting,
             modifier = modifier
         )
     }
