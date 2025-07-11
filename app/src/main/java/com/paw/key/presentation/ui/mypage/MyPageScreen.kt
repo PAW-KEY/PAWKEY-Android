@@ -20,8 +20,8 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.tooling.preview.Preview
 import com.paw.key.R
+import com.paw.key.core.designsystem.component.SubChip
 import com.paw.key.core.designsystem.theme.PawKeyTheme
-import com.paw.key.presentation.ui.mypage.component.TagChip
 
 @Composable
 fun MyPageRoute(
@@ -175,7 +175,9 @@ fun PetCard(
                 horizontalArrangement = Arrangement.spacedBy(4.dp)
             ) {
                 tags.forEach {
-                    TagChip(text = it)
+                    SubChip(
+                        text = it
+                    )
                 }
             }
         }
@@ -226,7 +228,7 @@ fun WalkRouteList(routes: List<String>,
                   modifier: Modifier = Modifier
 ) {
     Column(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .background(Color.White)
             .padding(horizontal = 16.dp)
