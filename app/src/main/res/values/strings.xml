@@ -3,6 +3,9 @@
     <string name="empty_string">데이터가 없습니다.</string>
     <string name="loading_string">로딩 중...</string>
 
+    <!--메인-->
+    <string name="animation_footprint_description">Footprint</string>
+
     <!--바텀 바 애니메이션 라벨-->
     <string name="main_bottom_bar_animation_label">바텀 바 라벨</string>
 
@@ -36,7 +39,6 @@
     <!--MyPage-->
     <string name="ic_mypage_description">mypage</string>
     <string name="profile">profile</string>
-
 
 
 </resources>
