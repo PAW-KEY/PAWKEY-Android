@@ -1,5 +1,8 @@
 package com.paw.key.presentation.ui.signup.component
 
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -11,8 +14,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.paw.key.core.designsystem.theme.PawKeyTheme
@@ -36,6 +41,16 @@ fun SignUpHeader(
     modifier: Modifier = Modifier,
     progress: Float = 1F,
 ) {
+
+    val animatedProgress by animateFloatAsState(
+        targetValue = progress,
+        animationSpec = tween(
+            durationMillis = 1000,
+            easing = FastOutSlowInEasing
+        ),
+        label = "progress_animation"
+    )
+
     Column(
         modifier = modifier
             .fillMaxWidth()
@@ -65,12 +80,15 @@ fun SignUpHeader(
                 Spacer(modifier = Modifier.weight(1F))
 
                 LinearProgressIndicator(
-                    progress = { progress },
+                    progress = { animatedProgress },
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(2.dp),
                     color = PawKeyTheme.colors.green500,
                     trackColor = PawKeyTheme.colors.gray100,
+                    strokeCap = StrokeCap.Square,
+                    gapSize = 0.dp,
+                    drawStopIndicator = {}
                 )
             }
         }
