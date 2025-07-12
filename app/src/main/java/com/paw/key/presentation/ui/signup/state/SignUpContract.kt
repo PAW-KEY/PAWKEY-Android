@@ -15,7 +15,7 @@ class SignUpContract {
         val dogGender: DogGender = DogGender.UNKNOWN,
         val isNeutered: Boolean = false,
         val dogBreed: String = "",
-        val ageKnown: AgeKnown = AgeKnown.UNKNOWN,
+        val ageKnown: AgeKnown = AgeKnown.NONE,
         val dogAge: String = "",
 
         val selectedEnergyLevel: String = "",
@@ -38,6 +38,7 @@ class SignUpContract {
     }
 
     enum class AgeKnown {
+        NONE,
         KNOWN,
         UNKNOWN
     }

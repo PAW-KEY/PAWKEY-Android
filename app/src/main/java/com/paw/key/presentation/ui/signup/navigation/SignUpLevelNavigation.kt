@@ -15,7 +15,7 @@ fun NavController.navigateSignLevel(
     navigate(SignUpLevel, navOptions)
 }
 
-fun NavGraphBuilder.signupLevelNavGraph(
+fun NavGraphBuilder.signUpLevelNavGraph(
     navigateNext: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
