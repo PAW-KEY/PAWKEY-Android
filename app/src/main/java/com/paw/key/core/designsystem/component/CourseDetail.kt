@@ -13,8 +13,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Divider
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -72,7 +72,8 @@ fun CourseDetail(
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(160.dp)
+                        .height(244.dp)
+                        .width(360.dp)
                         .background(Color.LightGray)
                 )
 
@@ -86,11 +87,12 @@ fun CourseDetail(
                         Text(
                             text = title,
                             style = PawKeyTheme.typography.head20Sb,
-                            color = PawKeyTheme.colors.green500
+                            color = PawKeyTheme.colors.black
                         )
                         Icon(
                             imageVector = ImageVector.vectorResource(id = R.drawable.ic_heart_filled),
-                            contentDescription = "좋아요"
+                            contentDescription = "좋아요",
+                            tint = Color.Unspecified
                         )
                     }
 
@@ -114,10 +116,27 @@ fun CourseDetail(
                     }
 
                     Column(modifier = Modifier.padding(vertical = 8.dp)) {
-                        Text(text = location, style = PawKeyTheme.typography.body14M,
-                            color = PawKeyTheme.colors.gray400)
-                        Text(text = "$date | $time", style = PawKeyTheme.typography.body14M,
-                            color = PawKeyTheme.colors.gray400)
+                        Row {
+                            Icon(
+                                imageVector = ImageVector.vectorResource(id = R.drawable.ic_walk_review_location),
+                                contentDescription = "장소",
+                                tint = Color.Unspecified
+                            )
+                            Spacer(modifier = Modifier.width(6.dp))
+                            Text(text = location, style = PawKeyTheme.typography.body14M,
+                                color = PawKeyTheme.colors.gray400)
+                        }
+                        Row {
+                            Icon(
+                                imageVector = ImageVector.vectorResource(id = R.drawable.ic_walk_review_time),
+                                contentDescription = "시간",
+                                tint = Color.Unspecified
+                            )
+                            Spacer(modifier = Modifier.width(6.dp))
+
+                            Text(text = "$date | $time", style = PawKeyTheme.typography.body14M,
+                                color = PawKeyTheme.colors.gray400)
+                        }
                     }
 
                     Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -127,13 +146,14 @@ fun CourseDetail(
                     }
 
                     //산책 사진
-                    Row(
+
+                    LazyRow(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(vertical = 12.dp),
                         horizontalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
-                        Row {
+                        item {
                             Box(
                                 modifier = Modifier
                                     .width(100.dp)
@@ -154,13 +174,33 @@ fun CourseDetail(
                         color = PawKeyTheme.colors.gray200
                     )
                     HorizontalDivider(modifier = Modifier.padding(10.dp))
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = "이런 점이 좋았어요",
+                            style = PawKeyTheme.typography.head18Sb,
+                            color = PawKeyTheme.colors.black,
+                            modifier = Modifier.padding(vertical = 16.dp)
+                        )
 
-                    Text(
-                        text = "이런 점이 좋았어요",
-                        style = PawKeyTheme.typography.head18Sb,
-                        color = PawKeyTheme.colors.black,
-                        modifier = Modifier.padding(vertical = 16.dp)
-                    )
+                        Spacer(modifier = Modifier.width(12.dp))
+
+                        Icon(
+                            imageVector = ImageVector.vectorResource(id = R.drawable.ic_edit),
+                            contentDescription = "편집",
+                            tint = Color.Unspecified
+                        )
+
+                        Spacer(modifier = Modifier.width(4.dp))
+
+                        Text(
+                            text = "후기숫자를 적으세요",
+                            style = PawKeyTheme.typography.caption12M,
+                            color = PawKeyTheme.colors.gray200,
+                        )
+                    }
+
                     // 서버에서 전달받은 옵션이 없을 경우
                     if (option.isEmpty()) {
                         Text(
@@ -179,9 +219,9 @@ fun CourseDetail(
                             }
 
                             val backgroundColor = when (index) {
-                                0 -> PawKeyTheme.colors.green500
-                                1 -> PawKeyTheme.colors.green400
-                                2 -> PawKeyTheme.colors.green300
+                                0 -> PawKeyTheme.colors.green300
+                                1 -> PawKeyTheme.colors.green200
+                                2 -> PawKeyTheme.colors.green100
                                 else -> PawKeyTheme.colors.green500
                             }
 
@@ -200,7 +240,7 @@ fun CourseDetail(
                                 ) {
                                     Text(
                                         text = tag,
-                                        color = Color.White,
+                                        color = Color.Black,
                                         modifier = Modifier
                                             .align(Alignment.CenterStart)
                                             .padding(horizontal = 16.dp),
@@ -214,7 +254,7 @@ fun CourseDetail(
             }
         }
     }
-        }
+}
 
 
 
