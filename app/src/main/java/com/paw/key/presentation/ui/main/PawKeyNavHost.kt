@@ -14,11 +14,10 @@ import com.paw.key.presentation.ui.community.navigation.communityNavGraph
 import com.paw.key.presentation.ui.course.entire.navigation.courseNavGraph
 import com.paw.key.presentation.ui.course.entire.tab.map.navigation.walkCourseNavGraph
 import com.paw.key.presentation.ui.course.walkcomplete.navigation.walkCompletionNavGraph
-import com.paw.key.presentation.ui.course.walkrecord.navigation.walkReviewNavGraph
+import com.paw.key.presentation.ui.course.walkreview.navigation.walkReviewNavGraph
 import com.paw.key.presentation.ui.dummy.navigation.dummyNavGraph
 import com.paw.key.presentation.ui.dummy.next.dummyNextNavGraph
 import com.paw.key.presentation.ui.home.navigation.homeNavGraph
-import com.paw.key.presentation.ui.home.navigation.navigateHome
 import com.paw.key.presentation.ui.login.navigation.loginNavGraph
 import com.paw.key.presentation.ui.mypage.navigation.archivedCourseNavGraph
 import com.paw.key.presentation.ui.mypage.navigation.myPageNavGraph
@@ -26,7 +25,6 @@ import com.paw.key.presentation.ui.mypage.navigation.petProfileNavGraph
 import com.paw.key.presentation.ui.mypage.navigation.savedCourseNavGraph
 import com.paw.key.presentation.ui.mypage.navigation.userProfileNavGraph
 import com.paw.key.presentation.ui.region.navigation.regionalNavGraph
-import com.paw.key.presentation.ui.mypage.navigation.myPageNavGraph
 import com.paw.key.presentation.ui.onboard.navigation.onboardingNavGraph
 import com.paw.key.presentation.ui.splash.navigation.splashNavGraph
 
