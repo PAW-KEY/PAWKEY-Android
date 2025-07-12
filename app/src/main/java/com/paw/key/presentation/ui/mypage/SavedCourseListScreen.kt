@@ -111,9 +111,6 @@ fun SavedCourseListScreen(
                 title = course.title,
                 petName = course.petName,
                 date = course.date,
-                location = course.location,
-                distance = course.distance,
-                time = course.time
             )
         }
     }
