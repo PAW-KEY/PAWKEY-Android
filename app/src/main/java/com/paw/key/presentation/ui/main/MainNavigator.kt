@@ -114,6 +114,7 @@ class MainNavigator(
     fun navigateArchivedDetail(navOptions: NavOptions? = null) {
         navController.navigateArchivedDetail(navOptions = navOptions)
     }
+    
     fun navigateArchivedCourse(navOptions: NavOptions? = null) {
         navController.navigateArchivedCourse(navOptions = navOptions)
     }
@@ -131,6 +132,10 @@ class MainNavigator(
     }
 
     /*메인 탭 산택 기준 - 산책하기, 완료, 리뷰*/
+    fun navigateRegional(navOptions: NavOptions? = null) {
+        navController.navigateRegional(navOptions = navOptions)
+    }
+
     fun navigateWalkCourse(navOptions: NavOptions? = null) {
         navController.navigateWalkCourse(navOptions = navOptions)
     }

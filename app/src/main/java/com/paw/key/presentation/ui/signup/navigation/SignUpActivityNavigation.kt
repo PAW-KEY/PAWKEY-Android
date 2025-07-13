@@ -15,7 +15,7 @@ fun NavController.navigateSignUpActivity(
     navigate(SignUpActivity, navOptions)
 }
 
-fun NavGraphBuilder.signupactivityNavGraph(
+fun NavGraphBuilder.signUpActivityNavGraph(
     navigateSignUpDog: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
