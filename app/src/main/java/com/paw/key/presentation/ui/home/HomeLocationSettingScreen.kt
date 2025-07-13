@@ -23,6 +23,7 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.paw.key.R
 import com.paw.key.core.designsystem.component.PawkeyButton
 import com.paw.key.core.designsystem.theme.PawKeyTheme
@@ -31,6 +32,8 @@ import com.paw.key.presentation.ui.home.viewmodel.HomeViewModel
 import com.paw.key.presentation.ui.signup.component.FormField
 import com.paw.key.presentation.ui.signup.component.LocationButton
 import com.paw.key.presentation.ui.signup.component.LocationList
+import com.paw.key.presentation.ui.signup.component.SignUpHeader
+import com.paw.key.presentation.ui.signup.viewmodel.SignUpViewModel
 
 @Preview(showBackground = true)
 @Composable
@@ -52,7 +55,6 @@ fun HomeLocationSettingRoute(
     navigateNext: () -> Unit,
     navigateHomeLocationSetting: () -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: HomeViewModel = hiltViewModel(),
 ) {
 
     HomeLocationSettingScreen(
@@ -60,8 +62,7 @@ fun HomeLocationSettingRoute(
         navigateUp = navigateUp,
         navigateNext = navigateNext,
         navigateHomeLocationSetting = navigateHomeLocationSetting,
-        modifier = modifier,
-        viewModel = viewModel
+        modifier = modifier
     )
 }
 
@@ -74,7 +75,7 @@ fun HomeLocationSettingScreen(
     modifier: Modifier = Modifier,
     viewModel: HomeViewModel = hiltViewModel(),
 ) {
-    val state by viewModel.state.collectAsState()
+    val state by viewModel.state.collectAsStateWithLifecycle()
 
     Column(
         modifier = modifier
@@ -100,20 +101,20 @@ fun HomeLocationSettingScreen(
                 contentAlignment = Alignment.Center
             ) {
                 Text(
-                    text = "저장한 산책 루트",
+                    text = stringResource(id = R.string.ic_home_location_title),
                     style = PawKeyTheme.typography.body16Sb
                 )
             }
             Spacer(modifier = Modifier.width(24.dp))
         }
 
-        Spacer(modifier = Modifier.height(24.dp))
+        Spacer(modifier = Modifier.height(27.dp))
 
         FormField(
             label = stringResource(id = R.string.ic_onboarding_signup_main_location),
             content = {
                 LocationButton(
-                    isEnable = true,
+                    isEnable = state.isLocationMenuVisible,
                     location = "강남구",
                     onClick = { viewModel.toggleLocationMenu() }
                 )
@@ -146,14 +147,12 @@ fun HomeLocationSettingScreen(
             enabled = isFormValid,
             onClick = {
                 if (isFormValid) {
+
                 }
             }
         )
 
         Spacer(modifier = Modifier.height(46.dp))
-
     }
-
 }
-
 

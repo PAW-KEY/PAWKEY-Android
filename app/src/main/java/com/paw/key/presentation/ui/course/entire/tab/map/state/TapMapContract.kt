@@ -18,4 +18,5 @@ class TapMapContract {
         data object NavigateUp: TapMapSideEffect()
         data object NavigateNext: TapMapSideEffect()
     }
+
 }

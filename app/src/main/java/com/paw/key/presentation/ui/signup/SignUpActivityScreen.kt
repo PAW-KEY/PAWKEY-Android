@@ -115,5 +115,4 @@ fun SignUpActivityScreen(
             Spacer(modifier = Modifier.height(46.dp))
         }
     }
-
 }
