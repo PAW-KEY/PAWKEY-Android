@@ -43,8 +43,6 @@ fun UserProfileScreen(
             .fillMaxSize()
             .padding(horizontal = 20.dp)
     ) {
-        Spacer(modifier = Modifier.height(30.dp))
-
         TopBar(
             title = "견주 프로필",
             onBackClick = { navigateUp() }

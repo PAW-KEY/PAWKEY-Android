@@ -108,7 +108,9 @@ fun OwnerCard(
             .height(80.dp)
             .fillMaxWidth()
             .background(Color.White, RoundedCornerShape(12.dp))
-            .padding(16.dp),
+            .padding(16.dp)
+            .clickable { navigateUserProfile() },
+
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(text = ownerName, style = PawKeyTheme.typography.head20B2)

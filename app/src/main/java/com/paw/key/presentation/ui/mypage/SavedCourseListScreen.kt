@@ -1,8 +1,11 @@
 package com.paw.key.presentation.ui.mypage
 
+import android.util.Log
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
@@ -85,14 +88,17 @@ fun SavedCourseListScreen(
                 .padding(16.dp)
                 .background(PawKeyTheme.colors.white1)
         ) {
-            item {
-                courseList.forEach { course ->
-                    CourseCard(
-                        title = course.title,
-                        petName = course.petName,
-                        date = course.date,
-                    )
-                }
+            itemsIndexed(
+                items = courseList
+            ) { _, item ->
+                CourseCard(
+                    title = item.title,
+                    petName = item.petName,
+                    date = item.date,
+                    modifier = Modifier.clickable {
+                        navigateNext()
+                    }
+                )
             }
         }
     }

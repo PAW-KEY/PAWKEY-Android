@@ -46,8 +46,6 @@ fun PetProfileScreen(
             .fillMaxSize()
             .padding(horizontal = 20.dp)
     ) {
-        Spacer(modifier = Modifier.height(30.dp))
-
         TopBar(title = "반려견 프로필",
             onBackClick = { navigateUp() })
 
@@ -56,7 +54,7 @@ fun PetProfileScreen(
         Box(
             modifier = Modifier
                 .size(108.dp)
-                .align(Alignment.CenterHorizontally) // 👈 여기가 핵심!
+                .align(Alignment.CenterHorizontally)
                 .clip(CircleShape)
                 .border(2.dp, PawKeyTheme.colors.green500, CircleShape)
         ) {
