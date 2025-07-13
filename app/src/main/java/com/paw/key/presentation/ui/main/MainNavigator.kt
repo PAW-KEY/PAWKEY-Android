@@ -13,7 +13,7 @@ import com.paw.key.presentation.ui.community.navigation.navigateCommunity
 import com.paw.key.presentation.ui.course.entire.navigation.navigateCourse
 import com.paw.key.presentation.ui.course.entire.tab.map.navigation.navigateWalkCourse
 import com.paw.key.presentation.ui.course.walkcomplete.navigation.navigateWalkCompletion
-import com.paw.key.presentation.ui.course.walkrecord.navigation.navigateWalkReview
+import com.paw.key.presentation.ui.course.walkreview.navigation.navigateWalkReview
 import com.paw.key.presentation.ui.dummy.next.navigateDummyNext
 import com.paw.key.presentation.ui.home.navigation.navigateHome
 import com.paw.key.presentation.ui.home.navigation.navigateHomeLocationSetting
@@ -85,9 +85,15 @@ class MainNavigator(
         navController.navigateLogin(navOptions = navOptions)
     }
 
+
+    fun navigateSignUp(navOptions: NavOptions? = null) {
+        navController.navigateSignUp(navOptions = navOptions)
+    }
+
     fun navigateMyPage(navOptions: NavOptions? = null) {
         navController.navigateMyPage(navOptions = navOptions)
     }
+
 
     fun navigateUserProfile(navOptions: NavOptions? = null) {
         navController.navigateUserProfile(navOptions = navOptions)
@@ -100,6 +106,7 @@ class MainNavigator(
     fun navigateSavedCourse(navOptions: NavOptions? = null) {
         navController.navigateSavedCourse(navOptions = navOptions)
     }
+    
     fun navigateSavedDetail(navOptions: NavOptions? = null) {
         navController.navigateSavedDetail(navOptions = navOptions)
     }
@@ -139,18 +146,6 @@ class MainNavigator(
 
     fun navigateWalkReview(navOptions: NavOptions? = null) {
         navController.navigateWalkReview(navOptions = navOptions)
-    }
-
-    fun navigateUserProfile(navOptions: NavOptions? = null) {
-        navController.navigateUserProfile(navOptions = navOptions)
-    }
-
-    fun navigatePetProfile(navOptions: NavOptions? = null) {
-        navController.navigatePetProfile(navOptions = navOptions)
-    }
-
-    fun navigateSavedCourse(navOptions: NavOptions? = null) {
-        navController.navigateSavedCourse(navOptions = navOptions)
     }
 
     fun navigateDummyNext(navOptions: NavOptions? = null) {

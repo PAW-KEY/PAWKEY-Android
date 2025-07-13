@@ -1,4 +1,4 @@
-package com.paw.key.presentation.ui.course.walkrecord
+package com.paw.key.presentation.ui.course.walkreview
 
 import android.net.Uri
 import android.os.Build
@@ -23,6 +23,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.LocalLifecycleOwner
@@ -32,13 +33,13 @@ import com.paw.key.R
 import com.paw.key.core.designsystem.component.PawkeyButton
 import com.paw.key.core.designsystem.component.SubChip
 import com.paw.key.core.designsystem.theme.PawKeyTheme
-import com.paw.key.presentation.ui.course.walkrecord.component.WalkReviewFeedbackForm
-import com.paw.key.presentation.ui.course.walkrecord.component.WalkReviewFeedbackHeader
-import com.paw.key.presentation.ui.course.walkrecord.component.WalkReviewImageRow
-import com.paw.key.presentation.ui.course.walkrecord.component.WalkReviewInfoHolder
-import com.paw.key.presentation.ui.course.walkrecord.component.WalkReviewTextField
-import com.paw.key.presentation.ui.course.walkrecord.state.WalkReviewContract
-import com.paw.key.presentation.ui.course.walkrecord.viewmodel.WalkReviewViewModel
+import com.paw.key.presentation.ui.course.walkreview.component.WalkReviewFeedbackForm
+import com.paw.key.presentation.ui.course.walkreview.component.WalkReviewFeedbackHeader
+import com.paw.key.presentation.ui.course.walkreview.component.WalkReviewImageRow
+import com.paw.key.presentation.ui.course.walkreview.component.WalkReviewInfoHolder
+import com.paw.key.presentation.ui.course.walkreview.component.WalkReviewTextField
+import com.paw.key.presentation.ui.course.walkreview.state.WalkReviewContract
+import com.paw.key.presentation.ui.course.walkreview.viewmodel.WalkReviewViewModel
 
 @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
 @Composable
@@ -341,29 +342,26 @@ fun WalkReviewScreen(
         }
 
         item {
-            if (isSharedWalk) {
-                PawkeyButton(
-                    text = "산책 기록 공개하기",
-                    onClick = navigateNext,
-                    enabled = isFormValid,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp)
-                )
+            val buttonTextRes = if (isSharedWalk) {
+                R.string.course_review_shared_button
             } else {
-                PawkeyButton(
-                    text = "산책 기록 공개하기",
-                    onClick = navigateNext,
-                    enabled = isFormValid,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp)
-                )
+                R.string.course_review_shared_all_button
+            }
 
+            PawkeyButton(
+                text = stringResource(buttonTextRes),
+                onClick = navigateNext,
+                enabled = isFormValid,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp)
+            )
+
+            if (!isSharedWalk) {
                 Spacer(modifier = Modifier.height(10.dp))
 
                 PawkeyButton(
-                    text = "산책 기록 나만보기",
+                    text = stringResource(R.string.course_review_saved_button),
                     onClick = navigateUp,
                     enabled = isFormValid,
                     modifier = Modifier

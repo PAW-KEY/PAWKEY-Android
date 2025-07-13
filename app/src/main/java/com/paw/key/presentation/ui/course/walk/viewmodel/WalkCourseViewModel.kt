@@ -1,30 +1,32 @@
 package com.paw.key.presentation.ui.course.walk.viewmodel
 
+import android.content.Context
 import android.graphics.Bitmap
 import android.location.Location
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.kakao.vectormap.LatLng
-import com.paw.key.domain.repository.BitmapRepository
+import com.paw.key.core.util.PreferenceDataStore
+import com.paw.key.domain.repository.WalkSharedResultRepository
 import com.paw.key.presentation.ui.course.walk.state.WalkCourseContract.WalkCourseSideEffect
 import com.paw.key.presentation.ui.course.walk.state.WalkCourseContract.WalkCourseState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.toPersistentList
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
 class WalkCourseViewModel @Inject constructor(
-    private val bitmapRepository: BitmapRepository
+    @ApplicationContext private val context: Context,
+    private val walkSharedResultRepository : WalkSharedResultRepository,
 ) : ViewModel() {
     private val _state = MutableStateFlow(WalkCourseState())
     val state : StateFlow<WalkCourseState>
@@ -74,21 +76,27 @@ class WalkCourseViewModel @Inject constructor(
                     longitude = newLocation.longitude
                 }
 
-                val calculatedDistance = oldAndroidLocation.distanceTo(newAndroidLocation)
+                /*val calculatedDistance = oldAndroidLocation.distanceTo(newAndroidLocation)
 
                 val MIN_DISTANCE_THRESHOLD = 1f // 미터 단위
                 if (calculatedDistance >= MIN_DISTANCE_THRESHOLD) {
                     distanceIncrement = calculatedDistance
-                }
+                }*/
+                distanceIncrement = oldAndroidLocation.distanceTo(newAndroidLocation)
             }
+
+            val updatedPoiPoints: PersistentList<LatLng> =
+                if (currentUiState.poiPoints.isEmpty() && currentUiState.lastLocation == null) {
+                    // 첫 위치일 경우 무조건 추가
+                    currentUiState.poiPoints.add(newLocation)
+                } else if (distanceIncrement > 0) { // (이동이 있었으면) 추가
+                    currentUiState.poiPoints.add(newLocation)
+                } else {
+                    // 이동 거리가 0이거나 이전 위치가 없는 경우 (첫 위치가 이미 추가된 후)
+                    currentUiState.poiPoints
+                }
 
             val newTotalDistance = currentUiState.totalDistance + distanceIncrement
-
-            val updatedPoiPoints: PersistentList<LatLng> = if (distanceIncrement > 0) {
-                currentUiState.poiPoints.add(newLocation)
-            } else {
-                currentUiState.poiPoints
-            }
 
             currentUiState.copy(
                 lastLocation = newLocation,
@@ -150,13 +158,23 @@ class WalkCourseViewModel @Inject constructor(
 
     fun onMapCaptured(bitmap: Bitmap?) {
         if (bitmap == null) {
-            Log.e("WalkCourseViewModel", "Captured bitmap is null, cannot save.")
             return
+        }
+        updateState {
+            copy(bitmap = bitmap)
         }
 
         viewModelScope.launch {
             try {
-                bitmapRepository.saveBitmap(bitmap)
+                walkSharedResultRepository.saveResult(
+                    bitmap = state.value.bitmap,
+                    totalTime = _totalTime.value,
+                    distance = state.value.totalDistance,
+                    steps = state.value.steps.toInt(),
+                    points = state.value.poiPoints.toList()
+                )
+                Log.d("WalkCourseViewModel", "state : ${state.value}")
+
                 _sideEffect.emit(WalkCourseSideEffect.ShowSnackBar("산책 지도 이미지가 저장되었습니다."))
                 Log.d("WalkCourseViewModel", "Map captured bitmap saved to DataStore.")
             } catch (e: Exception) {
@@ -164,6 +182,44 @@ class WalkCourseViewModel @Inject constructor(
                 Log.e("WalkCourseViewModel", "Error saving captured bitmap: ${e.localizedMessage}")
             }  finally {
                 mapCaptureCompleted() // 캡처 시도 후, 성공/실패 여부와 관계없이 플래그 리셋
+            }
+        }
+    }
+
+    fun onStopTrackingEvent() {
+        viewModelScope.launch {
+            val currentWalkState = _state.value
+
+            try {
+                PreferenceDataStore.saveWalkSummary(
+                    context = context,
+                    points = currentWalkState.poiPoints.toList(),
+                    totalDistance = currentWalkState.totalDistance,
+                    totalTime = _totalTime.value,
+                    totalSteps = currentWalkState.steps.toInt()
+                )
+
+                walkSharedResultRepository.saveResult(
+                    bitmap = currentWalkState.bitmap,
+                    totalTime = _totalTime.value,
+                    distance = currentWalkState.totalDistance,
+                    steps = currentWalkState.steps.toInt(),
+                    points = currentWalkState.poiPoints.toList()
+                )
+                Log.d("WalkCourseViewModel", "All walk summary data saved successfully using PreferenceDataStore.")
+                Log.e("WalkCourseViewModel", PreferenceDataStore.getTotalTime(context).toString())
+                _sideEffect.emit(WalkCourseSideEffect.ShowSnackBar("산책 기록이 성공적으로 저장되었습니다."))
+            } catch (e: Exception) {
+                Log.e("WalkCourseViewModel", "Error saving all walk summary data: ${e.message}", e)
+                _sideEffect.emit(WalkCourseSideEffect.ShowSnackBar("산책 기록 저장 실패: ${e.localizedMessage}"))
+            } finally {
+                PreferenceDataStore.saveWalkSummary(
+                    context = context,
+                    points = currentWalkState.poiPoints.toList(),
+                    totalDistance = currentWalkState.totalDistance,
+                    totalTime = _totalTime.value,
+                    totalSteps = currentWalkState.steps.toInt()
+                )
             }
         }
     }

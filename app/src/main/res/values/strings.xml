@@ -59,12 +59,15 @@
     <string name="course_record_step">걸음 수 (걸음)</string>
     <string name="course_tap_location_description">내 위치</string>
 
+    <string name="course_review_shared_button">산책 후기 남기기</string>
+    <string name="course_review_shared_all_button">산책 기록 공개하기</string>
+    <string name="course_review_saved_button">산책 기록 나만보기</string>
+
     <!--Community-->
     <string name="ic_community_description">community</string>
 
     <!--MyPage-->
     <string name="ic_mypage_description">mypage</string>
     <string name="profile">profile</string>
-
 
 </resources>

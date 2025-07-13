@@ -65,12 +65,12 @@ fun OnboardingScreen(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .padding(horizontal = 16.dp, vertical = 48.dp)
             .background(color = PawKeyTheme.colors.white1)
     ) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
+                .padding(horizontal = 16.dp, vertical = 48.dp)
         ) {
             Spacer(modifier = Modifier.height(36.dp))
 

@@ -14,7 +14,7 @@ import com.paw.key.presentation.ui.community.navigation.communityNavGraph
 import com.paw.key.presentation.ui.course.entire.navigation.courseNavGraph
 import com.paw.key.presentation.ui.course.entire.tab.map.navigation.walkCourseNavGraph
 import com.paw.key.presentation.ui.course.walkcomplete.navigation.walkCompletionNavGraph
-import com.paw.key.presentation.ui.course.walkrecord.navigation.walkReviewNavGraph
+import com.paw.key.presentation.ui.course.walkreview.navigation.walkReviewNavGraph
 import com.paw.key.presentation.ui.dummy.navigation.dummyNavGraph
 import com.paw.key.presentation.ui.dummy.next.dummyNextNavGraph
 import com.paw.key.presentation.ui.home.navigation.homeLocationSettingNavGraph
@@ -208,6 +208,6 @@ fun PawKeyNavHost(
         signUpLevelNavGraph(
             navigateNext = navigator::navigateHome,
 
-            )
+        )
     }
 }

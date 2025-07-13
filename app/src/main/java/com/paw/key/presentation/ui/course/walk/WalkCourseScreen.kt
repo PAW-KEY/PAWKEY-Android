@@ -29,7 +29,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.LocationOn
-import androidx.compose.material3.Button
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
@@ -49,7 +48,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -69,6 +70,7 @@ import com.google.android.gms.location.Priority
 import com.kakao.vectormap.LatLng
 import com.kakao.vectormap.MapView
 import com.kakao.vectormap.graphics.gl.GLSurfaceView
+import com.paw.key.R
 import com.paw.key.core.designsystem.component.LoadingScreen
 import com.paw.key.core.designsystem.component.PawkeyButton
 import com.paw.key.core.designsystem.theme.PawKeyTheme
@@ -282,10 +284,11 @@ fun WalkCourseRoute(
         onDispose {
             if (stepCounterSensor != null) {
                 sensorManager.unregisterListener(stepSensorEventListener)
+                fusedLocationClient.removeLocationUpdates(locationCallback)
             }
         }
     }
-    
+
     when (state.initialLocationState) {
         is UiState.Empty -> Unit
         is UiState.Failure -> Unit
@@ -301,6 +304,7 @@ fun WalkCourseRoute(
                 onLabelClick = { _, _ -> },
                 currentUserLocation = state.currentLocation,
                 poiPoints = if (isSharedWalk) {
+                    //Todo : 여기 공유용 루트 좌표값용
                     listOf()
                 } else {
                     state.poiPoints
@@ -308,10 +312,10 @@ fun WalkCourseRoute(
                 isTrackingEnabled = state.isTrackingEnabled,
                 isPauseTracking = state.isRecording, // true = 잠시 중단, false = 시작
                 isStopTracking = state.isLocationTracking, // true = 진짜 중단
-                updateLocationAndCalculateDistance = { newLatLng, accuracy ->
-                    // 정확한 거리를 계산하여 거리를 기록하는 함수
-                    viewModel.updateLocationAndCalculateDistance(newLatLng,accuracy)
-                },
+                onDisposeCallback = {
+                    fusedLocationClient.removeLocationUpdates(locationCallback)
+                    viewModel.mapCaptureCompleted()
+                }
             )
 
             LaunchedEffect(Unit) {
@@ -322,10 +326,9 @@ fun WalkCourseRoute(
                 }
             }
 
+            // 캡처 부분
             LaunchedEffect(state.shouldCaptureMap, state.poiPoints) {
                 if (state.shouldCaptureMap) {
-                    delay(500L)
-
                     val glSurfaceView = mapView.surfaceView as? GLSurfaceView
                     if (glSurfaceView != null) {
                         withContext(Dispatchers.IO) {
@@ -365,6 +368,7 @@ fun WalkCourseRoute(
                     }
                 },
                 onPauseTracking = {
+                    viewModel.onStopTrackingEvent()
                     viewModel.updateState {
                         copy(
                             isRecording = !this.isRecording,
@@ -387,7 +391,7 @@ fun WalkCourseRoute(
                     }
                 },
                 onCaptured = { bitmap ->
-                    //viewModel.onMapCaptured(bitmap)
+                    viewModel.onMapCaptured(bitmap)
                 },
                 modifier = modifier,
             )
@@ -460,7 +464,7 @@ fun WalkCourseScreen(
                         verticalArrangement = Arrangement.Center
                     ) {
                         // Todo : 텍스트 스타일 24b로 변경 예쩡
-                        if (isSharedWalk) {
+                        if (!isSharedWalk) {
                             Text(
                                 text = "산책이 중단되었어요!",
                                 textAlign = TextAlign.Center,
@@ -517,7 +521,7 @@ fun WalkCourseScreen(
                             containerColor = Color.White
                         ) {
                             Icon(
-                                imageVector = Icons.Default.LocationOn,
+                                imageVector = ImageVector.vectorResource(R.drawable.ic_course_map_tap_location_on),
                                 contentDescription = "내 위치",//stringResource(id = R.string.lo)
                                 tint = Color.Black
                             )
@@ -526,7 +530,7 @@ fun WalkCourseScreen(
 
                     if (isTracking) {
                         PawkeyButton(
-                            text = "산책 기록 종료",
+                            text = "중지하기",
                             enabled = true,
                             onClick = {
                                 onPauseTracking()
@@ -546,7 +550,9 @@ fun WalkCourseScreen(
                                         }
                                     }
                                 }
-                            }
+                            },
+                            modifier = Modifier
+                                .padding(top = 16.dp)
                         )
                     } else {
                         Row (
@@ -570,7 +576,9 @@ fun WalkCourseScreen(
                                         color = PawKeyTheme.colors.green500,
                                         shape = RoundedCornerShape(8.dp)
                                     )
-                                    .padding(horizontal = 24.dp, vertical = 16.dp)
+                                    .padding(horizontal = 24.dp, vertical = 16.dp),
+                                color = PawKeyTheme.colors.green500,
+                                style = PawKeyTheme.typography.body16Sb
                             )
 
                             Spacer(modifier = Modifier.weight(1f))
@@ -588,7 +596,8 @@ fun WalkCourseScreen(
                                         onStopTracking()
                                     }
                                     .padding(horizontal = 24.dp, vertical = 16.dp),
-                                color = PawKeyTheme.colors.white1
+                                color = PawKeyTheme.colors.white1,
+                                style = PawKeyTheme.typography.body16Sb
                             )
                         }
                     }
@@ -608,7 +617,7 @@ fun captureMapToBitmap(surfaceView: GLSurfaceView, onCaptured: (Bitmap?) -> Unit
     }
 }
 
-private fun createBitmapFromGLSurface(x: Int, y: Int, w: Int, h: Int, gl: GL10): Bitmap? {
+fun createBitmapFromGLSurface(x: Int, y: Int, w: Int, h: Int, gl: GL10): Bitmap? {
     val bitmapBuffer = IntArray(w * h)
     val bitmapSource = IntArray(w * h)
     val intBuffer = IntBuffer.wrap(bitmapBuffer)
@@ -640,8 +649,7 @@ private fun createBitmapFromGLSurface(x: Int, y: Int, w: Int, h: Int, gl: GL10):
     // 전체 비트맵 생성
     val fullBitmap = Bitmap.createBitmap(bitmapSource, w, h, Bitmap.Config.ARGB_8888)
 
-    // 화면의 aspectRatio 계산 (Modifier.aspectRatio(340f / 150f) 와 동일하게)
-    val targetAspectRatio = 16f / 9f // 사용하고자 하는 화면의 aspectRatio를 여기에 설정합니다.
+    val targetAspectRatio = 16f / 11f
 
     var cropWidth: Int
     var cropHeight: Int
@@ -649,11 +657,9 @@ private fun createBitmapFromGLSurface(x: Int, y: Int, w: Int, h: Int, gl: GL10):
     val currentAspectRatio = w.toFloat() / h.toFloat()
 
     if (currentAspectRatio > targetAspectRatio) {
-        // 현재 비트맵이 목표보다 가로로 더 길면, 높이를 기준으로 너비를 계산하여 자름 (가로 양쪽 여백 발생)
         cropHeight = h
         cropWidth = (h * targetAspectRatio).toInt()
     } else {
-        // 현재 비트맵이 목표보다 세로로 더 길거나 같으면, 너비를 기준으로 높이를 계산하여 자름 (세로 양쪽 여백 발생)
         cropWidth = w
         cropHeight = (w / targetAspectRatio).toInt()
     }
@@ -743,7 +749,7 @@ private fun WalkCourseScreenPreview() {
                 )
                 .fillMaxWidth()
                 .padding(horizontal = 24.dp, vertical = 16.dp)
-                //.align(Alignment.CenterHorizontally)
+            //.align(Alignment.CenterHorizontally)
         ){
             val recordItems = listOf(
                 DistanceRecord,

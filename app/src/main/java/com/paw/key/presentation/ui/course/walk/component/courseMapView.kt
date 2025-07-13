@@ -1,10 +1,6 @@
 package com.paw.key.presentation.ui.course.walk.component
 
-import android.Manifest
 import android.content.Context
-import android.content.pm.PackageManager
-import android.hardware.SensorManager
-import android.os.Looper
 import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
@@ -14,24 +10,19 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
-import com.google.android.gms.location.LocationCallback
-import com.google.android.gms.location.LocationRequest
-import com.google.android.gms.location.LocationResult
-import com.google.android.gms.location.LocationServices
-import com.google.android.gms.location.Priority
 import com.kakao.vectormap.KakaoMap
 import com.kakao.vectormap.KakaoMapReadyCallback
 import com.kakao.vectormap.LatLng
 import com.kakao.vectormap.MapLifeCycleCallback
 import com.kakao.vectormap.MapView
 import com.kakao.vectormap.camera.CameraUpdateFactory
+import com.kakao.vectormap.graphics.gl.GLSurfaceView
 import com.kakao.vectormap.label.Label
 import com.kakao.vectormap.label.LabelOptions
 import com.kakao.vectormap.label.LabelStyle
@@ -42,11 +33,13 @@ import com.kakao.vectormap.route.RouteLineSegment
 import com.kakao.vectormap.route.RouteLineStyle
 import com.kakao.vectormap.route.RouteLineStylesSet
 import com.kakao.vectormap.shape.DimScreenLayer
-import com.kakao.vectormap.shape.DotPoints
-import com.kakao.vectormap.shape.PolygonOptions
-import com.kakao.vectormap.shape.PolygonStyles
-import com.kakao.vectormap.shape.PolygonStylesSet
 import com.paw.key.R
+import java.lang.Math.toDegrees
+import java.lang.Math.toRadians
+import kotlin.math.atan2
+import kotlin.math.cos
+import kotlin.math.sin
+import kotlin.math.sqrt
 
 @Composable
 fun courseMapView(
@@ -58,7 +51,7 @@ fun courseMapView(
     isStopTracking : Boolean,
     poiPoints : List<LatLng>,
     onLabelClick : (LatLng, String) -> Unit,
-    updateLocationAndCalculateDistance : (LatLng, Float) -> Unit,
+    onDisposeCallback : () -> Unit
 ) : MapView {
     val mapView = remember {
         MapView(context)
@@ -68,11 +61,8 @@ fun courseMapView(
         mutableStateOf<KakaoMap?>(null)
     }
 
-    var currentLocation by remember {
-        mutableStateOf(currentUserLocation)
-    }
-
     val stableCallback = rememberUpdatedState(onLabelClick)
+    val stableOnDisposeCallback = rememberUpdatedState(onDisposeCallback)
 
     var centerLabel by remember {
         mutableStateOf<Label?>(null)
@@ -112,6 +102,28 @@ fun courseMapView(
             currentDrawnRouteLine?.show()
         }
     }
+
+    /*val fusedLocationClient = remember { LocationServices.getFusedLocationProviderClient(context) }
+
+    val locationRequest = remember {
+        LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, 1000) // 1초마다, 높은 정확도
+            .setWaitForAccurateLocation(true)
+            .build()
+    }
+
+    val locationCallback = remember(isPauseTracking) {
+        object : LocationCallback() {
+            override fun onLocationResult(locationResult: LocationResult) {
+                locationResult.lastLocation?.let { location ->
+                    if (isPauseTracking) { // isRecording 상태를 직접 사용
+                        val newLatLng = LatLng.from(location.latitude, location.longitude)
+                        currentLocation = newLatLng
+                        Log.d("CourseMapView", "Updated location: $newLatLng, accuracy: ${location.accuracy}")
+                    }
+                }
+            }
+        }
+    }*/
 
     LaunchedEffect(poiPoints) {
         kakaoMapState?.let { map ->
@@ -178,11 +190,11 @@ fun courseMapView(
 
             override fun onPause(owner: LifecycleOwner) {
                 mapView.pause()
-                //fusedLocationClient.removeLocationUpdates(locationCallback)
-                /*sensorManager.unregisterListener(stepSensorEventListener)
-                fusedLocationClient.removeLocationUpdates(locationCallback)
-                initialSensorSteps = null
-                isWalking(false)*/
+                kakaoMapState?.moveCamera(
+                    CameraUpdateFactory.fitMapPoints(
+                        poiPoints.toTypedArray(), 700
+                    )
+                )
             }
         }
 
@@ -191,18 +203,24 @@ fun courseMapView(
         onDispose {
             lifeCycle.removeObserver(observer)
             //fusedLocationClient.removeLocationUpdates(locationCallback)
+            onDisposeCallback()
+            stableOnDisposeCallback.value()
         }
     }
 
-    LaunchedEffect(isTrackingEnabled, centerLabel) {
-        if (currentUserLocation != null && centerLabel != null) {
+    LaunchedEffect(currentUserLocation, centerLabel, kakaoMapState) {
+        if (currentUserLocation != null && centerLabel != null && kakaoMapState != null) {
             centerLabel?.moveTo(currentUserLocation)
-            kakaoMapState?.moveCamera(
-                CameraUpdateFactory.newCenterPosition(
-                    currentUserLocation, 18
-                )
-            )
+            Log.d("courseMapview", "Center label moved to: $currentUserLocation")
         }
+    }
+
+    LaunchedEffect(isTrackingEnabled) {
+        kakaoMapState?.moveCamera(
+            CameraUpdateFactory.newCenterPosition(
+                currentUserLocation, 18
+            )
+        )
     }
 
     LaunchedEffect(isPauseTracking) {
@@ -219,3 +237,19 @@ fun courseMapView(
     return mapView
 }
 
+
+fun calculateMidpoint(point1: LatLng, point2: LatLng): LatLng {
+    val lonAvg = (point1.longitude + point2.longitude) / 2.0
+
+    val lat1Rad = toRadians(point1.latitude)
+    val lon1Rad = toRadians(point1.longitude)
+    val lat2Rad = toRadians(point2.latitude)
+    val lon2Rad = toRadians(point2.longitude)
+
+    val Bx = cos(lat2Rad) * cos(lon2Rad - lon1Rad)
+    val By = cos(lat2Rad) * sin(lon2Rad - lon1Rad)
+    val latMid = atan2(sin(lat1Rad) + sin(lat2Rad), sqrt((cos(lat1Rad) + Bx) * (cos(lat1Rad) + Bx) + By * By))
+    val lonMid = lon1Rad + atan2(By, cos(lat1Rad) + Bx)
+
+    return LatLng.from(toDegrees(latMid), toDegrees(lonMid))
+}

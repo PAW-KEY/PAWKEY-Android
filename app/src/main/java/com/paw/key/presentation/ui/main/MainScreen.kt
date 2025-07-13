@@ -26,6 +26,7 @@ import com.paw.key.presentation.ui.main.component.MainBottomBar
 import com.paw.key.presentation.ui.main.state.MainContract
 import com.paw.key.presentation.ui.main.viewmodel.MainViewModel
 import kotlinx.collections.immutable.toImmutableList
+import kotlinx.collections.immutable.toPersistentList
 
 @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
 @Composable
@@ -99,7 +100,7 @@ private fun MainScreenContent(
         )
 
         FootprintAnimationScreen(
-            footprints = footprints,
+            footprints = footprints.toPersistentList(),
             onAnimationFinished = { finishedFootprint ->
                 removeFootprint(finishedFootprint)
             },

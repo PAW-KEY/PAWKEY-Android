@@ -22,12 +22,13 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.paw.key.R
 import com.paw.key.presentation.ui.main.state.MainContract
+import kotlinx.collections.immutable.PersistentList
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @Composable
 fun FootprintAnimationScreen(
-    footprints: List<MainContract.Footprint>,
+    footprints: PersistentList<MainContract.Footprint>,
     onAnimationFinished: (MainContract.Footprint) -> Unit,
     modifier: Modifier = Modifier
 ) {

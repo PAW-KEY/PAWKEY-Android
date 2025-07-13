@@ -1,4 +1,4 @@
-package com.paw.key.presentation.ui.course.walkrecord.navigation
+package com.paw.key.presentation.ui.course.walkreview.navigation
 
 import android.os.Build
 import androidx.annotation.RequiresApi
@@ -8,7 +8,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
 import com.paw.key.core.navigation.Route
-import com.paw.key.presentation.ui.course.walkrecord.WalkReviewRoute
+import com.paw.key.presentation.ui.course.walkreview.WalkReviewRoute
 import kotlinx.serialization.Serializable
 
 fun NavController.navigateWalkReview(
