@@ -55,6 +55,19 @@
     <string name="course_record_step">걸음 수 (걸음)</string>
     <string name="course_tap_location_description">내 위치</string>
 
+    <string name="course_list_option_title">산책 경로 옵션</string>
+    <string name="course_list_option_sort">정렬 옵션</string>
+    <string name="course_list_option_single">단일 선택 옵션</string>
+    <string name="course_list_option_multiple">복수 선택 옵션</string>
+    <string name="course_list_option_walk_time">산책 소요 시간</string>
+    <string name="course_list_option_mood">분위기</string>
+    <string name="course_list_option_dog_friend">강아지 친구</string>
+    <string name="course_list_option_safety">안전</string>
+    <string name="course_list_option_convenience">편의성</string>
+    <string name="course_list_option_environment">환경</string>
+    <string name="course_list_option_apply">옵션 적용하기</string>
+    <string name="course_list_option_reset">초기화</string>
+
     <!--Community-->
     <string name="ic_community_description">community</string>
 
