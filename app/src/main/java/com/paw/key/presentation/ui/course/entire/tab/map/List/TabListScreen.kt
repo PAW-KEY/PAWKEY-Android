@@ -5,6 +5,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -57,72 +58,77 @@ fun TabListScreen(
 ) {
     var showBottomSheet by remember { mutableStateOf(false) }
 
-    LazyColumn(
-        verticalArrangement = Arrangement.spacedBy(20.dp),
+    Column(
         modifier = modifier
             .fillMaxSize()
-            .background(PawKeyTheme.colors.white2)
-            .padding(bottom = 36.dp)
-
     ) {
-        item {
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                verticalAlignment = Alignment.CenterVertically,
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(color = PawKeyTheme.colors.white1)
+                .padding(horizontal = 16.dp, vertical = 11.dp)
+        ) {
+            Icon(
+                imageVector = ImageVector.vectorResource(R.drawable.ic_course_optin_filter),
+                contentDescription = "filter",
+                tint = Color.Unspecified,
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .background(color = PawKeyTheme.colors.white1)
-                    .padding(horizontal = 16.dp, vertical = 11.dp)
-            ) {
-                Icon(
-                    imageVector = ImageVector.vectorResource(R.drawable.ic_course_optin_filter),
-                    contentDescription = "filter",
-                    tint = Color.Unspecified,
-                    modifier = Modifier
-                        .noRippleClickable {
-                            showBottomSheet = true
-                        }
+                    .noRippleClickable {
+                        showBottomSheet = true
+                    }
+            )
+            OptionChip(
+                text = "선택한 옵션이 없어요",
+                isActionChip = true
+            )
+        }
+
+        LazyColumn(
+            verticalArrangement = Arrangement.spacedBy(20.dp),
+            modifier = modifier
+                .fillMaxSize()
+                .background(PawKeyTheme.colors.white2)
+                .padding(bottom = 36.dp)
+
+        ) {
+
+            item {
+                CourseCard(
+                    title = "제목을 입력해주세요",
+                    petName = "안녕꼬리",
+                    date = "21/1/1"
                 )
-                OptionChip(
-                    text = "선택한 옵션이 없어요",
-                    isActionChip = true
+            }
+            item {
+                CourseCard(
+                    title = "제목을 입력해주세요",
+                    petName = "안녕꼬리",
+                    date = "21/1/1"
+                )
+            }
+            item {
+                CourseCard(
+                    title = "제목을 입력해주세요",
+                    petName = "안녕꼬리",
+                    date = "21/1/1"
+                )
+            }
+            item {
+                CourseCard(
+                    title = "제목을 입력해주세요",
+                    petName = "안녕꼬리",
+                    date = "21/1/1"
                 )
             }
         }
-        item {
-            CourseCard(
-                title = "제목을 입력해주세요",
-                petName = "안녕꼬리",
-                date = "21/1/1"
+        if (showBottomSheet) {
+            CourseOptionBottomSheet(
+                viewModel = viewModel,
+                onDismissRequest = { showBottomSheet = false }
             )
         }
-        item {
-            CourseCard(
-                title = "제목을 입력해주세요",
-                petName = "안녕꼬리",
-                date = "21/1/1"
-            )
-        }
-        item {
-            CourseCard(
-                title = "제목을 입력해주세요",
-                petName = "안녕꼬리",
-                date = "21/1/1"
-            )
-        }
-        item {
-            CourseCard(
-                title = "제목을 입력해주세요",
-                petName = "안녕꼬리",
-                date = "21/1/1"
-            )
-        }
-    }
-    if (showBottomSheet) {
-        CourseOptionBottomSheet(
-            viewModel = viewModel,
-            onDismissRequest = { showBottomSheet = false }
-        )
     }
 }
 
