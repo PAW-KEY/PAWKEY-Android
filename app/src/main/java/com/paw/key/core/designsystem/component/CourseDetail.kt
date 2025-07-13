@@ -1,32 +1,45 @@
 package com.paw.key.core.designsystem.component
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
 import com.paw.key.R
 import com.paw.key.core.designsystem.theme.PawKeyTheme
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
+import com.paw.key.core.designsystem.theme.Gray100
 
 @Composable
 fun CourseDetail(
@@ -37,183 +50,229 @@ fun CourseDetail(
     distance: String,
     time: String,
     option: List<String>,
+    onImageClick: () -> Unit,
     modifier: Modifier = Modifier
 ){
-    LazyColumn(
+    Column(
         modifier = modifier
             .fillMaxWidth()
     ) {
-        item {
-            //상단의 헤더바
-            Row(
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 16.dp),
+            verticalAlignment = Alignment.CenterVertically
+        )
+        {
+            Icon(
+                imageVector = ImageVector.vectorResource(R.drawable.ic_arrow_left_black),
+                contentDescription = "뒤로가기"
+            )
+            Box(
+                modifier = Modifier.weight(1f),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = "저장한 산책 루트",
+                    style = PawKeyTheme.typography.body16Sb
+                )
+            }
+            Spacer(modifier = Modifier.width(24.dp))
+        }
+        Column {
+            AsyncImage(
+                model = ImageRequest.Builder(LocalContext.current)
+                    .data("https://pawkey-server.com/image.jpg")
+                    .crossfade(true)
+                    .build(),
+                contentDescription = null,
+                contentScale = ContentScale.Crop,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(vertical = 16.dp),
-                verticalAlignment = Alignment.CenterVertically
+                    .height(244.dp)
+                    .background(color = Gray100)
+                    .clickable { onImageClick() } // 클릭 시 확대!
             )
-            {
-                Icon(
-                    imageVector = ImageVector.vectorResource(R.drawable.ic_arrow_left_black),
-                    contentDescription = "뒤로가기"
-                )
-                Box(
-                    modifier = Modifier.weight(1f),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(
-                        text = "저장한 산책 루트",
-                        style = PawKeyTheme.typography.body16Sb
-                    )
-                }
-                Spacer(modifier = Modifier.width(24.dp))
-            }
-            Column {
-                Box(
+
+            // 모달
+
+        }
+            Column(modifier = Modifier.padding(horizontal = 16.dp)) {
+                Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(160.dp)
-                        .background(Color.LightGray)
-                )
+                        .padding(vertical = 12.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Text(
+                        text = title,
+                        style = PawKeyTheme.typography.head20Sb,
+                        color = PawKeyTheme.colors.black
+                    )
+                    Icon(
+                        imageVector = ImageVector.vectorResource(id = R.drawable.ic_heart_filled),
+                        contentDescription = "좋아요",
+                        tint = Color.Unspecified
+                    )
+                }
 
-                Column(modifier = Modifier.padding(horizontal = 16.dp)) {
-                    Row(
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 8.dp)
+                ) {
+                    //프로필 사진
+                    Box(
                         modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = 12.dp),
-                        horizontalArrangement = Arrangement.SpaceBetween
-                    ) {
-                        Text(
-                            text = title,
-                            style = PawKeyTheme.typography.head20Sb,
-                            color = PawKeyTheme.colors.green500
-                        )
+                            .size(40.dp)
+                            .background(Color.Gray, RoundedCornerShape(20.dp))
+                    )
+                    Text(
+                        text = petName,
+                        style = PawKeyTheme.typography.body16Sb,
+                        modifier = Modifier.padding(start = 8.dp)
+                    )
+                }
+
+                Column(modifier = Modifier.padding(vertical = 8.dp)) {
+                    Row {
                         Icon(
-                            imageVector = ImageVector.vectorResource(id = R.drawable.ic_heart_filled),
-                            contentDescription = "좋아요"
+                            imageVector = ImageVector.vectorResource(id = R.drawable.ic_walk_review_location),
+                            contentDescription = "장소",
+                            tint = Color.Unspecified
                         )
-                    }
-
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = 8.dp)
-                    ) {
-                        //프로필 사진
-                        Box(
-                            modifier = Modifier
-                                .size(40.dp)
-                                .background(Color.Gray, RoundedCornerShape(20.dp))
-                        )
-                        Text(
-                            text = petName,
-                            style = PawKeyTheme.typography.body16Sb,
-                            modifier = Modifier.padding(start = 8.dp)
-                        )
-                    }
-
-                    Column(modifier = Modifier.padding(vertical = 8.dp)) {
+                        Spacer(modifier = Modifier.width(6.dp))
                         Text(text = location, style = PawKeyTheme.typography.body14M,
                             color = PawKeyTheme.colors.gray400)
+                    }
+                    Row {
+                        Icon(
+                            imageVector = ImageVector.vectorResource(id = R.drawable.ic_walk_review_time),
+                            contentDescription = "시간",
+                            tint = Color.Unspecified
+                        )
+                        Spacer(modifier = Modifier.width(6.dp))
+
                         Text(text = "$date | $time", style = PawKeyTheme.typography.body14M,
                             color = PawKeyTheme.colors.gray400)
                     }
+                }
 
-                    Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                        SubChip(text = distance)
-                        SubChip(text = time)
-                        SubChip(text = location)
+                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    SubChip(text = distance)
+                    SubChip(text = time)
+                    SubChip(text = location)
+                }
+
+                //산책 사진
+
+                LazyRow(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 12.dp),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    item {
+                        Box(
+                            modifier = Modifier
+                                .width(100.dp)
+                                .height(100.dp)
+                                .background(Color.LightGray) //어차피 사진 들어갈거임
+                        )
                     }
+                }
 
-                    //산책 사진
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = 12.dp),
-                        horizontalArrangement = Arrangement.spacedBy(8.dp)
-                    ) {
-                        Row {
-                            Box(
-                                modifier = Modifier
-                                    .width(100.dp)
-                                    .height(100.dp)
-                                    .background(Color.LightGray) //어차피 사진 들어갈거임
-                            )
-                        }
-                    }
-
-                    Text(
-                        text = "후기 글 본문 후기 글 본문 후기 글 본문",
-                        style = PawKeyTheme.typography.body14R
-                    )
-                    Spacer(modifier = Modifier.height(12.dp))
-                    Text(
-                        text = "본인 위치에서의 거리",
-                        style = PawKeyTheme.typography.caption12Sb1,
-                        color = PawKeyTheme.colors.gray200
-                    )
-                    Divider(modifier = Modifier.padding(10.dp))
-
+                Text(
+                    text = "후기 글 본문 후기 글 본문 후기 글 본문",
+                    style = PawKeyTheme.typography.body14R
+                )
+                Spacer(modifier = Modifier.height(12.dp))
+                Text(
+                    text = "본인 위치에서의 거리",
+                    style = PawKeyTheme.typography.caption12Sb1,
+                    color = PawKeyTheme.colors.gray200
+                )
+                HorizontalDivider(modifier = Modifier.padding(10.dp))
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
                     Text(
                         text = "이런 점이 좋았어요",
                         style = PawKeyTheme.typography.head18Sb,
                         color = PawKeyTheme.colors.black,
                         modifier = Modifier.padding(vertical = 16.dp)
                     )
-                    // 서버에서 전달받은 옵션이 없을 경우
-                    if (option.isEmpty()) {
-                        Text(
-                            text = "아직은 후기가 없어요.",
-                            style = PawKeyTheme.typography.body16Sb,
-                            color = PawKeyTheme.colors.gray400
-                        )
-                    } else {
-                        // 각 항목에 대해 퍼센트 시각화
-                        option.forEachIndexed { index, tag ->
-                            val percentage = when (index) {
-                                0 -> 1f
-                                1 -> 0.8f
-                                2 -> 0.6f
-                                else -> 1f
-                            }
 
-                            val backgroundColor = when (index) {
-                                0 -> PawKeyTheme.colors.green500
-                                1 -> PawKeyTheme.colors.green400
-                                2 -> PawKeyTheme.colors.green300
-                                else -> PawKeyTheme.colors.green500
-                            }
+                    Spacer(modifier = Modifier.width(12.dp))
 
+                    Icon(
+                        imageVector = ImageVector.vectorResource(id = R.drawable.ic_edit),
+                        contentDescription = "편집",
+                        tint = Color.Unspecified
+                    )
+
+                    Spacer(modifier = Modifier.width(4.dp))
+
+                    Text(
+                        text = "후기숫자를 적으세요",
+                        style = PawKeyTheme.typography.caption12M,
+                        color = PawKeyTheme.colors.gray200,
+                    )
+                }
+
+                // 서버에서 전달받은 옵션이 없을 경우
+                if (option.isEmpty()) {
+                    Text(
+                        text = "아직은 후기가 없어요.",
+                        style = PawKeyTheme.typography.body16Sb,
+                        color = PawKeyTheme.colors.gray400
+                    )
+                } else {
+                    // 각 항목에 대해 퍼센트 시각화
+                    option.forEachIndexed { index, tag ->
+                        val percentage = when (index) {
+                            0 -> 1f
+                            1 -> 0.8f
+                            2 -> 0.6f
+                            else -> 1f
+                        }
+
+                        val backgroundColor = when (index) {
+                            0 -> PawKeyTheme.colors.green300
+                            1 -> PawKeyTheme.colors.green200
+                            2 -> PawKeyTheme.colors.green100
+                            else -> PawKeyTheme.colors.green500
+                        }
+
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = 4.dp)
+                                .height(48.dp)
+                                .background(PawKeyTheme.colors.gray100, RoundedCornerShape(6.dp)) // 회색 배경
+                        ) {
                             Box(
                                 modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(vertical = 4.dp)
-                                    .height(48.dp)
-                                    .background(PawKeyTheme.colors.gray100, RoundedCornerShape(6.dp)) // 회색 배경
+                                    .fillMaxWidth(percentage)
+                                    .fillMaxHeight()
+                                    .background(backgroundColor, RoundedCornerShape(6.dp))
                             ) {
-                                Box(
+                                Text(
+                                    text = tag,
+                                    color = Color.Black,
                                     modifier = Modifier
-                                        .fillMaxWidth(percentage)
-                                        .fillMaxHeight()
-                                        .background(backgroundColor, RoundedCornerShape(6.dp))
-                                ) {
-                                    Text(
-                                        text = tag,
-                                        color = Color.White,
-                                        modifier = Modifier
-                                            .align(Alignment.CenterStart)
-                                            .padding(horizontal = 16.dp),
-                                        style = PawKeyTheme.typography.body16Sb
-                                    )
-                                }
+                                        .align(Alignment.CenterStart)
+                                        .padding(horizontal = 16.dp),
+                                    style = PawKeyTheme.typography.body16Sb
+                                )
                             }
                         }
                     }
                 }
             }
         }
-    }
-        }
+}
 
 
 
@@ -228,7 +287,8 @@ fun CourseDetailPreview() {
             location = "홍대입구역",
             distance = "3km",
             time = "1시간 소요",
-            option = listOf("조용해요", "가로등 많아요", "산책로 깨끗해요")
+            option = listOf("조용해요", "가로등 많아요", "산책로 깨끗해요"),
+            onImageClick = {},
         )
     }
 }

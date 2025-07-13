@@ -1,24 +1,29 @@
 package com.paw.key.presentation.ui.home.viewmodel
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import com.paw.key.presentation.ui.home.state.HomeContract
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import javax.inject.Inject
 
 @HiltViewModel
-class HomeViewModel @Inject constructor(
+class HomeViewModel @Inject constructor() : ViewModel() {
 
-) : ViewModel() {
-    var isLocationMenuVisible by mutableStateOf(false)
-        private set
+    private val _state = MutableStateFlow(HomeContract.HomeState())
+    val state: StateFlow<HomeContract.HomeState>
+        get() = _state.asStateFlow()
 
     fun toggleLocationMenu() {
-        isLocationMenuVisible = !isLocationMenuVisible
+        _state.value = _state.value.copy(
+            isLocationMenuVisible = !_state.value.isLocationMenuVisible
+        )
     }
 
-    fun hideLocationMenu() {
-        isLocationMenuVisible = false
+    fun selectLocation(location: String) {
+        _state.value = _state.value.copy(
+            selectedLocation = location
+        )
     }
 }

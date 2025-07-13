@@ -92,4 +92,8 @@ dependencies {
 
     //실시간 위치
     implementation(libs.play.services.location)
+
+    // 회원가입
+    implementation ("androidx.compose.foundation:foundation:1.4.0")
+
 }

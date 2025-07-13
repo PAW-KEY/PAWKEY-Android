@@ -1,7 +1,6 @@
 package com.paw.key.presentation.ui.home.component
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.content.MediaType.Companion.Text
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -30,15 +29,17 @@ private fun PreviewSettingButton() {
 }
 
 @Composable
-internal fun SettingButton(){
+fun SettingButton(
+    modifier: Modifier = Modifier,
+) {
     Box(
-        modifier = Modifier
+        modifier = modifier
             .height(64.dp)
             .width(140.dp)
-            .background(color = PawKeyTheme.colors.white1
-                , shape = RoundedCornerShape(8.dp)
+            .background(
+                color = PawKeyTheme.colors.white1, shape = RoundedCornerShape(8.dp)
             ),
-    ){
+    ) {
         Row(
             horizontalArrangement = Arrangement.spacedBy(6.dp),
             verticalAlignment = Alignment.CenterVertically,
@@ -46,14 +47,14 @@ internal fun SettingButton(){
                 .fillMaxWidth()
                 .fillMaxHeight()
                 .padding(horizontal = 16.dp, vertical = 20.dp)
-        ){
+        ) {
             Icon(
                 imageVector = ImageVector.vectorResource(id = R.drawable.ic_home_setting),
                 contentDescription = "setting",
             )
 
             Text(
-                text ="내 지역 관리",
+                text = "내 지역 관리",
                 color = PawKeyTheme.colors.black,
                 style = PawKeyTheme.typography.body16Sb
             )

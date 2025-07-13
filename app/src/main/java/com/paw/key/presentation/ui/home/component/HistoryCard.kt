@@ -33,20 +33,20 @@ private fun PreviewHistoryCard() {
 }
 
 @Composable
-internal fun HistoryCard(
-
+fun HistoryCard(
+    modifier: Modifier = Modifier,
 ) {
     Box(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .height(298.dp)
+            .clip(RoundedCornerShape(12.dp))
             .background(
                 color = PawKeyTheme.colors.white2,
-                shape = RoundedCornerShape(12.dp)
             ),
+
     ) {
-        Column()
-        {
+        Column {
             Box(
                 modifier = Modifier
                     .fillMaxWidth()

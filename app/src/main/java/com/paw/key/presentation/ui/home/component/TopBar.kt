@@ -38,7 +38,7 @@ private fun PreviewTopBar() {
 }
 
 @Composable
-internal fun TopBar(
+fun TopBar(
     location: String,
     onLocationClick: () -> Unit,
     modifier: Modifier = Modifier,

@@ -19,17 +19,20 @@ import com.paw.key.core.designsystem.theme.PawKeyTheme
 @Composable
 fun ArchivedCourseRoute(
     navigateUp: () -> Unit,
+    navigateNext: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     ArchivedCourseListScreen(
         navigateUp = navigateUp,
-        modifier = modifier
+        navigateNext = navigateNext,
+    modifier = modifier
     )
 }
 
 @Composable
 fun ArchivedCourseListScreen(
     navigateUp: () -> Unit,
+    navigateNext: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val courseList = listOf(
@@ -85,10 +88,7 @@ fun ArchivedCourseListScreen(
             CourseCard(
                 title = course.title,
                 petName = course.petName,
-                date = course.date,
-                location = course.location,
-                distance = course.distance,
-                time = course.time
+                date = course.date
             )
         }
     }
@@ -98,6 +98,6 @@ fun ArchivedCourseListScreen(
 @Composable
 fun ArchivedCourseListScreenPreview() {
     PawKeyTheme {
-        ArchivedCourseListScreen(navigateUp = {})
+        ArchivedCourseListScreen(navigateUp = {}, navigateNext = {})
     }
 }

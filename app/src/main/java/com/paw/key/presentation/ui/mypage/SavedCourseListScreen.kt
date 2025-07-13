@@ -47,8 +47,7 @@ fun SavedCourseRoute(
 ) {
     SavedCourseListScreen(
         navigateUp = navigateUp,
-//        navigateNext = navigateNext,
-//        snackBarHostState = snackBarHostState,
+        navigateNext = navigateNext,
         modifier = modifier
     )
 }
@@ -56,6 +55,7 @@ fun SavedCourseRoute(
 @Composable
 fun SavedCourseListScreen(
     navigateUp: () -> Unit,
+    navigateNext: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val courseList = listOf(
@@ -110,10 +110,7 @@ fun SavedCourseListScreen(
             CourseCard(
                 title = course.title,
                 petName = course.petName,
-                date = course.date,
-                location = course.location,
-                distance = course.distance,
-                time = course.time
+                date = course.date
             )
         }
     }
@@ -123,6 +120,6 @@ fun SavedCourseListScreen(
 @Composable
 fun SavedCourseListScreenPreview() {
     PawKeyTheme {
-        SavedCourseListScreen(navigateUp = {})
+        SavedCourseListScreen(navigateUp = {}, navigateNext = {})
     }
 }
