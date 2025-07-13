@@ -18,7 +18,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -37,9 +36,9 @@ import com.paw.key.core.designsystem.component.CourseCard
 import com.paw.key.core.designsystem.theme.PawKeyTheme
 import com.paw.key.core.util.noRippleClickable
 import com.paw.key.presentation.ui.home.component.DaytimeCard
+import com.paw.key.presentation.ui.home.component.HomeTopBar
 import com.paw.key.presentation.ui.home.component.RowCalendar
 import com.paw.key.presentation.ui.home.component.SettingButton
-import com.paw.key.presentation.ui.home.component.TopBar
 import com.paw.key.presentation.ui.home.component.TrackingCard
 import com.paw.key.presentation.ui.home.component.WeatherCard
 import com.paw.key.presentation.ui.home.viewmodel.HomeViewModel
@@ -107,7 +106,7 @@ fun HomeScreen(
             .background(color = PawKeyTheme.colors.white2)
             .fillMaxSize()
     ) {
-        TopBar(location = "강남구 역삼동", onLocationClick = { viewModel.toggleLocationMenu() })
+        HomeTopBar(location = "강남구 역삼동", onLocationClick = { viewModel.toggleLocationMenu() })
 
         LazyColumn (
             verticalArrangement = Arrangement.spacedBy(12.dp),
@@ -185,7 +184,7 @@ fun HomeScreen(
         Box(
             contentAlignment = Alignment.TopEnd,
             modifier = Modifier
-                .padding(top = 97.dp, start = 250.dp),
+                .padding(top = 97.dp, start = 240.dp),
         ) {
             SettingButton(
                 modifier = Modifier

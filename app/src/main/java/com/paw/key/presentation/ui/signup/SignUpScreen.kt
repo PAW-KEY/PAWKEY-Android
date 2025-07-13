@@ -117,7 +117,7 @@ fun SignUpScreen(
                     state.selectedGender != SignUpContract.Gender.UNKNOWN
 
             PawkeyButton(
-                text = stringResource(id = R.string.ic_onboarding_signup_name),
+                text = stringResource(id = R.string.ic_onboarding_signup_button),
                 enabled = isFormValid,
                 onClick = {
                     if (isFormValid) {

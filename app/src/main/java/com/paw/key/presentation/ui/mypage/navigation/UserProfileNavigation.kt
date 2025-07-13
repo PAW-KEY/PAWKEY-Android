@@ -24,10 +24,7 @@ fun NavGraphBuilder.userProfileNavGraph(
 ) {
     composable<UserProfile> {
         UserProfileRoute(
-            paddingValues = paddingValues,
             navigateUp = navigateUp,
-            navigateNext = navigateNext,
-            snackBarHostState = snackBarHostState
         )
     }
 }

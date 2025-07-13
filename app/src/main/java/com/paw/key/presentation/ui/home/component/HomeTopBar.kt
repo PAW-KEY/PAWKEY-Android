@@ -27,9 +27,9 @@ import com.paw.key.core.designsystem.theme.PawKeyTheme
 
 @Preview
 @Composable
-private fun PreviewTopBar() {
+private fun PreviewHomeTopBar() {
     PawKeyTheme {
-        TopBar(
+        HomeTopBar(
             location = "강남구 역삼동",
             onLocationClick = {},
         )
@@ -38,7 +38,7 @@ private fun PreviewTopBar() {
 }
 
 @Composable
-fun TopBar(
+fun HomeTopBar(
     location: String,
     onLocationClick: () -> Unit,
     modifier: Modifier = Modifier,
@@ -46,7 +46,7 @@ fun TopBar(
     Card(
         modifier = modifier
             .fillMaxWidth()
-            .height(97.dp)
+            .height(46.dp)
             .background(color = PawKeyTheme.colors.white1),
         shape = RoundedCornerShape(
             bottomStart = 15.dp,
