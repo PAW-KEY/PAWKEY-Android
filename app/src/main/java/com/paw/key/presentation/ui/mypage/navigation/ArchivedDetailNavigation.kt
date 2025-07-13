@@ -23,6 +23,7 @@ fun NavController.navigateArchivedDetail(
 fun NavGraphBuilder.archivedDetailNavGraph(
     navigateUp: () -> Unit,
     modifier: Modifier = Modifier,
+
 ) {
     composable<ArchivedDetail> {
         ArchivedDetailRoute(

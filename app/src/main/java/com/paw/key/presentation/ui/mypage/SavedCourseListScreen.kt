@@ -111,6 +111,7 @@ fun SavedCourseListScreen(
                 title = course.title,
                 petName = course.petName,
                 date = course.date,
+
             )
         }
     }
