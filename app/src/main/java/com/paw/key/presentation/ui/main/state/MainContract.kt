@@ -6,7 +6,6 @@ import androidx.compose.ui.geometry.Offset
 import java.util.UUID
 
 class MainContract {
-    @Immutable
     data class MainState(
         val footprint : List<Footprint> = emptyList()
     )
