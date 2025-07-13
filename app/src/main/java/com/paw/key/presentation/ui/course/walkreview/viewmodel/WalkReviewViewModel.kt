@@ -1,19 +1,17 @@
-package com.paw.key.presentation.ui.course.walkrecord.viewmodel
+package com.paw.key.presentation.ui.course.walkreview.viewmodel
 
 import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.paw.key.presentation.ui.course.walkrecord.state.WalkReviewContract.WalkReviewFeedbackData
-import com.paw.key.presentation.ui.course.walkrecord.state.WalkReviewContract.WalkReviewSideEffect
-import com.paw.key.presentation.ui.course.walkrecord.state.WalkReviewContract.WalkReviewState
+import com.paw.key.presentation.ui.course.walkreview.state.WalkReviewContract.WalkReviewFeedbackData
+import com.paw.key.presentation.ui.course.walkreview.state.WalkReviewContract.WalkReviewSideEffect
+import com.paw.key.presentation.ui.course.walkreview.state.WalkReviewContract.WalkReviewState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
@@ -28,8 +26,8 @@ class WalkReviewViewModel @Inject constructor(
         get() = _state.asStateFlow()
 
     private val _sideEffect = MutableSharedFlow<WalkReviewSideEffect>()
-    val sideEffect : SharedFlow<WalkReviewSideEffect>
-        get() = _sideEffect.asSharedFlow()
+    val sideEffect : MutableSharedFlow<WalkReviewSideEffect>
+        get() = _sideEffect
 
     val isFormValid: StateFlow<Boolean> = state.map { state ->
         state.title.isNotBlank() && state.content.isNotBlank() && listOf(

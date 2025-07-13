@@ -1,4 +1,4 @@
-package com.paw.key.presentation.ui.course.walkrecord.component
+package com.paw.key.presentation.ui.course.walkreview.component
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth

@@ -8,6 +8,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.Lifecycle
@@ -29,7 +30,7 @@ fun tapMapView(
     context : Context,
     currentUserLocation : LatLng?,
     isTrackingEnabled : Boolean,
-    onDispose : () -> Unit,
+    onDisposeCallback : () -> Unit,
 ) : MapView {
     val mapView = remember {
         MapView(context)
@@ -43,12 +44,8 @@ fun tapMapView(
         mutableStateOf<Label?>(null)
     }
 
-    // ------------------------------------------------
-    // 트래킹
-    /*var trackingManager by remember {
-        mutableStateOf<TrackingManager?>(null)
-    }
-*/
+    val stableOnDisposeCallback = rememberUpdatedState(onDisposeCallback)
+
     DisposableEffect(lifeCycle) {
         val observer = object : DefaultLifecycleObserver {
             override fun onCreate(owner: LifecycleOwner) {
@@ -123,22 +120,28 @@ fun tapMapView(
         onDispose {
             lifeCycle.removeObserver(observer)
             //fusedLocationClient.removeLocationUpdates(locationCallback)
-            onDispose()
+            //onDisposeCallback()
+            stableOnDisposeCallback.value()
             /*sensorManager.unregisterListener(stepSensorEventListener)
             isWalking(false)*/
         }
     }
 
-    LaunchedEffect(isTrackingEnabled, centerLabel) {
-        if (currentUserLocation != null && centerLabel != null) {
+    LaunchedEffect(currentUserLocation, centerLabel, kakaoMapState) {
+        if (currentUserLocation != null && centerLabel != null && kakaoMapState != null) {
             centerLabel?.moveTo(currentUserLocation)
-            kakaoMapState?.moveCamera(
-                CameraUpdateFactory.newCenterPosition(
-                    currentUserLocation, 21
-                )
-            )
+            Log.d("TapMapView", "카메라 $currentUserLocation (Tracking Enabled)")
         }
     }
+
+    LaunchedEffect(isTrackingEnabled) {
+        kakaoMapState?.moveCamera(
+            CameraUpdateFactory.newCenterPosition(
+                currentUserLocation, 21 // 줌 레벨을 유지하거나 필요에 따라 변경
+            )
+        )
+    }
+
 
     return mapView
 }

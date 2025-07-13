@@ -13,7 +13,7 @@ import com.paw.key.presentation.ui.community.navigation.navigateCommunity
 import com.paw.key.presentation.ui.course.entire.navigation.navigateCourse
 import com.paw.key.presentation.ui.course.entire.tab.map.navigation.navigateWalkCourse
 import com.paw.key.presentation.ui.course.walkcomplete.navigation.navigateWalkCompletion
-import com.paw.key.presentation.ui.course.walkrecord.navigation.navigateWalkReview
+import com.paw.key.presentation.ui.course.walkreview.navigation.navigateWalkReview
 import com.paw.key.presentation.ui.dummy.next.navigateDummyNext
 import com.paw.key.presentation.ui.home.navigation.navigateHome
 import com.paw.key.presentation.ui.home.navigation.navigateHomeLocationSetting
@@ -106,6 +106,7 @@ class MainNavigator(
     fun navigateSavedCourse(navOptions: NavOptions? = null) {
         navController.navigateSavedCourse(navOptions = navOptions)
     }
+    
     fun navigateSavedDetail(navOptions: NavOptions? = null) {
         navController.navigateSavedDetail(navOptions = navOptions)
     }
@@ -113,6 +114,7 @@ class MainNavigator(
     fun navigateArchivedDetail(navOptions: NavOptions? = null) {
         navController.navigateArchivedDetail(navOptions = navOptions)
     }
+    
     fun navigateArchivedCourse(navOptions: NavOptions? = null) {
         navController.navigateArchivedCourse(navOptions = navOptions)
     }
@@ -130,6 +132,10 @@ class MainNavigator(
     }
 
     /*메인 탭 산택 기준 - 산책하기, 완료, 리뷰*/
+    fun navigateRegional(navOptions: NavOptions? = null) {
+        navController.navigateRegional(navOptions = navOptions)
+    }
+
     fun navigateWalkCourse(navOptions: NavOptions? = null) {
         navController.navigateWalkCourse(navOptions = navOptions)
     }
@@ -149,11 +155,7 @@ class MainNavigator(
     fun navigateUp() {
         navController.navigateUp()
     }
-
-    fun navigateSplash(navOptions: NavOptions? = null) {
-        navController.navigateSplash(navOptions = navOptions)
-    }
-
+    
     fun navigateRegional(navOptions: NavOptions? = null) {
         navController.navigateRegional(navOptions = navOptions)
     }

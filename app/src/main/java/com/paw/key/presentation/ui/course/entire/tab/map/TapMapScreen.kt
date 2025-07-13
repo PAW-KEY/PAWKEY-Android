@@ -87,7 +87,6 @@ fun TapMapRoute(
 
     LaunchedEffect(isGranted) {
         if (isGranted) {
-            Log.e("TapMapRoute", "isGranted: $isGranted")
             val currentLocation = getCurrentLocation(
                 context,
                 fusedLocationClient,
@@ -101,11 +100,7 @@ fun TapMapRoute(
                     currentLocation = currentLocation
                 )
             }
-        }
-    }
 
-    LaunchedEffect(isGranted) {
-        if (isGranted) {
             val locationRequest = LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, 1000) // 1초마다, 높은 정확도
                 .setWaitForAccurateLocation(true)
                 .build()
@@ -141,7 +136,7 @@ fun TapMapRoute(
                 context = context,
                 currentUserLocation = state.currentLocation,
                 isTrackingEnabled = state.isTrackingEnabled,
-                onDispose = {
+                onDisposeCallback = {
                     fusedLocationClient.removeLocationUpdates(locationCallback)
                 }
             )
