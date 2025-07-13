@@ -19,6 +19,7 @@ import androidx.compose.ui.unit.dp
 import com.paw.key.core.designsystem.component.CourseDetail
 import com.paw.key.core.designsystem.component.ImageModal
 import com.paw.key.core.designsystem.component.PawkeyButton
+import com.paw.key.core.designsystem.component.TopBar
 import com.paw.key.core.designsystem.theme.PawKeyTheme
 import com.paw.key.core.designsystem.theme.White1
 
@@ -40,11 +41,15 @@ fun ArchivedCourseDetailScreen(
 ){
     var isImageExpanded by remember { mutableStateOf(false) }
 
+    TopBar(
+        title = "내가 기록한 산책 루트",
+        onBackClick = navigateUp
+    )
+
     Box(modifier = Modifier.fillMaxSize()) {
         LazyColumn(
             modifier = modifier
                 .fillMaxWidth()
-                .padding(16.dp)
                 .background(color = White1)
         ) {
             item {

@@ -86,7 +86,6 @@ fun PawKeyNavHost(
             paddingValues = paddingValues,
             navigateUp = navigator::navigateUp,
             navigateNext = navigator::navigateWalkReview,
-            snackBarHostState = snackbarHostState
         )
 
         walkReviewNavGraph(

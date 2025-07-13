@@ -19,13 +19,13 @@ import androidx.compose.ui.unit.dp
 import com.paw.key.core.designsystem.component.CourseDetail
 import com.paw.key.core.designsystem.component.ImageModal
 import com.paw.key.core.designsystem.component.PawkeyButton
+import com.paw.key.core.designsystem.component.TopBar
 import com.paw.key.core.designsystem.theme.PawKeyTheme
 import com.paw.key.core.designsystem.theme.White1
 
 @Composable
 fun SavedDetailRoute(
     navigateUp: () -> Unit,
-    snackBarHostState: SnackbarHostState,
     modifier: Modifier = Modifier,
 ) {
     SavedCourseDetailScreen(
@@ -42,6 +42,10 @@ fun SavedCourseDetailScreen(
     var isImageExpanded by remember { mutableStateOf(false) }
 
     Box(modifier = Modifier.fillMaxSize()) {
+        TopBar(title = "내가 저장한 산책 루트",
+            onBackClick = { navigateUp() }
+        )
+
         LazyColumn(
             modifier = modifier
                 .fillMaxWidth()
