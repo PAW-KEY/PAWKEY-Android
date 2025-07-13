@@ -61,70 +61,75 @@ fun SignUpScreen(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .padding(horizontal = 16.dp)
     ) {
         SignUpHeader(
             title = stringResource(R.string.ic_onboarding_signup),
             subtitle = stringResource(id = R.string.ic_onboarding_signup_subtitle_step1),
             progress = step,
         )
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = 16.dp)
+        ) {
+            Spacer(modifier = Modifier.height(42.dp))
 
-        Spacer(modifier = Modifier.height(42.dp))
-
-        FormField(
-            label = stringResource(id = R.string.ic_onboarding_signup_name),
-            content = {
-                SignUpTextField(
-                    value = state.name,
-                    onValueChange = viewModel::onNameChanged,
-                    placeholder = "이름을 입력해주세요"
-                )
-            }
-        )
-
-        Spacer(modifier = Modifier.height(33.dp))
-
-        FormField(
-            label = stringResource(id = R.string.ic_onboarding_signup_gender),
-            content = {
-                GenderSelector(
-                    selectedGender = state.selectedGender,
-                    onGenderSelected = viewModel::selectGender
-                )
-            }
-        )
-
-        Spacer(modifier = Modifier.height(33.dp))
-
-        FormField(
-            label = stringResource(id = R.string.ic_onboarding_signup_age),
-            content = {
-                SignUpTextField(
-                    value = state.age,
-                    onValueChange = viewModel::onAgeChanged,
-                    placeholder = "나이를 입력해주세요"
-                )
-            }
-        )
-
-        Spacer(modifier = Modifier.weight(1f))
-
-        val isFormValid = state.name.isNotBlank() &&
-                state.age.isNotBlank() &&
-                state.selectedGender != SignUpContract.Gender.UNKNOWN
-
-        PawkeyButton(
-            text = stringResource(id = R.string.ic_onboarding_signup_name),
-            enabled = isFormValid,
-            onClick = {
-                if (isFormValid) {
-                    navigateSignUpActivity()
+            FormField(
+                label = stringResource(id = R.string.ic_onboarding_signup_name),
+                content = {
+                    SignUpTextField(
+                        value = state.name,
+                        onValueChange = viewModel::onNameChanged,
+                        placeholder = "이름을 입력해주세요"
+                    )
                 }
-            }
-        )
+            )
 
-        Spacer(modifier = Modifier.height(46.dp))
+            Spacer(modifier = Modifier.height(33.dp))
+
+            FormField(
+                label = stringResource(id = R.string.ic_onboarding_signup_gender),
+                content = {
+                    GenderSelector(
+                        selectedGender = state.selectedGender,
+                        onGenderSelected = viewModel::selectGender
+                    )
+                }
+            )
+
+            Spacer(modifier = Modifier.height(33.dp))
+
+            FormField(
+                label = stringResource(id = R.string.ic_onboarding_signup_age),
+                content = {
+                    SignUpTextField(
+                        value = state.age,
+                        onValueChange = viewModel::onAgeChanged,
+                        placeholder = "나이를 입력해주세요"
+                    )
+                }
+            )
+
+            Spacer(modifier = Modifier.weight(1f))
+
+            val isFormValid = state.name.isNotBlank() &&
+                    state.age.isNotBlank() &&
+                    state.selectedGender != SignUpContract.Gender.UNKNOWN
+
+            PawkeyButton(
+                text = stringResource(id = R.string.ic_onboarding_signup_name),
+                enabled = isFormValid,
+                onClick = {
+                    if (isFormValid) {
+                        navigateSignUpActivity()
+                    }
+                }
+            )
+
+            Spacer(modifier = Modifier.height(46.dp))
+        }
     }
+
 }
 
 @Composable

@@ -110,7 +110,8 @@ fun SavedCourseListScreen(
             CourseCard(
                 title = course.title,
                 petName = course.petName,
-                date = course.date
+                date = course.date,
+
             )
         }
     }

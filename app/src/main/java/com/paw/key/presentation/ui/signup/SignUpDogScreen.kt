@@ -66,6 +66,14 @@ fun SignUpDogRoute(
     )
 }
 
+private fun isAgeValid(ageKnown: SignUpContract.AgeKnown, dogAge: String): Boolean {
+    return when (ageKnown) {
+        SignUpContract.AgeKnown.KNOWN -> dogAge.isNotEmpty()
+        SignUpContract.AgeKnown.UNKNOWN -> true
+        SignUpContract.AgeKnown.NONE -> false
+    }
+}
+
 @Composable
 fun SignUpDogScreen(
     step: Float,
@@ -89,32 +97,36 @@ fun SignUpDogScreen(
                 modifier = Modifier.fillMaxSize()
             ) {
                 item { DogProfileImage() }
+
+                item {
+                    DogNameField(
+                        value = state.dogName,
+                        onValueChange = viewModel::onDogNameChanged
+                    )
+                }
+
                 item {
                     Column(
-                        verticalArrangement = Arrangement.spacedBy(10.dp),
+                        verticalArrangement = Arrangement.spacedBy(10.dp)
                     ) {
-                        DogNameField(
-                            value = state.dogName,
-                            onValueChange = viewModel::onDogNameChanged
-                        )
                         DogGenderSection(
                             selectedGender = state.dogGender,
                             onGenderSelected = viewModel::selectDogGender
                         )
+                        NeuteringCheckbox(
+                            isNeutered = state.isNeutered,
+                            onToggle = viewModel::toggleNeutering
+                        )
                     }
                 }
-                item {
-                    NeuteringCheckbox(
-                        isNeutered = state.isNeutered,
-                        onToggle = viewModel::toggleNeutering
-                    )
-                }
+
                 item {
                     DogBreedField(
                         value = state.dogBreed,
                         onValueChange = viewModel::onDogBreedChanged
                     )
                 }
+
                 item {
                     DogAgeSection(
                         ageKnown = state.ageKnown,
@@ -123,6 +135,7 @@ fun SignUpDogScreen(
                         onDogAgeChanged = viewModel::onDogAgeChanged
                     )
                 }
+
                 item { Spacer(modifier = Modifier.height(80.dp)) }
             }
         }
@@ -130,8 +143,7 @@ fun SignUpDogScreen(
         val isFormValid = state.dogName.isNotEmpty() &&
                 state.dogGender != SignUpContract.DogGender.UNKNOWN &&
                 state.dogBreed.isNotEmpty() &&
-                state.ageKnown != SignUpContract.AgeKnown.UNKNOWN &&
-                state.dogAge.isNotEmpty()
+                isAgeValid(state.ageKnown, state.dogAge)
 
         PawkeyButton(
             text = "다음으로",
@@ -185,7 +197,6 @@ private fun DogNameField(
             SignUpTextField(
                 value = value,
                 onValueChange = onValueChange,
-
                 placeholder = "강아지 이름을 입력해주세요"
             )
         }
@@ -289,14 +300,20 @@ private fun DogAgeSection(
                     SignUpUserSelectButton(
                         user = "나이를 알아요",
                         isSelect = ageKnown == SignUpContract.AgeKnown.KNOWN,
-                        onClick = { onAgeKnownSelected(SignUpContract.AgeKnown.KNOWN) },
+                        onClick = {
+                            onAgeKnownSelected(SignUpContract.AgeKnown.KNOWN)
+                            onDogAgeChanged("")
+                        },
                         modifier = Modifier.weight(1f)
                     )
 
                     SignUpUserSelectButton(
                         user = "나이를 몰라요",
                         isSelect = ageKnown == SignUpContract.AgeKnown.UNKNOWN,
-                        onClick = { onAgeKnownSelected(SignUpContract.AgeKnown.UNKNOWN) },
+                        onClick = {
+                            onAgeKnownSelected(SignUpContract.AgeKnown.UNKNOWN)
+                            onDogAgeChanged("")
+                        },
                         modifier = Modifier.weight(1f)
                     )
                 }

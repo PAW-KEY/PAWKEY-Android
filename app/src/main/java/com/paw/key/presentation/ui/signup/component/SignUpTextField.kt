@@ -23,7 +23,7 @@ fun SignUpTextField(
     value: String,
     onValueChange: (String) -> Unit,
     modifier: Modifier = Modifier,
-    placeholder: String = "",
+    placeholder: String,
     enabled: Boolean = true,
 ) {
     val isClicked = remember { mutableStateOf(false) }
