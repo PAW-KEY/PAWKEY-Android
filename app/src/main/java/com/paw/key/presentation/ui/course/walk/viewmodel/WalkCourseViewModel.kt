@@ -8,27 +8,25 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.kakao.vectormap.LatLng
 import com.paw.key.core.util.PreferenceDataStore
-import com.paw.key.domain.repository.BitmapRepository
+import com.paw.key.domain.repository.WalkSharedResultRepository
 import com.paw.key.presentation.ui.course.walk.state.WalkCourseContract.WalkCourseSideEffect
 import com.paw.key.presentation.ui.course.walk.state.WalkCourseContract.WalkCourseState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.toPersistentList
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
 class WalkCourseViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
-    private val bitmapRepository: BitmapRepository,
+    private val walkSharedResultRepository : WalkSharedResultRepository,
 ) : ViewModel() {
     private val _state = MutableStateFlow(WalkCourseState())
     val state : StateFlow<WalkCourseState>
@@ -154,13 +152,23 @@ class WalkCourseViewModel @Inject constructor(
 
     fun onMapCaptured(bitmap: Bitmap?) {
         if (bitmap == null) {
-            Log.e("WalkCourseViewModel", "Captured bitmap is null, cannot save.")
             return
+        }
+        updateState {
+            copy(bitmap = bitmap)
         }
 
         viewModelScope.launch {
             try {
-                bitmapRepository.saveBitmap(bitmap)
+                walkSharedResultRepository.saveResult(
+                    bitmap = state.value.bitmap,
+                    totalTime = _totalTime.value,
+                    distance = state.value.totalDistance,
+                    steps = state.value.steps.toInt(),
+                    points = state.value.poiPoints.toList()
+                )
+                Log.d("WalkCourseViewModel", "state : ${state.value}")
+
                 _sideEffect.emit(WalkCourseSideEffect.ShowSnackBar("산책 지도 이미지가 저장되었습니다."))
                 Log.d("WalkCourseViewModel", "Map captured bitmap saved to DataStore.")
             } catch (e: Exception) {
@@ -183,6 +191,14 @@ class WalkCourseViewModel @Inject constructor(
                     totalDistance = currentWalkState.totalDistance,
                     totalTime = _totalTime.value,
                     totalSteps = currentWalkState.steps.toInt()
+                )
+
+                walkSharedResultRepository.saveResult(
+                    bitmap = currentWalkState.bitmap,
+                    totalTime = _totalTime.value,
+                    distance = currentWalkState.totalDistance,
+                    steps = currentWalkState.steps.toInt(),
+                    points = currentWalkState.poiPoints.toList()
                 )
                 Log.d("WalkCourseViewModel", "All walk summary data saved successfully using PreferenceDataStore.")
                 Log.e("WalkCourseViewModel", PreferenceDataStore.getTotalTime(context).toString())
