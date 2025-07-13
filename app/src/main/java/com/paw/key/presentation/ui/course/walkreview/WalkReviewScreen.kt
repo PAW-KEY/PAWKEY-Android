@@ -23,6 +23,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.LocalLifecycleOwner
@@ -341,29 +342,26 @@ fun WalkReviewScreen(
         }
 
         item {
-            if (isSharedWalk) {
-                PawkeyButton(
-                    text = "산책 기록 공개하기",
-                    onClick = navigateNext,
-                    enabled = isFormValid,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp)
-                )
+            val buttonTextRes = if (isSharedWalk) {
+                R.string.course_review_shared_button
             } else {
-                PawkeyButton(
-                    text = "산책 기록 공개하기",
-                    onClick = navigateNext,
-                    enabled = isFormValid,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp)
-                )
+                R.string.course_review_shared_all_button
+            }
 
+            PawkeyButton(
+                text = stringResource(buttonTextRes),
+                onClick = navigateNext,
+                enabled = isFormValid,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp)
+            )
+
+            if (!isSharedWalk) {
                 Spacer(modifier = Modifier.height(10.dp))
 
                 PawkeyButton(
-                    text = "산책 기록 나만보기",
+                    text = stringResource(R.string.course_review_saved_button),
                     onClick = navigateUp,
                     enabled = isFormValid,
                     modifier = Modifier

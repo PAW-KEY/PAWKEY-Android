@@ -47,26 +47,25 @@ fun WalkCompletionRoute(
     viewModel: WalkCompleteViewModel = hiltViewModel(),
     isSharedWalk : Boolean = false
 ) {
-    val context = LocalContext.current
-    val bitmap by viewModel.savedMapBitmap.collectAsStateWithLifecycle()
     val state by viewModel.state.collectAsStateWithLifecycle()
 
-    val totalTime by PreferenceDataStore.getTotalTime(context).collectAsState(initial = 0L)
-    val totalDistance by PreferenceDataStore.getTotalDistance(context).collectAsState(initial = 0.0f)
-    val totalSteps by PreferenceDataStore.getTotalSteps(context).collectAsState(initial = 0)
-    val points by PreferenceDataStore.getPoints(context).collectAsState(initial = null)
-
     val walkRecordList = listOf(R.string.course_record_distance, R.string.course_record_time, R.string.course_record_step)
+
+    LaunchedEffect(Unit) {
+        viewModel.loadWalkResult()
+        // 디버깅용
+        viewModel.debugRepositoryState()
+    }
 
     WalkCompletionScreen(
         paddingValues = paddingValues,
         navigateUp = navigateUp,
         navigateNext = navigateNext,
-        bitmap = bitmap,
+        bitmap = state.bitmap,
         walkRecordList = walkRecordList,
-        totalDistance = totalDistance,
-        totalTime = totalTime,
-        totalSteps = totalSteps,
+        totalDistance = state.totalDistance,
+        totalTime = state.totalTime,
+        totalSteps = state.totalSteps,
         isSharedWalk = isSharedWalk,
         modifier = modifier,
     )
@@ -87,7 +86,7 @@ fun WalkCompletionScreen(
 ) {
     Column (
         modifier = modifier
-            .background(PawKeyTheme.colors.gray100),
+            .background(PawKeyTheme.colors.white2),
         horizontalAlignment = Alignment.CenterHorizontally,
     ){
         Text(
@@ -142,31 +141,21 @@ fun WalkCompletionScreen(
             )
         }
 
-        if (isSharedWalk) {
-            Spacer(modifier = Modifier.weight(1f))
-
-            PawkeyButton(
-                text = stringResource(R.string.course_shared_complete_button_text),
-                onClick = navigateNext,
-                enabled = true,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 24.dp) // 기존 16.dp에서 24.dp로 증가
-                    .padding(bottom = 24.dp)
-            )
+        val buttonTextRes = if (isSharedWalk) {
+            R.string.course_shared_complete_button_text
         } else {
-            Spacer(modifier = Modifier.weight(1f))
-
-            PawkeyButton(
-                text = stringResource(R.string.course_complete_button_text),
-                onClick = navigateNext,
-                enabled = true,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .navigationBarsPadding()
-                    .padding(horizontal = 24.dp) // 기존 16.dp에서 24.dp로 증가
-                    .padding(bottom = 24.dp)
-            )
+            R.string.course_complete_button_text
         }
+
+        Spacer(modifier = Modifier.weight(1f))
+
+        PawkeyButton(
+            text = stringResource(buttonTextRes),
+            onClick = navigateNext,
+            enabled = true,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = 16.dp, end = 16.dp, bottom = 60.dp)
+        )
     }
 }
