@@ -38,6 +38,7 @@
     <!--Home-->
     <string name="ic_home_description">home</string>
     <string name="ic_home_topbar_text">연속산책</string>
+    <string name="ic_home_location_title">내 동네 설정</string>
 
     <!--Course-->
     <string name="ic_course_description">course</string>
