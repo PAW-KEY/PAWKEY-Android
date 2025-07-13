@@ -107,12 +107,12 @@ fun SignUpDogScreen(
 
                 item {
                     Column(
-                        verticalArrangement = Arrangement.spacedBy(10.dp)
                     ) {
                         DogGenderSection(
                             selectedGender = state.dogGender,
                             onGenderSelected = viewModel::selectDogGender
                         )
+                        Spacer(modifier = Modifier.height(10.dp))
                         NeuteringCheckbox(
                             isNeutered = state.isNeutered,
                             onToggle = viewModel::toggleNeutering
