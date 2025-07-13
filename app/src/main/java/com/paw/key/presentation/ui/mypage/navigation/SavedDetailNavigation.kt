@@ -27,7 +27,6 @@ fun NavGraphBuilder.savedDetailNavGraph(
     composable<SavedDetail> {
         SavedDetailRoute(
             navigateUp = navigateUp,
-            snackBarHostState = snackBarHostState,
             modifier = modifier
         )
     }

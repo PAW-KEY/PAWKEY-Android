@@ -27,10 +27,8 @@ fun NavGraphBuilder.savedCourseNavGraph(
 ) {
     composable<SavedCourse> {
         SavedCourseRoute(
-            paddingValues = paddingValues,
             navigateUp = navigateUp,
             navigateNext = navigateNext,
-            snackBarHostState = snackBarHostState,
             modifier = modifier
         )
     }
