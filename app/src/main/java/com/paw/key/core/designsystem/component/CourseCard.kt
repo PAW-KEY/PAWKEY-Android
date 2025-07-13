@@ -20,6 +20,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -88,7 +90,7 @@ fun CourseCard(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier
                     .align(Alignment.BottomStart)
-                    .padding(start = 16.dp, bottom = 16.dp)
+                    .padding(start = 16.dp, end = 16.dp,bottom = 16.dp)
             ) {
                 AsyncImage(
                     model = ImageRequest.Builder(LocalContext.current)
@@ -119,23 +121,32 @@ fun CourseCard(
                         Text(
                             text = date,
                             style = PawKeyTheme.typography.caption12R,
-                            color = PawKeyTheme.colors.gray300
+                            color = PawKeyTheme.colors.gray100
                         )
                     }
                 }
-                Spacer(modifier = Modifier.width(120.dp))
+                Spacer(modifier = Modifier.weight(1f)) // 아이콘을 Row 끝으로 밀기 위한 Spacer
+
+                val isLiked = remember { mutableStateOf(false) }
 
                 Icon(
-                    imageVector = ImageVector.vectorResource(id = R.drawable.ic_heart_default),
-                    modifier = modifier.clickable { },
-                    tint = PawKeyTheme.colors.white1,
-                    contentDescription = "찜하기"
+                    imageVector = if (isLiked.value) {
+                        ImageVector.vectorResource(id = R.drawable.ic_heart_filled)
+                    } else {
+                        ImageVector.vectorResource(id = R.drawable.ic_heart_default)
+                    },
+                    contentDescription = "좋아요",
+                    tint = Color.Unspecified,
+                    modifier = Modifier.clickable {
+                        isLiked.value = !isLiked.value
+                    }
                 )
             }
         }
 
         Spacer(modifier = Modifier.height(12.dp))
-        //칩로우 넣깅
+
+        
         ChipRow(tags = listOf(
             "이륜차 거의 없음",
             "배변 쓰레기통",

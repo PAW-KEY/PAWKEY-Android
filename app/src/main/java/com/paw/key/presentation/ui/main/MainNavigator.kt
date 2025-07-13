@@ -132,9 +132,9 @@ class MainNavigator(
     }
 
     /*메인 탭 산택 기준 - 산책하기, 완료, 리뷰*/
-    fun navigateRegional(navOptions: NavOptions? = null) {
-        navController.navigateRegional(navOptions = navOptions)
-    }
+//    fun navigateRegional(navOptions: NavOptions? = null) {
+//        navController.navigateRegional(navOptions = navOptions)
+//    }
 
     fun navigateWalkCourse(navOptions: NavOptions? = null) {
         navController.navigateWalkCourse(navOptions = navOptions)
