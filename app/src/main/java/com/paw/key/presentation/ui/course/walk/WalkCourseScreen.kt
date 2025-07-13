@@ -29,6 +29,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.LocationOn
+import androidx.compose.material3.Button
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
@@ -339,7 +340,6 @@ fun WalkCourseRoute(
                             }
                         }
                     } else {
-                        Log.e("WalkCourseRoute", "GLSurfaceView not available for capture.")
                         viewModel.mapCaptureCompleted()
                     }
                 }
@@ -353,6 +353,7 @@ fun WalkCourseRoute(
                 snackBarHostState = snackBarHostState,
                 mapView = mapView,
                 totalDistance = formatDistance,
+                isSharedWalk = isSharedWalk,
                 currentSteps = state.steps,
                 totalTime = formattedTotalTime,
                 isTracking = state.isRecording, // true = 잠시 중단, false = dim
@@ -404,6 +405,7 @@ fun WalkCourseScreen(
     totalDistance: String,
     currentSteps: Long,
     totalTime: String,
+    isSharedWalk: Boolean,
     isTracking: Boolean, // 버튼 상태
     onClickTracking: () -> Unit,
     onStartTracking: () -> Unit, // 계속하기
@@ -458,22 +460,41 @@ fun WalkCourseScreen(
                         verticalArrangement = Arrangement.Center
                     ) {
                         // Todo : 텍스트 스타일 24b로 변경 예쩡
-                        Text(
-                            text = "산책이 중단되었어요!",
-                            textAlign = TextAlign.Center,
-                            style = PawKeyTheme.typography.head22B,
-                            color = PawKeyTheme.colors.white1,
-                            modifier = Modifier.fillMaxWidth()
-                        )
+                        if (isSharedWalk) {
+                            Text(
+                                text = "산책이 중단되었어요!",
+                                textAlign = TextAlign.Center,
+                                style = PawKeyTheme.typography.head22B,
+                                color = PawKeyTheme.colors.white1,
+                                modifier = Modifier.fillMaxWidth()
+                            )
 
-                        Text(
-                            text = "산책을 정말 종료하시겠어요?",
-                            fontSize = 12.sp,
-                            textAlign = TextAlign.Center,
-                            style = PawKeyTheme.typography.body16M,
-                            color = PawKeyTheme.colors.white2,
-                            modifier = Modifier.fillMaxWidth()
-                        )
+                            Text(
+                                text = "산책을 정말 종료하시겠어요?",
+                                fontSize = 12.sp,
+                                textAlign = TextAlign.Center,
+                                style = PawKeyTheme.typography.body16M,
+                                color = PawKeyTheme.colors.white2,
+                                modifier = Modifier.fillMaxWidth()
+                            )
+                        } else {
+                            Text(
+                                text = "산책을 종료하시겠어요?",
+                                textAlign = TextAlign.Center,
+                                style = PawKeyTheme.typography.head22B,
+                                color = PawKeyTheme.colors.white1,
+                                modifier = Modifier.fillMaxWidth()
+                            )
+
+                            Text(
+                                text = "아직 설정된 산책 루트를 다 돌지 못했어요 🥲",
+                                fontSize = 12.sp,
+                                textAlign = TextAlign.Center,
+                                style = PawKeyTheme.typography.body16M,
+                                color = PawKeyTheme.colors.white2,
+                                modifier = Modifier.fillMaxWidth()
+                            )
+                        }
                     }
                 }
 
@@ -717,7 +738,7 @@ private fun WalkCourseScreenPreview() {
                 .background(Color.White, shape = RoundedCornerShape(12.dp))
                 .border(
                     width = 1.dp,
-                    color = Color(0xFF00C853),
+                    color = PawKeyTheme.colors.green500,
                     shape = RoundedCornerShape(12.dp)
                 )
                 .fillMaxWidth()

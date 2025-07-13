@@ -85,15 +85,9 @@ class MainNavigator(
         navController.navigateLogin(navOptions = navOptions)
     }
 
-
-    fun navigateSignUp(navOptions: NavOptions? = null) {
-        navController.navigateSignUp(navOptions = navOptions)
-    }
-
     fun navigateMyPage(navOptions: NavOptions? = null) {
         navController.navigateMyPage(navOptions = navOptions)
     }
-
 
     fun navigateUserProfile(navOptions: NavOptions? = null) {
         navController.navigateUserProfile(navOptions = navOptions)
@@ -113,6 +107,7 @@ class MainNavigator(
     fun navigateArchivedDetail(navOptions: NavOptions? = null) {
         navController.navigateArchivedDetail(navOptions = navOptions)
     }
+    
     fun navigateArchivedCourse(navOptions: NavOptions? = null) {
         navController.navigateArchivedCourse(navOptions = navOptions)
     }
@@ -130,6 +125,10 @@ class MainNavigator(
     }
 
     /*메인 탭 산택 기준 - 산책하기, 완료, 리뷰*/
+    fun navigateRegional(navOptions: NavOptions? = null) {
+        navController.navigateRegional(navOptions = navOptions)
+    }
+
     fun navigateWalkCourse(navOptions: NavOptions? = null) {
         navController.navigateWalkCourse(navOptions = navOptions)
     }
@@ -142,6 +141,18 @@ class MainNavigator(
         navController.navigateWalkReview(navOptions = navOptions)
     }
 
+    fun navigateUserProfile(navOptions: NavOptions? = null) {
+        navController.navigateUserProfile(navOptions = navOptions)
+    }
+
+    fun navigatePetProfile(navOptions: NavOptions? = null) {
+        navController.navigatePetProfile(navOptions = navOptions)
+    }
+
+    fun navigateSavedCourse(navOptions: NavOptions? = null) {
+        navController.navigateSavedCourse(navOptions = navOptions)
+    }
+
     fun navigateDummyNext(navOptions: NavOptions? = null) {
         navController.navigateDummyNext(navOptions = navOptions)
     }
@@ -149,11 +160,7 @@ class MainNavigator(
     fun navigateUp() {
         navController.navigateUp()
     }
-
-    fun navigateSplash(navOptions: NavOptions? = null) {
-        navController.navigateSplash(navOptions = navOptions)
-    }
-
+    
     fun navigateRegional(navOptions: NavOptions? = null) {
         navController.navigateRegional(navOptions = navOptions)
     }

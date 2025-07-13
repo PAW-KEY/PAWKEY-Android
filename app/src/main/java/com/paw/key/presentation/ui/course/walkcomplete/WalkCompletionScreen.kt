@@ -31,9 +31,9 @@ fun WalkCompletionRoute(
     paddingValues: PaddingValues,
     navigateUp: () -> Unit,
     navigateNext: () -> Unit,
-    snackBarHostState: SnackbarHostState,
     modifier: Modifier = Modifier,
     viewModel: WalkCompleteViewModel = hiltViewModel(),
+    isSharedWalk : Boolean = false
 ) {
     val bitmap by viewModel.savedMapBitmap.collectAsStateWithLifecycle()
 
@@ -41,8 +41,8 @@ fun WalkCompletionRoute(
         paddingValues = paddingValues,
         navigateUp = navigateUp,
         navigateNext = navigateNext,
-        snackBarHostState = snackBarHostState,
         bitmap = bitmap,
+        isSharedWalk = isSharedWalk,
         modifier = modifier,
     )
 }
@@ -52,8 +52,8 @@ fun WalkCompletionScreen(
     paddingValues: PaddingValues,
     navigateUp: () -> Unit,
     navigateNext: () -> Unit,
-    snackBarHostState: SnackbarHostState,
     bitmap: Bitmap?,
+    isSharedWalk: Boolean,
     modifier: Modifier = Modifier,
 ) {
     Column (
@@ -105,14 +105,26 @@ fun WalkCompletionScreen(
                 .padding(top = 10.dp)
         )
 
-        Spacer(modifier = Modifier.weight(1f))
+        if (isSharedWalk) {
+            Spacer(modifier = Modifier.weight(1f))
 
-        PawkeyButton(
-            text = stringResource(R.string.course_complete_button_text),
-            onClick = navigateNext,
-            enabled = true,
-            modifier = Modifier
-                .fillMaxWidth()
-        )
+            PawkeyButton(
+                text = stringResource(R.string.course_shared_complete_button_text),
+                onClick = navigateNext,
+                enabled = true,
+                modifier = Modifier
+                    .fillMaxWidth()
+            )
+        } else {
+            Spacer(modifier = Modifier.weight(1f))
+
+            PawkeyButton(
+                text = stringResource(R.string.course_complete_button_text),
+                onClick = navigateNext,
+                enabled = true,
+                modifier = Modifier
+                    .fillMaxWidth()
+            )
+        }
     }
 }

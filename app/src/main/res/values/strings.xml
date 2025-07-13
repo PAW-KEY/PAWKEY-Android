@@ -3,6 +3,9 @@
     <string name="empty_string">데이터가 없습니다.</string>
     <string name="loading_string">로딩 중...</string>
 
+    <!--메인-->
+    <string name="animation_footprint_description">Footprint</string>
+
     <!--바텀 바 애니메이션 라벨-->
     <string name="main_bottom_bar_animation_label">바텀 바 라벨</string>
 
@@ -42,6 +45,7 @@
     <!--Course-->
     <string name="ic_course_description">course</string>
     <string name="course_complete_button_text">산책 기록하기</string>
+    <string name="course_shared_complete_button_text">후기 작성하기</string>
 
     <string name="course_review_image_description">산책 리뷰 이미지</string>
     <string name="course_review_location_icon_description">위치 정보 표시용 아이콘</string>
@@ -61,7 +65,6 @@
     <!--MyPage-->
     <string name="ic_mypage_description">mypage</string>
     <string name="profile">profile</string>
-
 
 
 </resources>

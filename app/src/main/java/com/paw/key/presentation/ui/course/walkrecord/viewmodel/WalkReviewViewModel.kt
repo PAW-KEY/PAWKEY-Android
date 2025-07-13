@@ -28,8 +28,8 @@ class WalkReviewViewModel @Inject constructor(
         get() = _state.asStateFlow()
 
     private val _sideEffect = MutableSharedFlow<WalkReviewSideEffect>()
-    val sideEffect : SharedFlow<WalkReviewSideEffect>
-        get() = _sideEffect.asSharedFlow()
+    val sideEffect : MutableSharedFlow<WalkReviewSideEffect>
+        get() = _sideEffect
 
     val isFormValid: StateFlow<Boolean> = state.map { state ->
         state.title.isNotBlank() && state.content.isNotBlank() && listOf(
