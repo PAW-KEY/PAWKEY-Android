@@ -26,7 +26,6 @@ import com.paw.key.core.designsystem.theme.White1
 @Composable
 fun SavedDetailRoute(
     navigateUp: () -> Unit,
-    snackBarHostState: SnackbarHostState,
     modifier: Modifier = Modifier,
 ) {
     SavedCourseDetailScreen(

@@ -13,16 +13,11 @@ import com.paw.key.core.designsystem.theme.PawKeyTheme
 
 @Composable
 fun UserProfileRoute(
-    paddingValues: PaddingValues,
     navigateUp: () -> Unit,
-    navigateNext: () -> Unit,
-    snackBarHostState: SnackbarHostState,
     modifier: Modifier = Modifier,
 ) {
     UserProfileScreen(
         navigateUp = navigateUp,
-        navigateNext = navigateNext,
-        snackBarHostState = snackBarHostState,
         modifier = modifier
     )
 }
@@ -30,8 +25,6 @@ fun UserProfileRoute(
 @Composable
 fun UserProfileScreen(
     navigateUp: () -> Unit,
-    navigateNext: () -> Unit,
-    snackBarHostState: SnackbarHostState,
     modifier: Modifier = Modifier,
     name: String = "김도기",
     gender: String = "여성",
@@ -84,9 +77,7 @@ fun ProfileItem(label: String, value: String) {
 fun UserProfileScreenPreview() {
     PawKeyTheme {
         UserProfileScreen(
-            navigateUp = {},
-            navigateNext = {},
-            snackBarHostState = SnackbarHostState()
+            navigateUp = {}
         )
     }
 }
