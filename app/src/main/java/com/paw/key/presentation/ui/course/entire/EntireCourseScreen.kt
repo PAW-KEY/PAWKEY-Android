@@ -27,6 +27,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.paw.key.core.designsystem.theme.PawKeyTheme
 import com.paw.key.presentation.ui.course.entire.component.EntireCourseTabRow
 import com.paw.key.presentation.ui.course.entire.state.EntireCourseContract.CourseTab
+import com.paw.key.presentation.ui.course.entire.tab.map.List.TapListRoute
 import com.paw.key.presentation.ui.course.entire.tab.map.TapMapRoute
 import com.paw.key.presentation.ui.course.entire.viewmodel.EntireCourseViewModel
 import kotlinx.coroutines.launch
@@ -174,7 +175,9 @@ fun EntireCourseScreen(
                 )
             }
 
-            1 -> {}
+            1 -> {
+                TapListRoute()
+            }
         }
     }
 }
