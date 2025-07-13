@@ -1,4 +1,4 @@
-package com.paw.key.presentation.ui.course.walkrecord
+package com.paw.key.presentation.ui.course.walkreview
 
 import android.net.Uri
 import android.os.Build
@@ -23,6 +23,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.LocalLifecycleOwner
@@ -32,13 +33,13 @@ import com.paw.key.R
 import com.paw.key.core.designsystem.component.PawkeyButton
 import com.paw.key.core.designsystem.component.SubChip
 import com.paw.key.core.designsystem.theme.PawKeyTheme
-import com.paw.key.presentation.ui.course.walkrecord.component.WalkReviewFeedbackForm
-import com.paw.key.presentation.ui.course.walkrecord.component.WalkReviewFeedbackHeader
-import com.paw.key.presentation.ui.course.walkrecord.component.WalkReviewImageRow
-import com.paw.key.presentation.ui.course.walkrecord.component.WalkReviewInfoHolder
-import com.paw.key.presentation.ui.course.walkrecord.component.WalkReviewTextField
-import com.paw.key.presentation.ui.course.walkrecord.state.WalkReviewContract
-import com.paw.key.presentation.ui.course.walkrecord.viewmodel.WalkReviewViewModel
+import com.paw.key.presentation.ui.course.walkreview.component.WalkReviewFeedbackForm
+import com.paw.key.presentation.ui.course.walkreview.component.WalkReviewFeedbackHeader
+import com.paw.key.presentation.ui.course.walkreview.component.WalkReviewImageRow
+import com.paw.key.presentation.ui.course.walkreview.component.WalkReviewInfoHolder
+import com.paw.key.presentation.ui.course.walkreview.component.WalkReviewTextField
+import com.paw.key.presentation.ui.course.walkreview.state.WalkReviewContract
+import com.paw.key.presentation.ui.course.walkreview.viewmodel.WalkReviewViewModel
 
 @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
 @Composable
@@ -48,6 +49,7 @@ fun WalkReviewRoute(
     snackBarHostState: SnackbarHostState,
     modifier: Modifier = Modifier,
     viewModel: WalkReviewViewModel = hiltViewModel(),
+    isSharedWalk : Boolean = false
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     val isFormValid by viewModel.isFormValid.collectAsStateWithLifecycle()
@@ -95,6 +97,7 @@ fun WalkReviewRoute(
             }
         },
         isFormValid = isFormValid,
+        isSharedWalk = isSharedWalk,
         imageList = state.images,
         petName = state.petName,
         titleText = state.title,
@@ -130,6 +133,7 @@ fun WalkReviewScreen(
     onImageDelete : (Uri?) -> Unit,
     imageList: List<Uri>,
     isFormValid : Boolean,
+    isSharedWalk : Boolean,
     petName : String,
     titleText : String,
     contentText : String,
@@ -142,21 +146,23 @@ fun WalkReviewScreen(
             .background(PawKeyTheme.colors.white1)
             .padding(bottom = 16.dp, top = 16.dp)
     ){
-        item {
-            WalkReviewImageRow(
-                imageList = imageList,
-                onClickCard = { index, _ ->
-                    if (index != 0) {
-                        onClickImage()
-                    }
-                },
-                onImageDelete = {
-                    onImageDelete(it)
-                },
-                modifier = Modifier
-                    .padding(start = 16.dp, end = 16.dp)
-                    .background(PawKeyTheme.colors.white1),
-            )
+        if (!isSharedWalk) {
+            item {
+                WalkReviewImageRow(
+                    imageList = imageList,
+                    onClickCard = { index, _ ->
+                        if (index != 0) {
+                            onClickImage()
+                        }
+                    },
+                    onImageDelete = {
+                        onImageDelete(it)
+                    },
+                    modifier = Modifier
+                        .padding(start = 16.dp, end = 16.dp)
+                        .background(PawKeyTheme.colors.white1),
+                )
+            }
         }
 
         item {
@@ -292,35 +298,37 @@ fun WalkReviewScreen(
             )
         }
 
-        item {
-            Text(
-                text = "산책에 대한 감상을 들려주시겠어요?",
-                style = PawKeyTheme.typography.body16M,
-                color = PawKeyTheme.colors.black,
-                modifier = Modifier
-                    .padding(top = 12.dp, start = 16.dp, end = 16.dp)
-            )
+        if (!isSharedWalk) {
+            item {
+                Text(
+                    text = "산책에 대한 감상을 들려주시겠어요?",
+                    style = PawKeyTheme.typography.body16M,
+                    color = PawKeyTheme.colors.black,
+                    modifier = Modifier
+                        .padding(top = 12.dp, start = 16.dp, end = 16.dp)
+                )
 
-            WalkReviewTextField(
-                textValue = titleText,
-                placeHolder = "후기 제목을 입력해주세요.",
-                onTextChanged = {
-                    onTitleTextChanged(it)
-                },
-                modifier = Modifier
-                    .padding(top = 10.dp, start = 16.dp, end = 16.dp)
-            )
+                WalkReviewTextField(
+                    textValue = titleText,
+                    placeHolder = "후기 제목을 입력해주세요.",
+                    onTextChanged = {
+                        onTitleTextChanged(it)
+                    },
+                    modifier = Modifier
+                        .padding(top = 10.dp, start = 16.dp, end = 16.dp)
+                )
 
-            WalkReviewTextField(
-                textValue = contentText,
-                placeHolder = "산책 후기를 간단하게 적어주세요!",
-                onTextChanged = {
-                    onContentTextChanged(it)
-                },
-                modifier = Modifier
-                    .heightIn(min = 200.dp, max = 400.dp)
-                    .padding(top = 10.dp, bottom = 24.dp, start = 16.dp, end = 16.dp)
-            )
+                WalkReviewTextField(
+                    textValue = contentText,
+                    placeHolder = "산책 후기를 간단하게 적어주세요!",
+                    onTextChanged = {
+                        onContentTextChanged(it)
+                    },
+                    modifier = Modifier
+                        .heightIn(min = 200.dp, max = 400.dp)
+                        .padding(top = 10.dp, bottom = 24.dp, start = 16.dp, end = 16.dp)
+                )
+            }
         }
 
         item {
@@ -334,8 +342,14 @@ fun WalkReviewScreen(
         }
 
         item {
+            val buttonTextRes = if (isSharedWalk) {
+                R.string.course_review_shared_button
+            } else {
+                R.string.course_review_shared_all_button
+            }
+
             PawkeyButton(
-                text = "산책 기록 공개하기",
+                text = stringResource(buttonTextRes),
                 onClick = navigateNext,
                 enabled = isFormValid,
                 modifier = Modifier
@@ -343,17 +357,19 @@ fun WalkReviewScreen(
                     .padding(horizontal = 16.dp)
             )
 
-            Spacer(modifier = Modifier.height(10.dp))
+            if (!isSharedWalk) {
+                Spacer(modifier = Modifier.height(10.dp))
 
-            PawkeyButton(
-                text = "산책 기록 나만보기",
-                onClick = navigateUp,
-                enabled = isFormValid,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp),
-                isBackGround = true
-            )
+                PawkeyButton(
+                    text = stringResource(R.string.course_review_saved_button),
+                    onClick = navigateUp,
+                    enabled = isFormValid,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp),
+                    isBackGround = true
+                )
+            }
         }
     }
 }

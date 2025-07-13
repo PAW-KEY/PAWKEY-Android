@@ -1,4 +1,4 @@
-package com.paw.key.presentation.ui.course.walkrecord.component
+package com.paw.key.presentation.ui.course.walkreview.component
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
@@ -14,7 +14,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.paw.key.core.designsystem.component.FeedbackItem
 import com.paw.key.core.designsystem.theme.PawKeyTheme
-import com.paw.key.presentation.ui.course.walkrecord.state.WalkReviewContract
+import com.paw.key.presentation.ui.course.walkreview.state.WalkReviewContract
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable

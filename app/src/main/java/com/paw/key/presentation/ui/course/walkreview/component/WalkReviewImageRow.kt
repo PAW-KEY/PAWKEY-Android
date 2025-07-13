@@ -1,4 +1,4 @@
-package com.paw.key.presentation.ui.course.walkrecord.component
+package com.paw.key.presentation.ui.course.walkreview.component
 
 import android.net.Uri
 import androidx.compose.foundation.layout.Arrangement

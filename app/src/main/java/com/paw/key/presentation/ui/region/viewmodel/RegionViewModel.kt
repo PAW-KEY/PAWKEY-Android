@@ -25,8 +25,8 @@ class RegionViewModel @Inject constructor(
             get() = _state.asStateFlow()
 
     private val _sideEffect = MutableSharedFlow<RegionContract.RegionSideEffect>()
-    val sideEffect : SharedFlow<RegionContract.RegionSideEffect>
-        get() = _sideEffect.asSharedFlow()
+    val sideEffect : MutableSharedFlow<RegionContract.RegionSideEffect>
+        get() = _sideEffect
 
     fun getRegionPoints(points : List<List<LatLng>>) {
         viewModelScope.launch {
