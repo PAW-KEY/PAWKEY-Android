@@ -13,7 +13,7 @@ import com.paw.key.presentation.ui.community.navigation.navigateCommunity
 import com.paw.key.presentation.ui.course.entire.navigation.navigateCourse
 import com.paw.key.presentation.ui.course.entire.tab.map.navigation.navigateWalkCourse
 import com.paw.key.presentation.ui.course.walkcomplete.navigation.navigateWalkCompletion
-import com.paw.key.presentation.ui.course.walkrecord.navigation.navigateWalkReview
+import com.paw.key.presentation.ui.course.walkreview.navigation.navigateWalkReview
 import com.paw.key.presentation.ui.dummy.next.navigateDummyNext
 import com.paw.key.presentation.ui.home.navigation.navigateHome
 import com.paw.key.presentation.ui.login.navigation.navigateLogin
@@ -23,7 +23,6 @@ import com.paw.key.presentation.ui.mypage.navigation.navigatePetProfile
 import com.paw.key.presentation.ui.mypage.navigation.navigateSavedCourse
 import com.paw.key.presentation.ui.mypage.navigation.navigateUserProfile
 import com.paw.key.presentation.ui.region.navigation.navigateRegional
-import com.paw.key.presentation.ui.mypage.navigation.navigateMyPage
 import com.paw.key.presentation.ui.onboard.navigation.navigateOnboarding
 import com.paw.key.presentation.ui.splash.navigation.Splash
 
