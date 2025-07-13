@@ -76,21 +76,27 @@ class WalkCourseViewModel @Inject constructor(
                     longitude = newLocation.longitude
                 }
 
-                val calculatedDistance = oldAndroidLocation.distanceTo(newAndroidLocation)
+                /*val calculatedDistance = oldAndroidLocation.distanceTo(newAndroidLocation)
 
                 val MIN_DISTANCE_THRESHOLD = 1f // 미터 단위
                 if (calculatedDistance >= MIN_DISTANCE_THRESHOLD) {
                     distanceIncrement = calculatedDistance
-                }
+                }*/
+                distanceIncrement = oldAndroidLocation.distanceTo(newAndroidLocation)
             }
+
+            val updatedPoiPoints: PersistentList<LatLng> =
+                if (currentUiState.poiPoints.isEmpty() && currentUiState.lastLocation == null) {
+                    // 첫 위치일 경우 무조건 추가
+                    currentUiState.poiPoints.add(newLocation)
+                } else if (distanceIncrement > 0) { // (이동이 있었으면) 추가
+                    currentUiState.poiPoints.add(newLocation)
+                } else {
+                    // 이동 거리가 0이거나 이전 위치가 없는 경우 (첫 위치가 이미 추가된 후)
+                    currentUiState.poiPoints
+                }
 
             val newTotalDistance = currentUiState.totalDistance + distanceIncrement
-
-            val updatedPoiPoints: PersistentList<LatLng> = if (distanceIncrement > 0) {
-                currentUiState.poiPoints.add(newLocation)
-            } else {
-                currentUiState.poiPoints
-            }
 
             currentUiState.copy(
                 lastLocation = newLocation,
