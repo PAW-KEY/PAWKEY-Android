@@ -30,7 +30,7 @@ import com.paw.key.R
 import com.paw.key.core.designsystem.component.CourseCard
 import com.paw.key.core.designsystem.theme.PawKeyTheme
 import com.paw.key.core.util.noRippleClickable
-import com.paw.key.presentation.ui.course.entire.tab.map.viewmodel.TapMapViewModel
+import com.paw.key.presentation.ui.course.entire.tab.map.List.viewmodel.TapListViewModel
 
 @Preview(showBackground = true)
 @Composable
@@ -43,7 +43,7 @@ private fun PreviewTabListScreen() {
 @Composable
 fun TapListRoute(
     modifier: Modifier = Modifier,
-    viewModel: TapMapViewModel = hiltViewModel(),
+    viewModel: TapListViewModel = hiltViewModel(),
 ) {
     TabListScreen(
         modifier = modifier,
@@ -53,7 +53,7 @@ fun TapListRoute(
 @Composable
 fun TabListScreen(
     modifier: Modifier = Modifier,
-    viewModel: TapMapViewModel = hiltViewModel(),
+    viewModel: TapListViewModel = hiltViewModel(),
 ) {
     var showBottomSheet by remember { mutableStateOf(false) }
 

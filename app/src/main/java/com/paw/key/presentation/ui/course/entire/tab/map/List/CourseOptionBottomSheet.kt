@@ -30,7 +30,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -41,7 +40,8 @@ import com.paw.key.R
 import com.paw.key.core.designsystem.component.PawkeyButton
 import com.paw.key.core.designsystem.theme.PawKeyTheme
 import com.paw.key.core.util.noRippleClickable
-import com.paw.key.presentation.ui.course.entire.tab.map.state.TapMapContract
+import com.paw.key.presentation.ui.course.entire.tab.map.List.state.TapListContract
+import com.paw.key.presentation.ui.course.entire.tab.map.List.viewmodel.TapListViewModel
 import com.paw.key.presentation.ui.course.entire.tab.map.viewmodel.TapMapViewModel
 
 @Preview(showBackground = true)
@@ -61,14 +61,14 @@ fun PreviewCourseOptionBottomSheet() {
 @Composable
 fun CourseOptionBottomSheet(
     modifier: Modifier = Modifier,
-    viewModel: TapMapViewModel,
+    viewModel: TapListViewModel,
     onDismissRequest: () -> Unit,
 ) {
     var showBottomSheet by remember { mutableStateOf(true) }
     val sheetState = rememberModalBottomSheetState(
         skipPartiallyExpanded = false
     )
-    val listState by viewModel.state_list.collectAsStateWithLifecycle()
+    val listState by viewModel.state.collectAsStateWithLifecycle()
 
     ModalBottomSheet(
         onDismissRequest = {
@@ -118,7 +118,7 @@ fun CourseOptionBottomSheet(
                     .weight(1f)
                     .padding(horizontal = 16.dp)
             ) {
-                items(TapMapContract.Options.sortOptions) { option ->
+                items(TapListContract.Options.sortOptions) { option ->
                     SortOptionItem(
                         title = option,
                         isSelected = listState.selectedSortOption == option,
@@ -146,7 +146,7 @@ fun CourseOptionBottomSheet(
                 }
 
                 if (listState.isWalkTimeExpanded) {
-                    items(TapMapContract.Options.walkTimeOptions) { option ->
+                    items(TapListContract.Options.walkTimeOptions) { option ->
                         SingleOptionItem(
                             title = option,
                             isSelected = listState.selectedWalkTime == option,
@@ -172,7 +172,7 @@ fun CourseOptionBottomSheet(
                 }
 
                 if (listState.isMoodExpanded) {
-                    items(TapMapContract.Options.moodOptions) { option ->
+                    items(TapListContract.Options.moodOptions) { option ->
                         SingleOptionItem(
                             title = option,
                             isSelected = listState.selectedMood == option,
@@ -198,7 +198,7 @@ fun CourseOptionBottomSheet(
                 }
 
                 if (listState.isDogFriendExpanded) {
-                    items(TapMapContract.Options.dogFriendOptions) { option ->
+                    items(TapListContract.Options.dogFriendOptions) { option ->
                         SingleOptionItem(
                             title = option,
                             isSelected = listState.selectedDogFriend == option,
@@ -234,7 +234,7 @@ fun CourseOptionBottomSheet(
                 }
 
                 if (listState.isSafetyExpanded) {
-                    items(TapMapContract.Options.safetyOptions) { option ->
+                    items(TapListContract.Options.safetyOptions) { option ->
                         MultipleOptionItem(
                             title = option,
                             isSelected = listState.selectedSafety.contains(option),
@@ -260,7 +260,7 @@ fun CourseOptionBottomSheet(
                 }
 
                 if (listState.isConvenienceExpanded) {
-                    items(TapMapContract.Options.convenienceOptions) { option ->
+                    items(TapListContract.Options.convenienceOptions) { option ->
                         MultipleOptionItem(
                             title = option,
                             isSelected = listState.selectedConvenience.contains(option),
@@ -286,7 +286,7 @@ fun CourseOptionBottomSheet(
                 }
 
                 if (listState.isEnvironmentExpanded) {
-                    items(TapMapContract.Options.environmentOptions) { option ->
+                    items(TapListContract.Options.environmentOptions) { option ->
                         MultipleOptionItem(
                             title = option,
                             isSelected = listState.selectedEnvironment.contains(option),
