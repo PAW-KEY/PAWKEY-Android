@@ -1,6 +1,9 @@
 package com.paw.key.data.di
 
 import com.paw.key.data.service.DummyService
+import com.paw.key.data.service.OnboardingInfoService
+import com.paw.key.data.service.OnboardingPetsService
+import com.paw.key.data.service.OnboardingRegionService
 import com.paw.key.data.service.RegionService
 import dagger.Module
 import dagger.Provides
@@ -22,6 +25,21 @@ object ServiceModule {
     @Singleton
     fun providesRegionService(retrofit: Retrofit ): RegionService =
         retrofit.create(RegionService::class.java)
+
+    @Provides
+    @Singleton
+    fun provideOnboardingPetsService(retrofit: Retrofit): OnboardingPetsService =
+        retrofit.create(OnboardingPetsService::class.java)
+
+    @Provides
+    @Singleton
+    fun provideOnboardingRegionService(retrofit: Retrofit): OnboardingRegionService =
+        retrofit.create(OnboardingRegionService::class.java)
+
+    @Provides
+    @Singleton
+    fun provideOnboardingInfoService(retrofit: Retrofit): OnboardingInfoService =
+        retrofit.create(OnboardingInfoService::class.java)
 
 
 }
