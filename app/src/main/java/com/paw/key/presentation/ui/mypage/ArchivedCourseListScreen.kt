@@ -7,26 +7,36 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.paw.key.core.designsystem.component.CourseCard
 import com.paw.key.core.designsystem.component.TopBar
 import com.paw.key.core.designsystem.theme.PawKeyTheme
 import com.paw.key.core.designsystem.theme.White1
+import com.paw.key.presentation.ui.mypage.state.ArchivedListContract
+import com.paw.key.presentation.ui.mypage.state.SavedListContract.CourseCardData
+import com.paw.key.presentation.ui.mypage.viewmodel.ArchivedListViewModel
 
 @Composable
 fun ArchivedCourseRoute(
     navigateUp: () -> Unit,
     navigateNext: () -> Unit,
     modifier: Modifier = Modifier,
+    viewModel: ArchivedListViewModel = hiltViewModel()
 ) {
+    val state = viewModel.state.collectAsStateWithLifecycle()
+
     ArchivedCourseListScreen(
+        state = state.value,
         navigateUp = navigateUp,
         navigateNext = navigateNext,
-    modifier = modifier
+        modifier = modifier
     )
 }
 
 @Composable
 fun ArchivedCourseListScreen(
+    state: ArchivedListContract.ArchivedListState,
     navigateUp: () -> Unit,
     navigateNext: () -> Unit,
     modifier: Modifier = Modifier
@@ -81,6 +91,21 @@ fun ArchivedCourseListScreen(
 @Composable
 fun ArchivedCourseListScreenPreview() {
     PawKeyTheme {
-        ArchivedCourseListScreen(navigateUp = {}, navigateNext = {})
+        ArchivedCourseListScreen(
+            state = ArchivedListContract.ArchivedListState(
+                courseList = listOf(
+                    ArchivedListContract.CourseCardData(
+                        title = "예시 산책로",
+                        petName = "하루",
+                        date = "2025/01/01",
+                        location = "강남",
+                        distance = "2.3km",
+                        time = "45분"
+                    )
+                )
+            ),
+            navigateUp = {},
+            navigateNext = {}
+        )
     }
 }

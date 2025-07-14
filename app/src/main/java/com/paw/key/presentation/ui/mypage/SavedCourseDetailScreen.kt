@@ -27,9 +27,7 @@ import com.paw.key.core.designsystem.component.PawkeyButton
 import com.paw.key.core.designsystem.component.TopBar
 import com.paw.key.core.designsystem.theme.PawKeyTheme
 import com.paw.key.core.designsystem.theme.White1
-import com.paw.key.presentation.ui.mypage.state.MyPageContract
 import com.paw.key.presentation.ui.mypage.state.SavedDetailContract
-import com.paw.key.presentation.ui.mypage.viewmodel.MyPageViewModel
 import com.paw.key.presentation.ui.mypage.viewmodel.SavedDetailViewModel
 
 @Composable

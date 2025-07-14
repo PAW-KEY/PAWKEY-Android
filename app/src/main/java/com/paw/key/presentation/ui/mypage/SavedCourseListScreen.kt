@@ -14,12 +14,9 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.paw.key.core.designsystem.component.CourseCard
 import com.paw.key.core.designsystem.component.TopBar
 import com.paw.key.core.designsystem.theme.PawKeyTheme
-import com.paw.key.presentation.ui.mypage.state.MyPageContract
 import com.paw.key.presentation.ui.mypage.state.SavedListContract
 import com.paw.key.presentation.ui.mypage.state.SavedListContract.CourseCardData
-import com.paw.key.presentation.ui.mypage.viewmodel.MyPageViewModel
 import com.paw.key.presentation.ui.mypage.viewmodel.SavedListViewModel
-
 
 @Composable
 fun SavedCourseRoute(
