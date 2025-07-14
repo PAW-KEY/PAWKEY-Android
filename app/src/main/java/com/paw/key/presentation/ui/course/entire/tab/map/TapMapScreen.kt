@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.FloatingActionButton
@@ -239,9 +240,10 @@ fun TapMapScreen(
                 FloatingActionButton(
                     onClick = onClickTracking,
                     shape = CircleShape,
-                    containerColor = PawKeyTheme.colors.gray50,
+                    containerColor = PawKeyTheme.colors.white1,
                     modifier = Modifier
-                        .align(Alignment.BottomEnd)
+                        .align(Alignment.CenterEnd)
+                        .size(44.dp)
                 ) {
                     Icon(
                         imageVector = ImageVector.vectorResource(R.drawable.ic_course_map_tap_location_on),
