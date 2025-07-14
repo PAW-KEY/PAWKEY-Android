@@ -72,7 +72,7 @@ fun DaytimeCard(
             )
         }
         Icon(
-            imageVector = ImageVector.vectorResource(R.drawable.img_home_sunset),
+            imageVector = ImageVector.vectorResource(R.drawable.img_home_sunrise),
             contentDescription = "daytime",
             tint = Color.Unspecified,
         )
