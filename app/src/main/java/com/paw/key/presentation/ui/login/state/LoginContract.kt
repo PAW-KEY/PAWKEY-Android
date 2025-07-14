@@ -9,7 +9,9 @@ class LoginContract {
         val password: String = "",
 
         val isPasswordVisible: Boolean = false
-    )
+    ) {
+        val isLoginValid get() = email.isNotBlank() && password.isNotBlank()
+    }
 
     sealed class LoginSideEffect {
         data class ShowSnackBar(val message: String) : LoginSideEffect()
