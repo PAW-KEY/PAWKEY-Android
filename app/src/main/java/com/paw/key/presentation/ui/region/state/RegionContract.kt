@@ -8,8 +8,8 @@ class RegionContract {
     @Immutable
     data class RegionState(
         val uiState: UiState<List<List<LatLng>>> = UiState.Loading,
-        val selectedRegion : String? = null,
-        val centerLocation : LatLng? = null,
+        val selectedRegion: String? = null,
+        val centerLocation: LatLng? = null,
     )
 
     sealed class RegionSideEffect {
