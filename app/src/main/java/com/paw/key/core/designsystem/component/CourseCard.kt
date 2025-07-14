@@ -18,6 +18,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import com.paw.key.R
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -48,7 +49,9 @@ fun CourseCard(
     petName:String,
     date: String,
     onCLickItem : () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    isShared : Boolean = false, // true면 떠진거 false면 닫은거
+    isRecord : Boolean = false // 기록한 아이템 - true면 하트, false면 공유 아이콘
 ) {
     Column(
         modifier = modifier
@@ -65,21 +68,35 @@ fun CourseCard(
             modifier = Modifier
                 .fillMaxWidth()
                 .aspectRatio(343f / 172f)
-                .clip(RoundedCornerShape(20.dp))
+                .clip(RoundedCornerShape(10.dp))
         ) {
-            // 지도 이미지
+            // 지도 이미지 Todo : 테스트용
             Image(
                 painter = painterResource(id = R.drawable.dummy_map),
                 contentDescription = null,
-                modifier = Modifier.fillMaxSize(),
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(start = 8.dp, end = 8.dp, top = 8.dp)
+                    .clip(RoundedCornerShape(8.dp)),
                 contentScale = ContentScale.Crop
             )
+
+            /*AsyncImage(
+                model = ImageRequest.Builder(LocalContext.current)
+                    .data("https://pawkey-server.com/image.jpg") // ← 서버에서 받은 이미지 URL 넣깅
+                    .crossfade(true)
+                    .build(),
+                contentDescription = null,
+                modifier = Modifier.fillMaxSize(),
+                contentScale = ContentScale.Crop
+            )*/
 
             // 하단 그라데이션 오버레이
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(LocalConfiguration.current.screenHeightDp.dp * 0.6f) // 높이 조절 가능
+                    .padding(start = 8.dp, end = 8.dp, top = 8.dp)
                     .align(Alignment.BottomCenter)
                     .background(
                         brush = Brush.verticalGradient(
@@ -87,8 +104,10 @@ fun CourseCard(
                                 PawKeyTheme.colors.black.copy(0.05f),
                                 PawKeyTheme.colors.black.copy(0.55f)
                             )
-                        )
+                        ),
+                        shape = RoundedCornerShape(8.dp)
                     )
+                    .clip(RoundedCornerShape(8.dp))
             )
 
             // 프로필 + 제목
@@ -131,40 +150,67 @@ fun CourseCard(
                         )
                     }
                 }
-                Spacer(modifier = Modifier.weight(1f)) // 아이콘을 Row 끝으로 밀기 위한 Spacer
+                Spacer(modifier = Modifier.weight(1f))
 
-                val isLiked = remember { mutableStateOf(false) }
-
-                Icon(
-                    imageVector = if (isLiked.value) {
-                        ImageVector.vectorResource(id = R.drawable.ic_heart_filled)
-                    } else {
-                        ImageVector.vectorResource(id = R.drawable.ic_heart_default)
-                    },
-                    contentDescription = "좋아요",
-                    tint = Color.Unspecified,
-                    modifier = Modifier.clickable {
-                        isLiked.value = !isLiked.value
+                when {
+                    isShared -> {
+                        Icon(
+                            imageVector = ImageVector.vectorResource(id = R.drawable.ic_eye_linear_valid),
+                            contentDescription = "공유됨",
+                            tint = PawKeyTheme.colors.gray200,
+                        )
                     }
-                )
+                    isRecord -> {
+                        val isLiked = remember { mutableStateOf(false) }
+
+                        Icon(
+                            imageVector = if (isLiked.value) {
+                                ImageVector.vectorResource(id = R.drawable.ic_heart_filled)
+                            } else {
+                                ImageVector.vectorResource(id = R.drawable.ic_heart_default)
+                            },
+                            contentDescription = "좋아요",
+                            tint = Color.Unspecified,
+                            modifier = Modifier.clickable {
+                                isLiked.value = !isLiked.value
+                            }
+                        )
+                    }
+                    else -> {
+                        Icon(
+                            imageVector = ImageVector.vectorResource(id = R.drawable.ic_eye_linear_invalid),
+                            contentDescription = "공유 안됨",
+                            tint = PawKeyTheme.colors.gray200,
+                        )
+                    }
+                }
             }
         }
 
         Spacer(modifier = Modifier.height(12.dp))
 
         
-        ChipRow(tags = listOf(
+        ChipRow(
+            tags = listOf(
             "이륜차 거의 없음",
             "배변 쓰레기통",
             "쉼터",
             "CCTV 있음",
             "물그릇 비치","이륜차 거의 없음",
             "배변 쓰레기통",
-            "쉼터",
-        ))
+            "쉼터",),
+            modifier = Modifier
+                .padding(start = 16.dp, end = 16.dp)
+        )
 
         Spacer(modifier = Modifier.height(12.dp))
     }
+
+    HorizontalDivider(
+        color = PawKeyTheme.colors.gray50,
+        thickness = 1.dp,
+        modifier = Modifier.padding(start = 16.dp, end = 16.dp)
+    )
 }
 @Preview(showBackground = true)
 @Composable

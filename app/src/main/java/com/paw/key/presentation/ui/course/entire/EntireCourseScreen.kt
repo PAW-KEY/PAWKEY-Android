@@ -21,6 +21,7 @@ import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -159,7 +160,8 @@ fun EntireCourseScreen(
                 onTabSelected(it)
             },
             tabs = tabs,
-            modifier = Modifier,
+            modifier = Modifier
+                .padding(top = 8.dp),
         )
 
         when (currentPage) {
