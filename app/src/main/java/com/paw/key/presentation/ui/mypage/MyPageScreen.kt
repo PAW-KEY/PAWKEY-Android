@@ -19,9 +19,13 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.paw.key.R
 import com.paw.key.core.designsystem.component.SubChip
 import com.paw.key.core.designsystem.theme.PawKeyTheme
+import com.paw.key.presentation.ui.mypage.state.MyPageContract
+import com.paw.key.presentation.ui.mypage.viewmodel.MyPageViewModel
 
 @Composable
 fun MyPageRoute(
@@ -32,9 +36,13 @@ fun MyPageRoute(
     navigateArchivedCourse: () -> Unit,
     navigateSavedCourse: () -> Unit,
     snackBarHostState: SnackbarHostState,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    viewModel: MyPageViewModel = hiltViewModel()
 ) {
+    val state = viewModel.state.collectAsStateWithLifecycle()
+
     MyPageScreen(
+        state = state.value,
         paddingValues = paddingValues,
         navigateUp = navigateUp,
         navigateUserProfile = navigateUserProfile,
@@ -49,6 +57,7 @@ fun MyPageRoute(
 
 @Composable
 fun MyPageScreen(
+    state: MyPageContract.MyPageState,
     paddingValues: PaddingValues,
     navigateUp: () -> Unit,
     navigateUserProfile: () -> Unit,
@@ -70,19 +79,23 @@ fun MyPageScreen(
                 style = PawKeyTheme.typography.head22B,
                 modifier = Modifier.padding(start = 16.dp, top = 16.dp, bottom = 12.dp)
             )
-            OwnerCard(ownerName = "김도기님", role = "견주", navigateUserProfile = navigateUserProfile)
-
+            OwnerCard(
+                ownerName = state.ownerName,
+                role = state.role,
+                navigateUserProfile = navigateUserProfile
+            )
             Spacer(modifier = Modifier.height(19.dp))
 
             PetCard(
-                name = "포비",
-                age = "12세",
-                gender = "여아",
-                tags = listOf("조금 느긋해요", "#오토바이소리", "#대형견"),
-                walkCount = "7회",
-                totalDistance = "14km",
+                name = state.petName,
+                age = state.petAge,
+                gender = state.petGender,
+                tags = state.petTags,
+                walkCount = state.walkCount,
+                totalDistance = state.totalDistance,
                 navigatePetProfile = navigatePetProfile
             )
+
             Spacer(modifier = Modifier.height(12.dp))
 
             WalkRouteList(
@@ -290,7 +303,16 @@ fun WalkRouteList(
 @Composable
 private fun MyPageScreenPreview() {
     PawKeyTheme {
-        MyPageScreen(
+        MyPageScreen(state = MyPageContract.MyPageState(
+            ownerName = "김도기님",
+            role = "견주",
+            petName = "포비",
+            petAge = "12세",
+            petGender = "여아",
+            petTags = listOf("조금 느긋해요", "#오토바이소리", "#대형견"),
+            walkCount = "7회",
+            totalDistance = "14km"
+        ),
             paddingValues = PaddingValues(),
             navigateUp = {},
             navigateUserProfile = {},

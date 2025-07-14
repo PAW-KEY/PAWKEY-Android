@@ -26,6 +26,7 @@ fun UserProfileRoute(
 fun UserProfileScreen(
     navigateUp: () -> Unit,
     modifier: Modifier = Modifier,
+    id: String = "sgh1261",
     name: String = "김도기",
     gender: String = "여성",
     age: String = "24세",
@@ -46,12 +47,12 @@ fun UserProfileScreen(
         Column(
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
+            ProfileItem(label = "아이디", value = id)
             ProfileItem(label = "이름", value = name)
             ProfileItem(label = "성별", value = gender)
             ProfileItem(label = "나이", value = age)
             ProfileItem(label = "활동지역", value = region)
         }
-
         Spacer(modifier = Modifier.weight(1f))
     }
 }

@@ -1,0 +1,17 @@
+package com.paw.key.presentation.ui.mypage.state
+
+import androidx.compose.runtime.Immutable
+
+class MyPageContract {
+    @Immutable
+    data class MyPageState(
+        val ownerName: String = "김도기님",
+        val role: String = "견주",
+        val petName: String = "포비",
+        val petAge: String = "12세",
+        val petGender: String = "여아",
+        val petTags: List<String> = listOf("조금 느긋해요", "#오토바이소리", "#대형견"),
+        val walkCount: String = "7회",
+        val totalDistance: String = "14km"
+    )
+}
