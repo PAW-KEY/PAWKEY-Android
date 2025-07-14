@@ -68,6 +68,7 @@ fun ArchivedCourseListScreen(
                         title = course.title,
                         petName = course.petName,
                         date = course.date,
+                        onCLickItem = navigateNext
                     )
                 }
             }
