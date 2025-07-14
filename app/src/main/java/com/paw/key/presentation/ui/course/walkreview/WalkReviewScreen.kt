@@ -1,5 +1,6 @@
 package com.paw.key.presentation.ui.course.walkreview
 
+import android.Manifest
 import android.net.Uri
 import android.os.Build
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -56,6 +57,12 @@ fun WalkReviewRoute(
 
     val lifecycleOwner = LocalLifecycleOwner.current
 
+    val imagePermission = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        Manifest.permission.READ_MEDIA_IMAGES
+    } else {
+        Manifest.permission.READ_EXTERNAL_STORAGE
+    }
+
     val pickMultipleMediaLauncher = rememberLauncherForActivityResult(
         ActivityResultContracts.PickMultipleVisualMedia(5)
     ) { uris ->
@@ -63,6 +70,24 @@ fun WalkReviewRoute(
             viewModel.onImagesSelected(uris)
         }
     }
+
+    val galleryLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.GetMultipleContents()
+    ) { uris: List<Uri> ->
+        if (uris.isNotEmpty()) {
+            val limitedUris = uris.take(5)
+            viewModel.onImagesSelected(limitedUris)
+        }
+    }
+
+    val permissionLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { isGranted ->
+        if (isGranted) {
+            galleryLauncher.launch("image/*")
+        }
+    }
+
 
     LaunchedEffect(viewModel.sideEffect, lifecycleOwner) {
         viewModel.sideEffect.flowWithLifecycle(lifecycleOwner.lifecycle)
@@ -110,9 +135,13 @@ fun WalkReviewRoute(
             viewModel.onContentTextChanged(it)
         },
         onClickImage = {
-            pickMultipleMediaLauncher.launch(
-                PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageAndVideo)
-            )
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                pickMultipleMediaLauncher.launch(
+                    PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageAndVideo)
+                )
+            } else {
+                permissionLauncher.launch(imagePermission)
+            }
         },
         onImageDelete = {
             viewModel.onImageDelete(it)
