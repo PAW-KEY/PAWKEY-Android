@@ -16,16 +16,24 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.paw.key.R
 import com.paw.key.core.designsystem.component.TopBar
 import com.paw.key.core.designsystem.theme.PawKeyTheme
+import com.paw.key.presentation.ui.mypage.state.PetProfileContract
+import com.paw.key.presentation.ui.mypage.viewmodel.PetProfileViewModel
 
 @Composable
 fun PetProfileRoute(
     navigateUp : () -> Unit,
     modifier: Modifier = Modifier,
+    viewModel: PetProfileViewModel = hiltViewModel()
 ) {
+    val state = viewModel.state.collectAsStateWithLifecycle()
+
     PetProfileScreen(
+        state = state.value,
         navigateUp = navigateUp,
         modifier = modifier
     )
@@ -33,13 +41,16 @@ fun PetProfileRoute(
 
 @Composable
 fun PetProfileScreen(
+    state: PetProfileContract.PetProfileState,
     navigateUp: () -> Unit,
+    modifier: Modifier = Modifier,
+    imageUrl: String? = null,
     name: String = "까루",
     gender: String = "남아",
     breed: String = "코리안 숏헤어",
     age: String = "4세",
-    personality: String = "활동적",
-    modifier: Modifier = Modifier
+    energyLevel: String = "활동적이에요",
+    socialLevel: String = "불편해해요"
 ) {
     Column(
         modifier = modifier
@@ -58,6 +69,7 @@ fun PetProfileScreen(
                 .clip(CircleShape)
                 .border(2.dp, PawKeyTheme.colors.green500, CircleShape)
         ) {
+            // TODO: imageUrl AsyncImage로 URL 로딩
             Image(
                 painter = painterResource(id = R.drawable.profile),
                 contentDescription = null,
@@ -106,7 +118,7 @@ fun PetProfileScreen(
                     color = PawKeyTheme.colors.gray600
                 )
                 Text(
-                    text = "활동적이에요",
+                    text = energyLevel,
                     style = PawKeyTheme.typography.head18Sb,
                     color = PawKeyTheme.colors.green500
                 )
@@ -124,7 +136,7 @@ fun PetProfileScreen(
                     color = PawKeyTheme.colors.gray600
                 )
                 Text(
-                    text = "불편해해요",
+                    text = socialLevel,
                     style = PawKeyTheme.typography.head18Sb,
                     color = PawKeyTheme.colors.green500
                 )
@@ -164,7 +176,15 @@ fun PetProfileItem(
 fun PetProfileScreenPreview() {
     PawKeyTheme {
         PetProfileScreen(
-            navigateUp = {},
+            state = PetProfileContract.PetProfileState(
+                name = "까루",
+                gender = "남아",
+                breed = "코리안 숏헤어",
+                age = "4세",
+                energyLevel = "활동적이에요",
+                socialLevel = "불편해해요"
+            ),
+            navigateUp = {}
         )
     }
 }
