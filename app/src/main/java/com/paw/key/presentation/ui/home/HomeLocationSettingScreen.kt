@@ -147,7 +147,7 @@ fun HomeLocationSettingScreen(
             enabled = isFormValid,
             onClick = {
                 if (isFormValid) {
-
+                    navigateNext()
                 }
             }
         )

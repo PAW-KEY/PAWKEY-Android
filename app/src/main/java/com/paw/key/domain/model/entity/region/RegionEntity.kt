@@ -1,19 +1,11 @@
 package com.paw.key.domain.model.entity.region
 
-import com.kakao.vectormap.LatLng
-
-data class RegionResponse(
-    val code: String,
-    val message: String,
-    val data: RegionData
-)
-
-data class RegionData(
+data class RegionDataEntity(
     val regionName: String,
-    val geometryDto: GeometryDto
+    val geometry: GeometryEntity
 )
 
-data class GeometryDto(
+data class GeometryEntity(
     val type: String,
     val coordinates: List<List<List<Pair<Double, Double>>>> // MultiPolygon은 여러 폴리곤의 리스트를 가짐
 )

@@ -17,7 +17,7 @@ import kotlinx.serialization.Serializable
 fun NavController.navigateArchivedDetail(
     navOptions: NavOptions?
 ) {
-    navigate(SavedCourse, navOptions)
+    navigate(ArchivedDetail, navOptions)
 }
 
 fun NavGraphBuilder.archivedDetailNavGraph(
