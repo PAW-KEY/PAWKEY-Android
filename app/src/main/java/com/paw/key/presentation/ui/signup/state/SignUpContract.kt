@@ -1,5 +1,6 @@
 package com.paw.key.presentation.ui.signup.state
 
+import android.net.Uri
 import androidx.compose.runtime.Immutable
 
 class SignUpContract {
@@ -10,6 +11,7 @@ class SignUpContract {
         val isLocationMenuVisible: Boolean = false,
         val name: String = "",
         val age: String = "",
+        val dogImage: Uri? = null,
 
         val dogName: String = "",
         val dogGender: DogGender = DogGender.UNKNOWN,

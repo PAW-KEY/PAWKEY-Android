@@ -1,5 +1,6 @@
 package com.paw.key.presentation.ui.signup.viewmodel
 
+import android.net.Uri
 import androidx.lifecycle.ViewModel
 import com.paw.key.presentation.ui.signup.state.SignUpContract
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -7,6 +8,7 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import javax.inject.Inject
 
 @HiltViewModel
@@ -25,6 +27,10 @@ class SignUpViewModel @Inject constructor(
         _state.value = _state.value.copy(
             selectedGender = gender
         )
+    }
+
+    fun onDogImageSelected(uri: Uri) {
+        _state.update { it.copy(dogImage = uri) }
     }
 
     fun selectDistrict(districts: List<String>) {

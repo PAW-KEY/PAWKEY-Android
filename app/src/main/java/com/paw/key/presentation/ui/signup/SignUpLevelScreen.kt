@@ -95,8 +95,8 @@ fun SignUpLevelScreen(
             LevelSection(
                 title = stringResource(id = R.string.ic_onboarding_signup_social_level),
                 options = listOf(
-                    listOf("잘 안 친해요", "친해려 친해해요"),
-                    listOf("잘 친해해요", "친구왕이에요")
+                    listOf("잘 어울려요", "천천히 친해져요"),
+                    listOf("낯을 가려요", "상관없어요")
                 ),
                 selectedOption = selectedSocialLevel,
                 onOptionClick = { option ->

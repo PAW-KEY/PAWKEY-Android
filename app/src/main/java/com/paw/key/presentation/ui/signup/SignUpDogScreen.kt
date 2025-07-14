@@ -1,5 +1,15 @@
 package com.paw.key.presentation.ui.signup
 
+import android.Manifest
+import android.net.Uri
+import android.os.Build
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresApi
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -16,6 +26,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -24,12 +35,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import coil.compose.AsyncImage
 import com.paw.key.R
 import com.paw.key.core.designsystem.component.PawkeyButton
 import com.paw.key.core.designsystem.theme.PawKeyTheme
@@ -45,13 +59,11 @@ import com.paw.key.presentation.ui.signup.viewmodel.SignUpViewModel
 @Composable
 private fun PreviewSignUpDogScreen() {
     PawKeyTheme {
-        SignUpDogScreen(
-            step = 0.75F,
-            navigateNext = {},
-        )
+
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
 @Composable
 fun SignUpDogRoute(
     navigateNext: () -> Unit,
@@ -74,29 +86,115 @@ private fun isAgeValid(ageKnown: SignUpContract.AgeKnown, dogAge: String): Boole
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.TIRAMISU)
 @Composable
 fun SignUpDogScreen(
     step: Float,
     navigateNext: () -> Unit,
     modifier: Modifier = Modifier,
+    progress: Float = 1F,
     viewModel: SignUpViewModel = hiltViewModel(),
 ) {
     val state by viewModel.state.collectAsState()
+    val animatedProgress by animateFloatAsState(
+        targetValue = progress,
+        animationSpec = tween(
+            durationMillis = 1000,
+            easing = FastOutSlowInEasing
+        ),
+        label = "progress_animation"
+    )
+
+    val imagePermission = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        Manifest.permission.READ_MEDIA_IMAGES
+    } else {
+        Manifest.permission.READ_EXTERNAL_STORAGE
+    }
+
+    val pickSingleMediaLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.PickVisualMedia()
+    ) { uri ->
+        if (uri != null) {
+            viewModel.onDogImageSelected(uri)
+        }
+    }
+
+    val galleryLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.GetContent()
+    ) { uri: Uri? ->
+        if (uri != null) {
+            viewModel.onDogImageSelected(uri)
+        }
+    }
+
+    val permissionLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { isGranted ->
+        if (isGranted) {
+            galleryLauncher.launch("image/*")
+        }
+    }
+
+    val onClickImage = {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            pickSingleMediaLauncher.launch(
+                PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+            )
+        } else {
+            permissionLauncher.launch(imagePermission)
+        }
+    }
 
     Box(modifier = modifier.fillMaxSize()) {
         Column(modifier = Modifier.fillMaxSize()) {
-            SignUpHeader(
-                title = stringResource(R.string.ic_onboarding_signup),
-                subtitle = stringResource(id = R.string.ic_onboarding_signup_subtitle_step3),
-                progress = step,
-            )
+
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center,
+            ) {
+                Text(
+                    text = stringResource(id = R.string.ic_onboarding_signup),
+                    color = PawKeyTheme.colors.black,
+                    style = PawKeyTheme.typography.body16Sb,
+                    modifier = Modifier
+                        .padding(top = 16.dp),
+                )
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                LinearProgressIndicator(
+                    progress = { animatedProgress },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(2.dp),
+                    color = PawKeyTheme.colors.green500,
+                    trackColor = PawKeyTheme.colors.gray100,
+                    strokeCap = StrokeCap.Square,
+                    gapSize = 0.dp,
+                    drawStopIndicator = {}
+                )
+            }
 
             LazyColumn(
                 verticalArrangement = Arrangement.spacedBy(32.dp),
                 contentPadding = PaddingValues(16.dp),
                 modifier = Modifier.fillMaxSize()
             ) {
-                item { DogProfileImage() }
+                item{
+                    Text(
+                        text = stringResource(id = R.string.ic_onboarding_signup_subtitle_step3),
+                        color = PawKeyTheme.colors.black,
+                        style = PawKeyTheme.typography.head22Sb,
+                        modifier = Modifier
+                            .padding(top = 20.dp)
+                    )
+                }
+                item {
+                    DogProfileImage(
+                        dogImage = state.dogImage,
+                        onClickImage = onClickImage
+                    )
+                }
 
                 item {
                     DogNameField(
@@ -152,15 +250,17 @@ fun SignUpDogScreen(
             modifier = Modifier
                 .align(Alignment.BottomCenter)
                 .fillMaxWidth()
-                .padding(16.dp)
+                .padding(horizontal = 16.dp, vertical = 46.dp)
         )
 
-        Spacer(modifier = Modifier.height(34.dp))
     }
 }
 
 @Composable
-private fun DogProfileImage() {
+private fun DogProfileImage(
+    dogImage: Uri?,
+    onClickImage: () -> Unit
+) {
     Column {
         Box(
             contentAlignment = Alignment.Center,
@@ -173,14 +273,30 @@ private fun DogProfileImage() {
                 modifier = Modifier
                     .size(96.dp)
                     .clip(CircleShape)
-                    .border(1.dp, PawKeyTheme.colors.white2, CircleShape)
+                    .border(
+                        width = 2.dp,
+                        color = if (dogImage != null) PawKeyTheme.colors.green500 else PawKeyTheme.colors.white2,
+                        shape = CircleShape
+                    )
                     .background(PawKeyTheme.colors.white2)
+                    .noRippleClickable { onClickImage() }
             ) {
-                Icon(
-                    imageVector = ImageVector.vectorResource(R.drawable.ic_onboarding_img_plus),
-                    contentDescription = "앨범",
-                    tint = PawKeyTheme.colors.gray100
-                )
+                if (dogImage != null) {
+                    AsyncImage(
+                        model = dogImage,
+                        contentDescription = "강아지 프로필 이미지",
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier
+                            .size(92.dp)
+                            .clip(CircleShape)
+                    )
+                } else {
+                    Icon(
+                        imageVector = ImageVector.vectorResource(R.drawable.ic_onboarding_img_plus),
+                        contentDescription = "앨범",
+                        tint = PawKeyTheme.colors.gray100
+                    )
+                }
             }
         }
     }
@@ -256,9 +372,8 @@ private fun NeuteringCheckbox(
             color = if (isNeutered)
                 PawKeyTheme.colors.black
             else PawKeyTheme.colors.gray300,
-            style = if (isNeutered)
-                PawKeyTheme.typography.body14Sb
-            else PawKeyTheme.typography.body14R
+            style = PawKeyTheme.typography.body14Sb
+
         )
     }
 }

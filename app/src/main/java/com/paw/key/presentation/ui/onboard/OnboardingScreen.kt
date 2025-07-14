@@ -12,6 +12,10 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.withStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.paw.key.core.designsystem.component.PawkeyButton
@@ -70,12 +74,17 @@ fun OnboardingScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(horizontal = 16.dp, vertical = 48.dp)
+                .padding(horizontal = 16.dp, vertical = 60.dp)
         ) {
-            Spacer(modifier = Modifier.height(36.dp))
 
             Text(
-                text = "안녕하세요\n우리 강아지를 위한 산책,\n${"PAWKEY"}와 함께해요! ",
+                text = buildAnnotatedString {
+                    append("안녕하세요\n우리 강아지를 위한 산책,\n")
+                    withStyle(style = SpanStyle(color = PawKeyTheme.colors.green500)) {
+                        append("PAWKEY")
+                    }
+                    append("와 함께해요! ")
+                },
                 color = PawKeyTheme.colors.black,
                 style = PawKeyTheme.typography.head22B
             )
@@ -95,6 +104,7 @@ fun OnboardingScreen(
                     text = "기존 계정으로 로그인",
                     enabled = true,
                     isBackGround = true,
+                    isBorder = false,
                     onClick = { navigateSignUp() },
                 )
             }

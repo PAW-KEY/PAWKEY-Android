@@ -69,7 +69,9 @@ fun RowCalendar(
             Text(
                 text = date,
                 color = PawKeyTheme.colors.black,
-                style = PawKeyTheme.typography.head18Sb
+                style = PawKeyTheme.typography.head18Sb,
+                modifier = Modifier
+                    .padding(bottom = 28.dp)
             )
 
             LazyRow(
@@ -82,13 +84,16 @@ fun RowCalendar(
                     val dates = listOf("14", "15", "16", "17", "18", "19", "20")
                     val days = listOf("월", "화", "수", "목", "금", "토", "일")
                     val hasActivity = listOf(true, true, false, true, false, false, false)
+                    val selectedIndex = 3
+                    val todayIndex = 6
 
                     CalendarItem(
                         date = dates[index],
                         day = days[index],
                         state = hasActivity[index],
-                        isSelected = index == 3, // 17일이 선택됨
-                        isToday = index == 6 // 20일이 오늘
+                        isSelected = index == selectedIndex,
+                        isToday = index == todayIndex,
+                        isAfterSelected = index > selectedIndex && index < todayIndex
                     )
                 }
             }
@@ -104,6 +109,7 @@ private fun CalendarItem(
     state: Boolean = false,
     isSelected: Boolean = false,
     isToday: Boolean = false,
+    isAfterSelected: Boolean = false,
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -133,6 +139,7 @@ private fun CalendarItem(
                     color = when {
                         isSelected -> PawKeyTheme.colors.white1
                         isToday -> Color.Red
+                        isAfterSelected -> PawKeyTheme.colors.black
                         else -> PawKeyTheme.colors.gray900.copy(alpha = 0.6f)
                     },
                     style = PawKeyTheme.typography.body14R,
@@ -143,6 +150,7 @@ private fun CalendarItem(
                     color = when {
                         isSelected -> PawKeyTheme.colors.white1
                         isToday -> Color.Red
+                        isAfterSelected -> PawKeyTheme.colors.black
                         else -> PawKeyTheme.colors.gray900.copy(alpha = 0.6f)
                     },
                     style = PawKeyTheme.typography.body14R,

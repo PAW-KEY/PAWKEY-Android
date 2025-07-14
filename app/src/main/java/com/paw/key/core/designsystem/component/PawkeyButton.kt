@@ -26,30 +26,29 @@ private fun PreviewPawkeyButton() {
         Column (
             verticalArrangement = Arrangement.spacedBy(12.dp),
         ){
-            // 초록색 버튼
+            // 기본 초록색 버튼 (활성화)
             PawkeyButton(
                 text = "신규 계정으로 회원가입",
                 enabled = true,
                 onClick = {}
             )
 
-            // 회색 버튼
+            // 기본 회색 버튼 (비활성화)
             PawkeyButton(
                 text = "신규 계정으로 회원가입",
                 enabled = false,
                 onClick = {}
             )
 
-            // 활성화 - 빈 상자
+            // 활성화 - 흰 배경, 초록 테두리
             PawkeyButton(
                 text = "신규 계정으로 회원가입",
                 enabled = true,
                 onClick = {},
-                isBorder = false,
                 isBackGround = true
             )
 
-            // 비활성화 - 빈 상자
+            // 비활성화 - 흰 배경, 회색 테두리
             PawkeyButton(
                 text = "신규 계정으로 회원가입",
                 enabled = false,
@@ -57,13 +56,30 @@ private fun PreviewPawkeyButton() {
                 isBackGround = true
             )
 
-            // 투명 border
+            // 활성화 - 흰 배경, 테두리 없음
             PawkeyButton(
                 text = "신규 계정으로 회원가입",
                 enabled = true,
                 onClick = {},
-                isBorder = true,
-                isBackGround = true
+                isBackGround = true,
+                isBorder = false
+            )
+
+            // 비활성화 - 흰 배경, 테두리 없음
+            PawkeyButton(
+                text = "신규 계정으로 회원가입",
+                enabled = false,
+                onClick = {},
+                isBackGround = true,
+                isBorder = false
+            )
+
+            // 초록색 버튼 - 테두리 없음
+            PawkeyButton(
+                text = "신규 계정으로 회원가입",
+                enabled = true,
+                onClick = {},
+                isBorder = false
             )
         }
     }
@@ -76,25 +92,33 @@ fun PawkeyButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     isBackGround: Boolean = false,
-    isBorder: Boolean = false
+    isBorder: Boolean = true
 ) {
+
+    val actualEnabled = if (!isBackGround) {
+        enabled
+    } else {
+        enabled
+    }
+
     val backgroundColor = when {
-        enabled && !isBackGround -> PawKeyTheme.colors.green500
-        enabled && isBackGround -> PawKeyTheme.colors.white1
-        !enabled && isBackGround -> PawKeyTheme.colors.white1
+        actualEnabled && !isBackGround -> PawKeyTheme.colors.green500
+        actualEnabled && isBackGround -> PawKeyTheme.colors.white1
+        !actualEnabled && isBackGround -> PawKeyTheme.colors.white1
         else -> PawKeyTheme.colors.gray200
     }
 
     val contentColor = when {
-        enabled && !isBackGround -> PawKeyTheme.colors.white1
-        enabled && isBackGround -> PawKeyTheme.colors.green500
-        !enabled && isBackGround -> PawKeyTheme.colors.gray100
+        actualEnabled && !isBackGround -> PawKeyTheme.colors.white1
+        actualEnabled && isBackGround -> PawKeyTheme.colors.green500
+        !actualEnabled && isBackGround -> PawKeyTheme.colors.gray100
         else -> PawKeyTheme.colors.white1
     }
 
     val borderColor = when {
-        enabled && isBackGround -> PawKeyTheme.colors.green500
-        !enabled && isBackGround -> PawKeyTheme.colors.gray200
+        !isBorder -> Color.Transparent
+        actualEnabled && isBackGround -> PawKeyTheme.colors.green500
+        !actualEnabled && isBackGround -> PawKeyTheme.colors.gray200
         else -> Color.Transparent
     }
 
@@ -102,8 +126,14 @@ fun PawkeyButton(
         modifier = modifier
             .fillMaxWidth()
             .background(backgroundColor, shape = RoundedCornerShape(8.dp))
-            .then(if (isBorder || isBackGround) Modifier.border(1.dp, borderColor, RoundedCornerShape(8.dp)) else Modifier)
-            .noRippleClickable{ onClick() }
+            .border(
+                width = 1.dp,
+                color = borderColor,
+                shape = RoundedCornerShape(8.dp)
+            )
+            .noRippleClickable {
+                if (actualEnabled) onClick()
+            }
             .padding(vertical = 14.dp),
         contentAlignment = Alignment.Center
     ) {
@@ -114,4 +144,3 @@ fun PawkeyButton(
         )
     }
 }
-

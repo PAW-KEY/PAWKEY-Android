@@ -34,8 +34,8 @@
     <string name="ic_onboarding_signup_dog_name">반려견 이름</string>
     <string name="ic_onboarding_signup_dog_breed">견종</string>
 
-    <string name="ic_onboarding_signup_energy_level">활동성</string>
-    <string name="ic_onboarding_signup_social_level">친밀도</string>
+    <string name="ic_onboarding_signup_energy_level">에너지 레벨</string>
+    <string name="ic_onboarding_signup_social_level">사회성 레벨</string>
 
     <!-- Navigation -->
     <!--Home-->
