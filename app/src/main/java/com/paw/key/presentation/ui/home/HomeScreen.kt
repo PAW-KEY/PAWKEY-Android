@@ -161,10 +161,8 @@ fun HomeScreen(
                     date = "년도/월/일",
                     onCLickItem = {}
                 )
+                Spacer(modifier = Modifier.height(48.dp))
             }
-            item{}
-            item{}
-
 
         }
 
