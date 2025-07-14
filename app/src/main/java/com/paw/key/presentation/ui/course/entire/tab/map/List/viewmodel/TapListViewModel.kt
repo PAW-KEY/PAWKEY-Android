@@ -12,8 +12,7 @@ import javax.inject.Inject
 @HiltViewModel
 class TapListViewModel @Inject constructor(
 
-)
-    : ViewModel() {
+) : ViewModel() {
 
     private val _state = MutableStateFlow(TapListContract.TapListState())
     val state: StateFlow<TapListContract.TapListState>

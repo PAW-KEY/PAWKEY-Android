@@ -29,19 +29,19 @@ class WalkReviewViewModel @Inject constructor(
     val sideEffect : MutableSharedFlow<WalkReviewSideEffect>
         get() = _sideEffect
 
-    val isFormValid: StateFlow<Boolean> = state.map { state ->
-        state.title.isNotBlank() && state.content.isNotBlank() && listOf(
-                    state.feedbackState.selectedSafetyFeedback,
-                    state.feedbackState.selectedFacilityFeedback,
-                    state.feedbackState.selectedRoadFeedback,
-                    state.feedbackState.selectedNoiseFeedback,
-                    state.feedbackState.selectedFrequencyFeedback
-        ).any { it != null }
+    /*val isFormValid: StateFlow<Boolean> = state.map { state ->
+        state.title.isNotBlank() &&
+                state.content.isNotBlank() &&
+                state.feedbackState.selectedSafetyFeedback != null &&
+                state.feedbackState.selectedFacilityFeedback != null &&
+                state.feedbackState.selectedRoadFeedback != null &&
+                state.feedbackState.selectedNoiseFeedback != null &&
+                state.feedbackState.selectedFrequencyFeedback != null
     }.stateIn(
         viewModelScope,
         SharingStarted.WhileSubscribed(5000),
         false
-    )
+    )*/
 
     private fun handleFeedbackSelection(
         currentSelected: WalkReviewFeedbackData?,

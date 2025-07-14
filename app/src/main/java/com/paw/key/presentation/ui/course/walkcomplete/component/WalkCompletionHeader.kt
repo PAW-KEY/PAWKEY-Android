@@ -4,6 +4,7 @@ import android.graphics.Bitmap
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
@@ -24,21 +25,24 @@ fun WalkCompleteHeader(
 ) {
     Row (
         modifier = modifier
-    ){
+            .fillMaxWidth()
+    ) {
         AsyncImage(
             model = bitmap,
             contentDescription = "profile",
             modifier = Modifier
                 .size(48.dp)
-                .padding(end = 10.dp)
                 .background(
-                    color = Color.LightGray,
+                    color = PawKeyTheme.colors.gray50,
                     shape = CircleShape
                 )
                 .clip(CircleShape)
         )
 
-        Column {
+        Column (
+            modifier = Modifier
+                .padding(start = 10.dp)
+        ) {
             Text(
                 text = "포비",
                 color = PawKeyTheme.colors.black,
@@ -56,7 +60,7 @@ fun WalkCompleteHeader(
     }
 }
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 private fun WalkCompleteHeaderPreview() {
     PawKeyTheme {

@@ -79,6 +79,19 @@ fun courseMapView(
         mutableStateOf<RouteLine?>(null)
     }
 
+    /*val yeoksamCoordinates = listOf(
+        LatLng.from(37.50097, 127.03734),  // 역삼동 중심 :contentReference[oaicite:1]{index=1}
+        LatLng.from(37.50079, 127.03689),  // 역삼역 (L2) 정문 인근 :contentReference[oaicite:2]{index=2}
+        LatLng.from(37.50001, 127.03549),  // 역삼역 지하철역 (GPS 웹 기준) :contentReference[oaicite:3]{index=3}
+        LatLng.from(37.49950, 127.03322),  // 역삼1동 중심 지역 :contentReference[oaicite:4]{index=4}
+        LatLng.from(37.49900, 127.03856),  // 역삼동 중심 북동쪽 :contentReference[oaicite:5]{index=5}
+        LatLng.from(37.49999, 127.03719),  // 테헤란로 중심가 (중간 위치) ← 위도/경도 참고 위 :contentReference[oaicite:6]{index=6}
+        LatLng.from(37.49850, 127.03800),  // 강남대로 인근
+        LatLng.from(37.49800, 127.03450),  // 논현로 인근
+        LatLng.from(37.50150, 127.03700),  // 삼성역 방면 경계 지역
+        LatLng.from(37.50050, 127.03900),  // 국기원/코엑스 방향 경계
+    )*/
+
     val drawRouteOnMap: (KakaoMap, List<LatLng>) -> Unit = { kakaoMap, pointsToDraw ->
         if (pointsToDraw.isNotEmpty()) {
             currentDrawnRouteLine?.remove()
@@ -129,6 +142,12 @@ fun courseMapView(
         kakaoMapState?.let { map ->
             drawRouteOnMap(map, poiPoints)
         }
+
+        kakaoMapState?.moveCamera(
+            CameraUpdateFactory.fitMapPoints(
+                poiPoints.toTypedArray(), 150, 15
+            )
+        )
     }
 
     DisposableEffect(lifeCycle) {
@@ -190,11 +209,6 @@ fun courseMapView(
 
             override fun onPause(owner: LifecycleOwner) {
                 mapView.pause()
-                kakaoMapState?.moveCamera(
-                    CameraUpdateFactory.fitMapPoints(
-                        poiPoints.toTypedArray(), 700
-                    )
-                )
             }
         }
 
@@ -208,19 +222,16 @@ fun courseMapView(
         }
     }
 
-    LaunchedEffect(currentUserLocation, centerLabel, kakaoMapState) {
+    LaunchedEffect(currentUserLocation, isTrackingEnabled, centerLabel, kakaoMapState) {
         if (currentUserLocation != null && centerLabel != null && kakaoMapState != null) {
             centerLabel?.moveTo(currentUserLocation)
-            Log.d("courseMapview", "Center label moved to: $currentUserLocation")
-        }
-    }
 
-    LaunchedEffect(isTrackingEnabled) {
-        kakaoMapState?.moveCamera(
-            CameraUpdateFactory.newCenterPosition(
-                currentUserLocation, 18
+            kakaoMapState?.moveCamera(
+                CameraUpdateFactory.newCenterPosition(
+                    currentUserLocation, 18
+                )
             )
-        )
+        }
     }
 
     LaunchedEffect(isPauseTracking) {
@@ -235,21 +246,4 @@ fun courseMapView(
     }
 
     return mapView
-}
-
-
-fun calculateMidpoint(point1: LatLng, point2: LatLng): LatLng {
-    val lonAvg = (point1.longitude + point2.longitude) / 2.0
-
-    val lat1Rad = toRadians(point1.latitude)
-    val lon1Rad = toRadians(point1.longitude)
-    val lat2Rad = toRadians(point2.latitude)
-    val lon2Rad = toRadians(point2.longitude)
-
-    val Bx = cos(lat2Rad) * cos(lon2Rad - lon1Rad)
-    val By = cos(lat2Rad) * sin(lon2Rad - lon1Rad)
-    val latMid = atan2(sin(lat1Rad) + sin(lat2Rad), sqrt((cos(lat1Rad) + Bx) * (cos(lat1Rad) + Bx) + By * By))
-    val lonMid = lon1Rad + atan2(By, cos(lat1Rad) + Bx)
-
-    return LatLng.from(toDegrees(latMid), toDegrees(lonMid))
 }

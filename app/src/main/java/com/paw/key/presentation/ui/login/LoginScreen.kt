@@ -2,12 +2,14 @@ package com.paw.key.presentation.ui.login
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Icon
@@ -26,7 +28,9 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.paw.key.R
 import com.paw.key.core.designsystem.component.PawkeyButton
+import com.paw.key.core.designsystem.component.TopBar
 import com.paw.key.core.designsystem.theme.PawKeyTheme
+import com.paw.key.core.util.isKeyboardOpen
 import com.paw.key.core.util.noRippleClickable
 import com.paw.key.presentation.ui.login.component.LoginTextField
 import com.paw.key.presentation.ui.login.viewmodel.LoginViewModel
@@ -41,7 +45,7 @@ fun LoginRoute(
     viewModel: LoginViewModel = hiltViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
-    val isLoginFormValid by viewModel.isLoginFormValid.collectAsStateWithLifecycle()
+    val isLoginFormValid = viewModel.state.collectAsStateWithLifecycle().value.isLoginValid
 
     LoginScreen(
         paddingValues = paddingValues,
@@ -59,6 +63,7 @@ fun LoginRoute(
     )
 }
 
+
 @Composable
 fun LoginScreen(
     paddingValues: PaddingValues,
@@ -66,94 +71,107 @@ fun LoginScreen(
     navigateNext: () -> Unit,
     onEmailChanged: (String) -> Unit,
     onPasswordChanged: (String) -> Unit,
-    onClickIcon : () -> Unit,
+    onClickIcon: () -> Unit,
     snackBarHostState: SnackbarHostState,
-    email : String,
-    password : String,
-    isPasswordVisible : Boolean,
-    isLoginFormValid : Boolean,
+    email: String,
+    password: String,
+    isPasswordVisible: Boolean,
+    isLoginFormValid: Boolean,
     modifier: Modifier = Modifier,
 ) {
-    Column(
+    Box(
         modifier = modifier
             .fillMaxSize()
             .background(PawKeyTheme.colors.white1)
-            .padding(horizontal = 16.dp, vertical = 60.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
     ) {
-        Spacer(modifier = Modifier.weight(1f))
-
-        Text(
-            text = "로그인",
-            modifier = modifier
-                .align(Alignment.Start)
-                .padding(10.dp),
-            color = PawKeyTheme.colors.black,
-            style = PawKeyTheme.typography.body14Sb
+        TopBar(
+            title = "기존 계정으로 로그인",
+            onBackClick = navigateUp,
+            modifier = Modifier.padding(
+                top = paddingValues.calculateTopPadding()
+            ).padding(top = 10.dp)
         )
 
-        LoginTextField(
-            textValue = email,
-            placeHolder = "사용하실 아이디를 입력해주세요",
-            isPassword = true,
-            onTextChanged = {
-                onEmailChanged(it)
-            }
-        )
-
-        Spacer(modifier = Modifier.height(40.dp))
-
-        Text(
-            text = "비밀번호",
-            modifier = modifier
-                .align(Alignment.Start)
-                .padding(10.dp),
-            color = PawKeyTheme.colors.black,
-            style = PawKeyTheme.typography.body14Sb
-        )
-
-        LoginTextField(
-            textValue = password,
-            placeHolder = "사용하실 비밀번호를 입력해주세요",
-            isPassword = isPasswordVisible,
-            onTextChanged = {
-                onPasswordChanged(it)
-            },
-            suffix = {
-                Icon(
-                    imageVector = ImageVector.vectorResource(
-                        if (!isPasswordVisible) R.drawable.ic_eye_linear_gray_valid else R.drawable.ic_eye_linear_invalid
-                    ),
-                    contentDescription = null,
-                    modifier = Modifier.noRippleClickable(onClickIcon),
-                    tint = Color.Unspecified
-                )
-            },
-        )
-
-        Spacer(modifier = Modifier.weight(1f))
-
-        PawkeyButton(
-            text = "신규 계정으로 회원가입",
-            onClick = navigateUp,
-            enabled = true,
-            isBackGround = true,
-            isBorder = false,
+        Column(
             modifier = Modifier
-                .fillMaxWidth()
-        )
+                .padding(horizontal = 16.dp)
+                .align(Alignment.Center)
+                .imePadding(),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text(
+                text = "로그인",
+                modifier = Modifier
+                    .align(Alignment.Start)
+                    .padding(10.dp),
+                color = PawKeyTheme.colors.black,
+                style = PawKeyTheme.typography.body14Sb
+            )
 
-        Spacer(modifier = Modifier.height(12.dp))
+            LoginTextField(
+                textValue = email,
+                placeHolder = "사용하실 아이디를 입력해주세요",
+                isPassword = true,
+                onTextChanged = onEmailChanged
+            )
 
-        PawkeyButton(
-            text = "로그인",
-            onClick = navigateNext,
-            enabled = isLoginFormValid,
+            Spacer(modifier = Modifier.height(40.dp))
+
+            Text(
+                text = "비밀번호",
+                modifier = Modifier
+                    .align(Alignment.Start)
+                    .padding(10.dp),
+                color = PawKeyTheme.colors.black,
+                style = PawKeyTheme.typography.body14Sb
+            )
+
+            LoginTextField(
+                textValue = password,
+                placeHolder = "사용하실 비밀번호를 입력해주세요",
+                isPassword = isPasswordVisible,
+                onTextChanged = onPasswordChanged,
+                suffix = {
+                    Icon(
+                        imageVector = ImageVector.vectorResource(
+                            if (!isPasswordVisible) R.drawable.ic_eye_linear_gray_valid
+                            else R.drawable.ic_eye_linear_invalid
+                        ),
+                        contentDescription = null,
+                        modifier = Modifier.noRippleClickable(onClickIcon),
+                        tint = PawKeyTheme.colors.gray200
+                    )
+                },
+            )
+
+            Spacer(modifier = Modifier.height(60.dp))
+        }
+
+        Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .navigationBarsPadding()
-        )
+                .align(Alignment.BottomCenter)
+                .padding(horizontal = 16.dp, vertical = 24.dp)
+        ) {
+            PawkeyButton(
+                text = "신규 계정으로 회원가입",
+                onClick = navigateUp,
+                enabled = true,
+                isBackGround = true,
+                isBorder = false,
+                modifier = Modifier.fillMaxWidth()
+            )
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            PawkeyButton(
+                text = "로그인",
+                onClick = navigateNext,
+                enabled = isLoginFormValid,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .navigationBarsPadding()
+            )
+        }
     }
 }
 

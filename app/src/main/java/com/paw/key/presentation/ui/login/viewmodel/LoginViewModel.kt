@@ -22,14 +22,6 @@ class LoginViewModel @Inject constructor(
     val sideEffect : StateFlow<LoginContract.LoginSideEffect?>
         get() = _sideEffect.asStateFlow()
 
-    val isLoginFormValid: StateFlow<Boolean> = state.map { state ->
-        state.email.isNotBlank() && state.password.isNotBlank()
-    }.stateIn(
-        viewModelScope,
-        SharingStarted.WhileSubscribed(3000),
-        false
-    )
-
     fun onEmailChanged(email: String) {
         _state.value = _state.value.copy(
             email = email

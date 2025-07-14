@@ -86,12 +86,10 @@ fun TabListScreen(
         }
 
         LazyColumn(
-            verticalArrangement = Arrangement.spacedBy(20.dp),
             modifier = modifier
                 .fillMaxSize()
                 .background(PawKeyTheme.colors.white2)
                 .padding(bottom = 36.dp)
-
         ) {
 
             item {
@@ -99,6 +97,7 @@ fun TabListScreen(
                     title = "제목을 입력해주세요",
                     petName = "안녕꼬리",
                     date = "21/1/1",
+                    isRecord = true,
                     onCLickItem = {}
                 )
             }
@@ -107,6 +106,7 @@ fun TabListScreen(
                     title = "제목을 입력해주세요",
                     petName = "안녕꼬리",
                     date = "21/1/1",
+                    isRecord = true,
                     onCLickItem = {}
                 )
             }
@@ -115,6 +115,7 @@ fun TabListScreen(
                     title = "제목을 입력해주세요",
                     petName = "안녕꼬리",
                     date = "21/1/1",
+                    isRecord = true,
                     onCLickItem = {}
                 )
             }
@@ -123,6 +124,7 @@ fun TabListScreen(
                     title = "제목을 입력해주세요",
                     petName = "안녕꼬리",
                     date = "21/1/1",
+                    isRecord = true,
                     onCLickItem = {}
                 )
             }

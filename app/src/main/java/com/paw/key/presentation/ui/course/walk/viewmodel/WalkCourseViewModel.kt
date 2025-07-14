@@ -191,14 +191,6 @@ class WalkCourseViewModel @Inject constructor(
             val currentWalkState = _state.value
 
             try {
-                PreferenceDataStore.saveWalkSummary(
-                    context = context,
-                    points = currentWalkState.poiPoints.toList(),
-                    totalDistance = currentWalkState.totalDistance,
-                    totalTime = _totalTime.value,
-                    totalSteps = currentWalkState.steps.toInt()
-                )
-
                 walkSharedResultRepository.saveResult(
                     bitmap = currentWalkState.bitmap,
                     totalTime = _totalTime.value,
@@ -213,12 +205,12 @@ class WalkCourseViewModel @Inject constructor(
                 Log.e("WalkCourseViewModel", "Error saving all walk summary data: ${e.message}", e)
                 _sideEffect.emit(WalkCourseSideEffect.ShowSnackBar("산책 기록 저장 실패: ${e.localizedMessage}"))
             } finally {
-                PreferenceDataStore.saveWalkSummary(
-                    context = context,
-                    points = currentWalkState.poiPoints.toList(),
-                    totalDistance = currentWalkState.totalDistance,
+                walkSharedResultRepository.saveResult(
+                    bitmap = currentWalkState.bitmap,
                     totalTime = _totalTime.value,
-                    totalSteps = currentWalkState.steps.toInt()
+                    distance = currentWalkState.totalDistance,
+                    steps = currentWalkState.steps.toInt(),
+                    points = currentWalkState.poiPoints.toList()
                 )
             }
         }

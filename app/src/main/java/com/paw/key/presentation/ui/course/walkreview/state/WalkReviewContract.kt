@@ -20,7 +20,15 @@ class WalkReviewContract {
         val petName : String = "포비",
 
         val feedbackState: WalkReviewFeedbackState = WalkReviewFeedbackState()
-    )
+    ){
+        val isValidForm get() = title.isNotBlank() &&
+                content.isNotBlank() &&
+                feedbackState.selectedSafetyFeedback != null &&
+                feedbackState.selectedFacilityFeedback != null &&
+                feedbackState.selectedRoadFeedback != null &&
+                feedbackState.selectedNoiseFeedback != null &&
+                feedbackState.selectedFrequencyFeedback != null
+    }
 
     sealed class WalkReviewSideEffect {
         data class ShowSnackBar(val message: String) : WalkReviewSideEffect()

@@ -91,6 +91,7 @@ fun PawKeyNavHost(
         walkReviewNavGraph(
             navigateUp = navigator::navigateUp,
             navigateNext = navigator::navigateDummyNext,
+            navigateShared = navigator::navigateArchivedDetail,
             snackBarHostState = snackbarHostState
         )
 

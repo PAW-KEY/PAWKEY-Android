@@ -2,6 +2,7 @@ package com.paw.key.presentation.ui.course.walkreview.component
 
 import android.net.Uri
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyRow
@@ -26,6 +27,7 @@ fun WalkReviewImageRow (
             .fillMaxWidth()
             .padding(top = 24.dp, bottom = 24.dp),
         horizontalArrangement = Arrangement.spacedBy(10.dp),
+        contentPadding = PaddingValues(horizontal = 16.dp)
     ) {
         items(totalCardCount) { index ->
             val currentImageUri = imageList.getOrNull(index)

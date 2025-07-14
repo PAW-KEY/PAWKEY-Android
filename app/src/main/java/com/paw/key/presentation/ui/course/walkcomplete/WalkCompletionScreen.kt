@@ -21,6 +21,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -29,6 +30,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.paw.key.R
 import com.paw.key.core.designsystem.component.PawkeyButton
+import com.paw.key.core.designsystem.component.TopBar
 import com.paw.key.core.designsystem.theme.PawKeyTheme
 import com.paw.key.core.util.PreferenceDataStore
 import com.paw.key.presentation.ui.course.walk.component.WalkRecordRow
@@ -89,29 +91,37 @@ fun WalkCompletionScreen(
             .background(PawKeyTheme.colors.white2),
         horizontalAlignment = Alignment.CenterHorizontally,
     ){
+        TopBar(
+            title = "산책 완료",
+            onBackClick = navigateUp,
+            modifier = Modifier
+                .background(PawKeyTheme.colors.white1),
+            isBackVisible = false
+        )
+
         Text(
-            text = "포비와 함께한 산책한 루트에요.",
+            text = "산책 결과를 확인해보세요.",
             color = PawKeyTheme.colors.black,
-            style = PawKeyTheme.typography.head20B2,
-            modifier = modifier
-                .padding(top = 20.dp, bottom = 10.dp)
+            style = PawKeyTheme.typography.head18Sb,
+            modifier = Modifier
+                .padding(top = 36.dp, bottom = 16.dp)
                 .padding(horizontal = 16.dp)
                 .fillMaxWidth()
         )
 
         Column (
-            modifier = Modifier
+            modifier = modifier
                 .padding(start = 16.dp, end = 16.dp)
                 .background(
                     color = PawKeyTheme.colors.white1,
                     shape = RoundedCornerShape(12.dp)
                 )
-        ){
+        ) {
+            // Todo : 사진 받아올 곳
             WalkCompleteHeader(
                 bitmap = null,
-                modifier = modifier
-                    .fillMaxWidth()
-                    .padding(top = 10.dp)
+                modifier = Modifier
+                    .padding(top = 16.dp, start = 16.dp, end = 16.dp)
             )
 
             bitmap?.asImageBitmap()?.let {
@@ -119,13 +129,14 @@ fun WalkCompletionScreen(
                     bitmap = it,
                     contentDescription = "My Image",
                     modifier = Modifier
-                        .padding(horizontal = 8.dp)
-                        .padding(top = 6.dp)
+                        .padding(start = 8.dp, end = 8.dp)
+                        .padding(top = 12.dp)
+                        .clip(RoundedCornerShape(8.dp))
                 )
             }
 
             HorizontalDivider(
-                thickness = 3.dp,
+                thickness = 1.dp,
                 color = PawKeyTheme.colors.gray50,
                 modifier = Modifier
                     .fillMaxWidth()
