@@ -6,7 +6,6 @@ import com.paw.key.domain.model.entity.region.RegionDataEntity
 import com.paw.key.domain.repository.RegionRepository
 import javax.inject.Inject
 
-
 class RegionRepositoryImpl @Inject constructor(
     private val regionDataSource: RegionDataSource,
     private val mapper: RegionMapper
