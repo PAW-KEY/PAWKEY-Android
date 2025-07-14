@@ -80,9 +80,7 @@ fun SavedCourseListScreen(
                     title = item.title,
                     petName = item.petName,
                     date = item.date,
-                    modifier = Modifier.clickable {
-                        navigateNext()
-                    }
+                    onCLickItem = navigateNext
                 )
             }
         }
