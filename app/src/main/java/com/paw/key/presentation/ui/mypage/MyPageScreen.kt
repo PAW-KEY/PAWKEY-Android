@@ -51,7 +51,6 @@ fun MyPageRoute(
         navigateSavedCourse = navigateSavedCourse,
         snackBarHostState = snackBarHostState,
         modifier = modifier
-
     )
 }
 
@@ -172,7 +171,7 @@ fun PetCard(
             )
             Text(
                 text = "반려견 프로필",
-                style = PawKeyTheme.typography.caption12Sb1,
+                style = PawKeyTheme.typography.body16Sb,
                 color = Color.White
             )
             Spacer(modifier = Modifier.weight(1f))

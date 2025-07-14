@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -20,20 +19,30 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.paw.key.core.designsystem.component.CourseDetail
 import com.paw.key.core.designsystem.component.ImageModal
 import com.paw.key.core.designsystem.component.PawkeyButton
 import com.paw.key.core.designsystem.component.TopBar
 import com.paw.key.core.designsystem.theme.PawKeyTheme
 import com.paw.key.core.designsystem.theme.White1
+import com.paw.key.presentation.ui.mypage.state.MyPageContract
+import com.paw.key.presentation.ui.mypage.state.SavedDetailContract
+import com.paw.key.presentation.ui.mypage.viewmodel.MyPageViewModel
+import com.paw.key.presentation.ui.mypage.viewmodel.SavedDetailViewModel
 
 @Composable
 fun SavedDetailRoute(
     navigateUp: () -> Unit,
     navigateToWalk: () -> Unit,
     modifier: Modifier = Modifier,
+    viewModel: SavedDetailViewModel = hiltViewModel()
 ) {
+    val state = viewModel.state.collectAsStateWithLifecycle()
+
     SavedCourseDetailScreen(
+        state = state.value,
         navigateUp = navigateUp,
         navigateToWalk = navigateToWalk,
         modifier = modifier
@@ -42,6 +51,7 @@ fun SavedDetailRoute(
 
 @Composable
 fun SavedCourseDetailScreen(
+    state: SavedDetailContract.SavedDetailState,
     navigateUp: () -> Unit,
     navigateToWalk: () -> Unit,
     modifier: Modifier = Modifier
@@ -111,7 +121,7 @@ fun SavedCourseDetailScreen(
 
         if (isImageExpanded) {
             ImageModal(
-                imageUrl = "https://pawkey-server.com/image.jpg",
+                imageUrl = state.imageUrl,
                 onDismiss = { isImageExpanded = false }
             )
         }
@@ -123,7 +133,16 @@ fun SavedCourseDetailScreen(
 @Composable
 fun SavedCourseDetailPreview(){
     PawKeyTheme {
-        SavedCourseDetailScreen(
+        SavedCourseDetailScreen(state = SavedDetailContract.SavedDetailState(
+            title = "한강 산책로",
+            petName = "후추",
+            date = "2025/06/02",
+            location = "뚝섬유원지",
+            distance = "4.5km",
+            time = "1시간 30분 소요",
+            option = listOf("풍경이 좋아요", "조용해요", "길이 깨끗해요"),
+            imageUrl = "https://pawkey-server.com/image.jpg"
+        ),
             navigateUp = {},
             navigateToWalk = {}
         )
