@@ -1,8 +1,10 @@
 package com.paw.key.data.di
 
 import com.paw.key.data.repositoryimpl.DummyRepositoryImpl
+import com.paw.key.data.repositoryimpl.RegionRepositoryImpl
 import com.paw.key.data.repositoryimpl.WalkSharedResultRepositoryImpl
 import com.paw.key.domain.repository.DummyRepository
+import com.paw.key.domain.repository.RegionRepository
 import com.paw.key.domain.repository.WalkSharedResultRepository
 import dagger.Binds
 import dagger.Module
@@ -25,4 +27,10 @@ interface RepositoryModule {
         walkSharedResultRepositoryImpl: WalkSharedResultRepositoryImpl
     ): WalkSharedResultRepository
 
+    /*Home*/
+    @Binds
+    @Singleton
+    fun bindsRegionRepository(
+        regionRepositoryImpl: RegionRepositoryImpl
+    ): RegionRepository
 }
