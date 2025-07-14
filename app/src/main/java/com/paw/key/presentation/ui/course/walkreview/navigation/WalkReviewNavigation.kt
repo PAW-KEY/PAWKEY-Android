@@ -21,12 +21,14 @@ fun NavController.navigateWalkReview(
 fun NavGraphBuilder.walkReviewNavGraph(
     navigateUp: () -> Unit,
     navigateNext: () -> Unit,
+    navigateShared : () -> Unit,
     snackBarHostState: SnackbarHostState,
 ) {
     composable<WalkReview> {
         WalkReviewRoute(
             navigateUp = navigateUp,
             navigateNext = navigateNext,
+            navigateShared = navigateShared,
             snackBarHostState = snackBarHostState,
         )
     }
