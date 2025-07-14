@@ -20,6 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -77,7 +78,7 @@ fun LoginScreen(
         modifier = modifier
             .fillMaxSize()
             .background(PawKeyTheme.colors.white1)
-            .padding(horizontal = 16.dp),
+            .padding(horizontal = 16.dp, vertical = 60.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
@@ -122,7 +123,7 @@ fun LoginScreen(
             suffix = {
                 Icon(
                     imageVector = ImageVector.vectorResource(
-                        if (!isPasswordVisible) R.drawable.ic_eye_linear_valid else R.drawable.ic_eye_linear_invalid
+                        if (!isPasswordVisible) R.drawable.ic_eye_linear_gray_valid else R.drawable.ic_eye_linear_invalid
                     ),
                     contentDescription = null,
                     modifier = Modifier.noRippleClickable(onClickIcon),
@@ -153,7 +154,25 @@ fun LoginScreen(
                 .fillMaxWidth()
                 .navigationBarsPadding()
         )
+    }
+}
 
-        Spacer(modifier = Modifier.height(60.dp))
+@Preview(showBackground = true)
+@Composable
+private fun PreviewLoginScreen(){
+    PawKeyTheme{
+        LoginScreen(
+            paddingValues = PaddingValues(),
+            navigateUp = {},
+            navigateNext = {},
+            onEmailChanged = {},
+            onPasswordChanged = {},
+            onClickIcon = {},
+            snackBarHostState = SnackbarHostState(),
+            email = "",
+            password = "",
+            isPasswordVisible = false,
+            isLoginFormValid = true,
+        )
     }
 }
