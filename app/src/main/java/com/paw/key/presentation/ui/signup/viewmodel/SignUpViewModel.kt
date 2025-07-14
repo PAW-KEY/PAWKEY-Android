@@ -130,7 +130,6 @@ class SignUpViewModel @Inject constructor(
         _state.update { it.copy(selectedSocialLevel = socialLevel) }
     }
 
-    // 🔧 수정: 기존 함수 이름 변경 (호환성 유지)
     fun isNextButtonEnabled(): Boolean {
         return isSignUpEnabled()
     }
@@ -197,14 +196,14 @@ class SignUpViewModel @Inject constructor(
                 Log.d("SignUpViewModel", "Starting signUp process...")
                 val state = _state.value
 
-                // 🔧 수정: 레벨만 선택되어 있으면 일단 진행
+
                 if (state.selectedEnergyLevel.isEmpty() || state.selectedSocialLevel.isEmpty()) {
                     Log.e("SignUpViewModel", "Energy or social level not selected")
                     _sideEffect.emit(SignUpContract.SignUpSideEffect.ShowSnackBar("에너지 레벨과 사회성 레벨을 모두 선택해주세요."))
                     return@launch
                 }
 
-                // 🔧 수정: 필수 정보가 없으면 임시 데이터로 대체하거나 다른 처리
+
                 if (!isSignUpEnabled()) {
                     Log.e("SignUpViewModel", "Required signup info missing")
                     _sideEffect.emit(SignUpContract.SignUpSideEffect.ShowSnackBar("회원가입 정보가 부족합니다."))
