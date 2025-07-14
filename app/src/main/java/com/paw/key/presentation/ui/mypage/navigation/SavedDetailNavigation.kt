@@ -16,17 +16,19 @@ import kotlinx.serialization.Serializable
 fun NavController.navigateSavedDetail(
     navOptions: NavOptions?
 ) {
-    navigate(SavedCourse, navOptions)
+    navigate(SavedDetail, navOptions)
 }
 
 fun NavGraphBuilder.savedDetailNavGraph(
     navigateUp: () -> Unit,
+    navigateToWalk : () -> Unit,
     snackBarHostState: SnackbarHostState,
     modifier: Modifier = Modifier,
 ) {
     composable<SavedDetail> {
         SavedDetailRoute(
             navigateUp = navigateUp,
+            navigateToWalk = navigateToWalk,
             modifier = modifier
         )
     }

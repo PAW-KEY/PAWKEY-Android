@@ -86,14 +86,15 @@ fun OnboardingScreen(
                 verticalArrangement = Arrangement.spacedBy(10.dp)
             ) {
                 PawkeyButton(
-                    text = "로그인",
+                    text = "신규 계정으로 회원가입",
                     enabled = true,
-                    onClick = { navigateSignUp() },
+                    onClick = { },
                 )
 
                 PawkeyButton(
-                    text = "회원가입",
-                    enabled = false,
+                    text = "기존 계정으로 로그인",
+                    enabled = true,
+                    isBackGround = true,
                     onClick = { navigateSignUp() },
                 )
             }

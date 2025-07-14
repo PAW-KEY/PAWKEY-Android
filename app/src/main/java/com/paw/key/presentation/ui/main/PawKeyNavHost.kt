@@ -62,7 +62,7 @@ fun PawKeyNavHost(
         homeLocationSettingNavGraph(
             paddingValues = paddingValues,
             navigateUp = navigator::navigateUp,
-            navigateNext = navigator::navigateCourse,
+            navigateNext = navigator::navigateRegional,
             navigateHomeLocationSetting = navigator::navigateHomeLocationSetting,
             modifier = modifier,
         )
@@ -123,8 +123,10 @@ fun PawKeyNavHost(
             navigateNext = navigator::navigateArchivedDetail,
             modifier = modifier
         )
+
         savedDetailNavGraph(
             navigateUp = navigator::navigateUp,
+            navigateToWalk = navigator::navigateWalkCourse,
             snackBarHostState = snackbarHostState
         )
 
