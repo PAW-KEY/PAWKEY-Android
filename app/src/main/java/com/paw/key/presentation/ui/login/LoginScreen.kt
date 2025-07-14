@@ -138,7 +138,7 @@ fun LoginScreen(
             onClick = navigateUp,
             enabled = true,
             isBackGround = true,
-            isBorder = true,
+            isBorder = false,
             modifier = Modifier
                 .fillMaxWidth()
         )
@@ -154,6 +154,6 @@ fun LoginScreen(
                 .navigationBarsPadding()
         )
 
-        Spacer(modifier = Modifier.height(12.dp))
+        Spacer(modifier = Modifier.height(60.dp))
     }
 }

@@ -159,6 +159,7 @@ fun HomeScreen(
                     title = "제목을 입력해주세요",
                     petName = "반려견 이름",
                     date = "년도/월/일",
+                    onCLickItem = {}
                 )
             }
             item{}
@@ -179,19 +180,15 @@ fun HomeScreen(
                 ) {
                     viewModel.toggleLocationMenu()
                 }
-        )
-
-        Box(
-            contentAlignment = Alignment.TopEnd,
-            modifier = Modifier
-                .padding(top = 97.dp, start = 240.dp),
         ) {
             SettingButton(
                 modifier = Modifier
+                    .padding(top = 43.dp, end = 16.dp)
                     .noRippleClickable {
                         viewModel.toggleLocationMenu()
                         navigateHomeLocationSetting()
-                    },
+                    }
+                    .align(Alignment.TopEnd),
             )
         }
     }
