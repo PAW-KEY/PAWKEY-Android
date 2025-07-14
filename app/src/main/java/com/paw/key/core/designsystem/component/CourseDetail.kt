@@ -53,28 +53,6 @@ fun CourseDetail(
         modifier = modifier
             .fillMaxWidth()
     ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 16.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Icon(
-                imageVector = ImageVector.vectorResource(R.drawable.ic_arrow_left_black),
-                contentDescription = "뒤로가기"
-            )
-            Box(
-                modifier = Modifier.weight(1f),
-                contentAlignment = Alignment.Center
-            ) {
-                Text(
-                    text = "저장한 산책 루트",
-                    style = PawKeyTheme.typography.body16Sb
-                )
-            }
-            Spacer(modifier = Modifier.width(24.dp))
-        }
-
         AsyncImage(
             model = ImageRequest.Builder(LocalContext.current)
                 .data("https://pawkey-server.com/image.jpg")
