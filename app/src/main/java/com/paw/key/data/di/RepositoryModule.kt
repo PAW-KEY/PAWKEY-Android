@@ -2,10 +2,12 @@ package com.paw.key.data.di
 
 import com.paw.key.data.repositoryimpl.DummyRepositoryImpl
 import com.paw.key.data.repositoryimpl.RegionRepositoryImpl
+import com.paw.key.data.repositoryimpl.WalkCourseRepositoryImpl
 import com.paw.key.data.repositoryimpl.WalkSharedResultRepositoryImpl
 import com.paw.key.domain.repository.DummyRepository
 import com.paw.key.domain.repository.RegionRepository
 import com.paw.key.domain.repository.WalkSharedResultRepository
+import com.paw.key.domain.repository.walkcourse.WalkCourseRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -33,4 +35,11 @@ interface RepositoryModule {
     fun bindsRegionRepository(
         regionRepositoryImpl: RegionRepositoryImpl
     ): RegionRepository
+
+
+    @Binds
+    @Singleton
+    fun bindsWalkCourseRepository(
+        walkCourseRepositoryImpl: WalkCourseRepositoryImpl
+    ): WalkCourseRepository
 }
