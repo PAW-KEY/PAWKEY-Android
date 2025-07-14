@@ -34,6 +34,7 @@ import androidx.lifecycle.flowWithLifecycle
 import com.kakao.vectormap.LatLng
 import com.kakao.vectormap.MapView
 import com.paw.key.core.designsystem.component.CustomSnackBar
+import com.paw.key.core.designsystem.component.PawkeyButton
 import com.paw.key.core.designsystem.theme.PawKeyTheme
 import com.paw.key.core.util.UiState
 import com.paw.key.presentation.ui.region.component.regionalMapView
@@ -56,7 +57,7 @@ fun RegionalManagementRoute(
 
     LaunchedEffect(Unit) {
         // Todo : 나중에 서버에서 좌표받아올때 변경
-        val polyPoints: List<List<LatLng>> = listOf(
+        /*val polyPoints: List<List<LatLng>> = listOf(
             // 첫 번째 폴리곤 (JSON의 첫 번째 MultiPolygon 내부 배열)
             listOf(
                 LatLng.from(37.51711061445719, 127.02190765991858),
@@ -194,9 +195,12 @@ fun RegionalManagementRoute(
                 LatLng.from(37.52700302845431, 127.00996246776681),
                 LatLng.from(37.52701147918971, 127.00997077242218) // 닫는 좌표
             )
-        )
+        )*/
 
-        viewModel.getRegionPoints(polyPoints)
+        viewModel.getRegionGeometry(
+            X_USER_ID = 2,
+            regionId = 35,
+        )
     }
 
     LaunchedEffect(viewModel.sideEffect, lifecycleOwner) {
@@ -218,7 +222,7 @@ fun RegionalManagementRoute(
             val mapView = regionalMapView(
                 lifeCycle = lifecycleOwner.lifecycle,
                 context = context,
-                currentUserLocation = LatLng.from(37.497942, 127.027619),
+                currentUserLocation = state.centerLocation,
                 polyPoints = (state.uiState as UiState.Success<List<List<LatLng>>>).data
             )
 
@@ -326,24 +330,15 @@ fun RegionalManagementScreen(
 
                     Spacer(modifier = Modifier.height(12.dp))
 
-                    Button(
+                    PawkeyButton(
+                        text = "지역 변경하기",
                         onClick = {
                             onClickButton()
                         },
                         modifier = Modifier
-                            .fillMaxWidth()
-                            .height(52.dp),
-                        shape = RoundedCornerShape(8.dp),
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = if (selectedRegion != null) PawKeyTheme.colors.green500 else PawKeyTheme.colors.gray500
-                        )
-                    ) {
-                        Text(
-                            text = "지역 변경하기",
-                            style = PawKeyTheme.typography.body16Sb,
-                            color = PawKeyTheme.colors.white1
-                        )
-                    }
+                            .fillMaxWidth(),
+                        enabled = true,
+                    )
                 }
             }
         }
