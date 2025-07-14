@@ -53,16 +53,23 @@ fun SignUpActivityScreen(
     viewModel: SignUpViewModel = hiltViewModel(),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+    val regionList by viewModel.regionList.collectAsStateWithLifecycle()
+
+    val selectedGu = state.selectedGu
+    val selectedDong = state.selectedDong
+
+    val guOptions = regionList.map { it.gu.name }
+    val dongOptions = regionList.find { it.gu.name == selectedGu }?.dongs?.map { it.name } ?: emptyList()
 
     Column(
-        modifier = modifier
-            .fillMaxSize()
+        modifier = modifier.fillMaxSize()
     ) {
         SignUpHeader(
             title = stringResource(R.string.ic_onboarding_signup),
             subtitle = stringResource(id = R.string.ic_onboarding_signup_subtitle_step2),
             progress = step,
         )
+
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -75,32 +82,42 @@ fun SignUpActivityScreen(
                 content = {
                     LocationButton(
                         isEnable = state.isLocationMenuVisible,
-                        location = "강남구",
+                        location = selectedGu.ifEmpty { "구를 선택해주세요" },
                         onClick = { viewModel.toggleLocationMenu() }
                     )
                 }
             )
 
+            if (state.isLocationMenuVisible) {
+                LocationList(
+                    selected = selectedGu,
+                    locations = guOptions,
+                    onLocationSelected = {
+                        viewModel.onGuSelected(it)
+                    }
+                )
+            }
+
             Spacer(modifier = Modifier.height(46.dp))
 
-            FormField(
-                label = stringResource(id = R.string.ic_onboarding_signup_sub_location),
-                content = {
-                    if (state.isLocationMenuVisible) {
+            if (selectedGu.isNotEmpty()) {
+                FormField(
+                    label = stringResource(id = R.string.ic_onboarding_signup_sub_location),
+                    content = {
                         LocationList(
-                            selected = state.selectedLocation,
-                            locations = listOf("개포동", "논현동", "뭔동", "동동동", "스꾸삐", "4글자유"),
-                            onLocationSelected = { location ->
-                                viewModel.selectLocation(location)
+                            selected = selectedDong,
+                            locations = dongOptions,
+                            onLocationSelected = {
+                                viewModel.onDongSelected(it)
                             }
                         )
                     }
-                }
-            )
+                )
+            }
 
             Spacer(modifier = Modifier.weight(1f))
 
-            val isFormValid = state.selectedLocation.isNotEmpty()
+            val isFormValid = selectedGu.isNotEmpty() && selectedDong.isNotEmpty()
 
             PawkeyButton(
                 text = stringResource(id = R.string.ic_onboarding_signup_button),
