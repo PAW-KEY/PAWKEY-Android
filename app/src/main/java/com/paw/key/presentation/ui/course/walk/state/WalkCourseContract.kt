@@ -15,6 +15,9 @@ class WalkCourseContract {
         val uiState: UiState<PersistentList<LatLng>> = UiState.Loading,
         val poiPoints: PersistentList<LatLng> = persistentListOf(),
 
+        val startedAt: String = "",
+        val endedAt: String = "",
+
         val bitmap: Bitmap? = null,
 
         // 현재 걸음 수
