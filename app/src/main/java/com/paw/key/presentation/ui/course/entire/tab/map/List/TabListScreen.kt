@@ -98,28 +98,32 @@ fun TabListScreen(
                 CourseCard(
                     title = "제목을 입력해주세요",
                     petName = "안녕꼬리",
-                    date = "21/1/1"
+                    date = "21/1/1",
+                    onCLickItem = {}
                 )
             }
             item {
                 CourseCard(
                     title = "제목을 입력해주세요",
                     petName = "안녕꼬리",
-                    date = "21/1/1"
+                    date = "21/1/1",
+                    onCLickItem = {}
                 )
             }
             item {
                 CourseCard(
                     title = "제목을 입력해주세요",
                     petName = "안녕꼬리",
-                    date = "21/1/1"
+                    date = "21/1/1",
+                    onCLickItem = {}
                 )
             }
             item {
                 CourseCard(
                     title = "제목을 입력해주세요",
                     petName = "안녕꼬리",
-                    date = "21/1/1"
+                    date = "21/1/1",
+                    onCLickItem = {}
                 )
             }
         }

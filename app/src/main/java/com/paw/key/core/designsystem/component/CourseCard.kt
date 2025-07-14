@@ -1,5 +1,6 @@
 package com.paw.key.core.designsystem.component
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -38,6 +39,7 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.paw.key.core.designsystem.theme.PawKeyTheme
+import com.paw.key.core.util.noRippleClickable
 import kotlin.String
 
 @Composable
@@ -45,6 +47,7 @@ fun CourseCard(
     title: String,
     petName:String,
     date: String,
+    onCLickItem : () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -53,6 +56,9 @@ fun CourseCard(
             .fillMaxWidth()
             .size(width = 328.dp , height = 240.dp)
             .background(Color.White, shape = RoundedCornerShape(20.dp))
+            .noRippleClickable {
+                onCLickItem()
+            }
     ) {
         // 지도 썸네일
         Box(
@@ -168,6 +174,7 @@ fun CourseCardPreview() {
             title = "홍대 주변 좋은 산책 코스",
             petName = "반려견 이름",
             date = "2025/05/17",
+            onCLickItem = {}
         )
     }
 }
