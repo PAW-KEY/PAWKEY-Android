@@ -28,7 +28,7 @@ import com.paw.key.presentation.ui.mypage.viewmodel.ArchivedDetailViewModel
 @Composable
 fun ArchivedDetailRoute(
     navigateUp: () -> Unit,
-    navigateToWalk: () -> Unit,
+    navigateToSharedWalk: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: ArchivedDetailViewModel = hiltViewModel()
 ) {
@@ -37,7 +37,7 @@ fun ArchivedDetailRoute(
     ArchivedCourseDetailScreen(
         state = state.value,
         navigateUp = navigateUp,
-        navigateToWalk = navigateToWalk,
+        navigateToSharedWalk = navigateToSharedWalk,
         modifier = modifier
     )
 }
@@ -46,7 +46,7 @@ fun ArchivedDetailRoute(
 fun ArchivedCourseDetailScreen(
     state: ArchivedDetailContract.ArchivedDetailState,
     navigateUp: () -> Unit,
-    navigateToWalk: () -> Unit,
+    navigateToSharedWalk: () -> Unit,
     modifier: Modifier = Modifier
 ){
     var isImageExpanded by remember { mutableStateOf(false) }
@@ -76,7 +76,7 @@ fun ArchivedCourseDetailScreen(
                 PawkeyButton(
                     text = "해당 루트로 산책하기",
                     enabled = true,
-                    onClick = {},
+                    onClick = navigateToSharedWalk,
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(top = 16.dp)
@@ -108,7 +108,7 @@ fun ArchivedCourseDetailPreview(){
             imageUrl = "https://pawkey-server.com/image.jpg"
         ),
             navigateUp = {},
-            navigateToWalk = {}
+            navigateToSharedWalk = {}
         )
     }
 }

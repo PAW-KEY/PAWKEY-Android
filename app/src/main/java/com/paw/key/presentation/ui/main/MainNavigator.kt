@@ -11,7 +11,10 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
 import com.paw.key.presentation.ui.community.navigation.navigateCommunity
 import com.paw.key.presentation.ui.course.entire.navigation.navigateCourse
-import com.paw.key.presentation.ui.course.entire.tab.map.navigation.navigateWalkCourse
+import com.paw.key.presentation.ui.course.sharedwalk.complete.navigation.navigateSharedWalkCompletion
+import com.paw.key.presentation.ui.course.sharedwalk.review.navigation.navigateSharedWalkReview
+import com.paw.key.presentation.ui.course.sharedwalk.sharedroute.navigation.navigateSharedWalkCourse
+import com.paw.key.presentation.ui.course.walk.navigation.navigateWalkCourse
 import com.paw.key.presentation.ui.course.walkcomplete.navigation.navigateWalkCompletion
 import com.paw.key.presentation.ui.course.walkreview.navigation.navigateWalkReview
 import com.paw.key.presentation.ui.dummy.next.navigateDummyNext
@@ -23,6 +26,8 @@ import com.paw.key.presentation.ui.mypage.navigation.navigateArchivedDetail
 import com.paw.key.presentation.ui.mypage.navigation.navigateMyPage
 import com.paw.key.presentation.ui.mypage.navigation.navigatePetProfile
 import com.paw.key.presentation.ui.mypage.navigation.navigateSavedCourse
+import com.paw.key.presentation.ui.mypage.navigation.navigateUserProfile
+import com.paw.key.presentation.ui.region.navigation.navigateRegional
 import com.paw.key.presentation.ui.mypage.navigation.navigateSavedDetail
 import com.paw.key.presentation.ui.mypage.navigation.navigateUserProfile
 import com.paw.key.presentation.ui.onboard.navigation.navigateOnboarding
@@ -109,16 +114,17 @@ class MainNavigator(
         navController.navigateSavedDetail(navOptions = navOptions)
     }
 
-    fun navigateArchivedDetail(navOptions: NavOptions? = null) {
-        navController.navigateArchivedDetail(navOptions = navOptions)
-    }
+
     
     fun navigateArchivedCourse(navOptions: NavOptions? = null) {
         navController.navigateArchivedCourse(navOptions = navOptions)
     }
 
-    fun navigateCourse(navOptions: NavOptions? = null) {
-        navController.navigateCourse(navOptions = navOptions)
+    fun navigateCourse(index : Int = 0, navOptions: NavOptions? = null) {
+        navController.navigateCourse(
+            index = index,
+            navOptions = navOptions
+        )
     }
 
     fun navigateHome(navOptions: NavOptions? = null) {
@@ -129,6 +135,25 @@ class MainNavigator(
         navController.navigateHomeLocationSetting(navOptions = navOptions)
     }
 
+    /*메인 탭 산택 기준 - 산책하기, 완료, 리뷰*/
+//    fun navigateRegional(navOptions: NavOptions? = null) {
+//        navController.navigateRegional(navOptions = navOptions)
+//    }
+    fun navigateSharedWalkCourse(navOptions: NavOptions? = null) {
+        navController.navigateSharedWalkCourse(navOptions = navOptions)
+    }
+
+    fun navigateSharedWalkReview(navOptions: NavOptions? = null) {
+        navController.navigateSharedWalkReview(navOptions = navOptions)
+    }
+
+    fun navigateSharedWalkCompletion(navOptions: NavOptions? = null) {
+        navController.navigateSharedWalkCompletion(navOptions = navOptions)
+    }
+
+    fun navigateArchivedDetail(navOptions: NavOptions? = null) {
+        navController.navigateArchivedDetail(navOptions = navOptions)
+    }
 
     fun navigateWalkCourse(navOptions: NavOptions? = null) {
         navController.navigateWalkCourse(navOptions = navOptions)

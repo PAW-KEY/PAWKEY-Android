@@ -19,6 +19,8 @@ class WalkReviewContract {
 
         val petName : String = "포비",
 
+        val isDialogVisible : Boolean = false,
+
         val feedbackState: WalkReviewFeedbackState = WalkReviewFeedbackState()
     ){
         val isValidForm get() = title.isNotBlank() &&

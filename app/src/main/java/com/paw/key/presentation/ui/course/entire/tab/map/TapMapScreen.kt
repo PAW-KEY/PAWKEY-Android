@@ -51,7 +51,7 @@ import com.paw.key.core.util.UiState
 import com.paw.key.core.util.noRippleClickable
 import com.paw.key.presentation.ui.course.entire.tab.map.component.tapMapView
 import com.paw.key.presentation.ui.course.entire.tab.map.viewmodel.TapMapViewModel
-import com.paw.key.presentation.ui.course.walk.getCurrentLocation
+import com.paw.key.presentation.ui.course.sharedwalk.sharedroute.getCurrentLocation
 
 @Composable
 fun TapMapRoute(

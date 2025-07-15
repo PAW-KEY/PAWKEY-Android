@@ -1,47 +1,29 @@
-package com.paw.key.presentation.ui.course.walkreview.viewmodel
+package com.paw.key.presentation.ui.course.sharedwalk.review.viewmodel
 
-import android.net.Uri
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import com.paw.key.presentation.ui.course.sharedwalk.review.state.SharedWalkReviewSideEffect
+import com.paw.key.presentation.ui.course.sharedwalk.review.state.SharedWalkReviewState
 import com.paw.key.presentation.ui.course.walkreview.state.WalkReviewContract.WalkReviewFeedbackData
-import com.paw.key.presentation.ui.course.walkreview.state.WalkReviewContract.WalkReviewSideEffect
-import com.paw.key.presentation.ui.course.walkreview.state.WalkReviewContract.WalkReviewState
-import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import javax.inject.Inject
 
-@HiltViewModel
-class WalkReviewViewModel @Inject constructor(
+class SharedWalkReviewViewModel @Inject constructor(
+
 ) : ViewModel() {
-    private val _state = MutableStateFlow(WalkReviewState())
-    val state : StateFlow<WalkReviewState>
+    private val _state = MutableStateFlow(SharedWalkReviewState())
+    val state : StateFlow<SharedWalkReviewState>
         get() = _state.asStateFlow()
 
-    private val _sideEffect = MutableSharedFlow<WalkReviewSideEffect>()
-    val sideEffect : MutableSharedFlow<WalkReviewSideEffect>
-        get() = _sideEffect
 
-    /*val isFormValid: StateFlow<Boolean> = state.map { state ->
-        state.title.isNotBlank() &&
-                state.content.isNotBlank() &&
-                state.feedbackState.selectedSafetyFeedback != null &&
-                state.feedbackState.selectedFacilityFeedback != null &&
-                state.feedbackState.selectedRoadFeedback != null &&
-                state.feedbackState.selectedNoiseFeedback != null &&
-                state.feedbackState.selectedFrequencyFeedback != null
-    }.stateIn(
-        viewModelScope,
-        SharingStarted.WhileSubscribed(5000),
-        false
-    )*/
+    private val _sideEffect = MutableSharedFlow<SharedWalkReviewSideEffect>()
+    val sideEffect : SharedFlow<SharedWalkReviewSideEffect>
+        get() = _sideEffect.asSharedFlow()
 
     private fun handleFeedbackSelection(
         currentSelected: WalkReviewFeedbackData?,
@@ -58,22 +40,6 @@ class WalkReviewViewModel @Inject constructor(
         _state.update {
             it.copy(
                 isDialogVisible = true
-            )
-        }
-    }
-
-    fun onTitleTextChanged(text : String) {
-        _state.update {
-            it.copy(
-                title = text
-            )
-        }
-    }
-
-    fun onContentTextChanged(text : String) {
-        _state.update {
-            it.copy(
-                content = text
             )
         }
     }
@@ -124,27 +90,6 @@ class WalkReviewViewModel @Inject constructor(
                 feedbackState = currentState.feedbackState.copy(
                     selectedFrequencyFeedback = handleFeedbackSelection(currentState.feedbackState.selectedFrequencyFeedback, feedItem)
                 )
-            )
-        }
-    }
-
-    fun onImagesSelected(uris: List<Uri>) {
-        val currentImages = _state.value.images.toMutableList()
-        currentImages.addAll(uris)
-
-        _state.update {
-            it.copy(
-                images = currentImages.toPersistentList()
-            )
-        }
-    }
-
-    fun onImageDelete(uri : Uri?) {
-        _state.update {
-            it.copy(
-                images = it.images.filter { currentUri ->
-                    currentUri != uri
-                }.toPersistentList()
             )
         }
     }

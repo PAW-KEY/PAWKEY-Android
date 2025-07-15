@@ -1,4 +1,4 @@
-package com.paw.key.presentation.ui.course.entire.tab.map.navigation
+package com.paw.key.presentation.ui.course.walk.navigation
 
 import android.os.Build
 import androidx.annotation.RequiresApi
@@ -13,7 +13,7 @@ import com.paw.key.presentation.ui.course.walk.WalkCourseRoute
 import kotlinx.serialization.Serializable
 
 fun NavController.navigateWalkCourse(
-    navOptions: NavOptions?
+    navOptions: NavOptions?,
 ) {
     navigate(WalkCourse, navOptions)
 }

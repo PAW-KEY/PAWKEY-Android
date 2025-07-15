@@ -39,6 +39,8 @@ fun EntireCourseRoute(
     paddingValues: PaddingValues,
     navigateUp: () -> Unit,
     navigateNext: () -> Unit,
+    navigateToDetail: () -> Unit,
+    routeIndex: Int,
     snackBarHostState: SnackbarHostState,
     setOnVisibleRecord: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
@@ -50,6 +52,12 @@ fun EntireCourseRoute(
     val context = LocalContext.current
 
     val pagerState = rememberPagerState(pageCount = { 2 })
+
+    LaunchedEffect(Unit) {
+        viewModel.updateState {
+            copy(selectedTabIndex = routeIndex)
+        }
+    }
 
     val requestPermissionLauncher = rememberLauncherForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
@@ -129,6 +137,7 @@ fun EntireCourseRoute(
             }
             setOnVisibleRecord(it)
         },
+        navigateToDetail = navigateToDetail,
         isGranted = state.isLocationPermissionGranted,
         tabs = state.courseTabs,
         modifier = modifier,
@@ -145,6 +154,7 @@ fun EntireCourseScreen(
     currentPage : Int,
     navigateUp: () -> Unit,
     navigateNext: () -> Unit,
+    navigateToDetail : () -> Unit,
     setOnVisibleRecord : (Boolean) -> Unit,
     onTabSelected : (Int) -> Unit,
     modifier: Modifier = Modifier,
@@ -178,7 +188,9 @@ fun EntireCourseScreen(
             }
 
             1 -> {
-                TapListRoute()
+                TapListRoute(
+                    navigateToDetail = navigateToDetail
+                )
             }
         }
     }
@@ -223,6 +235,7 @@ private fun EntireCourseScreenPreview() {
             onTabSelected = {},
             isGranted = true,
             setOnVisibleRecord = {},
+            navigateToDetail = {},
             modifier = Modifier,
         )
     }

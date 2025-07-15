@@ -1,4 +1,4 @@
-package com.paw.key.presentation.ui.course.walkreview
+package com.paw.key.presentation.ui.course.sharedwalk.review
 
 import android.Manifest
 import android.net.Uri
@@ -40,6 +40,8 @@ import com.paw.key.core.designsystem.component.PawkeyButton
 import com.paw.key.core.designsystem.component.SubChip
 import com.paw.key.core.designsystem.component.TopBar
 import com.paw.key.core.designsystem.theme.PawKeyTheme
+import com.paw.key.presentation.ui.course.sharedwalk.review.state.SharedWalkReviewSideEffect
+import com.paw.key.presentation.ui.course.sharedwalk.review.viewmodel.SharedWalkReviewViewModel
 import com.paw.key.presentation.ui.course.walkreview.component.WalkReviewDialog
 import com.paw.key.presentation.ui.course.walkreview.component.WalkReviewFeedbackForm
 import com.paw.key.presentation.ui.course.walkreview.component.WalkReviewFeedbackHeader
@@ -51,66 +53,34 @@ import com.paw.key.presentation.ui.course.walkreview.viewmodel.WalkReviewViewMod
 
 @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
 @Composable
-fun WalkReviewRoute(
+fun SharedWalkReviewRoute(
     navigateUp: () -> Unit,
     navigateNext: () -> Unit,
-    navigateShared : () -> Unit,
     snackBarHostState: SnackbarHostState,
     modifier: Modifier = Modifier,
-    viewModel: WalkReviewViewModel = hiltViewModel(),
-    isSharedWalk : Boolean = false
+    viewModel: SharedWalkReviewViewModel = hiltViewModel(),
+    isSharedWalk : Boolean = true
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     val isValid = viewModel.state.collectAsStateWithLifecycle().value.isValidForm
 
     val lifecycleOwner = LocalLifecycleOwner.current
 
-    val imagePermission = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-        Manifest.permission.READ_MEDIA_IMAGES
-    } else {
-        Manifest.permission.READ_EXTERNAL_STORAGE
-    }
-
-    val pickMultipleMediaLauncher = rememberLauncherForActivityResult(
-        ActivityResultContracts.PickMultipleVisualMedia(5)
-    ) { uris ->
-        if (uris.isNotEmpty()) {
-            viewModel.onImagesSelected(uris)
-        }
-    }
-
-    val galleryLauncher = rememberLauncherForActivityResult(
-        ActivityResultContracts.GetMultipleContents()
-    ) { uris: List<Uri> ->
-        if (uris.isNotEmpty()) {
-            val limitedUris = uris.take(5)
-            viewModel.onImagesSelected(limitedUris)
-        }
-    }
-
-    val permissionLauncher = rememberLauncherForActivityResult(
-        ActivityResultContracts.RequestPermission()
-    ) { isGranted ->
-        if (isGranted) {
-            galleryLauncher.launch("image/*")
-        }
-    }
-
     LaunchedEffect(viewModel.sideEffect, lifecycleOwner) {
         viewModel.sideEffect.flowWithLifecycle(lifecycleOwner.lifecycle)
             .collect { sideEffect ->
                 when (sideEffect) {
-                    is WalkReviewContract.WalkReviewSideEffect.ShowSnackBar -> snackBarHostState.showSnackbar(
+                    is SharedWalkReviewSideEffect.ShowSnackBar -> snackBarHostState.showSnackbar(
                         sideEffect.message
                     )
 
-                    WalkReviewContract.WalkReviewSideEffect.NavigateNext -> navigateNext()
-                    WalkReviewContract.WalkReviewSideEffect.NavigateUp -> navigateUp()
+                    SharedWalkReviewSideEffect.NavigateNext -> navigateNext()
+                    SharedWalkReviewSideEffect.NavigateUp -> navigateUp()
                 }
             }
     }
 
-    WalkReviewScreen(
+    SharedWalkReviewScreen(
         navigateUp = navigateUp,
         navigateNext = navigateNext,
         onClickFeedback = { index, content ->
@@ -131,52 +101,26 @@ fun WalkReviewRoute(
         isDialogVisible = state.isDialogVisible,
         isFormValid = isValid,
         isSharedWalk = isSharedWalk,
-        imageList = state.images,
         petName = state.petName,
-        titleText = state.title,
-        contentText = state.content,
         feedbackState = state.feedbackState,
-        onTitleTextChanged = {
-            viewModel.onTitleTextChanged(it)
+        onClickSharedReview = {
+            viewModel.onClickSharedReview()
         },
-        onContentTextChanged = {
-            viewModel.onContentTextChanged(it)
-        },
-        onClickImage = {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                pickMultipleMediaLauncher.launch(
-                    PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageAndVideo)
-                )
-            } else {
-                permissionLauncher.launch(imagePermission)
-            }
-        },
-        onImageDelete = {
-            viewModel.onImageDelete(it)
-        },
-        navigateShared = navigateShared,
         modifier = modifier,
     )
 }
 
 @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
 @Composable
-fun WalkReviewScreen(
+fun SharedWalkReviewScreen(
     navigateUp: () -> Unit,
     navigateNext: () -> Unit,
+    onClickSharedReview : () -> Unit,
     onClickFeedback : (Int, String) -> Unit,
-    onTitleTextChanged : (String) -> Unit,
-    onContentTextChanged : (String) -> Unit,
-    onClickImage : () -> Unit,
-    onImageDelete : (Uri?) -> Unit,
-    navigateShared : () -> Unit,
     isDialogVisible : Boolean,
-    imageList: List<Uri>,
     isFormValid : Boolean,
     isSharedWalk : Boolean,
     petName : String,
-    titleText : String,
-    contentText : String,
     feedbackState : WalkReviewContract.WalkReviewFeedbackState,
     modifier: Modifier = Modifier,
 ) {
@@ -204,56 +148,38 @@ fun WalkReviewScreen(
                 .background(PawKeyTheme.colors.white1)
                 .padding(bottom = 16.dp)
         ){
-            if (!isSharedWalk) {
-                item {
-                    WalkReviewImageRow(
-                        imageList = imageList,
-                        onClickCard = { index, _ ->
-                            if (index != 0) {
-                                onClickImage()
-                            }
-                        },
-                        onImageDelete = {
-                            onImageDelete(it)
-                        },
+            item {
+                Text(
+                    text = "제목",
+                    style = PawKeyTheme.typography.head20Sb,
+                    color = PawKeyTheme.colors.green500,
+                    modifier = Modifier
+                        .padding(bottom = 10.dp)
+                )
+
+                Row (
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 10.dp)
+                ) {
+                    AsyncImage(
+                        model = "",
+                        contentDescription = "profile",
                         modifier = Modifier
-                            .background(PawKeyTheme.colors.white1),
+                            .size(48.dp)
+                            .background(
+                                color = PawKeyTheme.colors.gray50,
+                                shape = CircleShape
+                            )
+                            .clip(CircleShape)
+                            .padding(end = 10.dp)
                     )
-                }
-            } else {
-                item {
+
                     Text(
-                        text = "제목",
-                        style = PawKeyTheme.typography.head20Sb,
-                        color = PawKeyTheme.colors.green500,
-                        modifier = Modifier
-                            .padding(bottom = 10.dp)
+                        text = "강아지 이름 작성",
+                        style = PawKeyTheme.typography.body16Sb,
+                        color = PawKeyTheme.colors.gray600
                     )
-
-                    Row (
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(bottom = 10.dp)
-                    ) {
-                        AsyncImage(
-                            model = "",
-                            contentDescription = "profile",
-                            modifier = Modifier
-                                .size(48.dp)
-                                .background(
-                                    color = PawKeyTheme.colors.gray50,
-                                    shape = CircleShape
-                                )
-                                .clip(CircleShape)
-                                .padding(end = 10.dp)
-                        )
-
-                        Text(
-                            text = "강아지 이름 작성",
-                            style = PawKeyTheme.typography.body16Sb,
-                            color = PawKeyTheme.colors.gray600
-                        )
-                    }
                 }
             }
 
@@ -390,86 +316,29 @@ fun WalkReviewScreen(
                 )
             }
 
-            if (!isSharedWalk) {
-                item {
-                    Text(
-                        text = "산책에 대한 감상을 들려주시겠어요?",
-                        style = PawKeyTheme.typography.body16M,
-                        color = PawKeyTheme.colors.black,
-                        modifier = Modifier
-                            .padding(top = 12.dp, start = 16.dp, end = 16.dp)
-                    )
-
-                    WalkReviewTextField(
-                        textValue = titleText,
-                        placeHolder = "후기 제목을 입력해주세요.",
-                        onTextChanged = {
-                            onTitleTextChanged(it)
-                        },
-                        modifier = Modifier
-                            .padding(top = 10.dp, start = 16.dp, end = 16.dp)
-                            .imePadding()
-                    )
-
-                    WalkReviewTextField(
-                        textValue = contentText,
-                        placeHolder = "산책 후기를 간단하게 적어주세요!",
-                        onTextChanged = {
-                            onContentTextChanged(it)
-                        },
-                        modifier = Modifier
-                            .heightIn(min = 200.dp, max = 400.dp)
-                            .padding(top = 10.dp, bottom = 24.dp, start = 16.dp, end = 16.dp)
-                            .imePadding()
-                    )
-                }
-            }
-
-            item {
-                HorizontalDivider(
-                    thickness = 10.dp,
-                    color = PawKeyTheme.colors.gray50,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(bottom = 24.dp)
-                )
-            }
-
             item {
                 val buttonTextRes = if (isSharedWalk) {
-                    // 공유됨
+                    // 후기
                     R.string.course_review_shared_button
                 } else {
                     R.string.course_review_shared_all_button
                 }
 
+                // Todo : 후기 남기고 course의 리스트로 이동 - 애니메이션
                 PawkeyButton(
                     text = stringResource(buttonTextRes),
-                    onClick = navigateShared,
+                    onClick = {
+                        onClickSharedReview()
+                    },
                     enabled = isFormValid,
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 16.dp)
                 )
-
-                if (!isSharedWalk) {
-                    Spacer(modifier = Modifier.height(10.dp))
-
-                    PawkeyButton(
-                        text = stringResource(R.string.course_review_saved_button),
-                        onClick = navigateShared,
-                        enabled = isFormValid,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 16.dp),
-                        isBackGround = true,
-                        isBorder = true,
-                    )
-                }
             }
         }
 
-        if (isDialogVisible) {
+        if (isDialogVisible && isSharedWalk) {
             WalkReviewDialog(
                 onClickOk = {
                     // 리스트로 이동

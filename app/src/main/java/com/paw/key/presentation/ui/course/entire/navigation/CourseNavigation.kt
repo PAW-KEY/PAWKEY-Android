@@ -8,29 +8,36 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
+import androidx.navigation.toRoute
 import com.paw.key.core.navigation.MainTabRoute
 import com.paw.key.presentation.ui.course.entire.EntireCourseRoute
 import kotlinx.serialization.Serializable
 
 fun NavController.navigateCourse(
-    navOptions: NavOptions?
-) {
-    navigate(Course, navOptions)
-}
+    navOptions: NavOptions? = null,
+    index: Int = 0,
+) = navigate(Course(index), navOptions)
+
 
 @RequiresApi(Build.VERSION_CODES.Q)
 fun NavGraphBuilder.courseNavGraph(
     paddingValues: PaddingValues,
     navigateUp: () -> Unit,
     navigateNext: () -> Unit,
+    navigateToWalk: () -> Unit,
     setOnVisibleRecord: (Boolean) -> Unit,
     snackBarHostState: SnackbarHostState,
 ) {
-    composable<Course> {
+    composable<Course> { backStackEntry ->
+        val courseDestination = backStackEntry.toRoute<Course>()
+        val receivedIndex = courseDestination.index
+
         EntireCourseRoute(
             paddingValues = paddingValues,
             navigateUp = navigateUp,
             navigateNext = navigateNext,
+            navigateToDetail = navigateToWalk,
+            routeIndex = receivedIndex,
             setOnVisibleRecord = setOnVisibleRecord,
             snackBarHostState = snackBarHostState,
         )
@@ -38,4 +45,5 @@ fun NavGraphBuilder.courseNavGraph(
 }
 
 @Serializable
-data object Course : MainTabRoute
+data class Course(val index: Int = 0) : MainTabRoute
+

@@ -7,6 +7,8 @@ import kotlinx.serialization.Serializable
 data class RegionResponseDto(
     @SerialName("regionName")
     val regionName: String,
+    @SerialName("preRegionName")
+    val preRegionName: String,
     @SerialName("geometryDto")
     val geometryDto: GeometryDto
 )

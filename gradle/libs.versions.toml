@@ -1,6 +1,7 @@
 [versions]
 accompanistSystemuicontroller = "0.30.1"
 compileSdk = "35"
+lottieCompose = "6.3.0"
 minSdk = "28"
 targetSdk = "35"
 versionCode = "1"
@@ -89,6 +90,7 @@ androidx-core-splashscreen = { module = "androidx.core:core-splashscreen", versi
 
 # Third Party
 # Network
+lottie-compose = { module = "com.airbnb.android:lottie-compose", version.ref = "lottieCompose" }
 okhttp-bom = { group = "com.squareup.okhttp3", name = "okhttp-bom", version.ref = "okhttp" }
 okhttp = { group = "com.squareup.okhttp3", name = "okhttp" }
 okhttp-logging-interceptor = { group = "com.squareup.okhttp3", name = "logging-interceptor" }

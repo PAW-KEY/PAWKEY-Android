@@ -93,5 +93,6 @@ dependencies {
     //실시간 위치
     implementation(libs.play.services.location)
 
-
+    //로띠 - 애니메이션
+    implementation(libs.lottie.compose)
 }

@@ -37,22 +37,27 @@ import com.paw.key.presentation.ui.course.entire.tab.map.List.viewmodel.TapListV
 @Composable
 private fun PreviewTabListScreen() {
     PawKeyTheme {
-        TabListScreen()
+        TabListScreen(
+            navigateToDetail = {}
+        )
     }
 }
 
 @Composable
 fun TapListRoute(
+    navigateToDetail: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: TapListViewModel = hiltViewModel(),
 ) {
     TabListScreen(
         modifier = modifier,
+        navigateToDetail = navigateToDetail
     )
 }
 
 @Composable
 fun TabListScreen(
+    navigateToDetail: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: TapListViewModel = hiltViewModel(),
 ) {
@@ -91,14 +96,16 @@ fun TabListScreen(
                 .background(PawKeyTheme.colors.white2)
                 .padding(bottom = 36.dp)
         ) {
-
+            // Todo : 나중에 서버용 리스트로 변경
             item {
                 CourseCard(
                     title = "제목을 입력해주세요",
                     petName = "안녕꼬리",
                     date = "21/1/1",
                     isRecord = true,
-                    onCLickItem = {}
+                    onCLickItem = {
+                        navigateToDetail()
+                    }
                 )
             }
             item {

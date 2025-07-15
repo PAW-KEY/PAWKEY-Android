@@ -5,6 +5,7 @@ import com.paw.key.data.service.onboarding.OnboardingInfoService
 import com.paw.key.data.service.onboarding.OnboardingPetsService
 import com.paw.key.data.service.onboarding.OnboardingRegionService
 import com.paw.key.data.service.RegionService
+import com.paw.key.data.service.sharedwalk.SharedWalkService
 import com.paw.key.data.service.home.HomeRegionService
 import com.paw.key.data.service.walkcourse.WalkCourseService
 import dagger.Module
@@ -33,7 +34,9 @@ object ServiceModule {
     @Singleton
     fun providesWalkCourseService(retrofit: Retrofit ): WalkCourseService =
         retrofit.create()
-
+        
+    @Provides
+    @Singleton
     fun provideOnboardingPetsService(retrofit: Retrofit): OnboardingPetsService =
         retrofit.create(OnboardingPetsService::class.java)
 
@@ -49,6 +52,11 @@ object ServiceModule {
 
     @Provides
     @Singleton
+    fun provideSharedWalkService(retrofit: Retrofit): SharedWalkService =
+        retrofit.create()
+        
+    @Provides
+    @Singleton    
     fun provideHomeRegionService(retrofit: Retrofit): HomeRegionService =
         retrofit.create(HomeRegionService::class.java)
 
