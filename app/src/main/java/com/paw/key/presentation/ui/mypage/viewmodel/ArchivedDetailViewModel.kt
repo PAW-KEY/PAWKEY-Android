@@ -41,11 +41,11 @@ class ArchivedDetailViewModel @Inject constructor(
                             regionName = result.regionName,
                             categorySummary = result.categoryTags.categoryOptionSummary,
                             routeMapImageUrl = result.routeMapImageUrl,
-                            walkingImageUrls = it.walkingImageUrls,
-                            postContent = result.content
+                            walkingImageUrls = result.walkingImageUrls,
+                            postContent = result.content,
+                            petProfileImage = result.authorInfo.petProfileImage,
                         )
                     }
-                    Log.d("getWalkDetail", "getWalkDetail: ${result.content}")
                 }
                 .onFailure {
                     Log.e("getWalkDetail", "getWalkDetail: ${it.message}")
@@ -63,7 +63,6 @@ class ArchivedDetailViewModel @Inject constructor(
                             totalReviewCount = result.totalReviewCount
                         )
                     }
-
                     Log.d("getWalkTopPopular", "getWalkTopPopular: ${result.categoryTop3}")
                 }
                 .onFailure {
