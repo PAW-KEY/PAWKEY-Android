@@ -10,6 +10,7 @@ class RegionMapper @Inject constructor() {
     fun mapDtoToEntity(dto: RegionResponseDto): RegionDataEntity {
         return RegionDataEntity(
             regionName = dto.regionName,
+            preRegionName = dto.preRegionName,
             geometry = dto.geometryDto.toEntity()
         )
     }

@@ -32,7 +32,7 @@ enum class MainTab(
         selectedIcon = R.drawable.ic_walk_fill,
         unselectedIcon = R.drawable.ic_walk_linear,
         contentDescription = ic_course_description,
-        route = Course,
+        route = Course(),
     ),
     COMMUNITY(
         selectedIcon = R.drawable.ic_community_fill,
