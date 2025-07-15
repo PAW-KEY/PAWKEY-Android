@@ -43,6 +43,7 @@ data class WalkReviewDetailResponseDto(
             regionName = regionName,
             createdAt = createdAt,
             routeMapImageUrl = routeMapImageUrl,
+            walkingImageUrls = walkingImageUrls
         )
     }
 }
