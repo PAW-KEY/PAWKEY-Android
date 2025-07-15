@@ -80,6 +80,8 @@ import com.paw.key.presentation.ui.course.sharedwalk.sharedroute.state.SharedWal
 import com.paw.key.presentation.ui.course.sharedwalk.sharedroute.viewmodel.SharedWalkCourseViewModel
 import com.paw.key.presentation.ui.course.walk.component.WalkRecordItem
 import com.paw.key.presentation.ui.course.walk.component.WalkRecordRow
+import com.paw.key.presentation.ui.course.walk.formatDistance
+import com.paw.key.presentation.ui.course.walk.formatTime
 import com.paw.key.presentation.ui.course.walk.state.WalkCourseContract.WalkCourseRecord.DistanceRecord
 import com.paw.key.presentation.ui.course.walk.state.WalkCourseContract.WalkCourseRecord.StepsRecord
 import com.paw.key.presentation.ui.course.walk.state.WalkCourseContract.WalkCourseRecord.TimeRecord
@@ -724,20 +726,6 @@ suspend fun getCurrentLocation(
     }
 
     Log.e("getCurrentLocation", "getCurrentLocation ${continuation}")
-}
-
-fun formatTime(millis: Long): String {
-    val totalSeconds = TimeUnit.MILLISECONDS.toSeconds(millis)
-    //val hours = TimeUnit.SECONDS.toHours(totalSeconds)
-    val minutes = TimeUnit.SECONDS.toMinutes(totalSeconds) % 60
-    val seconds = totalSeconds % 60
-
-    return String.format(Locale.getDefault(), "%02d:%02d", minutes, seconds)
-}
-
-fun formatDistance(distance: Float): String {
-    val distanceToKm = distance / 1000
-    return String.format(Locale.getDefault(), "%.1f km", distanceToKm)
 }
 
 @Preview(showBackground = true)

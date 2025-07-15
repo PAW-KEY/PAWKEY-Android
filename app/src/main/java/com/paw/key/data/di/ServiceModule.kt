@@ -1,6 +1,7 @@
 package com.paw.key.data.di
 
 import com.paw.key.data.service.DummyService
+import com.paw.key.data.service.PetProfileService
 import com.paw.key.data.service.onboarding.OnboardingInfoService
 import com.paw.key.data.service.onboarding.OnboardingPetsService
 import com.paw.key.data.service.onboarding.OnboardingRegionService
@@ -54,10 +55,15 @@ object ServiceModule {
     @Singleton
     fun provideSharedWalkService(retrofit: Retrofit): SharedWalkService =
         retrofit.create()
-        
+
     @Provides
-    @Singleton    
+    @Singleton
     fun provideHomeRegionService(retrofit: Retrofit): HomeRegionService =
         retrofit.create(HomeRegionService::class.java)
 
+    //마이페이지
+    @Provides
+    @Singleton
+    fun providePetProfileService(retrofit: Retrofit): PetProfileService =
+        retrofit.create()
 }

@@ -2,7 +2,6 @@ package com.paw.key.presentation.ui.mypage.state
 
 import androidx.compose.runtime.Immutable
 
-class MyPageContract {
     @Immutable
     data class MyPageState(
         val ownerName: String = "김도기님",
@@ -14,4 +13,9 @@ class MyPageContract {
         val walkCount: String = "7회",
         val totalDistance: String = "14km"
     )
+
+sealed class MyPageSideEffect {
+    data class ShowSnackBar(val message: String) : MyPageSideEffect()
+    data object NavigateUp : MyPageSideEffect()
+    data object NavigateNext : MyPageSideEffect()
 }

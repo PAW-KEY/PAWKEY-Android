@@ -1,27 +1,32 @@
 package com.paw.key.presentation.ui.mypage
 
+import android.R.attr.contentDescription
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
 import com.paw.key.R
 import com.paw.key.core.designsystem.component.TopBar
 import com.paw.key.core.designsystem.theme.PawKeyTheme
-import com.paw.key.presentation.ui.mypage.state.PetProfileContract
+import com.paw.key.presentation.ui.mypage.state.PetProfileState
 import com.paw.key.presentation.ui.mypage.viewmodel.PetProfileViewModel
 
 @Composable
@@ -32,8 +37,18 @@ fun PetProfileRoute(
 ) {
     val state = viewModel.state.collectAsStateWithLifecycle()
 
+    LaunchedEffect(Unit) {
+        viewModel.getPetProfiles(2)
+    }
+
     PetProfileScreen(
-        state = state.value,
+        imageUrl = state.value.imageUrl,
+        name = state.value.name,
+        gender = state.value.gender,
+        breed = state.value.breed,
+        age = state.value.age,
+        energyLevel = state.value.energyLevel,
+        socialLevel = state.value.socialLevel,
         navigateUp = navigateUp,
         modifier = modifier
     )
@@ -41,16 +56,15 @@ fun PetProfileRoute(
 
 @Composable
 fun PetProfileScreen(
-    state: PetProfileContract.PetProfileState,
     navigateUp: () -> Unit,
     modifier: Modifier = Modifier,
     imageUrl: String? = null,
-    name: String = "까루",
-    gender: String = "남아",
-    breed: String = "코리안 숏헤어",
-    age: String = "4세",
-    energyLevel: String = "활동적이에요",
-    socialLevel: String = "불편해해요"
+    name: String,
+    gender: String,
+    breed: String,
+    age: String,
+    energyLevel: String,
+    socialLevel: String
 ) {
     Column(
         modifier = modifier
@@ -69,12 +83,14 @@ fun PetProfileScreen(
                 .clip(CircleShape)
                 .border(2.dp, PawKeyTheme.colors.green500, CircleShape)
         ) {
-            // TODO: imageUrl AsyncImage로 URL 로딩
-            Image(
-                painter = painterResource(id = R.drawable.profile),
+            AsyncImage(
+                model = ImageRequest.Builder(LocalContext.current)
+                    .data(imageUrl)
+                    .crossfade(true)
+                    .build(),
                 contentDescription = null,
-                contentScale = ContentScale.Crop,
-                modifier = Modifier.fillMaxSize()
+                modifier = Modifier.fillMaxSize(),
+                contentScale = ContentScale.Crop
             )
         }
 
@@ -176,14 +192,13 @@ fun PetProfileItem(
 fun PetProfileScreenPreview() {
     PawKeyTheme {
         PetProfileScreen(
-            state = PetProfileContract.PetProfileState(
-                name = "까루",
-                gender = "남아",
-                breed = "코리안 숏헤어",
-                age = "4세",
-                energyLevel = "활동적이에요",
-                socialLevel = "불편해해요"
-            ),
+            name = "까루",
+            gender = "남아",
+            breed = "코리안 숏헤어",
+            age = "4세",
+            energyLevel = "활동적이에요",
+            socialLevel = "불편해해요",
+            imageUrl = null,
             navigateUp = {}
         )
     }

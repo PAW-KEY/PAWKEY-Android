@@ -1,7 +1,6 @@
 package com.paw.key.presentation.ui.course.walkcomplete
 
 import android.graphics.Bitmap
-import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -28,8 +27,6 @@ import com.paw.key.R
 import com.paw.key.core.designsystem.component.PawkeyButton
 import com.paw.key.core.designsystem.component.TopBar
 import com.paw.key.core.designsystem.theme.PawKeyTheme
-import com.paw.key.presentation.ui.course.sharedwalk.sharedroute.formatDistance
-import com.paw.key.presentation.ui.course.sharedwalk.sharedroute.formatTime
 import com.paw.key.presentation.ui.course.walk.formatDistance
 import com.paw.key.presentation.ui.course.walk.formatTime
 import com.paw.key.presentation.ui.course.walkcomplete.component.WalkCompleteHeader
