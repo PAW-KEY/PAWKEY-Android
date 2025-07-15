@@ -21,6 +21,9 @@ class SignUpContract {
         val ageKnown: AgeKnown = AgeKnown.NONE,
         val dogAge: String = "",
 
+        val selectedDongId: Int = 0,
+        val selectedGuId: Int = 0,
+
         val selectedEnergyLevel: String = "",
         val selectedSocialLevel: String = "",
 
