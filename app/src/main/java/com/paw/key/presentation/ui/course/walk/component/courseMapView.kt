@@ -113,6 +113,12 @@ fun courseMapView(
 
             currentDrawnRouteLine = kakaoMap.routeLineManager?.layer?.addRouteLine(routeLineOptions)
             currentDrawnRouteLine?.show()
+
+            kakaoMapState?.moveCamera(
+                CameraUpdateFactory.fitMapPoints(
+                    poiPoints.toTypedArray(), 150, 15
+                )
+            )
         }
     }
 
@@ -142,12 +148,6 @@ fun courseMapView(
         kakaoMapState?.let { map ->
             drawRouteOnMap(map, poiPoints)
         }
-
-        kakaoMapState?.moveCamera(
-            CameraUpdateFactory.fitMapPoints(
-                poiPoints.toTypedArray(), 150, 15
-            )
-        )
     }
 
     DisposableEffect(lifeCycle) {

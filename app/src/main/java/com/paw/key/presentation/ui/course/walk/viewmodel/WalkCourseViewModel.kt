@@ -21,16 +21,12 @@ import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import okhttp3.MediaType.Companion.toMediaTypeOrNull
-import okhttp3.MultipartBody
-import okhttp3.RequestBody.Companion.toRequestBody
-import java.io.ByteArrayOutputStream
-import java.io.File
-import java.io.FileOutputStream
 import javax.inject.Inject
 
 @HiltViewModel
@@ -44,8 +40,8 @@ class WalkCourseViewModel @Inject constructor(
         get() = _state.asStateFlow()
 
     private val _sideEffect = MutableSharedFlow<WalkCourseSideEffect>()
-    val sideEffect: MutableSharedFlow<WalkCourseSideEffect>
-        get() = _sideEffect
+    val sideEffect: SharedFlow<WalkCourseSideEffect>
+        get() = _sideEffect.asSharedFlow()
 
     private val _totalTime = MutableStateFlow(0L)
     val totalTime: StateFlow<Long> = _totalTime.asStateFlow()
@@ -102,7 +98,7 @@ class WalkCourseViewModel @Inject constructor(
             )
 
             result.onSuccess { response ->
-                _sideEffect.emit(WalkCourseSideEffect.ShowSnackBar("루트 업로드 완료: routeId=${response}"))
+                _sideEffect.emit(WalkCourseSideEffect.NavigateNext(response.regionId))
                 Log.d("WalkCourseViewModel", "routeId = ${response}")
             }.onFailure { throwable ->
                 _sideEffect.emit(WalkCourseSideEffect.ShowSnackBar("업로드 실패: ${throwable.message}"))
