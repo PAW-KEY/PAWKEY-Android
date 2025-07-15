@@ -229,19 +229,11 @@ fun SharedWalkReviewScreen(
                 )
             }
 
-            val feedbackTitle = listOf(
-                "\uD83D\uDEB8 산책 중 안전 요소는 어땠나요?",
-                "\uD83E\uDDFA 산책 중 어떤 편의 시설이 있었나요?",
-                "\uD83C\uDF3F 산책 주변의 길 상태는 어땠나요?",
-                "\uD83D\uDE0C 산책로의 분위기는 어땠나요 ?",
-                "\uD83D\uDC36 산책 중 다른 강아지들과 얼마나 마주쳤나요?"
-            )
-
             item {
                 feedbackList.forEachIndexed { index, category ->
                     WalkReviewFeedbackForm(
                         icon = R.drawable.ic_walk_review_location,
-                        title = feedbackTitle.getOrNull(index) ?: category.categoryName,
+                        title = category.categoryDescription,
                         selectedFeedbackItem = category.options.firstOrNull { it.isSelected }?.optionText,
                         feedbackList = category.options.map { it.optionText },
                         onClickFeedback = { selectedText ->
