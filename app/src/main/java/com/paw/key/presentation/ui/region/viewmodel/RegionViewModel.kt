@@ -43,7 +43,9 @@ class RegionViewModel @Inject constructor(
 
                 _state.update {
                     it.copy(
-                        uiState = UiState.Success(flattenedLatLng)
+                        uiState = UiState.Success(flattenedLatLng),
+                        preRegionName = data.preRegionName,
+                        regionName = data.regionName
                     )
                 }
 
