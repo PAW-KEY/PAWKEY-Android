@@ -19,5 +19,7 @@ data class ArchivedDetailState(
     val walkingImageUrls: List<String> = emptyList(),
 
     val categoryTop3: List<CategoryTop3Entity> = emptyList(),
-    val totalReviewCount: Int = 0
+    val totalReviewCount: Int = 0,
+
+    val clickImage : String = ""
 )
