@@ -11,9 +11,10 @@ import kotlinx.serialization.Serializable
 
 fun NavController.navigateArchivedDetail(
     routeId: Int,
+    pageId : Int,
     navOptions: NavOptions?
 ) {
-    navigate(ArchivedDetail(routeId), navOptions)
+    navigate(ArchivedDetail(routeId, pageId), navOptions)
 }
 
 fun NavGraphBuilder.archivedDetailNavGraph(
@@ -21,14 +22,19 @@ fun NavGraphBuilder.archivedDetailNavGraph(
     navigateToSharedWalk: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    composable<ArchivedDetail> {
+    composable<ArchivedDetail> { backStackEntry ->
+        val routeId = backStackEntry.arguments?.getInt("routeId") ?: 0
+        val pageId = backStackEntry.arguments?.getInt("pageId") ?: 0
+
         ArchivedDetailRoute(
             navigateUp = navigateUp,
             navigateToSharedWalk = navigateToSharedWalk,
+            routeId = routeId,
+            pageId = pageId,
             modifier = modifier
         )
     }
 }
 
 @Serializable
-data class ArchivedDetail(val routeId: Int) : Route
+data class ArchivedDetail(val routeId: Int, val pageId : Int) : Route

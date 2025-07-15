@@ -24,7 +24,7 @@ fun NavGraphBuilder.courseNavGraph(
     paddingValues: PaddingValues,
     navigateUp: () -> Unit,
     navigateNext: () -> Unit,
-    navigateToWalk: () -> Unit,
+    navigateToDetail: () -> Unit,
     setOnVisibleRecord: (Boolean) -> Unit,
     snackBarHostState: SnackbarHostState,
 ) {
@@ -36,7 +36,7 @@ fun NavGraphBuilder.courseNavGraph(
             paddingValues = paddingValues,
             navigateUp = navigateUp,
             navigateNext = navigateNext,
-            navigateToDetail = navigateToWalk,
+            navigateToDetail = navigateToDetail,
             routeIndex = receivedIndex,
             setOnVisibleRecord = setOnVisibleRecord,
             snackBarHostState = snackBarHostState,
