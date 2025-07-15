@@ -168,7 +168,7 @@ fun HomeLocationSettingScreen(
             enabled = isFormValid,
             onClick = {
                 if (isFormValid) {
-                    viewModel.patchRegion(
+                    /*viewModel.patchRegion(
                         userId = 2,
                         onSuccess = {
                             val selectedDongId = state.selectedDongId
@@ -177,7 +177,8 @@ fun HomeLocationSettingScreen(
                         onFailure = { message ->
                             Log.e("HomeScreen", "지역 설정 실패: $message")
                         }
-                    )
+                    )*/
+                    navigateNext(state.selectedDongId)
                 }
             }
         )

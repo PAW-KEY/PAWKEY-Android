@@ -60,7 +60,7 @@ fun RegionalManagementRoute(
     LaunchedEffect(Unit) {
         Log.e("regregionId", regionId.toString())
         viewModel.getRegionGeometry(
-            X_USER_ID = 2,
+            userId = 2,
             regionId = regionId,
         )
     }
@@ -96,7 +96,7 @@ fun RegionalManagementRoute(
                 preRegionName = state.preRegionName,
                 regionName = state.regionName,
                 onClickButton = {
-                    viewModel.onChangeRegion()
+                    viewModel.patchRegion(userId = 2, regionId = regionId)
                     navigateNext()
                 },
                 modifier = modifier
