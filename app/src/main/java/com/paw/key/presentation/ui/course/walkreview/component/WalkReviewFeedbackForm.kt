@@ -19,24 +19,24 @@ import com.paw.key.presentation.ui.course.walkreview.state.WalkReviewContract
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun WalkReviewFeedbackForm(
-    icon : Int,
-    title : String,
-    selectedFeedbackItem: WalkReviewContract.WalkReviewFeedbackData?,
-    feedbackList : List<String>,
-    onClickFeedback : (String) -> Unit,
+    icon: Int,
+    title: String,
+    selectedFeedbackItem: String?, // 선택된 옵션 텍스트
+    feedbackList: List<String>,
+    onClickFeedback: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Row (
+    Row(
         modifier = modifier
             .padding(top = 24.dp)
             .fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically
-    ){
-        // Todo : 아이콘 변경 예정
-        /*Icon(
+    ) {
+        // TODO: 아이콘 변경 예정
+        /* Icon(
             imageVector = ImageVector.vectorResource(icon),
             contentDescription = null
-        )*/
+        ) */
 
         Text(
             text = title,
@@ -52,13 +52,13 @@ fun WalkReviewFeedbackForm(
         horizontalArrangement = Arrangement.spacedBy(8.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        feedbackList.forEach {
-            val isSelected = selectedFeedbackItem?.label == it
+        feedbackList.forEach { itemText ->
+            val isSelected = selectedFeedbackItem == itemText
             val textColor = if (isSelected) PawKeyTheme.colors.green500 else PawKeyTheme.colors.gray400
             val borderColor = if (isSelected) PawKeyTheme.colors.green500 else PawKeyTheme.colors.gray50
 
             FeedbackItem(
-                item = it,
+                item = itemText,
                 textColor = textColor,
                 borderColor = borderColor,
                 onClickFeedback = onClickFeedback
@@ -66,6 +66,7 @@ fun WalkReviewFeedbackForm(
         }
     }
 }
+
 
 @Preview(showBackground = true)
 @Composable

@@ -2,55 +2,40 @@ package com.paw.key.presentation.ui.course.walkreview.state
 
 import android.net.Uri
 import androidx.compose.runtime.Immutable
+import com.paw.key.presentation.ui.course.walkreview.WalkReviewCategoryUiModel
 import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.persistentListOf
 
 class WalkReviewContract {
+
     @Immutable
     data class WalkReviewState(
         val images: PersistentList<Uri> = persistentListOf(),
+        val tags : PersistentList<String> = persistentListOf(),
+        val location: String = "",
+        val date: String = "",
+        val time: String = "",
 
-        val location : String = "",
-        val date : String = "",
-        val time : String = "",
+        val title: String = "",
+        val content: String = "",
 
-        val title : String = "",
-        val content : String = "",
+        val petName: String = "포비",
 
-        val petName : String = "포비",
+        val isPublic: Boolean = false,
 
-        val isDialogVisible : Boolean = false,
-
-        val feedbackState: WalkReviewFeedbackState = WalkReviewFeedbackState()
-    ){
-        val isValidForm get() = title.isNotBlank() &&
-                content.isNotBlank() &&
-                feedbackState.selectedSafetyFeedback != null &&
-                feedbackState.selectedFacilityFeedback != null &&
-                feedbackState.selectedRoadFeedback != null &&
-                feedbackState.selectedNoiseFeedback != null &&
-                feedbackState.selectedFrequencyFeedback != null
+        val categoryList: List<WalkReviewCategoryUiModel> = emptyList()
+    ) {
+        val isValidForm: Boolean
+            get() = title.isNotBlank() &&
+                    content.isNotBlank() &&
+                    categoryList.all { category ->
+                        category.options.any { it.isSelected }
+                    }
     }
 
     sealed class WalkReviewSideEffect {
         data class ShowSnackBar(val message: String) : WalkReviewSideEffect()
         data object NavigateUp: WalkReviewSideEffect()
-        data object NavigateNext: WalkReviewSideEffect()
+        data class NavigateNext(val routeId : Int): WalkReviewSideEffect()
     }
-
-    @Immutable
-    data class WalkReviewFeedbackData(
-        val id: String,
-        val label: String,
-        val isSelected: Boolean = false
-    )
-
-    @Immutable
-    data class WalkReviewFeedbackState(
-        val selectedSafetyFeedback: WalkReviewFeedbackData? = null, // 안전 요소
-        val selectedFacilityFeedback: WalkReviewFeedbackData? = null, // 편의시성
-        val selectedRoadFeedback: WalkReviewFeedbackData? = null, // 길 상태
-        val selectedNoiseFeedback: WalkReviewFeedbackData? = null, // 분위기 - 소음정도
-        val selectedFrequencyFeedback : WalkReviewFeedbackData? = null, // 강아지 빈도
-    )
 }
