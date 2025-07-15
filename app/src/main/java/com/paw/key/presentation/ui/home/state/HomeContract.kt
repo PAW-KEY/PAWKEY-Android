@@ -9,5 +9,10 @@ class HomeContract {
         val isLocationMenuVisible: Boolean = false,
         val isVisible: Boolean = false,
         val selectedLocation: String = "",
+
+        val selectedGuId: Int = 0,
+        val selectedDongId: Int = 0,
+        val selectedGu: String = "",
+        val selectedDong: String = "",
     )
 }
