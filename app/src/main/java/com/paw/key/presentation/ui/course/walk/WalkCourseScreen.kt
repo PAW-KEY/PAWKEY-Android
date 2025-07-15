@@ -630,6 +630,7 @@ fun captureMapToBitmap(surfaceView: GLSurfaceView, onCaptured: (Bitmap?) -> Unit
     surfaceView.queueEvent {
         val egl = EGLContext.getEGL() as EGL10
         val gl = egl.eglGetCurrentContext().gl as GL10
+      
         // 원하는 최종 크기를 먼저 계산
         val screenWidth = surfaceView.context.resources.displayMetrics.widthPixels
         val contentWidth = (screenWidth - 32)

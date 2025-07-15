@@ -8,6 +8,7 @@ import com.paw.key.data.repositoryimpl.onboarding.OnboardingRepositoryImpl
 import com.paw.key.data.repositoryimpl.RegionRepositoryImpl
 import com.paw.key.data.repositoryimpl.WalkCourseRepositoryImpl
 import com.paw.key.data.repositoryimpl.WalkSharedResultRepositoryImpl
+import com.paw.key.data.repositoryimpl.filter.FilterOptionRepositoryImpl
 import com.paw.key.data.repositoryimpl.sharedwalk.SharedWalkRepositoryImpl
 import com.paw.key.data.repositoryimpl.home.HomeRegionRepositoryImpl
 import com.paw.key.domain.repository.DummyRepository
@@ -16,6 +17,7 @@ import com.paw.key.domain.repository.onboarding.OnboardingRegionRepository
 import com.paw.key.domain.repository.onboarding.OnboardingRepository
 import com.paw.key.domain.repository.RegionRepository
 import com.paw.key.domain.repository.WalkSharedResultRepository
+import com.paw.key.domain.repository.filter.FilterOptionRepository
 import com.paw.key.domain.repository.sharedwalk.SharedWalkRepository
 import com.paw.key.domain.repository.home.HomeRegionRepository
 import com.paw.key.domain.repository.petprofile.PetProfileRepository
@@ -91,5 +93,10 @@ interface RepositoryModule {
     fun bindPetProfileRepository(
         impl: PetProfileRepositoryImpl
     ): PetProfileRepository
-
+  
+    @Binds
+    @Singleton
+    fun bindFilterOptionRepository(
+        impl: FilterOptionRepositoryImpl
+    ): FilterOptionRepository
 }
