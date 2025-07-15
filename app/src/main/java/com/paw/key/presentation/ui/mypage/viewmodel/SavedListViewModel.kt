@@ -5,7 +5,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.paw.key.domain.repository.SavedListRepository
 import com.paw.key.presentation.ui.mypage.state.CourseCardData
-import com.paw.key.presentation.ui.mypage.state.PetProfileSideEffect
 import com.paw.key.presentation.ui.mypage.state.SavedListSideEffect
 import com.paw.key.presentation.ui.mypage.state.SavedListState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -16,7 +15,6 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-import kotlin.onFailure
 
 @HiltViewModel
 class SavedListViewModel @Inject constructor(
@@ -41,7 +39,14 @@ class SavedListViewModel @Inject constructor(
                             courseList = result.map { item ->
                                 CourseCardData(
                                     petName = item.petName,
+                                    description = item.description,
+                                    createdAt = item.createdAt,
+                                    isShared = item.isShared,
+                                    isLiked = item.isLiked,
+                                    imageUrl = item.imageUrl
                                 )
+
+
                             }
                         )
                     }

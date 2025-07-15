@@ -9,13 +9,13 @@ data class SavedListState(
 
 @Immutable
 data class CourseCardData(
+    //제목
     val description: String,
     val petName: String,
     val createdAt: String,
     val isShared: Boolean,
     val isLiked: Boolean,
     val imageUrl: String,
-    val onClickItem: () -> Unit = {}, // optional로 추가
 )
 
 sealed class SavedListSideEffect {

@@ -1,7 +1,7 @@
 package com.paw.key.presentation.ui.mypage.viewmodel
 
 import androidx.lifecycle.ViewModel
-import com.paw.key.presentation.ui.mypage.state.ArchivedDetailContract.ArchivedDetailState
+import com.paw.key.presentation.ui.mypage.state.ArchivedDetailState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
