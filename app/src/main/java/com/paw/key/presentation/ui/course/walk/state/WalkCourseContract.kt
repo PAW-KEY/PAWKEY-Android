@@ -43,7 +43,7 @@ class WalkCourseContract {
     sealed class WalkCourseSideEffect {
         data class ShowSnackBar(val message: String) : WalkCourseSideEffect()
         data object NavigateUp: WalkCourseSideEffect()
-        data object NavigateNext: WalkCourseSideEffect()
+        data class NavigateNext(val regionId: Int): WalkCourseSideEffect()
     }
 
     sealed class WalkCourseRecord (

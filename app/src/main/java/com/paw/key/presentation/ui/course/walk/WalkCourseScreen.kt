@@ -104,7 +104,7 @@ import kotlin.coroutines.resumeWithException
 fun WalkCourseRoute(
     paddingValues: PaddingValues,
     navigateUp: () -> Unit,
-    navigateNext: () -> Unit,
+    navigateNext: (routeId : Int) -> Unit,
     snackBarHostState: SnackbarHostState,
     modifier: Modifier = Modifier,
     isSharedWalk : Boolean = false,
@@ -119,13 +119,13 @@ fun WalkCourseRoute(
 
     val formattedTotalTime by remember(totalTime) {
         derivedStateOf {
-            com.paw.key.presentation.ui.course.sharedwalk.sharedroute.formatTime(totalTime)
+            formatTime(totalTime)
         }
     }
 
     val formatDistance by remember(state.totalDistance) {
         derivedStateOf {
-            com.paw.key.presentation.ui.course.sharedwalk.sharedroute.formatDistance(state.totalDistance)
+            formatDistance(state.totalDistance)
         }
     }
 
@@ -191,11 +191,10 @@ fun WalkCourseRoute(
     }
 
     LaunchedEffect(Unit) {
-        val currentLocation =
-            com.paw.key.presentation.ui.course.sharedwalk.sharedroute.getCurrentLocation(
-                context,
-                fusedLocationClient,
-            )
+        val currentLocation = getCurrentLocation(
+            context,
+            fusedLocationClient,
+        )
 
         viewModel.updateState {
             copy(
@@ -217,7 +216,7 @@ fun WalkCourseRoute(
                         sideEffect.message
                     )
 
-                    WalkCourseSideEffect.NavigateNext -> navigateNext()
+                    is WalkCourseSideEffect.NavigateNext -> navigateNext(sideEffect.regionId)
                     WalkCourseSideEffect.NavigateUp -> navigateUp()
                 }
             }
@@ -333,7 +332,7 @@ fun WalkCourseRoute(
                     val glSurfaceView = mapView.surfaceView as? GLSurfaceView
                     if (glSurfaceView != null) {
                         withContext(Dispatchers.IO) {
-                            com.paw.key.presentation.ui.course.sharedwalk.sharedroute.captureMapToBitmap(
+                            captureMapToBitmap(
                                 glSurfaceView
                             ) { capturedBitmap ->
                                 capturedBitmap?.let {
@@ -360,7 +359,6 @@ fun WalkCourseRoute(
             WalkCourseScreen(
                 paddingValues = paddingValues,
                 navigateUp = navigateUp,
-                navigateNext = navigateNext,
                 scope = scope,
                 snackBarHostState = snackBarHostState,
                 mapView = mapView,
@@ -415,7 +413,6 @@ fun WalkCourseRoute(
 fun WalkCourseScreen(
     paddingValues: PaddingValues,
     navigateUp: () -> Unit,
-    navigateNext: () -> Unit,
     scope: CoroutineScope,
     snackBarHostState: SnackbarHostState,
     totalDistance: String,
@@ -435,9 +432,6 @@ fun WalkCourseScreen(
         modifier = modifier
             .padding(paddingValues),
         snackbarHost = {
-            SnackbarHost(
-                hostState = snackBarHostState,
-            )
         }
     ) { pv ->
         Box(
@@ -553,7 +547,7 @@ fun WalkCourseScreen(
                                     val glSurfaceView = mapView.surfaceView as? GLSurfaceView
                                     if (glSurfaceView != null) {
                                         withContext(Dispatchers.IO) {
-                                            com.paw.key.presentation.ui.course.sharedwalk.sharedroute.captureMapToBitmap(
+                                            captureMapToBitmap(
                                                 glSurfaceView
                                             ) { capturedBitmap ->
                                                 capturedBitmap?.let {
@@ -611,7 +605,6 @@ fun WalkCourseScreen(
                                         shape = RoundedCornerShape(8.dp)
                                     )
                                     .noRippleClickable {
-                                        navigateNext()
                                         onStopTracking()
                                     }
                                     .padding(horizontal = 24.dp, vertical = 16.dp),
@@ -636,17 +629,7 @@ fun captureMapToBitmap(surfaceView: GLSurfaceView, onCaptured: (Bitmap?) -> Unit
         val contentWidth = (screenWidth - 32)
         val targetHeight = (156 * surfaceView.context.resources.displayMetrics.density).toInt()
 
-        val bitmap =
-            com.paw.key.presentation.ui.course.sharedwalk.sharedroute.createBitmapFromGLSurface(
-                0,
-                0,
-                surfaceView.width,
-                surfaceView.height,
-                gl,
-                contentWidth,
-                targetHeight
-            )
-
+        val bitmap = createBitmapFromGLSurface(0, 0, surfaceView.width, surfaceView.height, gl)
         onCaptured(bitmap)
     }
 }
