@@ -2,6 +2,7 @@ package com.paw.key.presentation.ui.signup.state
 
 import android.net.Uri
 import androidx.compose.runtime.Immutable
+import com.paw.key.data.dto.response.PetTraitCategoryDto
 
 class SignUpContract {
     @Immutable
@@ -25,7 +26,13 @@ class SignUpContract {
 
         val selectedDistrict: List<String> = emptyList(),
         val isDistrictMenuVisible: Boolean = false,
-    )
+
+        val petTraitCategoryList: List<PetTraitCategoryDto> = emptyList(),
+
+        val selectedGu: String = "",
+        val selectedDong: String = "",
+
+        )
 
     enum class Gender {
         MALE,

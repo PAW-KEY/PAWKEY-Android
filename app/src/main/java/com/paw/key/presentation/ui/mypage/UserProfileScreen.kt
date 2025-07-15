@@ -1,22 +1,28 @@
 package com.paw.key.presentation.ui.mypage
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.paw.key.core.designsystem.component.TopBar
 import com.paw.key.core.designsystem.theme.PawKeyTheme
+import com.paw.key.presentation.ui.mypage.state.UserProfileContract
+import com.paw.key.presentation.ui.mypage.viewmodel.UserProfileViewModel
 
 @Composable
 fun UserProfileRoute(
     navigateUp: () -> Unit,
     modifier: Modifier = Modifier,
+    viewModel: UserProfileViewModel = hiltViewModel()
 ) {
+    val state = viewModel.state.collectAsStateWithLifecycle()
+
     UserProfileScreen(
+        state = state.value,
         navigateUp = navigateUp,
         modifier = modifier
     )
@@ -24,8 +30,10 @@ fun UserProfileRoute(
 
 @Composable
 fun UserProfileScreen(
+    state: UserProfileContract.UserProfileState,
     navigateUp: () -> Unit,
     modifier: Modifier = Modifier,
+    id: String = "sgh1261",
     name: String = "김도기",
     gender: String = "여성",
     age: String = "24세",
@@ -46,12 +54,12 @@ fun UserProfileScreen(
         Column(
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
+            ProfileItem(label = "아이디", value = id)
             ProfileItem(label = "이름", value = name)
             ProfileItem(label = "성별", value = gender)
             ProfileItem(label = "나이", value = age)
             ProfileItem(label = "활동지역", value = region)
         }
-
         Spacer(modifier = Modifier.weight(1f))
     }
 }
@@ -77,6 +85,13 @@ fun ProfileItem(label: String, value: String) {
 fun UserProfileScreenPreview() {
     PawKeyTheme {
         UserProfileScreen(
+            state = UserProfileContract.UserProfileState(
+                id = "sgh1261",
+                name = "김도기",
+                gender = "여성",
+                age = "24세",
+                region = "강남구 역삼동"
+            ),
             navigateUp = {}
         )
     }

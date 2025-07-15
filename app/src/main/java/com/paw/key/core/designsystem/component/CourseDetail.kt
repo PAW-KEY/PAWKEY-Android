@@ -31,6 +31,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.zIndex
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.paw.key.R
@@ -66,12 +67,22 @@ fun CourseDetail(
                 .background(color = Gray100)
         )
 
-        Column(modifier = Modifier.padding(horizontal = 16.dp)) {
+        Column(
+            modifier = Modifier
+                .background(
+                    color = PawKeyTheme.colors.white1,
+                    shape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp)
+                )
+                .clip(RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp)
+                )
+                .padding(horizontal = 16.dp)
+        ) {
             Row(
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(vertical = 12.dp),
-                horizontalArrangement = Arrangement.SpaceBetween
+                    .padding(vertical = 16.dp),
             ) {
                 Text(
                     text = title,
@@ -82,9 +93,9 @@ fun CourseDetail(
 
                 Icon(
                     imageVector = if (isLiked.value) {
-                        ImageVector.vectorResource(id = R.drawable.ic_heart_filled)
+                        ImageVector.vectorResource(id = R.drawable.ic_eye_linear_gray_valid)
                     } else {
-                        ImageVector.vectorResource(id = R.drawable.ic_heart_default)
+                        ImageVector.vectorResource(id = R.drawable.ic_eye_linear_gray_invalid)
                     },
                     contentDescription = "좋아요",
                     tint = Color.Unspecified,
@@ -98,7 +109,7 @@ fun CourseDetail(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(vertical = 8.dp)
+                    .padding(vertical = 12.dp)
             ) {
                 Box(
                     modifier = Modifier
@@ -112,7 +123,7 @@ fun CourseDetail(
                 )
             }
 
-            Column(modifier = Modifier.padding(vertical = 8.dp)) {
+            Column(modifier = Modifier.padding(vertical = 12.dp)) {
                 Row {
                     Icon(
                         imageVector = ImageVector.vectorResource(id = R.drawable.ic_walk_review_location),
@@ -141,9 +152,12 @@ fun CourseDetail(
                 }
             }
 
-            Spacer(modifier = Modifier.height(12.dp))
 
-            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                modifier = Modifier
+                    .padding(vertical = 13.dp)
+            ) {
                 SubChip(text = distance)
                 SubChip(text = time)
                 SubChip(text = location)
@@ -180,13 +194,17 @@ fun CourseDetail(
                 color = PawKeyTheme.colors.gray200
             )
             Spacer(modifier = Modifier.height(12.dp))
+
+            HorizontalDivider(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(8.dp)
+                    .zIndex(1F)
+            )
+
         }
 
-        HorizontalDivider(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(8.dp)
-        )
+        Spacer(modifier = Modifier.height(8.dp))
 
         Column(modifier = Modifier.padding(horizontal = 16.dp)) {
             Row(

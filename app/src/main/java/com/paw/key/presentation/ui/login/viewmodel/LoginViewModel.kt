@@ -1,14 +1,11 @@
 package com.paw.key.presentation.ui.login.viewmodel
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.navigation.NavController
 import com.paw.key.presentation.ui.login.state.LoginContract
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
 
 class LoginViewModel @Inject constructor(
@@ -39,4 +36,12 @@ class LoginViewModel @Inject constructor(
             isPasswordVisible = !_state.value.isPasswordVisible
         )
     }
+
+
+    fun onClickSignUp(navController: NavController, email: String, password: String) {
+        val encodedEmail = java.net.URLEncoder.encode(email, "UTF-8")
+        val encodedPassword = java.net.URLEncoder.encode(password, "UTF-8")
+        navController.navigate("signup/$encodedEmail/$encodedPassword")
+    }
+
 }

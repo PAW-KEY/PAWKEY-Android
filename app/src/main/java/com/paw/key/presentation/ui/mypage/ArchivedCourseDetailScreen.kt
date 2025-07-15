@@ -2,12 +2,10 @@ package com.paw.key.presentation.ui.mypage
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -16,27 +14,39 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.paw.key.core.designsystem.component.CourseDetail
 import com.paw.key.core.designsystem.component.ImageModal
 import com.paw.key.core.designsystem.component.PawkeyButton
 import com.paw.key.core.designsystem.component.TopBar
 import com.paw.key.core.designsystem.theme.PawKeyTheme
 import com.paw.key.core.designsystem.theme.White1
+import com.paw.key.presentation.ui.mypage.state.ArchivedDetailContract
+import com.paw.key.presentation.ui.mypage.viewmodel.ArchivedDetailViewModel
 
 @Composable
 fun ArchivedDetailRoute(
     navigateUp: () -> Unit,
+    navigateToWalk: () -> Unit,
     modifier: Modifier = Modifier,
+    viewModel: ArchivedDetailViewModel = hiltViewModel()
 ) {
+    val state = viewModel.state.collectAsStateWithLifecycle()
+
     ArchivedCourseDetailScreen(
+        state = state.value,
         navigateUp = navigateUp,
+        navigateToWalk = navigateToWalk,
         modifier = modifier
     )
 }
 
 @Composable
 fun ArchivedCourseDetailScreen(
+    state: ArchivedDetailContract.ArchivedDetailState,
     navigateUp: () -> Unit,
+    navigateToWalk: () -> Unit,
     modifier: Modifier = Modifier
 ){
     var isImageExpanded by remember { mutableStateOf(false) }
@@ -76,7 +86,7 @@ fun ArchivedCourseDetailScreen(
 
         if (isImageExpanded) {
             ImageModal(
-                imageUrl = "https://pawkey-server.com/image.jpg",
+                imageUrl = state.imageUrl,
                 onDismiss = { isImageExpanded = false }
             )
         }
@@ -87,6 +97,18 @@ fun ArchivedCourseDetailScreen(
 @Composable
 fun ArchivedCourseDetailPreview(){
     PawKeyTheme {
-        ArchivedCourseDetailScreen(navigateUp = {})
+        ArchivedCourseDetailScreen(state = ArchivedDetailContract.ArchivedDetailState(
+            title = "한강 산책로",
+            petName = "후추",
+            date = "2025/06/02",
+            location = "뚝섬유원지",
+            distance = "4.5km",
+            time = "1시간 30분 소요",
+            option = listOf("풍경이 좋아요", "조용해요", "길이 깨끗해요"),
+            imageUrl = "https://pawkey-server.com/image.jpg"
+        ),
+            navigateUp = {},
+            navigateToWalk = {}
+        )
     }
 }

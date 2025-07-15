@@ -21,6 +21,8 @@ fun NavGraphBuilder.signupNavGraph(
 ) {
     composable<SignUp> {
         SignUpRoute(
+            email = "",
+            password = "",
             navigateSignUpActivity = navigateSignUpActivity,
             modifier = modifier
         )
