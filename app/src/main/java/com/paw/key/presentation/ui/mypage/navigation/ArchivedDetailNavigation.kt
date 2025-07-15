@@ -24,7 +24,6 @@ fun NavGraphBuilder.archivedDetailNavGraph(
         ArchivedDetailRoute(
             navigateUp = navigateUp,
             navigateToSharedWalk = navigateToSharedWalk,
-            navigateToWalk = {},
             modifier = modifier
         )
     }
