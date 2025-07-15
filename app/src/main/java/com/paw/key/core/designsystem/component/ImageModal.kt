@@ -47,6 +47,13 @@ fun ImageModal(
                     .padding(bottom = 8.dp)
                     .size(24.dp)
             )
+
+            AsyncImage(
+                model = imageUrl,
+                contentDescription = null,
+                modifier = Modifier
+            )
+
 //            AsyncImage(
 //                model = ImageRequest.Builder(LocalContext.current)
 //                    .data("https://pawkey-server.com/image.jpg") // ← 서버에서 받은 이미지 URL 넣깅
@@ -55,11 +62,11 @@ fun ImageModal(
 //                contentDescription = null,
 //                modifier = Modifier
 //            )
-            Image( //테스트용!!
+            /*Image( //테스트용!!
                 painter = painterResource(id = R.drawable.test),
                 contentDescription = null,
                 modifier = Modifier
-            )
+            )*/
         }
     }
 }

@@ -19,6 +19,7 @@ data class SelectOptionItem(
 data class Category(
     val categoryId: Int = 0,
     val categoryName: String = "",
+    val categoryDescription: String? = null,
     val categoryOptions: List<CategoryOption>? = null
 )
 

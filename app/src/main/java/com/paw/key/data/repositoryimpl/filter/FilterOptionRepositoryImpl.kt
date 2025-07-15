@@ -19,12 +19,10 @@ class FilterOptionRepositoryImpl @Inject constructor(
                 val filterEntity = FilterEntity(
                     categoryList = try {
                         response.data.categoryList.map { categoryDto ->
-                            println("  - Category: ${categoryDto.categoryName}")
                             Category(
                                 categoryId = categoryDto.categoryId ?: 0,
                                 categoryName = categoryDto.categoryName ?: "",
                                 categoryOptions = categoryDto.categoryOptions?.map { optionDto ->
-                                    println("    - CategoryOption: ${optionDto.categoryOptionText}")
                                     CategoryOption(
                                         categoryOptionId = optionDto.categoryOptionId ?: 0,
                                         categoryOptionText = optionDto.categoryOptionText ?: ""
