@@ -478,7 +478,7 @@ fun SharedWalkCourseScreen(
                             )
                         } else {
                             Text(
-                                text = "산책을 종료하시겠어요?",
+                                text = "산책이 중단되었어요.",
                                 textAlign = TextAlign.Center,
                                 style = PawKeyTheme.typography.head22B,
                                 color = PawKeyTheme.colors.white1,
@@ -486,7 +486,7 @@ fun SharedWalkCourseScreen(
                             )
 
                             Text(
-                                text = "아직 설정된 산책 루트를 다 돌지 못했어요 🥲",
+                                text = "산책을 정말 종료하시겠어요?",
                                 fontSize = 12.sp,
                                 textAlign = TextAlign.Center,
                                 style = PawKeyTheme.typography.body16M,

@@ -17,12 +17,13 @@ fun NavController.navigateArchivedDetail(
 
 fun NavGraphBuilder.archivedDetailNavGraph(
     navigateUp: () -> Unit,
+    navigateToSharedWalk: () -> Unit,
     modifier: Modifier = Modifier,
-
 ) {
     composable<ArchivedDetail> {
         ArchivedDetailRoute(
             navigateUp = navigateUp,
+            navigateToSharedWalk = navigateToSharedWalk,
             modifier = modifier
         )
     }

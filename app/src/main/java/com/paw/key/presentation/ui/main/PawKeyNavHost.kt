@@ -12,7 +12,12 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.navOptions
 import com.paw.key.presentation.ui.community.navigation.communityNavGraph
 import com.paw.key.presentation.ui.course.entire.navigation.courseNavGraph
-import com.paw.key.presentation.ui.course.entire.tab.map.navigation.walkCourseNavGraph
+import com.paw.key.presentation.ui.course.entire.navigation.navigateCourse
+import com.paw.key.presentation.ui.course.sharedwalk.complete.navigation.sharedWalkCompletionNavGraph
+import com.paw.key.presentation.ui.course.sharedwalk.review.navigation.sharedWalkReviewNavGraph
+import com.paw.key.presentation.ui.course.sharedwalk.sharedroute.navigation.sharedWalkCourseNavGraph
+import com.paw.key.presentation.ui.course.walk.navigation.navigateWalkCourse
+import com.paw.key.presentation.ui.course.walk.navigation.walkCourseNavGraph
 import com.paw.key.presentation.ui.course.walkcomplete.navigation.walkCompletionNavGraph
 import com.paw.key.presentation.ui.course.walkreview.navigation.walkReviewNavGraph
 import com.paw.key.presentation.ui.dummy.navigation.dummyNavGraph
@@ -71,7 +76,39 @@ fun PawKeyNavHost(
             paddingValues = paddingValues,
             navigateUp = navigator::navigateUp,
             navigateNext = navigator::navigateWalkCourse,
+            navigateToWalk = navigator::navigateArchivedDetail,
             setOnVisibleRecord = navigator::setOnVisibleRecord,
+            snackBarHostState = snackbarHostState
+        )
+
+        walkCourseNavGraph(
+            paddingValues = paddingValues,
+            navigateUp = navigator::navigateUp,
+            navigateNext = navigator::navigateWalkCompletion,
+            snackBarHostState = snackbarHostState
+        )
+
+        sharedWalkCourseNavGraph(
+            paddingValues = paddingValues,
+            navigateUp = navigator::navigateUp,
+            navigateNext = navigator::navigateSharedWalkCompletion,
+            snackBarHostState = snackbarHostState
+        )
+
+        sharedWalkCompletionNavGraph(
+            paddingValues = paddingValues,
+            navigateUp = navigator::navigateUp,
+            navigateNext = navigator::navigateSharedWalkReview,
+            snackBarHostState = snackbarHostState
+        )
+
+        //  Todo : 리스트로 돌아갈 수 있게 - 다이얼로그
+        sharedWalkReviewNavGraph(
+            paddingValues = paddingValues,
+            navigateUp = navigator::navigateUp,
+            navigateNext = {
+                navigator.navController.navigateCourse(index = 1, navOptions = null)
+            },
             snackBarHostState = snackbarHostState
         )
 
@@ -90,7 +127,7 @@ fun PawKeyNavHost(
 
         walkReviewNavGraph(
             navigateUp = navigator::navigateUp,
-            navigateNext = navigator::navigateDummyNext,
+            navigateNext = navigator::navigateCourse,
             navigateShared = navigator::navigateArchivedDetail,
             snackBarHostState = snackbarHostState
         )
@@ -132,7 +169,9 @@ fun PawKeyNavHost(
         )
 
         archivedDetailNavGraph(
-            navigateUp = navigator::navigateUp
+            navigateUp = navigator::navigateUp,
+            navigateToSharedWalk = navigator::navigateSharedWalkCourse,
+            modifier = modifier
         )
 
         userProfileNavGraph(
