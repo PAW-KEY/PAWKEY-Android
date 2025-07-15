@@ -65,7 +65,12 @@ fun PawKeyNavHost(
         homeLocationSettingNavGraph(
             paddingValues = paddingValues,
             navigateUp = navigator::navigateUp,
-            navigateNext = navigator::navigateRegional,
+            navigateNext = {
+                navigator.navigateRegional(
+                    regionId = it,
+                    navOptions = null
+                )
+            },
             navigateHomeLocationSetting = navigator::navigateHomeLocationSetting,
             modifier = modifier,
         )

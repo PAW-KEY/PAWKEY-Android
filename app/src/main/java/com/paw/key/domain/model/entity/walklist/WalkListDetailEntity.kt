@@ -11,6 +11,7 @@ data class WalkListDetailEntity(
     val regionName: String,
     val createdAt: String,
     val routeMapImageUrl: String,
+    val walkingImageUrls: List<String>
 )
 
 data class AuthorInfoEntity(

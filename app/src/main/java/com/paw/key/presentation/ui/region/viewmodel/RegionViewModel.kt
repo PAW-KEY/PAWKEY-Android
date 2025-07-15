@@ -7,6 +7,7 @@ import com.kakao.vectormap.LatLng
 import com.paw.key.core.util.UiState
 import com.paw.key.core.util.handleError
 import com.paw.key.domain.repository.RegionRepository
+import com.paw.key.domain.repository.home.HomeRegionRepository
 import com.paw.key.presentation.ui.region.state.RegionContract
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -19,7 +20,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class RegionViewModel @Inject constructor(
-    private val regionRepository: RegionRepository
+    private val regionRepository: RegionRepository,
+    private val homeRepository: HomeRegionRepository
 ) : ViewModel() {
     private val _state = MutableStateFlow(RegionContract.RegionState())
     val state : StateFlow<RegionContract.RegionState>
@@ -29,8 +31,8 @@ class RegionViewModel @Inject constructor(
     val sideEffect : MutableSharedFlow<RegionContract.RegionSideEffect>
         get() = _sideEffect
 
-    fun getRegionGeometry(X_USER_ID: Int, regionId: Int) = viewModelScope.launch {
-        regionRepository.getRegionGeometry(X_USER_ID, regionId)
+    fun getRegionGeometry(userId: Int, regionId: Int) = viewModelScope.launch {
+        regionRepository.getRegionGeometry(userId, regionId)
             .onSuccess { data ->
                 Log.d("RegionViewModel", "API 응답 성공: $data")
                 Log.d("RegionViewModel", "geometry type: ${data.geometry.type}")
@@ -83,13 +85,30 @@ class RegionViewModel @Inject constructor(
             }
     }
 
-    fun onChangeRegion() {
+    fun patchRegion(userId: Int, regionId: Int) = viewModelScope.launch {
+        homeRepository.patchRegion(userId, regionId)
+            .onSuccess { data ->
+                Log.d("RegionViewModel", "API 응답 성공: $data")
+                _sideEffect.emit(
+                    RegionContract.RegionSideEffect.ShowSnackBar("지역을 ${state.value.selectedRegion ?: "역삼동"}으로 변경했어요.")
+                )
+            }
+            .onFailure { throwable ->
+                Log.e("RegionViewModel", "API 호출 실패", throwable)
+                val errorMessage = handleError(throwable)
+                _sideEffect.emit(
+                    RegionContract.RegionSideEffect.ShowSnackBar(errorMessage)
+                )
+            }
+    }
+
+    /*fun onChangeRegion() {
         viewModelScope.launch {
             _sideEffect.emit(
                 RegionContract.RegionSideEffect.ShowSnackBar("지역을 ${state.value.selectedRegion ?: "역삼동"}으로 변경했어요.")
             )
         }
-    }
+    }*/
 }
 
 private fun flattenCoordinatesToLatLng(
