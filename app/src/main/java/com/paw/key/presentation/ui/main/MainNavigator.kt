@@ -26,16 +26,11 @@ import com.paw.key.presentation.ui.mypage.navigation.navigateArchivedDetail
 import com.paw.key.presentation.ui.mypage.navigation.navigateMyPage
 import com.paw.key.presentation.ui.mypage.navigation.navigatePetProfile
 import com.paw.key.presentation.ui.mypage.navigation.navigateSavedCourse
-import com.paw.key.presentation.ui.mypage.navigation.navigateUserProfile
-import com.paw.key.presentation.ui.region.navigation.navigateRegional
 import com.paw.key.presentation.ui.mypage.navigation.navigateSavedDetail
 import com.paw.key.presentation.ui.mypage.navigation.navigateUserProfile
 import com.paw.key.presentation.ui.onboard.navigation.navigateOnboarding
 import com.paw.key.presentation.ui.region.navigation.navigateRegional
-import com.paw.key.presentation.ui.signup.navigation.navigateSignLevel
-import com.paw.key.presentation.ui.signup.navigation.navigateSignUp
-import com.paw.key.presentation.ui.signup.navigation.navigateSignUpActivity
-import com.paw.key.presentation.ui.signup.navigation.navigateSignUpDog
+import com.paw.key.presentation.ui.signup.navigation.navigateSignUpFlow
 import com.paw.key.presentation.ui.splash.navigation.Splash
 
 class MainNavigator(
@@ -90,7 +85,7 @@ class MainNavigator(
 
 
     fun navigateSignUp(navOptions: NavOptions? = null) {
-        navController.navigateSignUp(navOptions = navOptions)
+        navController.navigateSignUpFlow(navOptions)
     }
 
     fun navigateMyPage(navOptions: NavOptions? = null) {
@@ -114,7 +109,9 @@ class MainNavigator(
         navController.navigateSavedDetail(navOptions = navOptions)
     }
 
-
+    fun navigateSignUpFlow(navOptions: NavOptions? = null) {
+        navController.navigateSignUpFlow(navOptions)
+    }
     
     fun navigateArchivedCourse(navOptions: NavOptions? = null) {
         navController.navigateArchivedCourse(navOptions = navOptions)
@@ -200,17 +197,6 @@ class MainNavigator(
         navController.navigateRegional(regionId, navOptions)
     }
 
-    fun navigateSignUpActivity(navOptions: NavOptions? = null) {
-        navController.navigateSignUpActivity(navOptions = navOptions)
-    }
-
-    fun navigateSignUpDog(navOptions: NavOptions? = null) {
-        navController.navigateSignUpDog(navOptions = navOptions)
-    }
-
-    fun navigateSignUpLevel(navOptions: NavOptions? = null) {
-        navController.navigateSignLevel(navOptions = navOptions)
-    }
 
 
     @Composable
