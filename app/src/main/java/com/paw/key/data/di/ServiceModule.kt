@@ -5,11 +5,13 @@ import com.paw.key.data.service.OnboardingInfoService
 import com.paw.key.data.service.OnboardingPetsService
 import com.paw.key.data.service.OnboardingRegionService
 import com.paw.key.data.service.RegionService
+import com.paw.key.data.service.sharedwalk.SharedWalkService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import retrofit2.Retrofit
+import retrofit2.create
 import javax.inject.Singleton
 
 @Module
@@ -41,5 +43,8 @@ object ServiceModule {
     fun provideOnboardingInfoService(retrofit: Retrofit): OnboardingInfoService =
         retrofit.create(OnboardingInfoService::class.java)
 
-
+    @Provides
+    @Singleton
+    fun provideSharedWalkService(retrofit: Retrofit): SharedWalkService =
+        retrofit.create()
 }
