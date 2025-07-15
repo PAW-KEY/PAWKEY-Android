@@ -22,14 +22,16 @@ fun NavController.navigateWalkCourse(
 fun NavGraphBuilder.walkCourseNavGraph(
     paddingValues: PaddingValues,
     navigateUp: () -> Unit,
-    navigateNext: () -> Unit,
+    navigateNext: (routeId : Int) -> Unit,
     snackBarHostState: SnackbarHostState,
 ) {
     composable<WalkCourse> {
         WalkCourseRoute(
             paddingValues = paddingValues,
             navigateUp = navigateUp,
-            navigateNext = navigateNext,
+            navigateNext = { routeId ->
+                navigateNext(routeId)
+            },
             snackBarHostState = snackBarHostState,
         )
     }

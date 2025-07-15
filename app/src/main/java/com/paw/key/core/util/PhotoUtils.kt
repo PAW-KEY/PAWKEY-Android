@@ -1,6 +1,8 @@
 package com.paw.key.core.util
 
+import android.content.ContentResolver
 import android.graphics.Bitmap
+import android.net.Uri
 import android.util.Log
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
@@ -92,6 +94,18 @@ class PhotoUtils {
             } catch (e: Exception) {
                 Log.e("PhotoUtils", "createBitmapMultipart - ${e.message}")
                 null
+            }
+        }
+
+        fun uriListToMultipartParts(
+            uris: List<Uri>,
+            contentResolver: ContentResolver
+        ): List<MultipartBody.Part> {
+            return uris.mapIndexed { index, uri ->
+                val inputStream = contentResolver.openInputStream(uri) ?: throw IllegalArgumentException("Can't open URI: $uri")
+                val fileName = "image_$index.jpg" // 혹은 uri에서 파일명 추출
+                val requestBody = inputStream.readBytes().toRequestBody("image/*".toMediaTypeOrNull())
+                MultipartBody.Part.createFormData("images", fileName, requestBody)
             }
         }
     }

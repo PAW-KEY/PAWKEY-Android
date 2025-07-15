@@ -142,13 +142,13 @@ fun WalkCompletionScreen(
                     .padding(top = 15.dp, bottom = 10.dp)
             )
 
-//            WalkCompletionRecordRow(
-//                totalDistance = formatDistance(totalDistance),
-//                totalTime = formatTime(totalTime),
-//                currentSteps = totalSteps,
-//                modifier = Modifier
-//                    .fillMaxWidth()
-//            )
+            WalkCompletionRecordRow(
+                totalDistance = formatDistance(totalDistance),
+                totalTime = formatTime(totalTime),
+                currentSteps = totalSteps,
+                modifier = Modifier
+                    .fillMaxWidth()
+            )
         }
 
         val buttonTextRes = if (isSharedWalk) {

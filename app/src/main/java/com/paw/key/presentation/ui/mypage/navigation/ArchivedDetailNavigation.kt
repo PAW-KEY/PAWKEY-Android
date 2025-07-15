@@ -10,9 +10,10 @@ import com.paw.key.presentation.ui.mypage.ArchivedDetailRoute
 import kotlinx.serialization.Serializable
 
 fun NavController.navigateArchivedDetail(
+    routeId: Int,
     navOptions: NavOptions?
 ) {
-    navigate(ArchivedDetail, navOptions)
+    navigate(ArchivedDetail(routeId), navOptions)
 }
 
 fun NavGraphBuilder.archivedDetailNavGraph(
@@ -30,4 +31,4 @@ fun NavGraphBuilder.archivedDetailNavGraph(
 }
 
 @Serializable
-data object ArchivedDetail : Route
+data class ArchivedDetail(val routeId: Int) : Route

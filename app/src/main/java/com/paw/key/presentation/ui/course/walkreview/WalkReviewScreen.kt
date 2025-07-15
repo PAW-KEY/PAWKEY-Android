@@ -3,6 +3,7 @@ package com.paw.key.presentation.ui.course.walkreview
 import android.Manifest
 import android.net.Uri
 import android.os.Build
+import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -53,8 +54,9 @@ import com.paw.key.presentation.ui.course.walkreview.viewmodel.WalkReviewViewMod
 @Composable
 fun WalkReviewRoute(
     navigateUp: () -> Unit,
-    navigateNext: () -> Unit,
-    navigateShared : () -> Unit,
+    navigateNext: (routeId : Int) -> Unit,
+    navigateShared : (routeId : Int) -> Unit,
+    routeId : Int,
     snackBarHostState: SnackbarHostState,
     modifier: Modifier = Modifier,
     viewModel: WalkReviewViewModel = hiltViewModel(),
@@ -96,6 +98,12 @@ fun WalkReviewRoute(
         }
     }
 
+    LaunchedEffect(routeId) {
+        Log.e("routeid", "$routeId")
+        viewModel.getWalkReviewCategory()
+        viewModel.getWalkReviewInfo(routeId)
+    }
+
     LaunchedEffect(viewModel.sideEffect, lifecycleOwner) {
         viewModel.sideEffect.flowWithLifecycle(lifecycleOwner.lifecycle)
             .collect { sideEffect ->
@@ -104,7 +112,7 @@ fun WalkReviewRoute(
                         sideEffect.message
                     )
 
-                    WalkReviewContract.WalkReviewSideEffect.NavigateNext -> navigateNext()
+                    is WalkReviewContract.WalkReviewSideEffect.NavigateNext -> navigateShared(sideEffect.routeId)
                     WalkReviewContract.WalkReviewSideEffect.NavigateUp -> navigateUp()
                 }
             }
@@ -112,30 +120,19 @@ fun WalkReviewRoute(
 
     WalkReviewScreen(
         navigateUp = navigateUp,
-        navigateNext = navigateNext,
-        onClickFeedback = { index, content ->
-            val feedItem = WalkReviewContract.WalkReviewFeedbackData(
-                id = index.toString(),
-                label = content,
-                isSelected = true
-            )
-
-            when (index) {
-                0 -> viewModel.onSelectSafetyFeedback(feedItem)
-                1 -> viewModel.onSelectFacilityFeedback(feedItem)
-                2 -> viewModel.onSelectRoadFeedback(feedItem)
-                3 -> viewModel.onSelectNoiseFeedback(feedItem)
-                4 -> viewModel.onSelectFrequencyFeedback(feedItem)
-            }
+        onClickFeedback = { categoryId, optionId ->
+            viewModel.onOptionSelected(categoryId, optionId)
         },
-        isDialogVisible = state.isDialogVisible,
+        locationDescription = state.location,
+        timeDescription = state.time,
+        tags = state.tags,
         isFormValid = isValid,
         isSharedWalk = isSharedWalk,
         imageList = state.images,
         petName = state.petName,
         titleText = state.title,
         contentText = state.content,
-        feedbackState = state.feedbackState,
+        feedbackList = state.categoryList,
         onTitleTextChanged = {
             viewModel.onTitleTextChanged(it)
         },
@@ -154,7 +151,15 @@ fun WalkReviewRoute(
         onImageDelete = {
             viewModel.onImageDelete(it)
         },
-        navigateShared = navigateShared,
+        onClickPublic = { isShare ->
+            viewModel.postWalkReview(
+                routeId = routeId,
+                isShare = isShare
+            )
+        },
+        /*navigateShared = {
+            navigateShared(routeId)
+        },*/
         modifier = modifier,
     )
 }
@@ -163,21 +168,22 @@ fun WalkReviewRoute(
 @Composable
 fun WalkReviewScreen(
     navigateUp: () -> Unit,
-    navigateNext: () -> Unit,
-    onClickFeedback : (Int, String) -> Unit,
+    onClickFeedback : (Int, Int) -> Unit, // 카테고리, 옵션
     onTitleTextChanged : (String) -> Unit,
     onContentTextChanged : (String) -> Unit,
     onClickImage : () -> Unit,
     onImageDelete : (Uri?) -> Unit,
-    navigateShared : () -> Unit,
-    isDialogVisible : Boolean,
+    onClickPublic : (Boolean) -> Unit, // true = 공개 / false = 비공개
     imageList: List<Uri>,
+    locationDescription : String,
+    timeDescription : String,
+    tags : List<String>,
     isFormValid : Boolean,
     isSharedWalk : Boolean,
     petName : String,
     titleText : String,
     contentText : String,
-    feedbackState : WalkReviewContract.WalkReviewFeedbackState,
+    feedbackList : List<WalkReviewCategoryUiModel>,
     modifier: Modifier = Modifier,
 ) {
     Column (
@@ -265,12 +271,12 @@ fun WalkReviewScreen(
                 ) {
                     WalkReviewInfoHolder(
                         icon = R.drawable.ic_walk_review_location,
-                        content = "강남구 역삼동"
+                        content = locationDescription
                     )
 
                     WalkReviewInfoHolder(
                         icon = R.drawable.ic_walk_review_time,
-                        content = "2025.06.26(금) | 23:20-23:30"
+                        content = timeDescription
                     )
                 }
             }
@@ -282,9 +288,7 @@ fun WalkReviewScreen(
                         .fillMaxWidth()
                         .background(PawKeyTheme.colors.white1)
                 ) {
-                    val chips = listOf("2.2km", "30분", "3208걸음")
-
-                    chips.forEach {
+                    tags.forEach {
                         SubChip(
                             text = it,
                             modifier = Modifier
@@ -314,65 +318,17 @@ fun WalkReviewScreen(
             }
 
             item {
-                val feedbackTitle = listOf(
-                    "\uD83D\uDEB8 산책 중 안전 요소는 어땠나요?",
-                    "\uD83E\uDDFA 산책 중 어떤 편의 시설이 있었나요?",
-                    "\uD83C\uDF3F 산책 주변의 길 상태는 어땠나요?",
-                    "\uD83D\uDE0C 산책로의 분위기는 어땠나요 ?",
-                    "\uD83D\uDC36 산책 중 다른 강아지들과 얼마나 마주쳤나요?"
-                )
-
-                // Todo : 서버에서 주는 값으로 변경 예정
-                val eachFeedbackList = listOf(
-                    listOf(
-                        "킥보드나 자전거가 거의 없어요",
-                        "차량이 거의 다니지 않아요",
-                        "야간 조명이 잘 되어 있어요",
-                        "보도와 차도가 구분되어 있어요",
-                        "보도가 넓어서 산책하기 편했어요"
-                    ),
-                    listOf(
-                        "배변 봉투 쓰레기통이 있어요",
-                        "애견 산책로가 있어요",
-                        "쉴 곳이 있어요",
-                        "편의점이 있어요",
-                        "반려견 동반 가능한 카페가 있어요"
-                    ),
-                    listOf(
-                        "풀이 많아요",
-                        "주로 흙길이에요",
-                        "주로 아스팔트, 벽돌이에요",
-                        "뛰어놀 수 있는 공간이 있어요"
-                    ),
-                    listOf(
-                        "조용하고 한적했어요",
-                        "사람이 적당히 있어요",
-                        "사람이 많았어요"
-                    ),
-                    listOf(
-                        "많이 마주쳤어요",
-                        "가끔 마주쳤어요",
-                        "거의 없었어요"
-                    )
-                )
-
-                feedbackTitle.forEachIndexed { index, title ->
-                    val currentSelectedFeedback = when (index) {
-                        0 -> feedbackState.selectedSafetyFeedback
-                        1 -> feedbackState.selectedFacilityFeedback
-                        2 -> feedbackState.selectedRoadFeedback
-                        3 -> feedbackState.selectedNoiseFeedback
-                        4 -> feedbackState.selectedFrequencyFeedback
-                        else -> null
-                    }
-
+                feedbackList.forEachIndexed { index, category ->
                     WalkReviewFeedbackForm(
                         icon = R.drawable.ic_walk_review_location,
-                        title = title,
-                        selectedFeedbackItem = currentSelectedFeedback,
-                        feedbackList = eachFeedbackList[index],
-                        onClickFeedback = { selectedFeedback ->
-                            onClickFeedback(index, selectedFeedback)
+                        title = category.categoryName,
+                        selectedFeedbackItem = category.options.firstOrNull { it.isSelected }?.optionText,
+                        feedbackList = category.options.map { it.optionText },
+                        onClickFeedback = { selectedText ->
+                            val selectedOption = category.options.find { it.optionText == selectedText }
+                            if (selectedOption != null) {
+                                onClickFeedback(category.categoryId, selectedOption.optionId)
+                            }
                         },
                         modifier = Modifier
                             .padding(top = 12.dp, bottom = 12.dp, start = 16.dp, end = 16.dp)
@@ -408,7 +364,6 @@ fun WalkReviewScreen(
                         },
                         modifier = Modifier
                             .padding(top = 10.dp, start = 16.dp, end = 16.dp)
-                            .imePadding()
                     )
 
                     WalkReviewTextField(
@@ -443,9 +398,15 @@ fun WalkReviewScreen(
                     R.string.course_review_shared_all_button
                 }
 
+                // 공유된 거면 산책후기남기기 / 공유 안된거면 산책 기록 공개하기
                 PawkeyButton(
                     text = stringResource(buttonTextRes),
-                    onClick = navigateShared,
+                    onClick = {
+                        // 공유뷰 아님 / 현재 그냥 리뷰
+                        if (!isSharedWalk) {
+                            onClickPublic(true)
+                        }
+                    },
                     enabled = isFormValid,
                     modifier = Modifier
                         .fillMaxWidth()
@@ -457,7 +418,9 @@ fun WalkReviewScreen(
 
                     PawkeyButton(
                         text = stringResource(R.string.course_review_saved_button),
-                        onClick = navigateShared,
+                        onClick = {
+                            onClickPublic(false)
+                        },
                         enabled = isFormValid,
                         modifier = Modifier
                             .fillMaxWidth()
@@ -467,15 +430,6 @@ fun WalkReviewScreen(
                     )
                 }
             }
-        }
-
-        if (isDialogVisible) {
-            WalkReviewDialog(
-                onClickOk = {
-                    // 리스트로 이동
-                    navigateNext()
-                }
-            )
         }
     }
 }

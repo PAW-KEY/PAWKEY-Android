@@ -13,25 +13,29 @@ import com.paw.key.presentation.ui.course.walkcomplete.WalkCompletionRoute
 import kotlinx.serialization.Serializable
 
 fun NavController.navigateWalkCompletion(
-    navOptions: NavOptions?
+    navOptions: NavOptions?,
+    routeId: Int
 ) {
-    navigate(WalkCompletion, navOptions)
+    navigate(WalkCompletion(routeId), navOptions)
 }
 
 @RequiresApi(Build.VERSION_CODES.Q)
 fun NavGraphBuilder.walkCompletionNavGraph(
     paddingValues: PaddingValues,
     navigateUp: () -> Unit,
-    navigateNext: () -> Unit,
+    navigateNext: (routeId : Int) -> Unit,
 ) {
-    composable<WalkCompletion> {
+    composable<WalkCompletion> { backStackEntry ->
+        val routeId = backStackEntry.arguments?.getInt("routeId") ?: 0
         WalkCompletionRoute(
             paddingValues = paddingValues,
             navigateUp = navigateUp,
-            navigateNext = navigateNext,
+            navigateNext = {
+                navigateNext(routeId)
+            },
         )
     }
 }
 
 @Serializable
-data object WalkCompletion : Route
+data class WalkCompletion(val routeId : Int) : Route
