@@ -25,7 +25,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.FloatingActionButton
@@ -90,6 +89,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
 import java.nio.IntBuffer
+import java.time.LocalDateTime
 import java.util.Locale
 import java.util.concurrent.TimeUnit
 import javax.microedition.khronos.egl.EGL10
@@ -201,7 +201,8 @@ fun WalkCourseRoute(
             copy(
                 isRecording = true,
                 currentLocation = currentLocation,
-                initialLocationState = UiState.Success(currentLocation)
+                initialLocationState = UiState.Success(currentLocation),
+                startedAt = LocalDateTime.now().toString(),
             )
         }
 
@@ -328,8 +329,6 @@ fun WalkCourseRoute(
 
             // 캡처 부분
             LaunchedEffect(state.shouldCaptureMap, state.poiPoints) {
-                delay(500)
-
                 if (state.shouldCaptureMap) {
                     val glSurfaceView = mapView.surfaceView as? GLSurfaceView
                     if (glSurfaceView != null) {
@@ -343,6 +342,9 @@ fun WalkCourseRoute(
                                         "WalkCourseRoute",
                                         "맵 캡처 성공! (triggered by shouldCaptureMap)"
                                     )
+
+                                    viewModel.onMapCaptured(it) // 캡처된 비트맵을 ViewModel로 전달
+                                    Log.d("WalkCourseRoute", "맵 캡처 성공! (triggered by shouldCaptureMap)")
                                 } ?: run {
                                     Log.e("WalkCourseRoute", "맵 캡처 실패: 비트맵이 null입니다.")
                                     viewModel.mapCaptureCompleted()
@@ -379,7 +381,7 @@ fun WalkCourseRoute(
                     viewModel.updateState {
                         copy(
                             isRecording = !this.isRecording,
-                            shouldCaptureMap = true
+                            shouldCaptureMap = true,
                         )
                     }
                 },
@@ -393,9 +395,12 @@ fun WalkCourseRoute(
                 onStopTracking = {
                     viewModel.updateState {
                         copy(
-                            isLocationTracking = !this.isLocationTracking
+                            isLocationTracking = !this.isLocationTracking,
+                            endedAt = LocalDateTime.now().toString()
                         )
                     }
+
+                    viewModel.postWalkCourseData(2)
                 },
                 onCaptured = { bitmap ->
                     viewModel.onMapCaptured(bitmap)
@@ -470,11 +475,12 @@ fun WalkCourseScreen(
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.Center
                     ) {
+                        // Todo : 텍스트 스타일 24b로 변경 예쩡
                         if (!isSharedWalk) {
                             Text(
                                 text = "산책이 중단되었어요!",
                                 textAlign = TextAlign.Center,
-                                style = PawKeyTheme.typography.head24B,
+                                style = PawKeyTheme.typography.head22B,
                                 color = PawKeyTheme.colors.white1,
                                 modifier = Modifier.fillMaxWidth()
                             )
@@ -485,9 +491,7 @@ fun WalkCourseScreen(
                                 textAlign = TextAlign.Center,
                                 style = PawKeyTheme.typography.body16M,
                                 color = PawKeyTheme.colors.white2,
-                                modifier = Modifier
-                                    .padding(top = 12.dp)
-                                    .fillMaxWidth()
+                                modifier = Modifier.fillMaxWidth()
                             )
                         } else {
                             Text(
@@ -517,28 +521,28 @@ fun WalkCourseScreen(
                         .navigationBarsPadding(),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    if (isTracking) {
-                        Row (
-                            modifier = Modifier
-                                .fillMaxWidth()
-                        ) {
-                            Spacer(modifier = Modifier.weight(1f))
+                    Row (
+                        modifier = Modifier
+                            .fillMaxWidth()
+                    ) {
+                        Spacer(modifier = Modifier.weight(1f))
 
+                        if (isTracking) {
                             FloatingActionButton(
                                 shape = CircleShape,
                                 onClick = onClickTracking,
-                                containerColor = PawKeyTheme.colors.white1,
-                                modifier = Modifier
-                                    .size(44.dp)
+                                containerColor = Color.White
                             ) {
                                 Icon(
                                     imageVector = ImageVector.vectorResource(R.drawable.ic_course_map_tap_location_on),
                                     contentDescription = "내 위치",//stringResource(id = R.string.lo)
-                                    tint = Color.Unspecified
+                                    tint = Color.Black
                                 )
                             }
                         }
+                    }
 
+                    if (isTracking) {
                         PawkeyButton(
                             text = "중지하기",
                             enabled = true,
@@ -568,14 +572,13 @@ fun WalkCourseScreen(
                             },
                             modifier = Modifier
                                 .padding(top = 16.dp)
-                                .padding(bottom = 44.dp)
                         )
                     } else {
                         Row (
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(16.dp)
-                        ) {
+                        ){
                             Text(
                                 text = "계속 산책하기",
                                 modifier = Modifier
@@ -592,7 +595,7 @@ fun WalkCourseScreen(
                                         color = PawKeyTheme.colors.green500,
                                         shape = RoundedCornerShape(8.dp)
                                     )
-                                    .padding(horizontal = 28.dp, vertical = 16.dp),
+                                    .padding(horizontal = 24.dp, vertical = 16.dp),
                                 color = PawKeyTheme.colors.green500,
                                 style = PawKeyTheme.typography.body16Sb
                             )
@@ -611,7 +614,7 @@ fun WalkCourseScreen(
                                         navigateNext()
                                         onStopTracking()
                                     }
-                                    .padding(horizontal = 28.dp, vertical = 16.dp),
+                                    .padding(horizontal = 24.dp, vertical = 16.dp),
                                 color = PawKeyTheme.colors.white1,
                                 style = PawKeyTheme.typography.body16Sb
                             )
@@ -627,6 +630,7 @@ fun captureMapToBitmap(surfaceView: GLSurfaceView, onCaptured: (Bitmap?) -> Unit
     surfaceView.queueEvent {
         val egl = EGLContext.getEGL() as EGL10
         val gl = egl.eglGetCurrentContext().gl as GL10
+        val bitmap = createBitmapFromGLSurface(0, 0, surfaceView.width, surfaceView.height, gl)
 
         // 원하는 최종 크기를 먼저 계산
         val screenWidth = surfaceView.context.resources.displayMetrics.widthPixels
@@ -643,11 +647,12 @@ fun captureMapToBitmap(surfaceView: GLSurfaceView, onCaptured: (Bitmap?) -> Unit
                 contentWidth,
                 targetHeight
             )
+
         onCaptured(bitmap)
     }
 }
 
-fun createBitmapFromGLSurface(x: Int, y: Int, w: Int, h: Int, gl: GL10, targetWidth: Int, targetHeight: Int): Bitmap? {
+fun createBitmapFromGLSurface(x: Int, y: Int, w: Int, h: Int, gl: GL10): Bitmap? {
     val bitmapBuffer = IntArray(w * h)
     val bitmapSource = IntArray(w * h)
     val intBuffer = IntBuffer.wrap(bitmapBuffer)
@@ -684,10 +689,8 @@ fun createBitmapFromGLSurface(x: Int, y: Int, w: Int, h: Int, gl: GL10, targetWi
     var cropWidth: Int
     var cropHeight: Int
 
-    // 비율 조정
     val currentAspectRatio = w.toFloat() / h.toFloat()
 
-    // 가로와 세로의 비율 조정 - 가로가 크다면 세로를 증가, 세로가 크다면 가로로 증가
     if (currentAspectRatio > targetAspectRatio) {
         cropHeight = h
         cropWidth = (h * targetAspectRatio).toInt()

@@ -4,19 +4,16 @@ import androidx.compose.runtime.Immutable
 import com.kakao.vectormap.LatLng
 import com.paw.key.core.util.UiState
 
-class TapMapContract {
-    @Immutable
-    data class TapMapState(
-        val initialLocationState : UiState<LatLng> = UiState.Loading,
-        val currentLocation: LatLng? = null,
-        val isLocationTracking: Boolean = false,
-        val isTrackingEnabled: Boolean = false,
-    )
+@Immutable
+data class TapMapState(
+    val initialLocationState : UiState<LatLng> = UiState.Loading,
+    val currentLocation: LatLng? = null,
+    val isLocationTracking: Boolean = false,
+    val isTrackingEnabled: Boolean = false,
+)
 
-    sealed class TapMapSideEffect {
-        data class ShowSnackBar(val message: String) : TapMapSideEffect()
-        data object NavigateUp: TapMapSideEffect()
-        data object NavigateNext: TapMapSideEffect()
-    }
-
+sealed class TapMapSideEffect {
+    data class ShowSnackBar(val message: String) : TapMapSideEffect()
+    data object NavigateUp: TapMapSideEffect()
+    data object NavigateNext: TapMapSideEffect()
 }

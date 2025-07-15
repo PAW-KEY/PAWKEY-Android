@@ -1,5 +1,6 @@
 package com.paw.key.presentation.ui.home
 
+import android.util.Log
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -31,6 +32,8 @@ import com.paw.key.core.util.noRippleClickable
 import com.paw.key.presentation.ui.home.viewmodel.HomeViewModel
 import com.paw.key.presentation.ui.signup.component.FormField
 import com.paw.key.presentation.ui.signup.component.LocationButton
+import com.paw.key.presentation.ui.signup.component.LocationItem
+import com.paw.key.presentation.ui.signup.component.LocationItemList
 import com.paw.key.presentation.ui.signup.component.LocationList
 import com.paw.key.presentation.ui.signup.component.SignUpHeader
 import com.paw.key.presentation.ui.signup.viewmodel.SignUpViewModel
@@ -52,7 +55,7 @@ private fun PreviewHomeLocationSettingScreen() {
 fun HomeLocationSettingRoute(
     paddingValues: PaddingValues,
     navigateUp: () -> Unit,
-    navigateNext: () -> Unit,
+    navigateNext: (Int) -> Unit,
     navigateHomeLocationSetting: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -70,31 +73,47 @@ fun HomeLocationSettingRoute(
 fun HomeLocationSettingScreen(
     paddingValues: PaddingValues,
     navigateUp: () -> Unit,
-    navigateNext: () -> Unit,
+    navigateNext: (Int) -> Unit,
     navigateHomeLocationSetting: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: HomeViewModel = hiltViewModel(),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+    val regionList by viewModel.regionList.collectAsStateWithLifecycle()
+
+    val selectedGu = state.selectedGu
+    val selectedDong = state.selectedDong
+
+    // 구 옵션들 (서버에서 받아온 구 리스트)
+    val guOptions = regionList.map { it.gu.name }
+
+    // 선택된 구에 해당하는 동 옵션들
+    val dongOptions = if (selectedGu.isNotEmpty()) {
+        regionList.find { it.gu.name == selectedGu }?.dongs?.map {
+            LocationItem(id = it.id, name = it.name)
+        } ?: emptyList()
+    } else {
+        emptyList()
+    }
 
     Column(
         modifier = modifier
             .fillMaxSize()
+            .padding(paddingValues)
             .padding(horizontal = 16.dp)
     ) {
+        // 헤더
         Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(60.dp)
                 .padding(vertical = 16.dp),
             verticalAlignment = Alignment.CenterVertically
-        )
-        {
+        ) {
             Icon(
                 imageVector = ImageVector.vectorResource(R.drawable.ic_arrow_left_black),
                 contentDescription = "뒤로가기",
-                modifier = Modifier
-                    .noRippleClickable { navigateUp() }
+                modifier = Modifier.noRippleClickable { navigateUp() }
             )
             Box(
                 modifier = Modifier.weight(1f),
@@ -110,44 +129,61 @@ fun HomeLocationSettingScreen(
 
         Spacer(modifier = Modifier.height(27.dp))
 
+        // 지역구 섹션 - 처음부터 모든 구 칩들을 보여줌
         FormField(
             label = stringResource(id = R.string.ic_onboarding_signup_main_location),
             content = {
-                LocationButton(
-                    isEnable = state.isLocationMenuVisible,
-                    location = "강남구",
-                    onClick = { viewModel.toggleLocationMenu() }
+                LocationList(
+                    selected = selectedGu,
+                    locations = guOptions,
+                    onLocationSelected = { guName ->
+                        val selectedGuItem = regionList.find { it.gu.name == guName }
+                        selectedGuItem?.let {
+                            viewModel.onGuSelected(it.gu.name, it.gu.id)
+                        }
+                    }
                 )
             }
         )
 
         Spacer(modifier = Modifier.height(46.dp))
 
-        FormField(
-            label = stringResource(id = R.string.ic_onboarding_signup_sub_location),
-            content = {
-                if (state.isLocationMenuVisible) {
-                    LocationList(
-                        selected = state.selectedLocation,
-                        locations = listOf("개포동", "논현동", "뭔동", "동동동", "스꾸삐", "4글자유"),
-                        onLocationSelected = { location ->
-                            viewModel.selectLocation(location)
+        // 동 선택 섹션 (구가 선택되었을 때만 표시)
+        if (selectedGu.isNotEmpty()) {
+            FormField(
+                label = stringResource(id = R.string.ic_onboarding_signup_sub_location),
+                content = {
+                    LocationItemList(
+                        selected = selectedDong,
+                        locations = dongOptions,
+                        onLocationSelected = { locationItem ->
+                            viewModel.onDongSelected(locationItem.name, locationItem.id)
                         }
                     )
                 }
-            }
-        )
+            )
+        }
 
         Spacer(modifier = Modifier.weight(1f))
 
-        val isFormValid = state.selectedLocation.isNotEmpty()
+        // 완료 버튼
+        val isFormValid = selectedGu.isNotEmpty() && selectedDong.isNotEmpty()
 
         PawkeyButton(
             text = stringResource(id = R.string.ic_onboarding_signup_button),
             enabled = isFormValid,
             onClick = {
                 if (isFormValid) {
-                    navigateNext()
+                    viewModel.patchRegion(
+                        userId = 2,
+                        onSuccess = {
+                            val selectedDongId = state.selectedDongId
+                            navigateNext(selectedDongId)
+                        },
+                        onFailure = { message ->
+                            Log.e("HomeScreen", "지역 설정 실패: $message")
+                        }
+                    )
                 }
             }
         )
@@ -155,4 +191,3 @@ fun HomeLocationSettingScreen(
         Spacer(modifier = Modifier.height(46.dp))
     }
 }
-

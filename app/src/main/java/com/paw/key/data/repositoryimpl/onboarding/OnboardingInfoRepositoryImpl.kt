@@ -1,8 +1,8 @@
-package com.paw.key.data.repositoryimpl
+package com.paw.key.data.repositoryimpl.onboarding
 
 import com.paw.key.data.dto.response.onboarding.OnboardingInfoResponse
 import com.paw.key.data.remote.datasource.OnboardingInfoDataSource
-import com.paw.key.domain.repository.OnboardingInfoRepository
+import com.paw.key.domain.repository.onboarding.OnboardingInfoRepository
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import javax.inject.Inject

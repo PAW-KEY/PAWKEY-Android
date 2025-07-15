@@ -29,7 +29,9 @@ import com.paw.key.presentation.ui.mypage.navigation.navigateSavedCourse
 import com.paw.key.presentation.ui.mypage.navigation.navigateUserProfile
 import com.paw.key.presentation.ui.region.navigation.navigateRegional
 import com.paw.key.presentation.ui.mypage.navigation.navigateSavedDetail
+import com.paw.key.presentation.ui.mypage.navigation.navigateUserProfile
 import com.paw.key.presentation.ui.onboard.navigation.navigateOnboarding
+import com.paw.key.presentation.ui.region.navigation.navigateRegional
 import com.paw.key.presentation.ui.signup.navigation.navigateSignLevel
 import com.paw.key.presentation.ui.signup.navigation.navigateSignUp
 import com.paw.key.presentation.ui.signup.navigation.navigateSignUpActivity
@@ -149,8 +151,6 @@ class MainNavigator(
         navController.navigateSharedWalkCompletion(navOptions = navOptions)
     }
 
-    ///////////////////////////////
-
     fun navigateArchivedDetail(navOptions: NavOptions? = null) {
         navController.navigateArchivedDetail(navOptions = navOptions)
     }
@@ -174,9 +174,9 @@ class MainNavigator(
     fun navigateUp() {
         navController.navigateUp()
     }
-    
-    fun navigateRegional(navOptions: NavOptions? = null) {
-        navController.navigateRegional(navOptions = navOptions)
+
+    fun navigateRegional(regionId: Int, navOptions: NavOptions? = null) {
+        navController.navigateRegional(regionId, navOptions)
     }
 
     fun navigateSignUpActivity(navOptions: NavOptions? = null) {

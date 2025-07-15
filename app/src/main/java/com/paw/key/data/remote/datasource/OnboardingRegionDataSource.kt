@@ -1,7 +1,6 @@
 package com.paw.key.data.remote.datasource
 
-import com.paw.key.data.service.OnboardingPetsService
-import com.paw.key.data.service.OnboardingRegionService
+import com.paw.key.data.service.onboarding.OnboardingRegionService
 import javax.inject.Inject
 
 class OnboardingRegionDataSource @Inject constructor(

@@ -10,9 +10,9 @@ import com.google.gson.Gson
 import com.paw.key.data.dto.request.onboarding.OnboardingInfoRequest
 import com.paw.key.data.dto.request.onboarding.PetInfoDto
 import com.paw.key.data.dto.request.onboarding.PetTraitDto
-import com.paw.key.domain.repository.OnboardingInfoRepository
-import com.paw.key.domain.repository.OnboardingRegionRepository
-import com.paw.key.domain.repository.OnboardingRepository
+import com.paw.key.domain.repository.onboarding.OnboardingInfoRepository
+import com.paw.key.domain.repository.onboarding.OnboardingRegionRepository
+import com.paw.key.domain.repository.onboarding.OnboardingRepository
 import com.paw.key.presentation.ui.signup.state.SignUpContract
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow

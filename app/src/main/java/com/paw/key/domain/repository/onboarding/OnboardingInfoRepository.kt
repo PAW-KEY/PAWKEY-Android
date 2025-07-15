@@ -1,4 +1,4 @@
-package com.paw.key.domain.repository
+package com.paw.key.domain.repository.onboarding
 
 import com.paw.key.data.dto.response.onboarding.OnboardingInfoResponse
 import okhttp3.MultipartBody

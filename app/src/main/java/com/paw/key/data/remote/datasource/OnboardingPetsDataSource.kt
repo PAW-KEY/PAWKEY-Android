@@ -1,6 +1,6 @@
 package com.paw.key.data.remote.datasource
 
-import com.paw.key.data.service.OnboardingPetsService
+import com.paw.key.data.service.onboarding.OnboardingPetsService
 import javax.inject.Inject
 
 class OnboardingPetsDataSource @Inject constructor(

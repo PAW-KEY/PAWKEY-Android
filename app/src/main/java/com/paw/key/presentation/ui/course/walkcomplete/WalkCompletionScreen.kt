@@ -1,6 +1,8 @@
 package com.paw.key.presentation.ui.course.walkcomplete
 
 import android.graphics.Bitmap
+import android.util.Log
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
@@ -28,6 +30,8 @@ import com.paw.key.core.designsystem.component.TopBar
 import com.paw.key.core.designsystem.theme.PawKeyTheme
 import com.paw.key.presentation.ui.course.sharedwalk.sharedroute.formatDistance
 import com.paw.key.presentation.ui.course.sharedwalk.sharedroute.formatTime
+import com.paw.key.presentation.ui.course.walk.formatDistance
+import com.paw.key.presentation.ui.course.walk.formatTime
 import com.paw.key.presentation.ui.course.walkcomplete.component.WalkCompleteHeader
 import com.paw.key.presentation.ui.course.walkcomplete.component.WalkCompletionRecordRow
 import com.paw.key.presentation.ui.course.walkcomplete.viewmodel.WalkCompleteViewModel
@@ -44,6 +48,11 @@ fun WalkCompletionRoute(
     val state by viewModel.state.collectAsStateWithLifecycle()
 
     val walkRecordList = listOf(R.string.course_record_distance, R.string.course_record_time, R.string.course_record_step)
+
+    BackHandler(enabled = true) {
+        // 뒤로 가기 막기
+    }
+
 
     LaunchedEffect(Unit) {
         viewModel.loadWalkResult()
@@ -87,6 +96,7 @@ fun WalkCompletionScreen(
             title = "산책 완료",
             onBackClick = navigateUp,
             modifier = Modifier
+                .padding(8.dp)
                 .background(PawKeyTheme.colors.white1),
             isBackVisible = false
         )
