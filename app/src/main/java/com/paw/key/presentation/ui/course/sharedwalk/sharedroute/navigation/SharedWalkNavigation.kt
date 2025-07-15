@@ -1,4 +1,4 @@
-package com.paw.key.presentation.ui.course.entire.tab.map.navigation
+package com.paw.key.presentation.ui.course.sharedwalk.sharedroute.navigation
 
 import android.os.Build
 import androidx.annotation.RequiresApi
@@ -9,24 +9,25 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
 import com.paw.key.core.navigation.Route
-import com.paw.key.presentation.ui.course.walk.WalkCourseRoute
+import com.paw.key.presentation.ui.course.sharedwalk.sharedroute.SharedWalkCourseRoute
+import com.paw.key.presentation.ui.course.walk.navigation.WalkCourse
 import kotlinx.serialization.Serializable
 
-fun NavController.navigateWalkCourse(
-    navOptions: NavOptions?
+fun NavController.navigateSharedWalkCourse(
+    navOptions: NavOptions?,
 ) {
-    navigate(WalkCourse, navOptions)
+    navigate(SharedWalkCourse, navOptions)
 }
 
 @RequiresApi(Build.VERSION_CODES.Q)
-fun NavGraphBuilder.walkCourseNavGraph(
+fun NavGraphBuilder.sharedWalkCourseNavGraph(
     paddingValues: PaddingValues,
     navigateUp: () -> Unit,
     navigateNext: () -> Unit,
     snackBarHostState: SnackbarHostState,
 ) {
-    composable<WalkCourse> {
-        WalkCourseRoute(
+    composable<SharedWalkCourse> {
+        SharedWalkCourseRoute(
             paddingValues = paddingValues,
             navigateUp = navigateUp,
             navigateNext = navigateNext,
@@ -36,4 +37,4 @@ fun NavGraphBuilder.walkCourseNavGraph(
 }
 
 @Serializable
-data object WalkCourse : Route
+data object SharedWalkCourse : Route
