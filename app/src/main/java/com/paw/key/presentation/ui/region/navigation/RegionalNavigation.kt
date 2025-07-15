@@ -7,14 +7,16 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
+import androidx.navigation.toRoute
 import com.paw.key.core.navigation.Route
 import com.paw.key.presentation.ui.region.RegionalManagementRoute
 import kotlinx.serialization.Serializable
 
 fun NavController.navigateRegional(
+    regionId: Int,
     navOptions: NavOptions?,
 ) {
-    navigate(Regional, navOptions)
+    navigate(Regional(regionId), navOptions)
 }
 
 fun NavGraphBuilder.regionalNavGraph(
@@ -25,16 +27,20 @@ fun NavGraphBuilder.regionalNavGraph(
     snackBarHostState: SnackbarHostState,
     modifier: Modifier = Modifier,
 ) {
-    composable<Regional> {
+    composable<Regional> {backStackEntry ->
+        val regional = backStackEntry.toRoute<Regional>()
         RegionalManagementRoute(
             paddingValues = paddingValues,
             snackBarHostState = snackBarHostState,
             navigateUp = navigateUp,
             navigateNext = navigateNext,
+            regionId = regional.regionId,
             modifier = modifier
         )
     }
 }
 
 @Serializable
-data object Regional : Route
+data class Regional(
+    val regionId: Int
+) : Route

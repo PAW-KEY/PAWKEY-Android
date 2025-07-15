@@ -47,6 +47,7 @@ fun RegionalManagementRoute(
     snackBarHostState: SnackbarHostState,
     navigateUp: () -> Unit,
     navigateNext: () -> Unit,
+    regionId: Int,
     modifier: Modifier = Modifier,
     viewModel: RegionViewModel = hiltViewModel()
 ) {
@@ -199,7 +200,7 @@ fun RegionalManagementRoute(
 
         viewModel.getRegionGeometry(
             X_USER_ID = 2,
-            regionId = 35,
+            regionId = regionId,
         )
     }
 

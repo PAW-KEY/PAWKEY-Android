@@ -23,17 +23,15 @@ import com.paw.key.presentation.ui.mypage.navigation.navigateArchivedDetail
 import com.paw.key.presentation.ui.mypage.navigation.navigateMyPage
 import com.paw.key.presentation.ui.mypage.navigation.navigatePetProfile
 import com.paw.key.presentation.ui.mypage.navigation.navigateSavedCourse
-import com.paw.key.presentation.ui.mypage.navigation.navigateUserProfile
-import com.paw.key.presentation.ui.region.navigation.navigateRegional
-import com.paw.key.presentation.ui.mypage.navigation.navigateMyPage
 import com.paw.key.presentation.ui.mypage.navigation.navigateSavedDetail
+import com.paw.key.presentation.ui.mypage.navigation.navigateUserProfile
 import com.paw.key.presentation.ui.onboard.navigation.navigateOnboarding
+import com.paw.key.presentation.ui.region.navigation.navigateRegional
 import com.paw.key.presentation.ui.signup.navigation.navigateSignLevel
 import com.paw.key.presentation.ui.signup.navigation.navigateSignUp
 import com.paw.key.presentation.ui.signup.navigation.navigateSignUpActivity
 import com.paw.key.presentation.ui.signup.navigation.navigateSignUpDog
 import com.paw.key.presentation.ui.splash.navigation.Splash
-import com.paw.key.presentation.ui.splash.navigation.navigateSplash
 
 class MainNavigator(
     val navController: NavHostController,
@@ -131,10 +129,6 @@ class MainNavigator(
         navController.navigateHomeLocationSetting(navOptions = navOptions)
     }
 
-    /*메인 탭 산택 기준 - 산책하기, 완료, 리뷰*/
-//    fun navigateRegional(navOptions: NavOptions? = null) {
-//        navController.navigateRegional(navOptions = navOptions)
-//    }
 
     fun navigateWalkCourse(navOptions: NavOptions? = null) {
         navController.navigateWalkCourse(navOptions = navOptions)
@@ -155,9 +149,9 @@ class MainNavigator(
     fun navigateUp() {
         navController.navigateUp()
     }
-    
-    fun navigateRegional(navOptions: NavOptions? = null) {
-        navController.navigateRegional(navOptions = navOptions)
+
+    fun navigateRegional(regionId: Int, navOptions: NavOptions? = null) {
+        navController.navigateRegional(regionId, navOptions)
     }
 
     fun navigateSignUpActivity(navOptions: NavOptions? = null) {
