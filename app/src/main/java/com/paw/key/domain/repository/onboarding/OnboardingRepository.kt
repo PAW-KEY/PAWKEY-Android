@@ -1,6 +1,5 @@
-package com.paw.key.domain.repository
+package com.paw.key.domain.repository.onboarding
 
-import DistrictResponse
 import com.paw.key.data.dto.response.OnboardingPetsResponse
 
 interface OnboardingRepository {

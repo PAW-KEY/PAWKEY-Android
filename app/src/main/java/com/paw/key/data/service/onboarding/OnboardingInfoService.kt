@@ -1,11 +1,8 @@
-package com.paw.key.data.service
+package com.paw.key.data.service.onboarding
 
-import com.paw.key.data.dto.request.onboarding.OnboardingInfoRequest
-import com.paw.key.data.dto.response.BaseResponse
 import com.paw.key.data.dto.response.onboarding.OnboardingInfoResponse
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
-import retrofit2.http.Body
 import retrofit2.http.Header
 import retrofit2.http.Multipart
 import retrofit2.http.POST
