@@ -1,6 +1,7 @@
 package com.paw.key.presentation.ui.main
 
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
@@ -19,6 +20,7 @@ import com.paw.key.presentation.ui.course.sharedwalk.sharedroute.navigation.shar
 import com.paw.key.presentation.ui.course.walk.navigation.navigateWalkCourse
 import com.paw.key.presentation.ui.course.walk.navigation.walkCourseNavGraph
 import com.paw.key.presentation.ui.course.walkcomplete.navigation.walkCompletionNavGraph
+import com.paw.key.presentation.ui.course.walkreview.navigation.navigateWalkReview
 import com.paw.key.presentation.ui.course.walkreview.navigation.walkReviewNavGraph
 import com.paw.key.presentation.ui.dummy.navigation.dummyNavGraph
 import com.paw.key.presentation.ui.dummy.next.dummyNextNavGraph
@@ -76,15 +78,13 @@ fun PawKeyNavHost(
             paddingValues = paddingValues,
             navigateUp = navigator::navigateUp,
             navigateNext = navigator::navigateWalkCourse,
-            navigateToWalk = navigator::navigateArchivedDetail,
+            navigateToWalk = {
+                // Todo : 마찬가지로 이것도 그냥 넣어놓음 나중에 리스트 연결 후 예쩡
+                navigator.navigateArchivedDetail(
+                    routeId = 2
+                )
+            },
             setOnVisibleRecord = navigator::setOnVisibleRecord,
-            snackBarHostState = snackbarHostState
-        )
-
-        walkCourseNavGraph(
-            paddingValues = paddingValues,
-            navigateUp = navigator::navigateUp,
-            navigateNext = navigator::navigateWalkCompletion,
             snackBarHostState = snackbarHostState
         )
 
@@ -115,20 +115,33 @@ fun PawKeyNavHost(
         walkCourseNavGraph(
             paddingValues = paddingValues,
             navigateUp = navigator::navigateUp,
-            navigateNext = navigator::navigateWalkCompletion,
+            navigateNext = {
+                Log.e("navigateNext", "navigateNext : $it")
+                navigator.navigateWalkCompletion(
+                    routeId = it,
+                )
+            },
             snackBarHostState = snackbarHostState
         )
 
         walkCompletionNavGraph(
             paddingValues = paddingValues,
             navigateUp = navigator::navigateUp,
-            navigateNext = navigator::navigateWalkReview,
+            navigateNext = {
+                navigator.navigateWalkReview(
+                    routeId = it,
+                )
+            },
         )
 
         walkReviewNavGraph(
             navigateUp = navigator::navigateUp,
             navigateNext = navigator::navigateCourse,
-            navigateShared = navigator::navigateArchivedDetail,
+            navigateShared = {
+                navigator.navigateArchivedDetail(
+                    routeId = it
+                )
+            },
             snackBarHostState = snackbarHostState
         )
 
@@ -158,7 +171,12 @@ fun PawKeyNavHost(
 
         archivedCourseNavGraph(
             navigateUp = navigator::navigateUp,
-            navigateNext = navigator::navigateArchivedDetail,
+            navigateNext = {
+                navigator.navigateArchivedDetail(
+                    // Todo : 리스트에서 상세정보 item id 넣어놓기 일단2
+                    routeId = 2
+                )
+            },
             modifier = modifier
         )
 
@@ -207,9 +225,8 @@ fun PawKeyNavHost(
                     launchSingleTop = true
                 }
                 navigator.navigateOnboarding(navOptions = options)
-            },
-
-            )
+            }
+        )
 
         onboardingNavGraph(
             paddingValues = paddingValues,

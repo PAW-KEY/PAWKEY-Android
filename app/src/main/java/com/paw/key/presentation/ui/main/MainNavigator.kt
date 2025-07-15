@@ -151,20 +151,32 @@ class MainNavigator(
         navController.navigateSharedWalkCompletion(navOptions = navOptions)
     }
 
-    fun navigateArchivedDetail(navOptions: NavOptions? = null) {
-        navController.navigateArchivedDetail(navOptions = navOptions)
+    fun navigateArchivedDetail(
+        routeId: Int,
+        navOptions: NavOptions? = null
+    ) {
+        navController.navigateArchivedDetail(
+            routeId = routeId,
+            navOptions = navOptions
+        )
     }
 
     fun navigateWalkCourse(navOptions: NavOptions? = null) {
         navController.navigateWalkCourse(navOptions = navOptions)
     }
 
-    fun navigateWalkCompletion(navOptions: NavOptions? = null) {
-        navController.navigateWalkCompletion(navOptions = navOptions)
+    fun navigateWalkCompletion(routeId : Int, navOptions: NavOptions? = null) {
+        navController.navigateWalkCompletion(
+            routeId = routeId,
+            navOptions = navOptions
+        )
     }
 
-    fun navigateWalkReview(navOptions: NavOptions? = null) {
-        navController.navigateWalkReview(navOptions = navOptions)
+    fun navigateWalkReview(routeId: Int, navOptions: NavOptions? = null) {
+        navController.navigateWalkReview(
+            routeId = routeId,
+            navOptions = navOptions
+        )
     }
 
     fun navigateDummyNext(navOptions: NavOptions? = null) {
