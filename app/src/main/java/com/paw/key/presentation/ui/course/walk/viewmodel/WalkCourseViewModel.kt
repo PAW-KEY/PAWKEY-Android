@@ -7,8 +7,12 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.kakao.vectormap.LatLng
+import com.paw.key.core.util.PhotoUtils
 import com.paw.key.core.util.PreferenceDataStore
+import com.paw.key.domain.model.entity.walkcourse.CoordinateEntity
+import com.paw.key.domain.model.entity.walkcourse.WalkCourseEntity
 import com.paw.key.domain.repository.WalkSharedResultRepository
+import com.paw.key.domain.repository.walkcourse.WalkCourseRepository
 import com.paw.key.presentation.ui.course.walk.state.WalkCourseContract.WalkCourseSideEffect
 import com.paw.key.presentation.ui.course.walk.state.WalkCourseContract.WalkCourseState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -21,12 +25,19 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
+import okhttp3.RequestBody.Companion.toRequestBody
+import java.io.ByteArrayOutputStream
+import java.io.File
+import java.io.FileOutputStream
 import javax.inject.Inject
 
 @HiltViewModel
 class WalkCourseViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
     private val walkSharedResultRepository : WalkSharedResultRepository,
+    private val walkCourseRepository: WalkCourseRepository
 ) : ViewModel() {
     private val _state = MutableStateFlow(WalkCourseState())
     val state : StateFlow<WalkCourseState>
@@ -53,9 +64,60 @@ class WalkCourseViewModel @Inject constructor(
         )
     }
 
+    // 서버 통신
+    fun postWalkCourseData(userId: Int) = viewModelScope.launch {
+        val bitmap = state.value.bitmap
+        if (bitmap == null) {
+            _sideEffect.emit(WalkCourseSideEffect.ShowSnackBar("산책 이미지가 없습니다."))
+            return@launch
+        }
+
+        try {
+            // PhotoUtils 사용
+            val imagePart = PhotoUtils.createBitmapMultipart(
+                bitmap = bitmap,
+                partName = "trackingImage"
+            )
+
+            if (imagePart == null) {
+                _sideEffect.emit(WalkCourseSideEffect.ShowSnackBar("이미지 변환 실패"))
+                return@launch
+            }
+
+            val routeEntity = WalkCourseEntity(
+                coordinates = state.value.poiPoints.map { // la, lo
+                    CoordinateEntity(it.longitude, it.latitude)
+                },
+                distance = state.value.totalDistance.toInt(),
+                duration = (_totalTime.value).toInt(),
+                startedAt = state.value.startedAt,
+                endedAt = state.value.endedAt,
+                stepCount = state.value.steps.toInt()
+            )
+
+            val result = walkCourseRepository.postWalkCourse(
+                userId = userId,
+                image = imagePart,
+                routeRequestDto = routeEntity.toDto()
+            )
+
+            result.onSuccess { response ->
+                _sideEffect.emit(WalkCourseSideEffect.ShowSnackBar("루트 업로드 완료: routeId=${response}"))
+                Log.d("WalkCourseViewModel", "routeId = ${response}")
+            }.onFailure { throwable ->
+                _sideEffect.emit(WalkCourseSideEffect.ShowSnackBar("업로드 실패: ${throwable.message}"))
+                Log.e("WalkCourseViewModel", "업로드 실패", throwable)
+            }
+
+        } catch (e: Exception) {
+            _sideEffect.emit(WalkCourseSideEffect.ShowSnackBar("오류 발생: ${e.localizedMessage}"))
+            Log.e("WalkCourseViewModel", "예외 발생", e)
+        }
+    }
+
+
     // Todo : = updateState 로 일관되게 정리하기
     fun updateLocationAndCalculateDistance(newLocation: LatLng, accuracy: Float) {
-        // GPS 정확도가 너무 낮은 경우 (예: 10m 이상) 무시
         val MIN_ACCURACY_THRESHOLD = 25f // 미터 단위 (이보다 높은 정확도일 때만 사용)
         if (accuracy > MIN_ACCURACY_THRESHOLD) {
             return
@@ -198,7 +260,6 @@ class WalkCourseViewModel @Inject constructor(
                     steps = currentWalkState.steps.toInt(),
                     points = currentWalkState.poiPoints.toList()
                 )
-                Log.d("WalkCourseViewModel", "All walk summary data saved successfully using PreferenceDataStore.")
                 Log.e("WalkCourseViewModel", PreferenceDataStore.getTotalTime(context).toString())
                 _sideEffect.emit(WalkCourseSideEffect.ShowSnackBar("산책 기록이 성공적으로 저장되었습니다."))
             } catch (e: Exception) {

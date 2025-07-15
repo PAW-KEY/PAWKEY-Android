@@ -5,6 +5,7 @@ import com.paw.key.data.repositoryimpl.onboarding.OnboardingInfoRepositoryImpl
 import com.paw.key.data.repositoryimpl.onboarding.OnboardingRegionRepositoryImpl
 import com.paw.key.data.repositoryimpl.onboarding.OnboardingRepositoryImpl
 import com.paw.key.data.repositoryimpl.RegionRepositoryImpl
+import com.paw.key.data.repositoryimpl.WalkCourseRepositoryImpl
 import com.paw.key.data.repositoryimpl.WalkSharedResultRepositoryImpl
 import com.paw.key.data.repositoryimpl.home.HomeRegionRepositoryImpl
 import com.paw.key.domain.repository.DummyRepository
@@ -14,6 +15,7 @@ import com.paw.key.domain.repository.onboarding.OnboardingRepository
 import com.paw.key.domain.repository.RegionRepository
 import com.paw.key.domain.repository.WalkSharedResultRepository
 import com.paw.key.domain.repository.home.HomeRegionRepository
+import com.paw.key.domain.repository.walkcourse.WalkCourseRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -42,6 +44,12 @@ interface RepositoryModule {
         regionRepositoryImpl: RegionRepositoryImpl
     ): RegionRepository
 
+    @Binds
+    @Singleton
+    fun bindsWalkCourseRepository(
+        walkCourseRepositoryImpl: WalkCourseRepositoryImpl
+    ): WalkCourseRepository
+  
     @Binds
     @Singleton
     fun bindOnboardingRepository(

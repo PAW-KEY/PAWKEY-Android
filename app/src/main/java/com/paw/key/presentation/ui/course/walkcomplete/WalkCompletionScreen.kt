@@ -2,28 +2,24 @@ package com.paw.key.presentation.ui.course.walkcomplete
 
 import android.graphics.Bitmap
 import android.util.Log
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
 import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.asImageBitmap
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -32,8 +28,6 @@ import com.paw.key.R
 import com.paw.key.core.designsystem.component.PawkeyButton
 import com.paw.key.core.designsystem.component.TopBar
 import com.paw.key.core.designsystem.theme.PawKeyTheme
-import com.paw.key.core.util.PreferenceDataStore
-import com.paw.key.presentation.ui.course.walk.component.WalkRecordRow
 import com.paw.key.presentation.ui.course.walk.formatDistance
 import com.paw.key.presentation.ui.course.walk.formatTime
 import com.paw.key.presentation.ui.course.walkcomplete.component.WalkCompleteHeader
@@ -52,6 +46,11 @@ fun WalkCompletionRoute(
     val state by viewModel.state.collectAsStateWithLifecycle()
 
     val walkRecordList = listOf(R.string.course_record_distance, R.string.course_record_time, R.string.course_record_step)
+
+    BackHandler(enabled = true) {
+        // 뒤로 가기 막기
+    }
+
 
     LaunchedEffect(Unit) {
         viewModel.loadWalkResult()
@@ -95,6 +94,7 @@ fun WalkCompletionScreen(
             title = "산책 완료",
             onBackClick = navigateUp,
             modifier = Modifier
+                .padding(8.dp)
                 .background(PawKeyTheme.colors.white1),
             isBackVisible = false
         )
