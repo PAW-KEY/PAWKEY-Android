@@ -17,11 +17,13 @@ data class WalkReviewCategoryResponseDto(
 @Serializable
 data class CategoryResponseDto(
     val categoryId : Int,
+    val categoryDescription : String,
     val categoryName : String,
     val categoryOptions : List<OptionsResponseDto>
 ) {
     fun toEntity() = WalkReviewCategoryEntity(
         categoryId = categoryId,
+        categoryDescription = categoryDescription,
         categoryName = categoryName,
         options = categoryOptions.map { it.toEntity() }
     )
