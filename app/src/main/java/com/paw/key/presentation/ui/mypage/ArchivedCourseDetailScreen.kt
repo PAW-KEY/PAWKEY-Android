@@ -22,7 +22,7 @@ import com.paw.key.core.designsystem.component.PawkeyButton
 import com.paw.key.core.designsystem.component.TopBar
 import com.paw.key.core.designsystem.theme.PawKeyTheme
 import com.paw.key.core.designsystem.theme.White1
-import com.paw.key.presentation.ui.mypage.state.ArchivedDetailContract
+import com.paw.key.domain.model.entity.walklist.CategoryTop3Entity
 import com.paw.key.presentation.ui.mypage.viewmodel.ArchivedDetailViewModel
 
 @Composable
@@ -32,10 +32,21 @@ fun ArchivedDetailRoute(
     modifier: Modifier = Modifier,
     viewModel: ArchivedDetailViewModel = hiltViewModel()
 ) {
-    val state = viewModel.state.collectAsStateWithLifecycle()
+    val state by viewModel.state.collectAsStateWithLifecycle()
 
     ArchivedCourseDetailScreen(
-        state = state.value,
+        title = state.postTitle,
+        petName = state.petName,
+        date = state.createdAt,
+        location = state.regionName,
+        isLike = state.isLiked,
+        content = state.postContent,
+        petProfileImage = state.petProfileImage,
+        routeMapImageUrl = state.routeMapImageUrl,
+        categorySummary = state.categorySummary,
+        categoryTop3 = state.categoryTop3,
+        totalReviewCount = state.totalReviewCount,
+
         navigateUp = navigateUp,
         navigateToSharedWalk = navigateToSharedWalk,
         modifier = modifier
@@ -44,11 +55,22 @@ fun ArchivedDetailRoute(
 
 @Composable
 fun ArchivedCourseDetailScreen(
-    state: ArchivedDetailContract.ArchivedDetailState,
+    title : String,
+    petName : String,
+    date : String,
+    location : String,
+    isLike : Boolean,
+    content : String,
+    petProfileImage : String,
+    routeMapImageUrl : String,
+    categorySummary : List<String>,
+    categoryTop3 : List<CategoryTop3Entity>,
+    totalReviewCount : Int,
+
     navigateUp: () -> Unit,
     navigateToSharedWalk: () -> Unit,
     modifier: Modifier = Modifier
-){
+) {
     var isImageExpanded by remember { mutableStateOf(false) }
 
     TopBar(
@@ -64,15 +86,16 @@ fun ArchivedCourseDetailScreen(
         ) {
             item {
                 CourseDetail(
-                    title = "한강 산책로",
-                    petName = "후추",
-                    date = "2025/06/02",
-                    location = "뚝섬유원지",
+                    title = title,
+                    petName = petName,
+                    date = date,
+                    location = location,
                     distance = "4.5km",
                     option = listOf("풍경이 좋아요", "조용해요", "길이 깨끗해요"),
                     time = "1시간 30분 소요",
                     onImageClick = { isImageExpanded = true } // ← 콜백 전달
                 )
+
                 PawkeyButton(
                     text = "해당 루트로 산책하기",
                     enabled = true,
@@ -86,7 +109,7 @@ fun ArchivedCourseDetailScreen(
 
         if (isImageExpanded) {
             ImageModal(
-                imageUrl = state.imageUrl,
+                imageUrl = routeMapImageUrl,
                 onDismiss = { isImageExpanded = false }
             )
         }
@@ -97,18 +120,5 @@ fun ArchivedCourseDetailScreen(
 @Composable
 fun ArchivedCourseDetailPreview(){
     PawKeyTheme {
-        ArchivedCourseDetailScreen(state = ArchivedDetailContract.ArchivedDetailState(
-            title = "한강 산책로",
-            petName = "후추",
-            date = "2025/06/02",
-            location = "뚝섬유원지",
-            distance = "4.5km",
-            time = "1시간 30분 소요",
-            option = listOf("풍경이 좋아요", "조용해요", "길이 깨끗해요"),
-            imageUrl = "https://pawkey-server.com/image.jpg"
-        ),
-            navigateUp = {},
-            navigateToSharedWalk = {}
-        )
     }
 }
