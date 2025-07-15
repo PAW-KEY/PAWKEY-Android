@@ -1,8 +1,8 @@
-package com.paw.key.data.repositoryimpl
+package com.paw.key.data.repositoryimpl.onboarding
 
 import com.paw.key.data.dto.response.OnboardingPetsResponse
 import com.paw.key.data.remote.datasource.OnboardingPetsDataSource
-import com.paw.key.domain.repository.OnboardingRepository
+import com.paw.key.domain.repository.onboarding.OnboardingRepository
 import javax.inject.Inject
 
 class OnboardingRepositoryImpl @Inject constructor(

@@ -23,6 +23,7 @@ fun NavGraphBuilder.archivedDetailNavGraph(
     composable<ArchivedDetail> {
         ArchivedDetailRoute(
             navigateUp = navigateUp,
+            navigateToWalk = {},
             modifier = modifier
         )
     }

@@ -1,8 +1,8 @@
-package com.paw.key.data.repositoryimpl
+package com.paw.key.data.repositoryimpl.onboarding
 
 import DistrictResponse
 import com.paw.key.data.remote.datasource.OnboardingRegionDataSource
-import com.paw.key.domain.repository.OnboardingRegionRepository
+import com.paw.key.domain.repository.onboarding.OnboardingRegionRepository
 import javax.inject.Inject
 
 class OnboardingRegionRepositoryImpl @Inject constructor(

@@ -10,6 +10,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.paw.key.core.designsystem.theme.PawKeyTheme
 
+// LocationItem 데이터 클래스 추가
+data class LocationItem(
+    val id: Int,
+    val name: String
+)
+
 @Preview(showBackground = true)
 @Composable
 private fun PreviewLocationList() {
@@ -22,6 +28,7 @@ private fun PreviewLocationList() {
     }
 }
 
+// 기존 String 버전 (구 선택용)
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun LocationList(
@@ -48,3 +55,29 @@ fun LocationList(
     }
 }
 
+// LocationItem 버전 (동 선택용)
+@OptIn(ExperimentalLayoutApi::class)
+@Composable
+fun LocationItemList(
+    locations: List<LocationItem>,
+    selected: String,
+    onLocationSelected: (LocationItem) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    FlowRow(
+        modifier = modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        verticalArrangement = Arrangement.spacedBy(12.dp),
+        maxItemsInEachRow = 3
+    ) {
+        locations.forEach { locationItem ->
+            LocationButton(
+                location = locationItem.name,
+                isEnable = locationItem.name == selected,
+                onClick = {
+                    onLocationSelected(locationItem)
+                }
+            )
+        }
+    }
+}

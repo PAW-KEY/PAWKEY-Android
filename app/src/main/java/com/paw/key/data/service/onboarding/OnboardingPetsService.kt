@@ -1,7 +1,6 @@
-package com.paw.key.data.service
+package com.paw.key.data.service.onboarding
 
 
-import com.paw.key.data.dto.response.BaseResponse
 import com.paw.key.data.dto.response.OnboardingPetsResponse
 import retrofit2.http.GET
 import retrofit2.http.Header

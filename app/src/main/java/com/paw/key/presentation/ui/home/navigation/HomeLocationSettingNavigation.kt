@@ -20,7 +20,7 @@ fun NavController.navigateHomeLocationSetting(
 fun NavGraphBuilder.homeLocationSettingNavGraph(
     paddingValues: PaddingValues,
     navigateUp: () -> Unit,
-    navigateNext: () -> Unit,
+    navigateNext: (Int) -> Unit,
     navigateHomeLocationSetting: () -> Unit,
     modifier: Modifier = Modifier
 ) {

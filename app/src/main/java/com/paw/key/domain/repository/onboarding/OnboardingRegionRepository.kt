@@ -1,4 +1,4 @@
-package com.paw.key.domain.repository
+package com.paw.key.domain.repository.onboarding
 
 import DistrictResponse
 
