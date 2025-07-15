@@ -16,9 +16,10 @@ import com.paw.key.presentation.ui.course.walk.navigation.WalkCourse
 import kotlinx.serialization.Serializable
 
 fun NavController.navigateSharedWalkReview(
+    routeId: Int,
     navOptions: NavOptions?,
 ) {
-    navigate(SharedWalkReview, navOptions)
+    navigate(SharedWalkReview(routeId), navOptions)
 }
 
 @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
@@ -28,14 +29,17 @@ fun NavGraphBuilder.sharedWalkReviewNavGraph(
     navigateNext: () -> Unit,
     snackBarHostState: SnackbarHostState,
 ) {
-    composable<SharedWalkReview> {
+    composable<SharedWalkReview> { backStackEntry ->
+        val routeId = backStackEntry.arguments?.getInt("routeId") ?: 0
+
         SharedWalkReviewRoute(
             navigateUp = navigateUp,
             navigateNext = navigateNext,
+            routeId = routeId,
             snackBarHostState = snackBarHostState,
         )
     }
 }
 
 @Serializable
-data object SharedWalkReview : Route
+data class SharedWalkReview(val routeId : Int) : Route

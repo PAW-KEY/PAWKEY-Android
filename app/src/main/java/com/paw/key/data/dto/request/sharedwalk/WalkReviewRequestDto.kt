@@ -5,6 +5,9 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class SharedWalkReviewRequestDto(
+    @SerialName("routeId")
+    val routeId: Int,
+
     @SerialName("selectedCategories")
     val selectedCategories: List<SharedWalkReviewCategoryDto>
 )

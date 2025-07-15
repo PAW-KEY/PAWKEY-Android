@@ -6,9 +6,11 @@ import com.paw.key.data.service.onboarding.OnboardingInfoService
 import com.paw.key.data.service.onboarding.OnboardingPetsService
 import com.paw.key.data.service.onboarding.OnboardingRegionService
 import com.paw.key.data.service.RegionService
+import com.paw.key.data.service.filter.FilterOptionService
 import com.paw.key.data.service.sharedwalk.SharedWalkService
 import com.paw.key.data.service.home.HomeRegionService
 import com.paw.key.data.service.walkcourse.WalkCourseService
+import com.paw.key.data.service.walklist.WalkListDetailService
 import com.paw.key.data.service.walkreview.WalkReviewService
 import dagger.Module
 import dagger.Provides
@@ -73,5 +75,14 @@ object ServiceModule {
     fun provideWalkReviewService(retrofit: Retrofit): WalkReviewService =
         retrofit.create()
 
+    // 리뷰
+    @Provides
+    @Singleton
+    fun provideWalkListDetailService(retrofit: Retrofit): WalkListDetailService =
+        retrofit.create()
 
+    @Provides
+    @Singleton
+    fun provideFilterOptionService(retrofit: Retrofit): FilterOptionService =
+        retrofit.create()
 }

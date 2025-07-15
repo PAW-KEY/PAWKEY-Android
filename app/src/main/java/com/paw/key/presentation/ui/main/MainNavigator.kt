@@ -143,12 +143,21 @@ class MainNavigator(
         navController.navigateSharedWalkCourse(navOptions = navOptions)
     }
 
-    fun navigateSharedWalkReview(navOptions: NavOptions? = null) {
-        navController.navigateSharedWalkReview(navOptions = navOptions)
+    fun navigateSharedWalkReview(routeId: Int, navOptions: NavOptions? = null) {
+        navController.navigateSharedWalkReview(
+            routeId = routeId,
+            navOptions = navOptions
+        )
     }
 
-    fun navigateSharedWalkCompletion(navOptions: NavOptions? = null) {
-        navController.navigateSharedWalkCompletion(navOptions = navOptions)
+    fun navigateSharedWalkCompletion(
+        routeId: Int,
+        navOptions: NavOptions? = null
+    ) {
+        navController.navigateSharedWalkCompletion(
+            routeId = routeId,
+            navOptions = navOptions
+        )
     }
 
     fun navigateArchivedDetail(

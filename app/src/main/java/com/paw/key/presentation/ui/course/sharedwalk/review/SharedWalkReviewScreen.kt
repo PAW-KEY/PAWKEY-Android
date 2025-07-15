@@ -42,6 +42,7 @@ import com.paw.key.core.designsystem.component.TopBar
 import com.paw.key.core.designsystem.theme.PawKeyTheme
 import com.paw.key.presentation.ui.course.sharedwalk.review.state.SharedWalkReviewSideEffect
 import com.paw.key.presentation.ui.course.sharedwalk.review.viewmodel.SharedWalkReviewViewModel
+import com.paw.key.presentation.ui.course.walkreview.WalkReviewCategoryUiModel
 import com.paw.key.presentation.ui.course.walkreview.component.WalkReviewDialog
 import com.paw.key.presentation.ui.course.walkreview.component.WalkReviewFeedbackForm
 import com.paw.key.presentation.ui.course.walkreview.component.WalkReviewFeedbackHeader
@@ -56,6 +57,7 @@ import com.paw.key.presentation.ui.course.walkreview.viewmodel.WalkReviewViewMod
 fun SharedWalkReviewRoute(
     navigateUp: () -> Unit,
     navigateNext: () -> Unit,
+    routeId : Int,
     snackBarHostState: SnackbarHostState,
     modifier: Modifier = Modifier,
     viewModel: SharedWalkReviewViewModel = hiltViewModel(),
@@ -84,25 +86,13 @@ fun SharedWalkReviewRoute(
         navigateUp = navigateUp,
         navigateNext = navigateNext,
         onClickFeedback = { index, content ->
-            val feedItem = WalkReviewContract.WalkReviewFeedbackData(
-                id = index.toString(),
-                label = content,
-                isSelected = true
-            )
-
-            when (index) {
-                0 -> viewModel.onSelectSafetyFeedback(feedItem)
-                1 -> viewModel.onSelectFacilityFeedback(feedItem)
-                2 -> viewModel.onSelectRoadFeedback(feedItem)
-                3 -> viewModel.onSelectNoiseFeedback(feedItem)
-                4 -> viewModel.onSelectFrequencyFeedback(feedItem)
-            }
+            viewModel.onClickFeedback(index, content)
         },
         isDialogVisible = state.isDialogVisible,
         isFormValid = isValid,
         isSharedWalk = isSharedWalk,
         petName = state.petName,
-        feedbackState = state.feedbackState,
+        feedbackList = state.categoryList,
         onClickSharedReview = {
             viewModel.onClickSharedReview()
         },
@@ -116,12 +106,12 @@ fun SharedWalkReviewScreen(
     navigateUp: () -> Unit,
     navigateNext: () -> Unit,
     onClickSharedReview : () -> Unit,
-    onClickFeedback : (Int, String) -> Unit,
+    onClickFeedback : (Int, Int) -> Unit,
     isDialogVisible : Boolean,
     isFormValid : Boolean,
     isSharedWalk : Boolean,
     petName : String,
-    feedbackState : WalkReviewContract.WalkReviewFeedbackState,
+    feedbackList : List<WalkReviewCategoryUiModel>,
     modifier: Modifier = Modifier,
 ) {
     Column (
@@ -239,66 +229,26 @@ fun SharedWalkReviewScreen(
                 )
             }
 
+            val feedbackTitle = listOf(
+                "\uD83D\uDEB8 산책 중 안전 요소는 어땠나요?",
+                "\uD83E\uDDFA 산책 중 어떤 편의 시설이 있었나요?",
+                "\uD83C\uDF3F 산책 주변의 길 상태는 어땠나요?",
+                "\uD83D\uDE0C 산책로의 분위기는 어땠나요 ?",
+                "\uD83D\uDC36 산책 중 다른 강아지들과 얼마나 마주쳤나요?"
+            )
+
             item {
-                val feedbackTitle = listOf(
-                    "\uD83D\uDEB8 산책 중 안전 요소는 어땠나요?",
-                    "\uD83E\uDDFA 산책 중 어떤 편의 시설이 있었나요?",
-                    "\uD83C\uDF3F 산책 주변의 길 상태는 어땠나요?",
-                    "\uD83D\uDE0C 산책로의 분위기는 어땠나요 ?",
-                    "\uD83D\uDC36 산책 중 다른 강아지들과 얼마나 마주쳤나요?"
-                )
-
-                // Todo : 서버에서 주는 값으로 변경 예정
-                val eachFeedbackList = listOf(
-                    listOf(
-                        "킥보드나 자전거가 거의 없어요",
-                        "차량이 거의 다니지 않아요",
-                        "야간 조명이 잘 되어 있어요",
-                        "보도와 차도가 구분되어 있어요",
-                        "보도가 넓어서 산책하기 편했어요"
-                    ),
-                    listOf(
-                        "배변 봉투 쓰레기통이 있어요",
-                        "애견 산책로가 있어요",
-                        "쉴 곳이 있어요",
-                        "편의점이 있어요",
-                        "반려견 동반 가능한 카페가 있어요"
-                    ),
-                    listOf(
-                        "풀이 많아요",
-                        "주로 흙길이에요",
-                        "주로 아스팔트, 벽돌이에요",
-                        "뛰어놀 수 있는 공간이 있어요"
-                    ),
-                    listOf(
-                        "조용하고 한적했어요",
-                        "사람이 적당히 있어요",
-                        "사람이 많았어요"
-                    ),
-                    listOf(
-                        "많이 마주쳤어요",
-                        "가끔 마주쳤어요",
-                        "거의 없었어요"
-                    )
-                )
-
-                feedbackTitle.forEachIndexed { index, title ->
-                    val currentSelectedFeedback = when (index) {
-                        0 -> feedbackState.selectedSafetyFeedback
-                        1 -> feedbackState.selectedFacilityFeedback
-                        2 -> feedbackState.selectedRoadFeedback
-                        3 -> feedbackState.selectedNoiseFeedback
-                        4 -> feedbackState.selectedFrequencyFeedback
-                        else -> null
-                    }
-
+                feedbackList.forEachIndexed { index, category ->
                     WalkReviewFeedbackForm(
                         icon = R.drawable.ic_walk_review_location,
-                        title = title,
-                        selectedFeedbackItem = currentSelectedFeedback,
-                        feedbackList = eachFeedbackList[index],
-                        onClickFeedback = { selectedFeedback ->
-                            onClickFeedback(index, selectedFeedback)
+                        title = feedbackTitle.getOrNull(index) ?: category.categoryName,
+                        selectedFeedbackItem = category.options.firstOrNull { it.isSelected }?.optionText,
+                        feedbackList = category.options.map { it.optionText },
+                        onClickFeedback = { selectedText ->
+                            val selectedOption = category.options.find { it.optionText == selectedText }
+                            if (selectedOption != null) {
+                                onClickFeedback(category.categoryId, selectedOption.optionId)
+                            }
                         },
                         modifier = Modifier
                             .padding(top = 12.dp, bottom = 12.dp, start = 16.dp, end = 16.dp)

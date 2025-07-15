@@ -199,7 +199,7 @@ fun SharedWalkCourseRoute(
     }
 
     LaunchedEffect(Unit) {
-        val currentLocation = getCurrentLocation(
+        val currentLocation = sharedGetCurrentLocation(
             context,
             fusedLocationClient,
         )
@@ -328,7 +328,7 @@ fun SharedWalkCourseRoute(
                     val glSurfaceView = mapView.surfaceView as? GLSurfaceView
                     if (glSurfaceView != null) {
                         withContext(Dispatchers.IO) {
-                            captureMapToBitmap(glSurfaceView) { capturedBitmap ->
+                            sharedCaptureMapToBitmap(glSurfaceView) { capturedBitmap ->
                                 capturedBitmap?.let {
                                     viewModel.onMapCaptured(it)
                                     Log.d("WalkCourseRoute", "맵 캡처 성공! (triggered by shouldCaptureMap)")
@@ -538,7 +538,7 @@ fun SharedWalkCourseScreen(
                                     val glSurfaceView = mapView.surfaceView as? GLSurfaceView
                                     if (glSurfaceView != null) {
                                         withContext(Dispatchers.IO) {
-                                            captureMapToBitmap(glSurfaceView) { capturedBitmap ->
+                                            sharedCaptureMapToBitmap(glSurfaceView) { capturedBitmap ->
                                                 capturedBitmap?.let {
                                                     onCaptured(it)
                                                     Log.d("WalkCourseScreen", "맵 캡처 성공!")
@@ -607,7 +607,7 @@ fun SharedWalkCourseScreen(
     }
 }
 
-fun captureMapToBitmap(surfaceView: GLSurfaceView, onCaptured: (Bitmap?) -> Unit) {
+fun sharedCaptureMapToBitmap(surfaceView: GLSurfaceView, onCaptured: (Bitmap?) -> Unit) {
     surfaceView.queueEvent {
         val egl = EGLContext.getEGL() as EGL10
         val gl = egl.eglGetCurrentContext().gl as GL10
@@ -617,12 +617,12 @@ fun captureMapToBitmap(surfaceView: GLSurfaceView, onCaptured: (Bitmap?) -> Unit
         val contentWidth = (screenWidth - 32)
         val targetHeight = (156 * surfaceView.context.resources.displayMetrics.density).toInt()
 
-        val bitmap = createBitmapFromGLSurface(0, 0, surfaceView.width, surfaceView.height, gl, contentWidth, targetHeight)
+        val bitmap = sharedCreateBitmapFromGLSurface(0, 0, surfaceView.width, surfaceView.height, gl, contentWidth, targetHeight)
         onCaptured(bitmap)
     }
 }
 
-fun createBitmapFromGLSurface(x: Int, y: Int, w: Int, h: Int, gl: GL10, targetWidth: Int, targetHeight: Int): Bitmap? {
+fun sharedCreateBitmapFromGLSurface(x: Int, y: Int, w: Int, h: Int, gl: GL10, targetWidth: Int, targetHeight: Int): Bitmap? {
     val bitmapBuffer = IntArray(w * h)
     val bitmapSource = IntArray(w * h)
     val intBuffer = IntBuffer.wrap(bitmapBuffer)
@@ -681,7 +681,7 @@ fun createBitmapFromGLSurface(x: Int, y: Int, w: Int, h: Int, gl: GL10, targetWi
     return Bitmap.createBitmap(fullBitmap, startX, startY, safeWidth, safeHeight)
 }
 
-suspend fun getCurrentLocation(
+suspend fun sharedGetCurrentLocation(
     context: Context,
     fusedLocationClient: FusedLocationProviderClient
 ): LatLng = suspendCancellableCoroutine { continuation ->
@@ -730,7 +730,7 @@ suspend fun getCurrentLocation(
 
 @Preview(showBackground = true)
 @Composable
-private fun WalkCourseScreenPreview() {
+private fun SharedWalkCourseScreenPreview() {
     PawKeyTheme {
         Row (
             modifier = Modifier
