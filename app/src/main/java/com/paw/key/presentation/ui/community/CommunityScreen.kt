@@ -1,9 +1,13 @@
 package com.paw.key.presentation.ui.community
 
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -34,10 +38,17 @@ fun CommunityScreen(
     snackBarHostState: SnackbarHostState,
     modifier: Modifier = Modifier,
 ) {
-    Text(
-        text = stringResource(R.string.ic_community_description),
-        modifier = modifier,
-    )
+    Column (
+        modifier = modifier
+            .fillMaxSize(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ){
+        Text(
+            text = stringResource(R.string.ic_community_description),
+            modifier = modifier
+        )
+    }
 }
 
 @Preview

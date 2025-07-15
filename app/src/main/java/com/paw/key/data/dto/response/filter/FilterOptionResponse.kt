@@ -23,6 +23,8 @@ data class FilterOptionResponse(
 data class CategoryDto(
     @SerialName("categoryId")
     val categoryId: Int? = null,
+    @SerialName("categoryDescription")
+    val categoryDescription: String? = null,
     @SerialName("categoryName")
     val categoryName: String? = null,
     @SerialName("categoryOptions")

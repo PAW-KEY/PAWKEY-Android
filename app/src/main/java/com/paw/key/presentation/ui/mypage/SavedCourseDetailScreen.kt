@@ -27,7 +27,7 @@ import com.paw.key.core.designsystem.component.PawkeyButton
 import com.paw.key.core.designsystem.component.TopBar
 import com.paw.key.core.designsystem.theme.PawKeyTheme
 import com.paw.key.core.designsystem.theme.White1
-import com.paw.key.presentation.ui.mypage.state.SavedDetailContract
+import com.paw.key.domain.model.entity.walklist.CategoryTop3Entity
 import com.paw.key.presentation.ui.mypage.viewmodel.SavedDetailViewModel
 
 @Composable
@@ -37,10 +37,22 @@ fun SavedDetailRoute(
     modifier: Modifier = Modifier,
     viewModel: SavedDetailViewModel = hiltViewModel()
 ) {
-    val state = viewModel.state.collectAsStateWithLifecycle()
+    val state by viewModel.state.collectAsStateWithLifecycle()
 
     SavedCourseDetailScreen(
-        state = state.value,
+        title = state.postTitle,
+        petName = state.petName,
+        date = state.createdAt,
+        location = state.regionName,
+        isLike = state.isLiked,
+        content = state.postContent,
+        petProfileImage = state.petProfileImage,
+        routeMapImageUrl = state.routeMapImageUrl,
+        categorySummary = state.categorySummary,
+        categoryTop3 = state.categoryTop3,
+        totalReviewCount = state.totalReviewCount,
+        walkingImageUrls = state.walkingImageUrls,
+
         navigateUp = navigateUp,
         navigateToWalk = navigateToWalk,
         modifier = modifier
@@ -49,7 +61,19 @@ fun SavedDetailRoute(
 
 @Composable
 fun SavedCourseDetailScreen(
-    state: SavedDetailContract.SavedDetailState,
+    title : String,
+    petName : String,
+    date : String,
+    location : String,
+    isLike : Boolean,
+    content : String,
+    petProfileImage : String,
+    routeMapImageUrl : String,
+    categorySummary : List<String>,
+    categoryTop3 : List<CategoryTop3Entity>,
+    totalReviewCount : Int,
+    walkingImageUrls : List<String>,
+
     navigateUp: () -> Unit,
     navigateToWalk: () -> Unit,
     modifier: Modifier = Modifier
@@ -73,13 +97,18 @@ fun SavedCourseDetailScreen(
             ) {
                 item {
                     CourseDetail(
-                        title = "한강 산책로",
-                        petName = "후추",
-                        date = "2025/06/02",
-                        location = "뚝섬유원지",
-                        distance = "4.5km",
-                        option = listOf("풍경이 좋아요", "조용해요", "길이 깨끗해요"),
-                        time = "1시간 30분 소요",
+                        title = title,
+                        petName = petName,
+                        date = date,
+                        location = location,
+                        isLike = isLike,
+                        content = content,
+                        petProfileImage = petProfileImage,
+                        routeMapImageUrl = routeMapImageUrl,
+                        categorySummary = categorySummary,
+                        categoryTop3 = categoryTop3,
+                        totalReviewCount = totalReviewCount,
+                        walkingImageUrls = walkingImageUrls,
                         onImageClick = {
                             isImageExpanded = true
                         }
@@ -119,7 +148,7 @@ fun SavedCourseDetailScreen(
 
         if (isImageExpanded) {
             ImageModal(
-                imageUrl = state.imageUrl,
+                imageUrl = routeMapImageUrl,
                 onDismiss = { isImageExpanded = false }
             )
         }
@@ -127,20 +156,51 @@ fun SavedCourseDetailScreen(
 }
 
 
-@Preview
+@Preview(showBackground = true)
 @Composable
-fun SavedCourseDetailPreview(){
+fun SavedCourseDetailPreview() {
     PawKeyTheme {
-        SavedCourseDetailScreen(state = SavedDetailContract.SavedDetailState(
+        SavedCourseDetailScreen(
             title = "한강 산책로",
             petName = "후추",
             date = "2025/06/02",
             location = "뚝섬유원지",
-            distance = "4.5km",
-            time = "1시간 30분 소요",
-            option = listOf("풍경이 좋아요", "조용해요", "길이 깨끗해요"),
-            imageUrl = "https://pawkey-server.com/image.jpg"
-        ),
+            isLike = true,
+            content = "봄에 꽃이 만개한 산책로예요. 조용하고 평탄해서 걷기 좋아요.",
+            petProfileImage = "https://pawkey-server.com/profile.jpg",
+            routeMapImageUrl = "https://pawkey-server.com/map.jpg",
+            categorySummary = listOf("풍경이 좋아요", "조용해요", "길이 깨끗해요"),
+            categoryTop3 = listOf(
+                CategoryTop3Entity(
+                    categoryId = 1,
+                    categoryName = "안전",
+                    categoryOptionId = 2,
+                    optionText = "차량이 거의 다니지 않아요",
+                    rank = 1,
+                    percentage = 42
+                ),
+                CategoryTop3Entity(
+                    categoryId = 1,
+                    categoryName = "안전",
+                    categoryOptionId = 3,
+                    optionText = "킥보드가 거의 없어요",
+                    rank = 2,
+                    percentage = 37
+                ),
+                CategoryTop3Entity(
+                    categoryId = 2,
+                    categoryName = "편리성",
+                    categoryOptionId = 7,
+                    optionText = "조명이 밝아요",
+                    rank = 3,
+                    percentage = 35
+                )
+            ),
+            totalReviewCount = 42,
+            walkingImageUrls = listOf(
+                "https://pawkey-server.com/etc1.jpg",
+                "https://pawkey-server.com/etc2.jpg"
+            ),
             navigateUp = {},
             navigateToWalk = {}
         )

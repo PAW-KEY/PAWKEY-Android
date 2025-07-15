@@ -37,26 +37,36 @@ import coil.request.ImageRequest
 import com.paw.key.R
 import com.paw.key.core.designsystem.theme.PawKeyTheme
 import com.paw.key.core.designsystem.theme.Gray100
+import com.paw.key.domain.model.entity.walklist.CategoryTop3Entity
 
 @Composable
 fun CourseDetail(
-    title: String,
-    petName: String,
-    date: String,
-    location: String,
-    distance: String,
-    time: String,
-    option: List<String>,
-    onImageClick: () -> Unit,
+    title : String,
+    petName : String,
+    date : String,
+    location : String,
+    isLike : Boolean,
+    content : String,
+    petProfileImage : String,
+    routeMapImageUrl : String,
+    categorySummary : List<String>,
+    categoryTop3 : List<CategoryTop3Entity>,
+    totalReviewCount : Int,
+    walkingImageUrls : List<String>,
+
+
+    onImageClick: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val isLiked = remember { mutableStateOf(false) }
+
     Column(
         modifier = modifier
             .fillMaxWidth()
     ) {
         AsyncImage(
             model = ImageRequest.Builder(LocalContext.current)
-                .data("https://pawkey-server.com/image.jpg")
+                .data(routeMapImageUrl)
                 .crossfade(true)
                 .build(),
             contentDescription = null,
@@ -65,6 +75,7 @@ fun CourseDetail(
                 .fillMaxWidth()
                 .height(244.dp)
                 .background(color = Gray100)
+                .background(Color.Gray)
         )
 
         Column(
@@ -89,7 +100,6 @@ fun CourseDetail(
                     style = PawKeyTheme.typography.head20Sb,
                     color = PawKeyTheme.colors.black
                 )
-                val isLiked = remember { mutableStateOf(false) }
 
                 Icon(
                     imageVector = if (isLiked.value) {
@@ -111,11 +121,16 @@ fun CourseDetail(
                     .fillMaxWidth()
                     .padding(vertical = 12.dp)
             ) {
-                Box(
+                AsyncImage(
+                    model = ImageRequest.Builder(LocalContext.current)
+                        .data(petProfileImage)
+                        .crossfade(true)
+                        .build(),
+                    contentDescription = null,
                     modifier = Modifier
-                        .size(40.dp)
-                        .background(Color.Gray, RoundedCornerShape(20.dp))
+                        .size(44.dp)
                 )
+
                 Text(
                     text = petName,
                     style = PawKeyTheme.typography.body16Sb,
@@ -145,7 +160,7 @@ fun CourseDetail(
                     )
                     Spacer(modifier = Modifier.width(6.dp))
                     Text(
-                        text = "$date | $time",
+                        text = date,
                         style = PawKeyTheme.typography.body14M,
                         color = PawKeyTheme.colors.gray400
                     )
@@ -158,9 +173,11 @@ fun CourseDetail(
                 modifier = Modifier
                     .padding(vertical = 13.dp)
             ) {
-                SubChip(text = distance)
-                SubChip(text = time)
-                SubChip(text = location)
+                categorySummary.forEach {
+                    SubChip(
+                        text = it
+                    )
+                }
             }
 
             Spacer(modifier = Modifier.height(12.dp))
@@ -171,19 +188,25 @@ fun CourseDetail(
                     .padding(vertical = 12.dp),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                item {
-                    Box(
+                items(walkingImageUrls.size) { index ->
+                    AsyncImage(
+                        model = ImageRequest.Builder(LocalContext.current)
+                            .data(walkingImageUrls[index])
+                            .crossfade(true)
+                            .build(),
+                        contentDescription = null,
                         modifier = Modifier
                             .width(100.dp)
                             .height(100.dp)
-                            .background(Color.LightGray)
-                            .clickable { onImageClick() }
+                            .clip(RoundedCornerShape(8.dp))
+                            .clickable { onImageClick(walkingImageUrls[index]) },
+                        contentScale = ContentScale.Crop
                     )
                 }
             }
 
             Text(
-                text = "후기 글 본문 후기 글 본문 후기 글 본문",
+                text = content,
                 style = PawKeyTheme.typography.body14R
             )
             Spacer(modifier = Modifier.height(12.dp))
@@ -208,6 +231,8 @@ fun CourseDetail(
 
         Column(modifier = Modifier.padding(horizontal = 16.dp)) {
             Row(
+                modifier = Modifier
+                    .fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
@@ -224,31 +249,27 @@ fun CourseDetail(
                 )
                 Spacer(modifier = Modifier.width(4.dp))
                 Text(
-                    text = "후기숫자를 적으세요",
+                    text = totalReviewCount.toString(),
                     style = PawKeyTheme.typography.caption12M,
                     color = PawKeyTheme.colors.gray200,
                 )
             }
 
-            if (option.isEmpty()) {
+            if (categoryTop3.isEmpty()) {
                 Text(
                     text = "아직은 후기가 없어요.",
                     style = PawKeyTheme.typography.body16Sb,
-                    color = PawKeyTheme.colors.gray400
+                    color = PawKeyTheme.colors.gray400,
+                    modifier = Modifier
+                        .align(Alignment.CenterHorizontally)
                 )
             } else {
-                option.forEachIndexed { index, tag ->
-                    val percentage = when (index) {
-                        0 -> 1f
-                        1 -> 0.8f
-                        2 -> 0.6f
-                        else -> 1f
-                    }
-
-                    val backgroundColor = when (index) {
-                        0 -> PawKeyTheme.colors.green300
-                        1 -> PawKeyTheme.colors.green200
-                        2 -> PawKeyTheme.colors.green100
+                categoryTop3.forEach { tag ->
+                    val fillRatio = (tag.percentage.coerceIn(0, 100)) / 100f
+                    val backgroundColor = when (tag.rank) {
+                        1 -> PawKeyTheme.colors.green300
+                        2 -> PawKeyTheme.colors.green200
+                        3 -> PawKeyTheme.colors.green100
                         else -> PawKeyTheme.colors.green500
                     }
 
@@ -257,21 +278,21 @@ fun CourseDetail(
                             .fillMaxWidth()
                             .padding(vertical = 4.dp)
                             .height(37.dp)
-                            .background(PawKeyTheme.colors.gray100, RoundedCornerShape(6.dp))
+                            .background(PawKeyTheme.colors.white2, RoundedCornerShape(6.dp))
                     ) {
                         Box(
                             modifier = Modifier
-                                .fillMaxWidth(percentage)
+                                .fillMaxWidth(fillRatio)
                                 .fillMaxHeight()
                                 .background(backgroundColor, RoundedCornerShape(6.dp))
                         ) {
                             Text(
-                                text = tag,
-                                color = Color.Black,
+                                text = tag.optionText,
+                                color = PawKeyTheme.colors.black,
                                 modifier = Modifier
                                     .align(Alignment.CenterStart)
                                     .padding(horizontal = 16.dp),
-                                style = PawKeyTheme.typography.body16Sb
+                                style = PawKeyTheme.typography.caption12Sb2
                             )
                         }
                     }
@@ -282,19 +303,27 @@ fun CourseDetail(
 }
 
 
-
 @Preview(showBackground = true)
 @Composable
 fun CourseDetailPreview() {
     PawKeyTheme {
         CourseDetail(
             title = "홍대 주변 좋은 산책 코스",
-            petName = "반려견 이름",
-            date = "2025/05/17",
+            petName = "핑구",
+            date = "2025/06/30",
             location = "홍대입구역",
-            distance = "3km",
-            time = "1시간 소요",
-            option = listOf("조용해요", "가로등 많아요", "산책로 깨끗해요"),
+            isLike = true,
+            content = "산책로가 깨끗하고 벚꽃이 예뻐요!",
+            petProfileImage = "https://pawkey-server.com/image/profile.png",
+            routeMapImageUrl = "https://pawkey-server.com/image/map.png",
+            categoryTop3 = listOf(
+                ),
+            totalReviewCount = 42,
+            walkingImageUrls = listOf(
+                "https://pawkey-server.com/image/walk1.jpg",
+                "https://pawkey-server.com/image/walk2.jpg"
+            ),
+            categorySummary = listOf("안전", "편리성"),
             onImageClick = {},
         )
     }

@@ -74,10 +74,11 @@ fun PawKeyNavHost(
             paddingValues = paddingValues,
             navigateUp = navigator::navigateUp,
             navigateNext = navigator::navigateWalkCourse,
-            navigateToWalk = {
-                // Todo : 마찬가지로 이것도 그냥 넣어놓음 나중에 리스트 연결 후 예쩡
+            navigateToDetail = {
+                // Todo : 마찬가지로 이것도 그냥 넣어놓음 나중에 리스트 연결 후 예쩡 / 리스트 아이템이동
                 navigator.navigateArchivedDetail(
-                    routeId = 2
+                    pageId = 20,
+                    routeId = 3
                 )
             },
             setOnVisibleRecord = navigator::setOnVisibleRecord,
@@ -142,7 +143,8 @@ fun PawKeyNavHost(
             navigateUp = navigator::navigateUp,
             navigateNext = navigator::navigateCourse,
             navigateShared = {
-                navigator.navigateArchivedDetail(
+                navigator.navigateArchivedDetail( // Todo 새로 생성 시라 pageId 변경
+                    pageId = 0,
                     routeId = it
                 )
             },
@@ -178,6 +180,7 @@ fun PawKeyNavHost(
             navigateNext = {
                 navigator.navigateArchivedDetail(
                     // Todo : 리스트에서 상세정보 item id 넣어놓기 일단2
+                    pageId = 0,
                     routeId = 2
                 )
             },
@@ -253,7 +256,7 @@ fun PawKeyNavHost(
         regionalNavGraph(
             paddingValues = paddingValues,
             navigateUp = navigator::navigateUp,
-            navigateNext = navigator::navigateDummyNext,
+            navigateNext = navigator::navigateHome,
             snackBarHostState = snackbarHostState
         )
 
