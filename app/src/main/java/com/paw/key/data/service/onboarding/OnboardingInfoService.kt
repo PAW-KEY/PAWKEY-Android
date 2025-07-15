@@ -1,5 +1,6 @@
 package com.paw.key.data.service.onboarding
 
+import com.paw.key.data.dto.response.BaseResponse
 import com.paw.key.data.dto.response.onboarding.OnboardingInfoResponse
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -15,5 +16,5 @@ interface OnboardingInfoService {
         @Header("X-USER-ID") userId: Int,
         @Part("data") data: RequestBody,
         @Part petProfile: MultipartBody.Part
-    ): OnboardingInfoResponse
+    ): BaseResponse<OnboardingInfoResponse>
 }

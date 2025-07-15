@@ -18,6 +18,13 @@ private val TOTAL_DISTANCE_KEY = floatPreferencesKey("total_distance")
 private val TOTAL_TIME_KEY = longPreferencesKey("total_time")
 private val TOTAL_STEPS_KEY = intPreferencesKey("total_steps")
 
+private val LOGIN_EMAIL_KEY = stringPreferencesKey("login_email")
+private val LOGIN_PASSWORD_KEY = stringPreferencesKey("login_password")
+private val USER_ID_KEY = intPreferencesKey("user_id")
+private val USER_NAME_KEY = stringPreferencesKey("user_name")
+private val PET_ID_KEY = intPreferencesKey("pet_id")
+private val PET_NAME_KEY = stringPreferencesKey("pet_name")
+
 private fun List<LatLng>.toPreferenceString(): String =
     joinToString(";") { "${it.latitude},${it.longitude}" }
 
@@ -72,7 +79,126 @@ object PreferenceDataStore {
 
     suspend fun clearWalkSummary(context: Context) {
         context.summaryStore.edit { preferences ->
-            preferences.clear() // 모든 데이터 삭제
+            preferences.remove(POINTS_KEY)
+            preferences.remove(TOTAL_DISTANCE_KEY)
+            preferences.remove(TOTAL_TIME_KEY)
+            preferences.remove(TOTAL_STEPS_KEY)
+        }
+    }
+
+    suspend fun saveLoginInfo(
+        context: Context,
+        email: String,
+        password: String
+    ) {
+        context.summaryStore.edit { preferences ->
+            preferences[LOGIN_EMAIL_KEY] = email
+            preferences[LOGIN_PASSWORD_KEY] = password
+        }
+    }
+
+    fun getLoginEmail(context: Context): Flow<String> {
+        return context.summaryStore.data.map { preferences ->
+            preferences[LOGIN_EMAIL_KEY] ?: ""
+        }
+    }
+
+    fun getLoginPassword(context: Context): Flow<String> {
+        return context.summaryStore.data.map { preferences ->
+            preferences[LOGIN_PASSWORD_KEY] ?: ""
+        }
+    }
+
+    data class LoginInfo(
+        val email: String,
+        val password: String
+    )
+
+    fun getLoginInfo(context: Context): Flow<LoginInfo> {
+        return context.summaryStore.data.map { preferences ->
+            LoginInfo(
+                email = preferences[LOGIN_EMAIL_KEY] ?: "",
+                password = preferences[LOGIN_PASSWORD_KEY] ?: ""
+            )
+        }
+    }
+
+    suspend fun clearLoginInfo(context: Context) {
+        context.summaryStore.edit { preferences ->
+            preferences.remove(LOGIN_EMAIL_KEY)
+            preferences.remove(LOGIN_PASSWORD_KEY)
+        }
+    }
+
+    suspend fun saveUserInfo(
+        context: Context,
+        userId: Int,
+        userName: String,
+        petId: Int,
+        petName: String
+    ) {
+        context.summaryStore.edit { preferences ->
+            preferences[USER_ID_KEY] = userId
+            preferences[USER_NAME_KEY] = userName
+            preferences[PET_ID_KEY] = petId
+            preferences[PET_NAME_KEY] = petName
+        }
+    }
+
+    fun getUserId(context: Context): Flow<Int> {
+        return context.summaryStore.data.map { preferences ->
+            preferences[USER_ID_KEY] ?: 0
+        }
+    }
+
+    fun getUserName(context: Context): Flow<String> {
+        return context.summaryStore.data.map { preferences ->
+            preferences[USER_NAME_KEY] ?: ""
+        }
+    }
+
+    fun getPetId(context: Context): Flow<Int> {
+        return context.summaryStore.data.map { preferences ->
+            preferences[PET_ID_KEY] ?: 0
+        }
+    }
+
+    fun getPetName(context: Context): Flow<String> {
+        return context.summaryStore.data.map { preferences ->
+            preferences[PET_NAME_KEY] ?: ""
+        }
+    }
+
+    data class UserInfo(
+        val userId: Int,
+        val userName: String,
+        val petId: Int,
+        val petName: String
+    )
+
+    fun getUserInfo(context: Context): Flow<UserInfo> {
+        return context.summaryStore.data.map { preferences ->
+            UserInfo(
+                userId = preferences[USER_ID_KEY] ?: 0,
+                userName = preferences[USER_NAME_KEY] ?: "",
+                petId = preferences[PET_ID_KEY] ?: 0,
+                petName = preferences[PET_NAME_KEY] ?: ""
+            )
+        }
+    }
+
+    suspend fun clearUserInfo(context: Context) {
+        context.summaryStore.edit { preferences ->
+            preferences.remove(USER_ID_KEY)
+            preferences.remove(USER_NAME_KEY)
+            preferences.remove(PET_ID_KEY)
+            preferences.remove(PET_NAME_KEY)
+        }
+    }
+
+    suspend fun clearAllData(context: Context) {
+        context.summaryStore.edit { preferences ->
+            preferences.clear()
         }
     }
 }

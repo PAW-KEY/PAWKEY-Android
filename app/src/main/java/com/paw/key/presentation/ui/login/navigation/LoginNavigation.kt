@@ -9,7 +9,6 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
 import com.paw.key.core.navigation.Route
-import com.paw.key.presentation.ui.home.navigation.navigateHome
 import com.paw.key.presentation.ui.login.LoginRoute
 import kotlinx.serialization.Serializable
 
@@ -24,14 +23,14 @@ fun NavGraphBuilder.loginNavGraph(
     paddingValues: PaddingValues,
     navigateUp: () -> Unit,
     navigateNext: () -> Unit,
-    snackBarHostState: SnackbarHostState,
+    snackBarHostState: SnackbarHostState
 ) {
     composable<Login> {
         LoginRoute(
+            paddingValues = paddingValues,
             navigateUp = navigateUp,
             navigateNext = navigateNext,
-            snackBarHostState = snackBarHostState,
-            paddingValues = paddingValues
+            snackBarHostState = snackBarHostState
         )
     }
 }

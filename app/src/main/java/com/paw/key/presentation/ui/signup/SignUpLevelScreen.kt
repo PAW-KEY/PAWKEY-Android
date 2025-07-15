@@ -1,6 +1,13 @@
 package com.paw.key.presentation.ui.signup
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -31,7 +38,8 @@ private fun PreviewSignUpLevelScreen() {
             energyOptions = listOf("매우 차분해요", "조금 느긋해요"),
             socialOptions = listOf("잘 어울려요", "천천히 친해져요"),
             energyTitle = "에너지 레벨",
-            socialTitle = "사회성 레벨"
+            socialTitle = "사회성 레벨",
+            viewModel = hiltViewModel()
         )
     }
 }
@@ -40,26 +48,23 @@ private fun PreviewSignUpLevelScreen() {
 fun SignUpLevelRoute(
     navigateNext: () -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: SignUpViewModel = hiltViewModel(),
+    viewModel: SignUpViewModel? = null
 ) {
-    val state by viewModel.state.collectAsState()
+    val actualViewModel = viewModel ?: hiltViewModel<SignUpViewModel>()
+    val state by actualViewModel.state.collectAsState()
     val context = LocalContext.current
 
-    // 🔧 수정: sideEffect를 key로 사용하여 변경시마다 실행
-    LaunchedEffect(viewModel.sideEffect) {
-        viewModel.sideEffect.collect { sideEffect ->
+    LaunchedEffect(actualViewModel.sideEffect) {
+        actualViewModel.sideEffect.collect { sideEffect ->
             when (sideEffect) {
                 is SignUpContract.SignUpSideEffect.NavigateNext -> {
                     navigateNext()
                 }
-
                 is SignUpContract.SignUpSideEffect.ShowSnackBar -> {
-                    // TODO: snackbar 처리 추가
                     println("SnackBar: ${sideEffect.message}")
                 }
-
                 is SignUpContract.SignUpSideEffect.NavigateUp -> {
-                    // TODO: 뒤로가기 처리 등
+
                 }
             }
         }
@@ -71,24 +76,24 @@ fun SignUpLevelRoute(
     val energyOptions = energyCategory?.petTraitCategoryOptions?.map { it.petTraitCategoryOptionText } ?: emptyList()
     val socialOptions = socialCategory?.petTraitCategoryOptions?.map { it.petTraitCategoryOptionText } ?: emptyList()
 
-    // 🔧 수정: 이 화면에서만 필요한 조건으로 버튼 활성화 체크
     val isButtonEnabled = state.selectedEnergyLevel.isNotEmpty() &&
             state.selectedSocialLevel.isNotEmpty()
 
     SignUpLevelScreen(
-        enabled = isButtonEnabled, // 🔧 수정: 올바른 활성화 조건 전달
+        enabled = isButtonEnabled,
         selectedEnergyLevel = state.selectedEnergyLevel,
         selectedSocialLevel = state.selectedSocialLevel,
         onSignUpClick = {
             println("SignUp button clicked")
-            viewModel.signUp(context)
+            actualViewModel.debugSignUpState()
+            actualViewModel.signUp(context)
         },
         energyOptions = energyOptions,
         socialOptions = socialOptions,
         energyTitle = "에너지 레벨",
         socialTitle = "사회성 레벨",
         modifier = modifier,
-        viewModel = viewModel
+        viewModel = actualViewModel
     )
 }
 
@@ -103,7 +108,7 @@ fun SignUpLevelScreen(
     socialOptions: List<String>,
     energyTitle: String = "에너지 레벨",
     socialTitle: String = "사회성 레벨",
-    viewModel: SignUpViewModel = hiltViewModel(),
+    viewModel: SignUpViewModel
 ) {
     Column(
         modifier = modifier.fillMaxSize()

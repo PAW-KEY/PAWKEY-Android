@@ -14,5 +14,6 @@ class HomeContract {
         val selectedDongId: Int = 0,
         val selectedGu: String = "",
         val selectedDong: String = "",
+
     )
 }

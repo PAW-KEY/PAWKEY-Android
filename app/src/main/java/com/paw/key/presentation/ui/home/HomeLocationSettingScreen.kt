@@ -84,10 +84,8 @@ fun HomeLocationSettingScreen(
     val selectedGu = state.selectedGu
     val selectedDong = state.selectedDong
 
-    // 구 옵션들 (서버에서 받아온 구 리스트)
     val guOptions = regionList.map { it.gu.name }
 
-    // 선택된 구에 해당하는 동 옵션들
     val dongOptions = if (selectedGu.isNotEmpty()) {
         regionList.find { it.gu.name == selectedGu }?.dongs?.map {
             LocationItem(id = it.id, name = it.name)
@@ -102,7 +100,6 @@ fun HomeLocationSettingScreen(
             .padding(paddingValues)
             .padding(horizontal = 16.dp)
     ) {
-        // 헤더
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -129,7 +126,6 @@ fun HomeLocationSettingScreen(
 
         Spacer(modifier = Modifier.height(27.dp))
 
-        // 지역구 섹션 - 처음부터 모든 구 칩들을 보여줌
         FormField(
             label = stringResource(id = R.string.ic_onboarding_signup_main_location),
             content = {
@@ -148,7 +144,6 @@ fun HomeLocationSettingScreen(
 
         Spacer(modifier = Modifier.height(46.dp))
 
-        // 동 선택 섹션 (구가 선택되었을 때만 표시)
         if (selectedGu.isNotEmpty()) {
             FormField(
                 label = stringResource(id = R.string.ic_onboarding_signup_sub_location),
@@ -166,7 +161,6 @@ fun HomeLocationSettingScreen(
 
         Spacer(modifier = Modifier.weight(1f))
 
-        // 완료 버튼
         val isFormValid = selectedGu.isNotEmpty() && selectedDong.isNotEmpty()
 
         PawkeyButton(

@@ -49,7 +49,6 @@ import com.paw.key.core.designsystem.component.PawkeyButton
 import com.paw.key.core.designsystem.theme.PawKeyTheme
 import com.paw.key.core.util.noRippleClickable
 import com.paw.key.presentation.ui.signup.component.FormField
-import com.paw.key.presentation.ui.signup.component.SignUpHeader
 import com.paw.key.presentation.ui.signup.component.SignUpTextField
 import com.paw.key.presentation.ui.signup.component.SignUpUserSelectButton
 import com.paw.key.presentation.ui.signup.state.SignUpContract
@@ -68,13 +67,14 @@ private fun PreviewSignUpDogScreen() {
 fun SignUpDogRoute(
     navigateNext: () -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: SignUpViewModel = hiltViewModel(),
+    viewModel: SignUpViewModel? = null
 ) {
+    val actualViewModel = viewModel ?: hiltViewModel<SignUpViewModel>()
     SignUpDogScreen(
         step = 0.75F,
         navigateNext = navigateNext,
         modifier = modifier,
-        viewModel = viewModel
+        viewModel = actualViewModel
     )
 }
 
@@ -93,7 +93,7 @@ fun SignUpDogScreen(
     navigateNext: () -> Unit,
     modifier: Modifier = Modifier,
     progress: Float = 1F,
-    viewModel: SignUpViewModel = hiltViewModel(),
+    viewModel: SignUpViewModel
 ) {
     val state by viewModel.state.collectAsState()
     val animatedProgress by animateFloatAsState(
