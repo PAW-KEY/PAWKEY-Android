@@ -1,12 +1,13 @@
 package com.paw.key.domain.model.entity.onboarding
 
-// 온보딩에서 사용하는 사용자 및 반려견 정보
 data class OnboardingInfo(
     val userId: Int,
-    val token: String
+    val userName: String,
+    val loginId: String,
+    val petId: Int,
+    val petName: String
 )
 
-// 반려견 성향 정보
 data class OnboardingPets(
     val petTraitCategoryList: List<PetTraitCategory>
 )
@@ -22,7 +23,6 @@ data class PetTraitCategoryOption(
     val petTraitCategoryOptionText: String
 )
 
-// 지역 정보 (구, 동 포함)
 data class OnboardingRegion(
     val districtList: List<District>
 )
@@ -42,8 +42,7 @@ data class Dong(
     val name: String
 )
 
-data class DistrictResponse(
-    val code: String,
-    val message: String,
-    val data: OnboardingRegion
+data class PetTraitDto(
+    val traitCategoryId: Int,
+    val traitOptionId: List<Int>
 )

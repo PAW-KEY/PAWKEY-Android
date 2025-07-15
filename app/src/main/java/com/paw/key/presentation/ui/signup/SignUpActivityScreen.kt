@@ -17,7 +17,8 @@ import com.paw.key.R
 import com.paw.key.core.designsystem.component.PawkeyButton
 import com.paw.key.core.designsystem.theme.PawKeyTheme
 import com.paw.key.presentation.ui.signup.component.FormField
-import com.paw.key.presentation.ui.signup.component.LocationButton
+import com.paw.key.presentation.ui.signup.component.LocationItem
+import com.paw.key.presentation.ui.signup.component.LocationItemList
 import com.paw.key.presentation.ui.signup.component.LocationList
 import com.paw.key.presentation.ui.signup.component.SignUpHeader
 import com.paw.key.presentation.ui.signup.viewmodel.SignUpViewModel
@@ -29,19 +30,23 @@ private fun PreviewSignUpActivityScreen() {
         SignUpActivityScreen(
             step = 0.5F,
             navigateSignUpDog = {},
+            viewModel = hiltViewModel()
         )
     }
 }
 
 @Composable
 fun SignUpActivityRoute(
-    navugateSignUpDog: () -> Unit,
+    navigateSignUpDog: () -> Unit,
     modifier: Modifier = Modifier,
+    viewModel: SignUpViewModel? = null
 ) {
+
     SignUpActivityScreen(
         step = 0.5F,
-        navigateSignUpDog = navugateSignUpDog,
+        navigateSignUpDog = navigateSignUpDog,
         modifier = modifier,
+        viewModel = viewModel ?: hiltViewModel()
     )
 }
 
@@ -50,7 +55,7 @@ fun SignUpActivityScreen(
     step: Float,
     navigateSignUpDog: () -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: SignUpViewModel = hiltViewModel(),
+    viewModel: SignUpViewModel
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     val regionList by viewModel.regionList.collectAsStateWithLifecycle()
@@ -59,7 +64,14 @@ fun SignUpActivityScreen(
     val selectedDong = state.selectedDong
 
     val guOptions = regionList.map { it.gu.name }
-    val dongOptions = regionList.find { it.gu.name == selectedGu }?.dongs?.map { it.name } ?: emptyList()
+
+    val dongOptions = if (selectedGu.isNotEmpty()) {
+        regionList.find { it.gu.name == selectedGu }?.dongs?.map {
+            LocationItem(id = it.id, name = it.name)
+        } ?: emptyList()
+    } else {
+        emptyList()
+    }
 
     Column(
         modifier = modifier.fillMaxSize()
@@ -77,26 +89,22 @@ fun SignUpActivityScreen(
         ) {
             Spacer(modifier = Modifier.height(27.dp))
 
+            // 지역구 섹션 - 처음부터 모든 구 칩들을 보여줌
             FormField(
                 label = stringResource(id = R.string.ic_onboarding_signup_main_location),
                 content = {
-                    LocationButton(
-                        isEnable = state.isLocationMenuVisible,
-                        location = selectedGu.ifEmpty { "구를 선택해주세요" },
-                        onClick = { viewModel.toggleLocationMenu() }
+                    LocationList(
+                        selected = selectedGu,
+                        locations = guOptions,
+                        onLocationSelected = { guName ->
+                            val selectedGuItem = regionList.find { it.gu.name == guName }
+                            selectedGuItem?.let {
+                                viewModel.onGuSelected(it.gu.name, it.gu.id)
+                            }
+                        }
                     )
                 }
             )
-
-            if (state.isLocationMenuVisible) {
-                LocationList(
-                    selected = selectedGu,
-                    locations = guOptions,
-                    onLocationSelected = {
-                        viewModel.onGuSelected(it)
-                    }
-                )
-            }
 
             Spacer(modifier = Modifier.height(46.dp))
 
@@ -104,11 +112,11 @@ fun SignUpActivityScreen(
                 FormField(
                     label = stringResource(id = R.string.ic_onboarding_signup_sub_location),
                     content = {
-                        LocationList(
+                        LocationItemList(
                             selected = selectedDong,
                             locations = dongOptions,
-                            onLocationSelected = {
-                                viewModel.onDongSelected(it)
+                            onLocationSelected = { locationItem ->
+                                viewModel.onDongSelected(locationItem.name, locationItem.id)
                             }
                         )
                     }

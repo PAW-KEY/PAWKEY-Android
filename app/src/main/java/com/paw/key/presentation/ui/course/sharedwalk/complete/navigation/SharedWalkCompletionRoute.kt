@@ -15,9 +15,10 @@ import com.paw.key.presentation.ui.course.walk.navigation.WalkCourse
 import kotlinx.serialization.Serializable
 
 fun NavController.navigateSharedWalkCompletion(
+    routeId: Int,
     navOptions: NavOptions?,
 ) {
-    navigate(SharedWalkCompletion, navOptions)
+    navigate(SharedWalkCompletion(routeId), navOptions)
 }
 
 @RequiresApi(Build.VERSION_CODES.Q)
@@ -27,7 +28,9 @@ fun NavGraphBuilder.sharedWalkCompletionNavGraph(
     navigateNext: () -> Unit,
     snackBarHostState: SnackbarHostState,
 ) {
-    composable<SharedWalkCompletion> {
+    composable<SharedWalkCompletion> { backStackEntry ->
+        val routeId = backStackEntry.arguments?.getInt("routeId") ?: 0
+
         SharedWalkCompletionRoute(
             paddingValues = paddingValues,
             navigateUp = navigateUp,
@@ -37,4 +40,4 @@ fun NavGraphBuilder.sharedWalkCompletionNavGraph(
 }
 
 @Serializable
-data object SharedWalkCompletion : Route
+data class SharedWalkCompletion(val routeId: Int) : Route

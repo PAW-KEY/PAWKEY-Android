@@ -17,7 +17,6 @@ import com.paw.key.presentation.ui.course.entire.navigation.navigateCourse
 import com.paw.key.presentation.ui.course.sharedwalk.complete.navigation.sharedWalkCompletionNavGraph
 import com.paw.key.presentation.ui.course.sharedwalk.review.navigation.sharedWalkReviewNavGraph
 import com.paw.key.presentation.ui.course.sharedwalk.sharedroute.navigation.sharedWalkCourseNavGraph
-import com.paw.key.presentation.ui.course.walk.navigation.navigateWalkCourse
 import com.paw.key.presentation.ui.course.walk.navigation.walkCourseNavGraph
 import com.paw.key.presentation.ui.course.walkcomplete.navigation.walkCompletionNavGraph
 import com.paw.key.presentation.ui.course.walkreview.navigation.navigateWalkReview
@@ -36,10 +35,7 @@ import com.paw.key.presentation.ui.mypage.navigation.savedDetailNavGraph
 import com.paw.key.presentation.ui.mypage.navigation.userProfileNavGraph
 import com.paw.key.presentation.ui.onboard.navigation.onboardingNavGraph
 import com.paw.key.presentation.ui.region.navigation.regionalNavGraph
-import com.paw.key.presentation.ui.signup.navigation.signUpActivityNavGraph
-import com.paw.key.presentation.ui.signup.navigation.signUpLevelNavGraph
-import com.paw.key.presentation.ui.signup.navigation.signupNavGraph
-import com.paw.key.presentation.ui.signup.navigation.signupdogNavGraph
+import com.paw.key.presentation.ui.signup.navigation.signUpNavGraph
 import com.paw.key.presentation.ui.splash.navigation.splashNavGraph
 
 @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
@@ -91,14 +87,22 @@ fun PawKeyNavHost(
         sharedWalkCourseNavGraph(
             paddingValues = paddingValues,
             navigateUp = navigator::navigateUp,
-            navigateNext = navigator::navigateSharedWalkCompletion,
+            navigateNext = {
+                // Todo : 마찬가지로 이것도 그냥 넣어놓음 나중에 리스트 연결 후 예쩡
+                navigator::navigateSharedWalkCompletion
+            },
             snackBarHostState = snackbarHostState
         )
 
         sharedWalkCompletionNavGraph(
             paddingValues = paddingValues,
             navigateUp = navigator::navigateUp,
-            navigateNext = navigator::navigateSharedWalkReview,
+            navigateNext = {
+                // Todo : 마찬가지로 이것도 그냥 넣어놓음 나중에 리스트 연결 후 예쩡
+                navigator.navigateSharedWalkReview(
+                    routeId = 2
+                )
+            },
             snackBarHostState = snackbarHostState
         )
 
@@ -236,10 +240,13 @@ fun PawKeyNavHost(
             snackBarHostState = snackbarHostState
         )
 
+
         loginNavGraph(
             paddingValues = paddingValues,
             navigateUp = navigator::navigateHome,
-            navigateNext = navigator::navigateSignUp,
+            navigateNext = {
+                navigator.navigateSignUpFlow()
+            },
             snackBarHostState = snackbarHostState
         )
 
@@ -247,25 +254,20 @@ fun PawKeyNavHost(
             paddingValues = paddingValues,
             navigateUp = navigator::navigateUp,
             navigateNext = navigator::navigateDummyNext,
-            navigateSignUp = navigator::navigateSignUp,
             snackBarHostState = snackbarHostState
         )
 
-        signupNavGraph(
-            navigateSignUpActivity = navigator::navigateSignUpActivity,
+        signUpNavGraph(
+            navController = navigator.navController,
+            navigateToHome = {
+                val options = navOptions {
+                    popUpTo(0) { inclusive = true }
+                    launchSingleTop = true
+                }
+                navigator.navigateHome(navOptions = options)
+            }
         )
 
-        signUpActivityNavGraph(
-            navigateSignUpDog = navigator::navigateSignUpDog,
-        )
 
-        signupdogNavGraph(
-            navigateNext = navigator::navigateSignUpLevel,
-        )
-
-        signUpLevelNavGraph(
-            navigateNext = navigator::navigateHome,
-
-        )
     }
 }

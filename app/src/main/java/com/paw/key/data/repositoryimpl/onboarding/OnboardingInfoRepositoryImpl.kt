@@ -1,10 +1,11 @@
 package com.paw.key.data.repositoryimpl.onboarding
 
+import com.paw.key.data.dto.request.onboarding.OnboardingInfoRequest
+import com.paw.key.data.dto.response.BaseResponse
 import com.paw.key.data.dto.response.onboarding.OnboardingInfoResponse
 import com.paw.key.data.remote.datasource.OnboardingInfoDataSource
 import com.paw.key.domain.repository.onboarding.OnboardingInfoRepository
 import okhttp3.MultipartBody
-import okhttp3.RequestBody
 import javax.inject.Inject
 
 class OnboardingInfoRepositoryImpl @Inject constructor(
@@ -13,10 +14,10 @@ class OnboardingInfoRepositoryImpl @Inject constructor(
 
     override suspend fun postOnboardingInfo(
         userId: Int,
-        requestBody: RequestBody,
-        petImage: MultipartBody.Part
-    ): Result<OnboardingInfoResponse> = runCatching {
-        val response = dataSource.postOnboardingInfo(userId, requestBody, petImage)
+        image: MultipartBody.Part,
+        onboardingInfoRequest: OnboardingInfoRequest
+    ): Result<BaseResponse<OnboardingInfoResponse>> = runCatching {
+        val response = dataSource.postOnboardingInfo(userId, image, onboardingInfoRequest)
         if (response.code == "S000") {
             response
         } else {

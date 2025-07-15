@@ -1,8 +1,7 @@
 package com.paw.key.presentation.ui.course.sharedwalk.review.state
 
-import android.net.Uri
 import androidx.compose.runtime.Immutable
-import com.paw.key.presentation.ui.course.walkreview.state.WalkReviewContract
+import com.paw.key.presentation.ui.course.walkreview.WalkReviewCategoryUiModel
 import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.persistentListOf
 
@@ -16,14 +15,13 @@ data class SharedWalkReviewState(
 
     val isDialogVisible : Boolean = false,
 
-    val feedbackState: WalkReviewContract.WalkReviewFeedbackState = WalkReviewContract.WalkReviewFeedbackState()
+    val categoryList: List<WalkReviewCategoryUiModel> = emptyList(),
+
+    val tags : PersistentList<String> = persistentListOf(),
 ){
-    val isValidForm get() =
-            feedbackState.selectedSafetyFeedback != null &&
-            feedbackState.selectedFacilityFeedback != null &&
-            feedbackState.selectedRoadFeedback != null &&
-            feedbackState.selectedNoiseFeedback != null &&
-            feedbackState.selectedFrequencyFeedback != null
+    val isValidForm get() = categoryList.all { category ->
+        category.options.any { it.isSelected }
+    }
 }
 
 sealed class SharedWalkReviewSideEffect {

@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -34,26 +33,24 @@ private fun PreviewSignUpScreen() {
         SignUpScreen(
             step = 0.25F,
             navigateSignUpActivity = {},
+            viewModel = hiltViewModel<SignUpViewModel>()
         )
     }
 }
 
 @Composable
 fun SignUpRoute(
-    email:String,
-    password:String,
     navigateSignUpActivity: () -> Unit,
     modifier: Modifier = Modifier,
+    viewModel: SignUpViewModel? = null
     ) {
-    val viewModel = hiltViewModel<SignUpViewModel>()
+    val actualViewModel = viewModel ?: hiltViewModel<SignUpViewModel>()
 
-    LaunchedEffect(email, password) {
-        viewModel.setLoginCredentials(email, password)
-    }
     SignUpScreen(
         step = 0.25F,
         navigateSignUpActivity = navigateSignUpActivity,
         modifier = modifier,
+        viewModel = actualViewModel
     )
 }
 
@@ -62,7 +59,7 @@ fun SignUpScreen(
     step: Float,
     navigateSignUpActivity: () -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: SignUpViewModel = hiltViewModel(),
+    viewModel: SignUpViewModel
 ) {
     val state by viewModel.state.collectAsState()
 
