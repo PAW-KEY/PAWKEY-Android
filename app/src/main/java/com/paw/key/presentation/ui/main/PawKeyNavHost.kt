@@ -91,14 +91,22 @@ fun PawKeyNavHost(
         sharedWalkCourseNavGraph(
             paddingValues = paddingValues,
             navigateUp = navigator::navigateUp,
-            navigateNext = navigator::navigateSharedWalkCompletion,
+            navigateNext = {
+                // Todo : 마찬가지로 이것도 그냥 넣어놓음 나중에 리스트 연결 후 예쩡
+                navigator::navigateSharedWalkCompletion
+            },
             snackBarHostState = snackbarHostState
         )
 
         sharedWalkCompletionNavGraph(
             paddingValues = paddingValues,
             navigateUp = navigator::navigateUp,
-            navigateNext = navigator::navigateSharedWalkReview,
+            navigateNext = {
+                // Todo : 마찬가지로 이것도 그냥 넣어놓음 나중에 리스트 연결 후 예쩡
+                navigator.navigateSharedWalkReview(
+                    routeId = 2
+                )
+            },
             snackBarHostState = snackbarHostState
         )
 
