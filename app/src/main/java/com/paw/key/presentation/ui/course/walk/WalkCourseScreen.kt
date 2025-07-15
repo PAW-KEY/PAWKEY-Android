@@ -119,13 +119,13 @@ fun WalkCourseRoute(
 
     val formattedTotalTime by remember(totalTime) {
         derivedStateOf {
-            com.paw.key.presentation.ui.course.sharedwalk.sharedroute.formatTime(totalTime)
+            formatTime(totalTime)
         }
     }
 
     val formatDistance by remember(state.totalDistance) {
         derivedStateOf {
-            com.paw.key.presentation.ui.course.sharedwalk.sharedroute.formatDistance(state.totalDistance)
+            formatDistance(state.totalDistance)
         }
     }
 
@@ -630,7 +630,7 @@ fun captureMapToBitmap(surfaceView: GLSurfaceView, onCaptured: (Bitmap?) -> Unit
     surfaceView.queueEvent {
         val egl = EGLContext.getEGL() as EGL10
         val gl = egl.eglGetCurrentContext().gl as GL10
-
+      
         // 원하는 최종 크기를 먼저 계산
         val screenWidth = surfaceView.context.resources.displayMetrics.widthPixels
         val contentWidth = (screenWidth - 32)

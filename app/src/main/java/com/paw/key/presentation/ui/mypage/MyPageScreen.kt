@@ -24,7 +24,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.paw.key.R
 import com.paw.key.core.designsystem.component.SubChip
 import com.paw.key.core.designsystem.theme.PawKeyTheme
-import com.paw.key.presentation.ui.mypage.state.MyPageContract
+import com.paw.key.presentation.ui.mypage.state.MyPageState
 import com.paw.key.presentation.ui.mypage.viewmodel.MyPageViewModel
 
 @Composable
@@ -56,7 +56,7 @@ fun MyPageRoute(
 
 @Composable
 fun MyPageScreen(
-    state: MyPageContract.MyPageState,
+    state: MyPageState,
     paddingValues: PaddingValues,
     navigateUp: () -> Unit,
     navigateUserProfile: () -> Unit,
@@ -302,7 +302,7 @@ fun WalkRouteList(
 @Composable
 private fun MyPageScreenPreview() {
     PawKeyTheme {
-        MyPageScreen(state = MyPageContract.MyPageState(
+        MyPageScreen(state = MyPageState(
             ownerName = "김도기님",
             role = "견주",
             petName = "포비",

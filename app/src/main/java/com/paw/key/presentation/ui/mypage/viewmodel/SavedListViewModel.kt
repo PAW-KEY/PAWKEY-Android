@@ -1,8 +1,6 @@
 package com.paw.key.presentation.ui.mypage.viewmodel
 
 import androidx.lifecycle.ViewModel
-import com.paw.key.presentation.ui.mypage.state.MyPageContract
-import com.paw.key.presentation.ui.mypage.state.MyPageContract.MyPageState
 import com.paw.key.presentation.ui.mypage.state.SavedListContract
 import com.paw.key.presentation.ui.mypage.state.SavedListContract.SavedListState
 import dagger.hilt.android.lifecycle.HiltViewModel
