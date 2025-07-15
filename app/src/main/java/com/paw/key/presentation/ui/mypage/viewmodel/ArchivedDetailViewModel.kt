@@ -20,22 +20,17 @@ import javax.inject.Inject
 class ArchivedDetailViewModel @Inject constructor(
     private val walkListDetailRepository: WalkListRepository
 ) : ViewModel() {
-    /*private val _state = MutableStateFlow(
-        ArchivedDetailState(
-            title = "한강 산책로",
-            petName = "후추",
-            date = "2025/06/02",
-            location = "뚝섬유원지",
-            distance = "4.5km",
-            time = "1시간 30분 소요",
-            option = listOf("풍경이 좋아요", "조용해요", "길이 깨끗해요"),
-            imageUrl = "https://pawkey-server.com/image.jpg"
-        )
-    )*/
-
     private val _state = MutableStateFlow(ArchivedDetailState())
     val state: StateFlow<ArchivedDetailState>
         get() = _state.asStateFlow()
+
+    fun onClickImage(imageUrl: String) {
+        _state.update {
+            it.copy(
+                clickImage = imageUrl
+            )
+        }
+    }
 
     fun getWalkDetail(userId: Int, postId: Int) {
         viewModelScope.launch {
@@ -61,9 +56,9 @@ class ArchivedDetailViewModel @Inject constructor(
         }
     }
 
-    fun getWalkTopPopular(userId: Int, postId: Int) {
+    fun getWalkTopPopular(userId: Int, routeId : Int) {
         viewModelScope.launch {
-            walkListDetailRepository.getWalkTopPopular(userId, postId)
+            walkListDetailRepository.getWalkTopPopular(userId, routeId)
                 .onSuccess { result ->
                     _state.update {
                         it.copy(

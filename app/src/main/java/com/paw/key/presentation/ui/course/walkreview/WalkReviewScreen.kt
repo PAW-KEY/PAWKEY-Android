@@ -321,7 +321,7 @@ fun WalkReviewScreen(
                 feedbackList.forEachIndexed { index, category ->
                     WalkReviewFeedbackForm(
                         icon = R.drawable.ic_walk_review_location,
-                        title = category.categoryName,
+                        title = category.categoryDescription,
                         selectedFeedbackItem = category.options.firstOrNull { it.isSelected }?.optionText,
                         feedbackList = category.options.map { it.optionText },
                         onClickFeedback = { selectedText ->

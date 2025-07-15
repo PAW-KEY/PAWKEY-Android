@@ -11,6 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.paw.key.core.designsystem.theme.PawKeyTheme
+import com.paw.key.core.util.noRippleClickable
 
 @Preview
 @Composable
@@ -34,7 +35,7 @@ fun SubChip(
                 color = if (isActionChip) PawKeyTheme.colors.white2 else PawKeyTheme.colors.green50,
                 shape = RoundedCornerShape(20.dp)
             )
-            .clickable(onClick = onClick)
+            .noRippleClickable(onClick = onClick)
             .padding(horizontal = 10.dp, vertical = 4.dp)
     ) {
         Text(

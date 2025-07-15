@@ -6,6 +6,7 @@ data class WalkReviewCategoryListEntity(
 
 data class WalkReviewCategoryEntity(
     val categoryId : Int,
+    val categoryDescription : String,
     val categoryName : String,
     val options : List<WalkReviewOptionOptionsResponseEntity>
 )

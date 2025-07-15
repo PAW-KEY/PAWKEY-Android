@@ -159,9 +159,11 @@ class MainNavigator(
 
     fun navigateArchivedDetail(
         routeId: Int,
+        pageId : Int,
         navOptions: NavOptions? = null
     ) {
         navController.navigateArchivedDetail(
+            pageId = pageId,
             routeId = routeId,
             navOptions = navOptions
         )

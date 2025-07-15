@@ -3,6 +3,7 @@ package com.paw.key.presentation.ui.course.walkreview
 data class WalkReviewCategoryUiModel(
     val categoryId: Int,
     val categoryName: String,
+    val categoryDescription: String,
     val options: List<WalkReviewOptionUiModel>
 )
 
