@@ -1,6 +1,7 @@
 package com.paw.key.presentation.ui.course.entire.tab.map.List
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -14,6 +15,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CheckboxDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -22,37 +24,31 @@ import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.paw.key.R
 import com.paw.key.core.designsystem.component.PawkeyButton
 import com.paw.key.core.designsystem.theme.PawKeyTheme
 import com.paw.key.core.util.noRippleClickable
 import com.paw.key.presentation.ui.course.entire.tab.map.List.state.TapListContract
 import com.paw.key.presentation.ui.course.entire.tab.map.List.viewmodel.TapListViewModel
-import com.paw.key.presentation.ui.course.entire.tab.map.viewmodel.TapMapViewModel
 
 @Preview(showBackground = true)
 @Composable
 fun PreviewCourseOptionBottomSheet() {
     PawKeyTheme {
         Column {
-            CourseOptionBottomSheet(
-                viewModel = viewModel(),
-                onDismissRequest = {}
-            )
+            Text("Bottom Sheet Preview")
         }
     }
 }
@@ -64,276 +60,400 @@ fun CourseOptionBottomSheet(
     viewModel: TapListViewModel,
     onDismissRequest: () -> Unit,
 ) {
-    var showBottomSheet by remember { mutableStateOf(true) }
     val sheetState = rememberModalBottomSheetState(
         skipPartiallyExpanded = false
     )
     val listState by viewModel.state.collectAsStateWithLifecycle()
 
+    LaunchedEffect(Unit) {
+        if (listState.filterOptions == null && !listState.isLoading) {
+            viewModel.loadFilterOptions()
+        }
+    }
+
     ModalBottomSheet(
-        onDismissRequest = {
-            showBottomSheet = false
-            onDismissRequest()
-        },
+        onDismissRequest = onDismissRequest,
         sheetState = sheetState,
         containerColor = PawKeyTheme.colors.white1,
         shape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp),
-        contentColor = PawKeyTheme.colors.white1
     ) {
         Column(
             modifier = modifier
                 .fillMaxWidth()
-                .padding(bottom = 16.dp)
+                .padding(bottom = 34.dp)
         ) {
-            Column(
-                modifier = Modifier.padding(horizontal = 16.dp, vertical = 20.dp)
+            BottomSheetHeader()
+
+            when {
+                listState.isLoading -> {
+                    LoadingContent(
+                        listState = listState,
+                        viewModel = viewModel,
+                        modifier = Modifier.weight(1f)
+                    )
+                }
+
+                listState.filterOptions != null -> {
+                    SuccessContent(
+                        listState = listState,
+                        viewModel = viewModel,
+                        modifier = Modifier.weight(1f)
+                    )
+                }
+
+                else -> {
+                    ErrorContent(
+                        listState = listState,
+                        viewModel = viewModel,
+                        modifier = Modifier.weight(1f)
+                    )
+                }
+            }
+
+            BottomButtons(
+                viewModel = viewModel,
+                onDismissRequest = onDismissRequest
+            )
+        }
+    }
+}
+
+@Composable
+private fun BottomSheetHeader() {
+    Column(
+        modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp)
+    ) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = stringResource(id = R.string.course_list_option_title),
+                color = PawKeyTheme.colors.black,
+                style = PawKeyTheme.typography.head20B1
+            )
+            Spacer(modifier = Modifier.weight(1f))
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Text(
+            text = stringResource(id = R.string.course_list_option_sort),
+            color = PawKeyTheme.colors.green500,
+            style = PawKeyTheme.typography.caption12Sb1
+        )
+    }
+}
+
+@Composable
+private fun LoadingContent(
+    listState: TapListContract.TapListState,
+    viewModel: TapListViewModel,
+    modifier: Modifier = Modifier
+) {
+    LazyColumn(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp)
+    ) {
+        items(TapListContract.Options.sortOptions) { option ->
+            SortOptionItem(
+                title = option,
+                isSelected = listState.selectedSortOption == option,
+                onSelect = { viewModel.updateSortOption(option) }
+            )
+        }
+
+        item {
+            Spacer(modifier = Modifier.height(32.dp))
+            Box(
+                modifier = Modifier.fillMaxWidth(),
+                contentAlignment = Alignment.Center
             ) {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    CircularProgressIndicator(
+                        color = PawKeyTheme.colors.green500,
+                        modifier = Modifier.size(24.dp)
+                    )
+                    Spacer(modifier = Modifier.height(16.dp))
+                    Text(
+                        text = "필터 옵션을 불러오는 중...",
+                        color = PawKeyTheme.colors.gray500,
+                        style = PawKeyTheme.typography.body14R,
+                        textAlign = TextAlign.Center
+                    )
+                }
+            }
+            Spacer(modifier = Modifier.height(80.dp))
+        }
+    }
+}
+
+@Composable
+private fun ErrorContent(
+    listState: TapListContract.TapListState,
+    viewModel: TapListViewModel,
+    modifier: Modifier = Modifier
+) {
+    LazyColumn(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp)
+    ) {
+        items(TapListContract.Options.sortOptions) { option ->
+            SortOptionItem(
+                title = option,
+                isSelected = listState.selectedSortOption == option,
+                onSelect = { viewModel.updateSortOption(option) }
+            )
+        }
+
+        item {
+            Spacer(modifier = Modifier.height(32.dp))
+            Box(
+                modifier = Modifier.fillMaxWidth(),
+                contentAlignment = Alignment.Center
+            ) {
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(
-                        text = stringResource(id = R.string.course_list_option_title),
-                        color = PawKeyTheme.colors.black,
-                        style = PawKeyTheme.typography.head20B1
+                        text = "필터 옵션을 불러올 수 없습니다",
+                        color = PawKeyTheme.colors.gray500,
+                        style = PawKeyTheme.typography.body14R,
+                        textAlign = TextAlign.Center
                     )
-
-                    Spacer(modifier = Modifier.weight(1f))
-                }
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                Text(
-                    text = stringResource(id = R.string.course_list_option_sort),
-                    color = PawKeyTheme.colors.green500,
-                    style = PawKeyTheme.typography.caption12Sb1
-                )
-
-                Spacer(modifier = Modifier.height(6.dp))
-            }
-
-            LazyColumn(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .weight(1f)
-                    .padding(horizontal = 16.dp)
-            ) {
-                items(TapListContract.Options.sortOptions) { option ->
-                    SortOptionItem(
-                        title = option,
-                        isSelected = listState.selectedSortOption == option,
-                        onSelect = { viewModel.updateSortOption(option) }
-                    )
-                }
-
-                item {
-                    Spacer(modifier = Modifier.height(16.dp))
-
+                    Spacer(modifier = Modifier.height(8.dp))
                     Text(
-                        text = stringResource(id = R.string.course_list_option_single),
-                        color = PawKeyTheme.colors.green500,
-                        style = PawKeyTheme.typography.caption12Sb1
+                        text = "다시 시도해보세요",
+                        color = PawKeyTheme.colors.gray400,
+                        style = PawKeyTheme.typography.caption12R,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.noRippleClickable {
+                            viewModel.loadFilterOptions()
+                        }
                     )
-                }
-
-                item {
-                    CourseOptionToggle(
-                        title = stringResource(id = R.string.course_list_option_sort),
-                        selecttitle = if (listState.selectedWalkTime.isNotEmpty()) listState.selectedWalkTime else "",
-                        isExpanded = listState.isWalkTimeExpanded,
-                        onClick = { viewModel.toggleWalkTimeExpanded() }
-                    )
-                }
-
-                if (listState.isWalkTimeExpanded) {
-                    items(TapListContract.Options.walkTimeOptions) { option ->
-                        SingleOptionItem(
-                            title = option,
-                            isSelected = listState.selectedWalkTime == option,
-                            onSelect = { viewModel.updateWalkTime(option) }
-                        )
-                    }
-                }
-
-                item {
-                    HorizontalDivider(
-                        color = PawKeyTheme.colors.gray50,
-                        thickness = 1.dp
-                    )
-                }
-
-                item {
-                    CourseOptionToggle(
-                        title = stringResource(id = R.string.course_list_option_mood),
-                        selecttitle = if (listState.selectedMood.isNotEmpty()) listState.selectedMood else "",
-                        isExpanded = listState.isMoodExpanded,
-                        onClick = { viewModel.toggleMoodExpanded() }
-                    )
-                }
-
-                if (listState.isMoodExpanded) {
-                    items(TapListContract.Options.moodOptions) { option ->
-                        SingleOptionItem(
-                            title = option,
-                            isSelected = listState.selectedMood == option,
-                            onSelect = { viewModel.updateMood(option) }
-                        )
-                    }
-                }
-
-                item {
-                    HorizontalDivider(
-                        color = PawKeyTheme.colors.gray50,
-                        thickness = 1.dp
-                    )
-                }
-
-                item {
-                    CourseOptionToggle(
-                        title = stringResource(id = R.string.course_list_option_dog_friend),
-                        selecttitle = if (listState.selectedDogFriend.isNotEmpty()) listState.selectedDogFriend else "",
-                        isExpanded = listState.isDogFriendExpanded,
-                        onClick = { viewModel.toggleDogFriendExpanded() }
-                    )
-                }
-
-                if (listState.isDogFriendExpanded) {
-                    items(TapListContract.Options.dogFriendOptions) { option ->
-                        SingleOptionItem(
-                            title = option,
-                            isSelected = listState.selectedDogFriend == option,
-                            onSelect = { viewModel.updateDogFriend(option) }
-                        )
-                    }
-                }
-
-                item {
-                    HorizontalDivider(
-                        color = PawKeyTheme.colors.gray50,
-                        thickness = 1.dp
-                    )
-                }
-
-                item {
-                    Spacer(modifier = Modifier.height(16.dp))
-
-                    Text(
-                        text = stringResource(id = R.string.course_list_option_multiple),
-                        color = PawKeyTheme.colors.green500,
-                        style = PawKeyTheme.typography.caption12Sb1
-                    )
-                }
-
-                item {
-                    CourseOptionToggle(
-                        title = stringResource(id = R.string.course_list_option_safety),
-                        selecttitle = if (listState.selectedSafety.isNotEmpty()) "${listState.selectedSafety.size}개 선택" else "",
-                        isExpanded = listState.isSafetyExpanded,
-                        onClick = { viewModel.toggleSafetyExpanded() }
-                    )
-                }
-
-                if (listState.isSafetyExpanded) {
-                    items(TapListContract.Options.safetyOptions) { option ->
-                        MultipleOptionItem(
-                            title = option,
-                            isSelected = listState.selectedSafety.contains(option),
-                            onSelect = { viewModel.updateSafety(option) }
-                        )
-                    }
-                }
-
-                item {
-                    HorizontalDivider(
-                        color = PawKeyTheme.colors.gray50,
-                        thickness = 1.dp
-                    )
-                }
-
-                item {
-                    CourseOptionToggle(
-                        title = stringResource(id = R.string.course_list_option_convenience),
-                        selecttitle = if (listState.selectedConvenience.isNotEmpty()) "${listState.selectedConvenience.size}개 선택" else "",
-                        isExpanded = listState.isConvenienceExpanded,
-                        onClick = { viewModel.toggleConvenienceExpanded() }
-                    )
-                }
-
-                if (listState.isConvenienceExpanded) {
-                    items(TapListContract.Options.convenienceOptions) { option ->
-                        MultipleOptionItem(
-                            title = option,
-                            isSelected = listState.selectedConvenience.contains(option),
-                            onSelect = { viewModel.updateConvenience(option) }
-                        )
-                    }
-                }
-
-                item {
-                    HorizontalDivider(
-                        color = PawKeyTheme.colors.gray50,
-                        thickness = 1.dp
-                    )
-                }
-
-                item {
-                    CourseOptionToggle(
-                        title = stringResource(id = R.string.course_list_option_environment),
-                        selecttitle = if (listState.selectedEnvironment.isNotEmpty()) "${listState.selectedEnvironment.size}개 항목 선택" else "",
-                        isExpanded = listState.isEnvironmentExpanded,
-                        onClick = { viewModel.toggleEnvironmentExpanded() }
-                    )
-                }
-
-                if (listState.isEnvironmentExpanded) {
-                    items(TapListContract.Options.environmentOptions) { option ->
-                        MultipleOptionItem(
-                            title = option,
-                            isSelected = listState.selectedEnvironment.contains(option),
-                            onSelect = { viewModel.updateEnvironment(option) }
-                        )
-                    }
-                }
-
-                item {
-                    HorizontalDivider(
-                        color = PawKeyTheme.colors.gray50,
-                        thickness = 1.dp
-                    )
-                }
-
-                item {
-                    Spacer(modifier = Modifier.height(80.dp))
                 }
             }
+            Spacer(modifier = Modifier.height(80.dp))
+        }
+    }
+}
 
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(10.dp)
-            ) {
-                PawkeyButton(
-                    text = stringResource(id = R.string.course_list_option_apply),
-                    enabled = viewModel.isAllOptionsSelected(),
-                    onClick = {
-                        viewModel.applyOptions()
-                        onDismissRequest()
-                    },
-                    modifier = Modifier
-                        .padding(horizontal = 16.dp)
-                        .width(260.dp)
+@Composable
+private fun SuccessContent(
+    listState: TapListContract.TapListState,
+    viewModel: TapListViewModel,
+    modifier: Modifier = Modifier
+) {
+    val filterOptions = listState.filterOptions!!
+
+    val moodOptions = filterOptions.categoryList?.find { it.categoryName == "분위기" }
+    val dogFriendOptions = filterOptions.categoryList?.find { it.categoryName == "강아지 친구" }
+    val safetyOptions = filterOptions.categoryList?.find { it.categoryName == "안전" }
+    val convenienceOptions = filterOptions.categoryList?.find { it.categoryName == "편의성" }
+    val environmentOptions = filterOptions.categoryList?.find { it.categoryName == "환경" }
+
+    LazyColumn(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp)
+    ) {
+        items(TapListContract.Options.sortOptions) { option ->
+            SortOptionItem(
+                title = option,
+                isSelected = listState.selectedSortOption == option,
+                onSelect = { viewModel.updateSortOption(option) }
+            )
+        }
+
+        item {
+            Spacer(modifier = Modifier.height(16.dp))
+            Text(
+                text = stringResource(id = R.string.course_list_option_single),
+                color = PawKeyTheme.colors.green500,
+                style = PawKeyTheme.typography.caption12Sb1
+            )
+        }
+
+        moodOptions?.let { mood ->
+            item {
+                CourseOptionToggle(
+                    title = mood.categoryName,
+                    selecttitle = listState.selectedMood,
+                    isExpanded = listState.isMoodExpanded,
+                    onClick = { viewModel.toggleMoodExpanded() }
                 )
+            }
 
-                IconButton(
-                    onClick = { viewModel.resetAllOptions() },
-                    modifier = Modifier.size(56.dp)
-                ) {
-                    Icon(
-                        imageVector = ImageVector.vectorResource(R.drawable.ic_course_list_refresh),
-                        contentDescription = stringResource(id = R.string.course_list_option_reset),
-                        tint = Color.Unspecified,
-                        modifier = Modifier.size(56.dp)
+            if (listState.isMoodExpanded) {
+                val options = mood.categoryOptions ?: emptyList()
+                items(options) { option ->
+                    SingleOptionItem(
+                        title = option.categoryOptionText,
+                        isSelected = listState.selectedMood == option.categoryOptionText,
+                        onSelect = { viewModel.updateMood(option.categoryOptionText) }
                     )
                 }
             }
+
+            item {
+                HorizontalDivider(color = PawKeyTheme.colors.gray50, thickness = 1.dp)
+            }
+        }
+
+        dogFriendOptions?.let { dogFriend ->
+            item {
+                CourseOptionToggle(
+                    title = dogFriend.categoryName,
+                    selecttitle = listState.selectedDogFriend,
+                    isExpanded = listState.isDogFriendExpanded,
+                    onClick = { viewModel.toggleDogFriendExpanded() }
+                )
+            }
+
+            if (listState.isDogFriendExpanded) {
+                val options = dogFriend.categoryOptions ?: emptyList()
+                items(options) { option ->
+                    SingleOptionItem(
+                        title = option.categoryOptionText,
+                        isSelected = listState.selectedDogFriend == option.categoryOptionText,
+                        onSelect = { viewModel.updateDogFriend(option.categoryOptionText) }
+                    )
+                }
+            }
+
+            item {
+                HorizontalDivider(color = PawKeyTheme.colors.gray50, thickness = 1.dp)
+            }
+        }
+
+        item {
+            Spacer(modifier = Modifier.height(16.dp))
+            Text(
+                text = stringResource(id = R.string.course_list_option_multiple),
+                color = PawKeyTheme.colors.green500,
+                style = PawKeyTheme.typography.caption12Sb1
+            )
+        }
+
+        safetyOptions?.let { safety ->
+            item {
+                CourseOptionToggle(
+                    title = safety.categoryName,
+                    selecttitle = if (listState.selectedSafety.isNotEmpty()) "${listState.selectedSafety.size}개 선택" else "",
+                    isExpanded = listState.isSafetyExpanded,
+                    onClick = { viewModel.toggleSafetyExpanded() }
+                )
+            }
+
+            if (listState.isSafetyExpanded) {
+                val options = safety.categoryOptions ?: emptyList()
+                items(options) { option ->
+                    MultipleOptionItem(
+                        title = option.categoryOptionText,
+                        isSelected = listState.selectedSafety.contains(option.categoryOptionText),
+                        onSelect = { viewModel.updateSafety(option.categoryOptionText) }
+                    )
+                }
+            }
+
+            item {
+                HorizontalDivider(color = PawKeyTheme.colors.gray50, thickness = 1.dp)
+            }
+        }
+
+        convenienceOptions?.let { convenience ->
+            item {
+                CourseOptionToggle(
+                    title = convenience.categoryName,
+                    selecttitle = if (listState.selectedConvenience.isNotEmpty()) "${listState.selectedConvenience.size}개 선택" else "",
+                    isExpanded = listState.isConvenienceExpanded,
+                    onClick = { viewModel.toggleConvenienceExpanded() }
+                )
+            }
+
+            if (listState.isConvenienceExpanded) {
+                val options = convenience.categoryOptions ?: emptyList()
+                items(options) { option ->
+                    MultipleOptionItem(
+                        title = option.categoryOptionText,
+                        isSelected = listState.selectedConvenience.contains(option.categoryOptionText),
+                        onSelect = { viewModel.updateConvenience(option.categoryOptionText) }
+                    )
+                }
+            }
+
+            item {
+                HorizontalDivider(color = PawKeyTheme.colors.gray50, thickness = 1.dp)
+            }
+        }
+
+        environmentOptions?.let { environment ->
+            item {
+                CourseOptionToggle(
+                    title = environment.categoryName,
+                    selecttitle = if (listState.selectedEnvironment.isNotEmpty()) "${listState.selectedEnvironment.size}개 선택" else "",
+                    isExpanded = listState.isEnvironmentExpanded,
+                    onClick = { viewModel.toggleEnvironmentExpanded() }
+                )
+            }
+
+            if (listState.isEnvironmentExpanded) {
+                val options = environment.categoryOptions ?: emptyList()
+                items(options) { option ->
+                    MultipleOptionItem(
+                        title = option.categoryOptionText,
+                        isSelected = listState.selectedEnvironment.contains(option.categoryOptionText),
+                        onSelect = { viewModel.updateEnvironment(option.categoryOptionText) }
+                    )
+                }
+            }
+
+            item {
+                HorizontalDivider(color = PawKeyTheme.colors.gray50, thickness = 1.dp)
+            }
+        }
+
+        item {
+            Spacer(modifier = Modifier.height(80.dp))
+        }
+    }
+}
+
+@Composable
+private fun BottomButtons(
+    viewModel: TapListViewModel,
+    onDismissRequest: () -> Unit
+) {
+    Row(
+        horizontalArrangement = Arrangement.spacedBy(10.dp),
+        modifier = Modifier.padding(horizontal = 16.dp)
+    ) {
+        PawkeyButton(
+            text = stringResource(id = R.string.course_list_option_apply),
+            enabled = viewModel.isAllOptionsSelected(),
+            onClick = {
+                viewModel.applyOptions()
+                onDismissRequest()
+            },
+            modifier = Modifier.width(300.dp)
+        )
+
+        Spacer(modifier = Modifier.weight(1F))
+
+        IconButton(
+            onClick = { viewModel.resetAllOptions() },
+            modifier = Modifier.size(56.dp)
+        ) {
+            Icon(
+                imageVector = ImageVector.vectorResource(R.drawable.ic_course_list_refresh),
+                contentDescription = "초기화",
+                tint = Color.Unspecified,
+                modifier = Modifier.size(56.dp)
+            )
         }
     }
 }
@@ -456,6 +576,7 @@ private fun CourseOptionToggle(
         modifier = modifier
             .fillMaxWidth()
             .padding(vertical = 20.dp)
+            .noRippleClickable { onClick() }
     ) {
         Text(
             text = title,
@@ -480,7 +601,7 @@ private fun CourseOptionToggle(
             ),
             contentDescription = "toggle",
             tint = Color.Unspecified,
-            modifier = Modifier.noRippleClickable { onClick() }
+            modifier = Modifier.size(24.dp)
         )
     }
 }
