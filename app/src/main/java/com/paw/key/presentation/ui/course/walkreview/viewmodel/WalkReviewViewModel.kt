@@ -54,6 +54,14 @@ class WalkReviewViewModel @Inject constructor(
         }
     }
 
+    fun onClickSharedReview() {
+        _state.update {
+            it.copy(
+                isDialogVisible = true
+            )
+        }
+    }
+
     fun onTitleTextChanged(text : String) {
         _state.update {
             it.copy(

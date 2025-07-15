@@ -7,7 +7,6 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -41,6 +40,7 @@ import com.paw.key.core.designsystem.component.PawkeyButton
 import com.paw.key.core.designsystem.component.SubChip
 import com.paw.key.core.designsystem.component.TopBar
 import com.paw.key.core.designsystem.theme.PawKeyTheme
+import com.paw.key.presentation.ui.course.walkreview.component.WalkReviewDialog
 import com.paw.key.presentation.ui.course.walkreview.component.WalkReviewFeedbackForm
 import com.paw.key.presentation.ui.course.walkreview.component.WalkReviewFeedbackHeader
 import com.paw.key.presentation.ui.course.walkreview.component.WalkReviewImageRow
@@ -96,7 +96,6 @@ fun WalkReviewRoute(
         }
     }
 
-
     LaunchedEffect(viewModel.sideEffect, lifecycleOwner) {
         viewModel.sideEffect.flowWithLifecycle(lifecycleOwner.lifecycle)
             .collect { sideEffect ->
@@ -129,6 +128,7 @@ fun WalkReviewRoute(
                 4 -> viewModel.onSelectFrequencyFeedback(feedItem)
             }
         },
+        isDialogVisible = state.isDialogVisible,
         isFormValid = isValid,
         isSharedWalk = isSharedWalk,
         imageList = state.images,
@@ -170,6 +170,7 @@ fun WalkReviewScreen(
     onClickImage : () -> Unit,
     onImageDelete : (Uri?) -> Unit,
     navigateShared : () -> Unit,
+    isDialogVisible : Boolean,
     imageList: List<Uri>,
     isFormValid : Boolean,
     isSharedWalk : Boolean,
@@ -436,6 +437,7 @@ fun WalkReviewScreen(
 
             item {
                 val buttonTextRes = if (isSharedWalk) {
+                    // 공유됨
                     R.string.course_review_shared_button
                 } else {
                     R.string.course_review_shared_all_button
@@ -465,6 +467,15 @@ fun WalkReviewScreen(
                     )
                 }
             }
+        }
+
+        if (isDialogVisible) {
+            WalkReviewDialog(
+                onClickOk = {
+                    // 리스트로 이동
+                    navigateNext()
+                }
+            )
         }
     }
 }

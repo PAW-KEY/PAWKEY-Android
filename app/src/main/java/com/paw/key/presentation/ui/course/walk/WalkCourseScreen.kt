@@ -28,8 +28,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
@@ -121,13 +119,13 @@ fun WalkCourseRoute(
 
     val formattedTotalTime by remember(totalTime) {
         derivedStateOf {
-            formatTime(totalTime)
+            com.paw.key.presentation.ui.course.sharedwalk.sharedroute.formatTime(totalTime)
         }
     }
 
     val formatDistance by remember(state.totalDistance) {
         derivedStateOf {
-            formatDistance(state.totalDistance)
+            com.paw.key.presentation.ui.course.sharedwalk.sharedroute.formatDistance(state.totalDistance)
         }
     }
 
@@ -193,10 +191,11 @@ fun WalkCourseRoute(
     }
 
     LaunchedEffect(Unit) {
-        val currentLocation = getCurrentLocation(
-            context,
-            fusedLocationClient,
-        )
+        val currentLocation =
+            com.paw.key.presentation.ui.course.sharedwalk.sharedroute.getCurrentLocation(
+                context,
+                fusedLocationClient,
+            )
 
         viewModel.updateState {
             copy(
@@ -335,10 +334,15 @@ fun WalkCourseRoute(
                     val glSurfaceView = mapView.surfaceView as? GLSurfaceView
                     if (glSurfaceView != null) {
                         withContext(Dispatchers.IO) {
-                            captureMapToBitmap(glSurfaceView) { capturedBitmap ->
+                            com.paw.key.presentation.ui.course.sharedwalk.sharedroute.captureMapToBitmap(
+                                glSurfaceView
+                            ) { capturedBitmap ->
                                 capturedBitmap?.let {
                                     viewModel.onMapCaptured(it)
-                                    Log.d("WalkCourseRoute", "맵 캡처 성공! (triggered by shouldCaptureMap)")
+                                    Log.d(
+                                        "WalkCourseRoute",
+                                        "맵 캡처 성공! (triggered by shouldCaptureMap)"
+                                    )
                                 } ?: run {
                                     Log.e("WalkCourseRoute", "맵 캡처 실패: 비트맵이 null입니다.")
                                     viewModel.mapCaptureCompleted()
@@ -545,12 +549,17 @@ fun WalkCourseScreen(
                                     val glSurfaceView = mapView.surfaceView as? GLSurfaceView
                                     if (glSurfaceView != null) {
                                         withContext(Dispatchers.IO) {
-                                            captureMapToBitmap(glSurfaceView) { capturedBitmap ->
+                                            com.paw.key.presentation.ui.course.sharedwalk.sharedroute.captureMapToBitmap(
+                                                glSurfaceView
+                                            ) { capturedBitmap ->
                                                 capturedBitmap?.let {
                                                     onCaptured(it)
                                                     Log.d("WalkCourseScreen", "맵 캡처 성공!")
                                                 } ?: run {
-                                                    Log.e("WalkCourseScreen", "맵 캡처 실패: 비트맵이 null입니다.")
+                                                    Log.e(
+                                                        "WalkCourseScreen",
+                                                        "맵 캡처 실패: 비트맵이 null입니다."
+                                                    )
                                                 }
                                             }
                                         }
@@ -624,7 +633,16 @@ fun captureMapToBitmap(surfaceView: GLSurfaceView, onCaptured: (Bitmap?) -> Unit
         val contentWidth = (screenWidth - 32)
         val targetHeight = (156 * surfaceView.context.resources.displayMetrics.density).toInt()
 
-        val bitmap = createBitmapFromGLSurface(0, 0, surfaceView.width, surfaceView.height, gl, contentWidth, targetHeight)
+        val bitmap =
+            com.paw.key.presentation.ui.course.sharedwalk.sharedroute.createBitmapFromGLSurface(
+                0,
+                0,
+                surfaceView.width,
+                surfaceView.height,
+                gl,
+                contentWidth,
+                targetHeight
+            )
         onCaptured(bitmap)
     }
 }
