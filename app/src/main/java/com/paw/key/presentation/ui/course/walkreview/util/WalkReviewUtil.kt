@@ -9,6 +9,7 @@ fun WalkReviewCategoryEntity.toUiModel(): WalkReviewCategoryUiModel {
     return WalkReviewCategoryUiModel(
         categoryId = categoryId,
         categoryName = categoryName,
+        categoryDescription = categoryDescription,
         options = options.map { it.toUiModel() }
     )
 }
