@@ -3,8 +3,8 @@ package com.paw.key.presentation.ui.mypage.viewmodel
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.paw.key.core.util.PreferenceDataStore
 import com.paw.key.domain.repository.userprofile.UserProfileRepository
-import com.paw.key.presentation.ui.mypage.state.PetProfileSideEffect
 import com.paw.key.presentation.ui.mypage.state.UserProfileState
 import com.paw.key.presentation.ui.mypage.state.UserProfileSideEffect
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -41,6 +41,13 @@ class UserProfileViewModel @Inject constructor(
                             age = result.age,
                             activeRegion = result.activeRegion
                         )
+                    }
+
+                    try {
+                        PreferenceDataStore.saveActiveRegion(result.activeRegion)
+                        Log.d("UserProfileViewModel", "activeRegion 저장 완료: ${result.activeRegion}")
+                    } catch (e: Exception) {
+                        Log.e("UserProfileViewModel", "activeRegion 저장 실패: ${e.message}")
                     }
                 }
                 .onFailure { e ->
