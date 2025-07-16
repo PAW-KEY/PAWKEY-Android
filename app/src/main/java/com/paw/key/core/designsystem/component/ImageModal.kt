@@ -37,17 +37,6 @@ fun ImageModal(
                 .wrapContentSize(),
             horizontalAlignment = Alignment.End
         ) {
-            Icon(
-                imageVector = Icons.Default.Close,
-                contentDescription = "닫기",
-                tint = Color.White,
-                modifier = Modifier
-                    .align(Alignment.End)
-                    .clickable { onDismiss() }
-                    .padding(bottom = 8.dp)
-                    .size(24.dp)
-            )
-
             AsyncImage(
                 model = imageUrl,
                 contentDescription = null,
@@ -62,11 +51,6 @@ fun ImageModal(
 //                contentDescription = null,
 //                modifier = Modifier
 //            )
-            /*Image( //테스트용!!
-                painter = painterResource(id = R.drawable.test),
-                contentDescription = null,
-                modifier = Modifier
-            )*/
         }
     }
 }

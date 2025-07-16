@@ -315,19 +315,19 @@ class TapListViewModel @Inject constructor(
         return isAllOptionsSelected()
     }
 
-    fun toggleLike(postId: Int, isLiked: Boolean) {
-        viewModelScope.launch {
-            _state.update { state ->
-                val updatedPosts = state.postsResult?.posts?.map {
-                    if (it.postId == postId) it.copy(isLike = isLiked) else it
-                } ?: emptyList()
-
-                val updatedPostsResult = state.postsResult?.copy(posts = updatedPosts)
-
-                state.copy(
-                    postsResult = updatedPostsResult
-                )
-            }
-        }
-    }
+//    fun toggleLike(postId: Int, isLiked: Boolean) {
+//        viewModelScope.launch {
+//            _state.update { state ->
+//                val updatedPosts = state.postsResult?.posts?.map {
+//                    if (it.postId == postId) it.copy(isLike = isLiked) else it
+//                } ?: emptyList()
+//
+//                val updatedPostsResult = state.postsResult?.copy(posts = updatedPosts)
+//
+//                state.copy(
+//                    postsResult = updatedPostsResult
+//                )
+//            }
+//        }
+//    }
 }

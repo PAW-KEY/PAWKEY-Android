@@ -28,6 +28,7 @@ import coil.request.ImageRequest
 import com.paw.key.R
 import com.paw.key.core.designsystem.component.SubChip
 import com.paw.key.core.designsystem.theme.PawKeyTheme
+import com.paw.key.presentation.ui.mypage.component.GrayChip
 import com.paw.key.presentation.ui.mypage.state.MyPageState
 import com.paw.key.presentation.ui.mypage.viewmodel.MyPageViewModel
 
@@ -75,42 +76,49 @@ fun MyPageScreen(
     snackBarHostState: SnackbarHostState,
     modifier: Modifier = Modifier
 ) {
-    LazyColumn(
+    Box(
         modifier = modifier
-            .padding(paddingValues)
             .fillMaxSize()
-            .padding(bottom = 80.dp)
-    ) {
-        item {
-            Text(
-                text = "마이페이지",
-                style = PawKeyTheme.typography.head22B,
-                modifier = Modifier.padding(start = 16.dp, top = 16.dp, bottom = 12.dp)
-            )
-            OwnerCard(
-                ownerName = state.ownerName,
-                navigateUserProfile = navigateUserProfile
-            )
-            Spacer(modifier = Modifier.height(19.dp))
+            .background(PawKeyTheme.colors.white2) // ⬅️ 전체 배경 설정
+            .padding(paddingValues)
+    ){
+        LazyColumn(
+            modifier = modifier
+                .padding(paddingValues)
+                .fillMaxSize()
+                .padding(bottom = 80.dp)
+        ) {
+            item {
+                Text(
+                    text = "마이페이지",
+                    style = PawKeyTheme.typography.head22B,
+                    modifier = Modifier.padding(start = 16.dp, top = 16.dp, bottom = 12.dp)
+                )
+                OwnerCard(
+                    ownerName = state.ownerName,
+                    navigateUserProfile = navigateUserProfile
+                )
+                Spacer(modifier = Modifier.height(19.dp))
 
-            PetCard(
-                name = state.petName,
-                age = state.petAge,
-                gender = state.petGender,
-                tags = state.petTags,
-                walkCount = state.walkCount,
-                totalDistance = state.totalDistance,
-                image = state.petImageUrl,
-                navigatePetProfile = navigatePetProfile
-            )
+                PetCard(
+                    name = state.petName,
+                    age = state.petAge,
+                    gender = state.petGender,
+                    tags = state.petTags,
+                    walkCount = state.walkCount,
+                    totalDistance = state.totalDistance,
+                    image = state.petImageUrl,
+                    navigatePetProfile = navigatePetProfile
+                )
 
-            Spacer(modifier = Modifier.height(12.dp))
+                Spacer(modifier = Modifier.height(12.dp))
 
-            WalkRouteList(
-                routes = listOf("저장한 산책 루트", "내가 기록한 산책 루트"),
-                navigateSavedCourse = navigateSavedCourse,
-                navigateArchivedCourse = navigateArchivedCourse
-            )
+                WalkRouteList(
+                    routes = listOf("저장한 산책 루트", "내가 기록한 산책 루트"),
+                    navigateSavedCourse = navigateSavedCourse,
+                    navigateArchivedCourse = navigateArchivedCourse
+                )
+            }
         }
     }
 }
@@ -171,11 +179,17 @@ fun PetCard(
                 .padding(12.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Icon(
-                imageVector = ImageVector.vectorResource(id = R.drawable.ic_personal_card),
-                contentDescription = "반려견 프로필",
-                tint = Color.White
-            )
+            Box(
+                modifier = Modifier
+                    .size(20.dp), // Text의 베이스라인에 맞추기 위해 아이콘 크기 명시
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(
+                    imageVector = ImageVector.vectorResource(id = R.drawable.ic_personal_card),
+                    contentDescription = "반려견 프로필",
+                    tint = Color.White
+                )
+            }
             Spacer(modifier.width(4.dp)
             )
             Text(
@@ -188,7 +202,7 @@ fun PetCard(
                 imageVector = ImageVector.vectorResource(id = R.drawable.ic_arrow_right),
                 modifier = modifier.clickable { navigatePetProfile() },
                 contentDescription = "반려견 프로필 이동",
-                tint = Color.White
+                tint = PawKeyTheme.colors.gray300
             )
         }
 
@@ -208,7 +222,7 @@ fun PetCard(
                 Spacer(modifier.width(16.dp))
                 Column {
                     Text(name, style = PawKeyTheme.typography.head20B2)
-                    Text("$age · $gender", style = PawKeyTheme.typography.body14R)
+                    Text("$age · $gender", style = PawKeyTheme.typography.caption12R, color = PawKeyTheme.colors.gray300)
                 }
             }
 
@@ -219,7 +233,7 @@ fun PetCard(
                 horizontalArrangement = Arrangement.spacedBy(4.dp)
             ) {
                 tags.forEach {
-                    SubChip(
+                    GrayChip(
                         text = it
                     )
                 }
@@ -256,7 +270,7 @@ fun PetCard(
                 modifier = modifier.weight(1f),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Text("누적 거리", style = PawKeyTheme.typography.caption12Sb1) //피그마랑 일치하는 글씨체 없음. 임의로 넣음
+                Text("누적 거리", style = PawKeyTheme.typography.caption12Sb1)
                 Text(
                     totalDistance,
                     style = PawKeyTheme.typography.head20Sb,
@@ -288,12 +302,21 @@ fun WalkRouteList(
             if (index != 0) {
                 HorizontalDivider(thickness = 1.dp, color = PawKeyTheme.colors.gray50)
             }
+            val iconRes = if (index == 0) {
+                R.drawable.ic_mypage_heart
+            } else {
+                R.drawable.ic_mypage_edit
+            }
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(vertical = 20.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
+                Icon(
+                    imageVector = ImageVector.vectorResource(id = iconRes),
+                    contentDescription = "산책루트 아이콘"
+                )
                 Text(
                     text = route,
                     modifier = Modifier.weight(1f),
