@@ -1,5 +1,6 @@
 package com.paw.key.data.di
 
+import com.paw.key.data.repositoryimpl.ArchivedListRepositoryImpl
 import com.paw.key.data.repositoryimpl.DummyRepositoryImpl
 import com.paw.key.data.repositoryimpl.PetProfileRepositoryImpl
 import com.paw.key.data.repositoryimpl.onboarding.OnboardingInfoRepositoryImpl
@@ -14,6 +15,7 @@ import com.paw.key.data.repositoryimpl.sharedwalk.SharedWalkRepositoryImpl
 import com.paw.key.data.repositoryimpl.home.HomeRegionRepositoryImpl
 import com.paw.key.data.repositoryimpl.walklist.WalkListDetailRepositoryImpl
 import com.paw.key.data.repositoryimpl.walkreview.WalkReviewRepositoryImpl
+import com.paw.key.domain.repository.ArchivedListRepository
 import com.paw.key.domain.repository.DummyRepository
 import com.paw.key.domain.repository.onboarding.OnboardingInfoRepository
 import com.paw.key.domain.repository.onboarding.OnboardingRegionRepository
@@ -105,6 +107,12 @@ interface RepositoryModule {
     fun bindSavedListRepository(
         impl: SavedListRepositoryImpl
     ): SavedListRepository
+
+    @Binds
+    @Singleton
+    fun bindArchivedListRepository(
+        impl: ArchivedListRepositoryImpl
+    ): ArchivedListRepository
 
     @Binds
     @Singleton

@@ -42,6 +42,7 @@ import com.paw.key.presentation.ui.home.component.SettingButton
 import com.paw.key.presentation.ui.home.component.TrackingCard
 import com.paw.key.presentation.ui.home.component.WeatherCard
 import com.paw.key.presentation.ui.home.viewmodel.HomeViewModel
+import kotlin.String
 
 
 @Preview
@@ -158,8 +159,13 @@ fun HomeScreen(
                 CourseCard(
                     title = "제목을 입력해주세요",
                     petName = "반려견 이름",
-                    date = "년도/월/일",
-                    onCLickItem = {}
+                    createdAt = "년도/월/일",
+                    representativeImageUrl = "시:분",
+                    petProfileImageUrl = "",
+                    descriptionTags = listOf("이륜차 거의 없음", "물그릇 비치", "쉴 곳 있음"),
+                    onClickItem = {},
+                    isLiked = true,
+                    postId = 1L
                 )
                 Spacer(modifier = Modifier.height(48.dp))
             }

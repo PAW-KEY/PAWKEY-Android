@@ -3,8 +3,10 @@ package com.paw.key.presentation.ui.mypage.viewmodel
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.paw.key.core.designsystem.component.CourseCard
 import com.paw.key.domain.repository.SavedListRepository
-import com.paw.key.presentation.ui.mypage.state.CourseCardData
+import com.paw.key.presentation.ui.mypage.state.MyPageSideEffect
+import com.paw.key.presentation.ui.mypage.state.PetProfileSideEffect.NavigateNext
 import com.paw.key.presentation.ui.mypage.state.SavedListSideEffect
 import com.paw.key.presentation.ui.mypage.state.SavedListState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -31,25 +33,18 @@ class SavedListViewModel @Inject constructor(
         viewModelScope.launch {
             savedListRepository.getSavedList(userId)
                 .onSuccess { result ->
-                    Log.d("SavedListViewModel", "SavedList 불러오기 성공: ${result}")
-                    Log.d("SavedListViewModel", "SavedList 불러오기 성공: ${result.size}개")
+                    Log.d("SavedListViewModel", "저장한 게시물 불러오기 성공: $result")
+                    Log.d("SavedListViewModel", "총 ${result.size}개")
+
                     _sideEffect.emit(SavedListSideEffect.ShowSnackBar("SavedList 불러오기 성공 (${result.size}개)"))
-                    _state.update { it ->
-                        it.copy(
-                            courseList = result.map { item ->
-                                CourseCardData(
-                                    petName = item.petName,
-                                    description = item.description,
-                                    createdAt = item.createdAt,
-                                    isShared = item.isShared,
-                                    isLiked = item.isLiked,
-                                    imageUrl = item.imageUrl
-                                )
 
-
-                            }
-                        )
+                    _state.update {
+                        it.copy(courseList = result)
                     }
+                }
+                .onFailure { e ->
+                    Log.e("SavedListViewModel", "저장한 게시물 불러오기 실패", e)
+                    _sideEffect.emit(SavedListSideEffect.ShowSnackBar(e.message ?: "알 수 없는 오류"))
                 }
         }
     }

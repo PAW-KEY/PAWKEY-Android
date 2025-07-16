@@ -97,44 +97,7 @@ fun TabListScreen(
                 .padding(bottom = 36.dp)
         ) {
             // Todo : 나중에 서버용 리스트로 변경
-            item {
-                CourseCard(
-                    title = "제목을 입력해주세요",
-                    petName = "안녕꼬리",
-                    date = "21/1/1",
-                    isRecord = true,
-                    onCLickItem = {
-                        navigateToDetail()
-                    }
-                )
-            }
-            item {
-                CourseCard(
-                    title = "제목을 입력해주세요",
-                    petName = "안녕꼬리",
-                    date = "21/1/1",
-                    isRecord = true,
-                    onCLickItem = {}
-                )
-            }
-            item {
-                CourseCard(
-                    title = "제목을 입력해주세요",
-                    petName = "안녕꼬리",
-                    date = "21/1/1",
-                    isRecord = true,
-                    onCLickItem = {}
-                )
-            }
-            item {
-                CourseCard(
-                    title = "제목을 입력해주세요",
-                    petName = "안녕꼬리",
-                    date = "21/1/1",
-                    isRecord = true,
-                    onCLickItem = {}
-                )
-            }
+
         }
         if (showBottomSheet) {
             CourseOptionBottomSheet(

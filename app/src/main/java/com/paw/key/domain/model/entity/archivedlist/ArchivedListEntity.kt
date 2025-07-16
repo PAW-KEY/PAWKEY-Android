@@ -1,15 +1,19 @@
-package com.paw.key.domain.model.entity.savedlist
+package com.paw.key.domain.model.entity.archivedlist
 
-data class SavedListEntity(
+data class ArchivedListPostsEntity(
+    val posts: List<ArchivedListEntity>
+)
+
+data class ArchivedListEntity(
     val postId: Long,
     val createdAt: String,
     val isLiked: Boolean,
     val title: String,
     val representativeImageUrl: String,
-    val writer: List<SavedWriterEntity>,
+    val writer: List<WriterEntity>,
     val descriptionTags: List<String>
 )
-data class SavedWriterEntity(
+data class WriterEntity(
     val userId: Long,
     val petName: String,
     val petProfileImageUrl: String

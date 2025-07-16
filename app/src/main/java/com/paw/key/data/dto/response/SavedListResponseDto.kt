@@ -1,7 +1,7 @@
 package com.paw.key.data.dto.response
 
 import com.paw.key.domain.model.entity.savedlist.SavedListEntity
-import com.paw.key.domain.model.entity.savedlist.WriterEntity
+import com.paw.key.domain.model.entity.savedlist.SavedWriterEntity
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -16,11 +16,14 @@ data class SavedListResponseDto(
     @SerialName("isLiked")
     val isLiked: Boolean,
 
+    @SerialName("title")
+    val title: String,
+
     @SerialName("representativeImageUrl")
     val representativeImageUrl: String,
 
     @SerialName("writer")
-    val writer: List<WriterDto>,
+    val writer: List<SavedWriterDto>,
 
     @SerialName("descriptionTags")
     val descriptionTags: List<String>
@@ -30,6 +33,7 @@ data class SavedListResponseDto(
         postId = postId,
         createdAt = createdAt,
         isLiked = isLiked,
+        title = title,
         representativeImageUrl = representativeImageUrl,
         writer = writer.map { it.toEntity() },
         descriptionTags = descriptionTags
@@ -37,7 +41,7 @@ data class SavedListResponseDto(
 }
 
 @Serializable
-data class WriterDto(
+data class SavedWriterDto(
     @SerialName("userId")
     val userId: Long,
 
@@ -47,7 +51,7 @@ data class WriterDto(
     @SerialName("petProfileImageUrl")
     val petProfileImageUrl: String
 ){
-    fun toEntity() = WriterEntity(
+    fun toEntity() = SavedWriterEntity(
         userId = userId,
         petName = petName,
         petProfileImageUrl = petProfileImageUrl

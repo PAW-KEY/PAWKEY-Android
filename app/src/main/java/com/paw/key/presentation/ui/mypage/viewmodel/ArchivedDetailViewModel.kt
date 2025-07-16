@@ -2,11 +2,8 @@ package com.paw.key.presentation.ui.mypage.viewmodel
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
-<<<<<<< HEAD
-=======
 import androidx.lifecycle.viewModelScope
 import com.paw.key.domain.repository.walklist.WalkListRepository
->>>>>>> 1386bd85a13bbc6bb0cd43764a44b72cf0699838
 import com.paw.key.presentation.ui.mypage.state.ArchivedDetailState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow

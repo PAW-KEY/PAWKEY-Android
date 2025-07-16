@@ -10,7 +10,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.paw.key.core.designsystem.component.TopBar
 import com.paw.key.core.designsystem.theme.PawKeyTheme
-import com.paw.key.presentation.ui.mypage.state.UserProfileContract
+import com.paw.key.presentation.ui.mypage.state.UserProfileState
 import com.paw.key.presentation.ui.mypage.viewmodel.UserProfileViewModel
 
 @Composable
@@ -30,7 +30,7 @@ fun UserProfileRoute(
 
 @Composable
 fun UserProfileScreen(
-    state: UserProfileContract.UserProfileState,
+    state: UserProfileState,
     navigateUp: () -> Unit,
     modifier: Modifier = Modifier,
     id: String = "sgh1261",
@@ -85,7 +85,7 @@ fun ProfileItem(label: String, value: String) {
 fun UserProfileScreenPreview() {
     PawKeyTheme {
         UserProfileScreen(
-            state = UserProfileContract.UserProfileState(
+            state = UserProfileState(
                 id = "sgh1261",
                 name = "김도기",
                 gender = "여성",
