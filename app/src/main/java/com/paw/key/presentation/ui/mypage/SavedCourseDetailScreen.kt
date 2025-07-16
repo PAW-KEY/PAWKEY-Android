@@ -101,7 +101,7 @@ fun SavedCourseDetailScreen(
                         petName = petName,
                         date = date,
                         location = location,
-                        isLike = isLike,
+                        onClickLike = {},
                         content = content,
                         petProfileImage = petProfileImage,
                         routeMapImageUrl = routeMapImageUrl,

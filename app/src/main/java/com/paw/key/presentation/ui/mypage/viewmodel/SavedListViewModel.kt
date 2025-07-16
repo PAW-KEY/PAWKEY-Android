@@ -46,4 +46,15 @@ class SavedListViewModel @Inject constructor(
                 }
         }
     }
+    fun toggleLike(postId: Int, isLiked: Boolean) {
+        viewModelScope.launch {
+            _state.update { state ->
+                state.copy(
+                    courseList = state.courseList.map {
+                        if (it.postId == postId) it.copy(isLiked = isLiked) else it
+                    }
+                )
+            }
+        }
+    }
 }

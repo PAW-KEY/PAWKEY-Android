@@ -2,6 +2,7 @@ package com.paw.key.core.designsystem.component
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -33,27 +34,21 @@ fun CourseCard(
     postId: Int,
     title: String,
     createdAt: String,
-    petName: String,
     isLiked: Boolean,
     onClickItem: () -> Unit,
-    modifier: Modifier = Modifier,
-    date: String,
-    representativeImageUrl: String? = null, // 추가
-    petProfileImageUrl: String? = null,     // 추가
-    descriptionTags: List<String> = emptyList(), // 추가
-    onCLickItem: () -> Unit,
-    isShared: Boolean = false,
-    isRecord: Boolean = false,
     onClickLike: (Boolean) -> Unit,
+    petName: String,
+    modifier: Modifier = Modifier,
+    representativeImageUrl: String? = null,
+    petProfileImageUrl: String? = null,
+    descriptionTags: List<String> = emptyList()
 ) {
-    // 날짜 포맷 변환 함수
     fun formatDate(dateString: String): String {
         return try {
-            // "2025-07-15T21:27:03.54498" -> "2025/07/15"
-            val datePart = dateString.split("T")[0] // "2025-07-15"
-            datePart.replace("-", "/") // "2025/07/15"
+            val datePart = dateString.split("T")[0]
+            datePart.replace("-", "/")
         } catch (e: Exception) {
-            dateString // 실패하면 원본 반환
+            dateString
         }
     }
 
@@ -65,16 +60,12 @@ fun CourseCard(
             .background(Color.White, shape = RoundedCornerShape(20.dp))
             .noRippleClickable { onClickItem() }
     ) {
-        // 지도 썸네일
         Box(
             modifier = Modifier
                 .fillMaxWidth()
                 .aspectRatio(343f / 172f)
                 .clip(RoundedCornerShape(10.dp))
         ) {
-         
-
-            // 서버 이미지 또는 기본 이미지
             if (representativeImageUrl != null) {
                 AsyncImage(
                     model = ImageRequest.Builder(LocalContext.current)
@@ -89,7 +80,6 @@ fun CourseCard(
                     contentScale = ContentScale.Crop
                 )
             } else {
-                // 기본 이미지
                 Image(
                     painter = painterResource(id = R.drawable.dummy_map),
                     contentDescription = null,
@@ -101,7 +91,6 @@ fun CourseCard(
                 )
             }
 
-            // 하단 그라데이션 오버레이
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -126,7 +115,6 @@ fun CourseCard(
                     .align(Alignment.BottomStart)
                     .padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
             ) {
-                // 반려견 프로필 이미지
                 if (petProfileImageUrl != null) {
                     AsyncImage(
                         model = ImageRequest.Builder(LocalContext.current)
@@ -140,7 +128,6 @@ fun CourseCard(
                         contentScale = ContentScale.Crop
                     )
                 } else {
-                    // 기본 프로필 이미지
                     Box(
                         modifier = Modifier
                             .size(40.dp)
@@ -158,6 +145,7 @@ fun CourseCard(
                 }
 
                 Spacer(modifier = Modifier.width(10.dp))
+
                 Column {
                     Text(
                         text = title,
@@ -172,33 +160,33 @@ fun CourseCard(
                             color = Color.White
                         )
                         Spacer(modifier = Modifier.width(8.dp))
-
                         Text(
-                            text = formatDate(date), // 포맷된 날짜 사용
+                            text = formatDate(createdAt),
                             style = PawKeyTheme.typography.caption12R,
                             color = PawKeyTheme.colors.gray100
                         )
                     }
                 }
+
                 Spacer(modifier = Modifier.weight(1f))
+
                 Icon(
                     imageVector = if (isLiked)
                         ImageVector.vectorResource(id = R.drawable.ic_heart_filled)
                     else
                         ImageVector.vectorResource(id = R.drawable.ic_heart_default),
                     contentDescription = "좋아요",
-                    tint = Color.Unspecified
+                    tint = Color.Unspecified,
+                    modifier = Modifier.clickable { onClickLike(!isLiked) } //클릭하면 외부에 알려줌
                 )
             }
         }
 
         Spacer(modifier = Modifier.height(12.dp))
 
-        // 서버에서 받은 태그들 사용
         ChipRow(
             tags = descriptionTags,
-            modifier = Modifier
-                .padding(start = 16.dp, end = 16.dp)
+            modifier = Modifier.padding(horizontal = 16.dp)
         )
 
         Spacer(modifier = Modifier.height(12.dp))
@@ -206,7 +194,7 @@ fun CourseCard(
         HorizontalDivider(
             color = PawKeyTheme.colors.gray50,
             thickness = 1.dp,
-            modifier = Modifier.padding(start = 16.dp, end = 16.dp)
+            modifier = Modifier.padding(horizontal = 16.dp)
         )
     }
 }
@@ -218,13 +206,14 @@ fun CourseCardPreview() {
         CourseCard(
             postId = 1,
             title = "홍대 주변 좋은 산책 코스",
-            createdAt = "2025/07/16",
-            representativeImageUrl = "https://pawkey-server.com/image.jpg",
-            petName = "후추",
-            petProfileImageUrl = "https://pawkey-server.com/profile.jpg",
-            descriptionTags = listOf("이륜차 거의 없음", "물그릇 비치", "쉴 곳 있음"),
+            createdAt = "2025-07-16T21:27:03.54498",
             isLiked = true,
-            onClickLike = {}
+            onClickItem = {},
+            onClickLike = {},
+            petName = "후추",
+            representativeImageUrl = "https://pawkey-server.com/image.jpg",
+            petProfileImageUrl = "https://pawkey-server.com/profile.jpg",
+            descriptionTags = listOf("이륜차 거의 없음", "물그릇 비치", "쉴 곳 있음")
         )
     }
 }
