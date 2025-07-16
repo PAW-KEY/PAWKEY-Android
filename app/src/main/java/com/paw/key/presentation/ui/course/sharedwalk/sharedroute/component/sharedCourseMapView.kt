@@ -25,6 +25,7 @@ import com.kakao.vectormap.camera.CameraUpdateFactory
 import com.kakao.vectormap.label.Label
 import com.kakao.vectormap.label.LabelOptions
 import com.kakao.vectormap.label.LabelStyle
+import com.kakao.vectormap.label.TrackingManager
 import com.kakao.vectormap.route.RouteLine
 import com.kakao.vectormap.route.RouteLineOptions
 import com.kakao.vectormap.route.RouteLineSegment
@@ -62,6 +63,10 @@ fun sharedWalkCourseMapView(
 
     // ------------------------------------------------
     // 트래킹
+
+    var trackingManager by remember {
+        mutableStateOf<TrackingManager?>(null)
+    }
 
     var dimScreenLayer by remember {
         mutableStateOf<DimScreenLayer?>(null)
@@ -159,6 +164,7 @@ fun sharedWalkCourseMapView(
                     object : KakaoMapReadyCallback() {
                         override fun onMapReady(kakaoMap: KakaoMap) {
                             kakaoMapState = kakaoMap
+                            trackingManager = kakaoMap.trackingManager
                             dimScreenLayer = kakaoMap.dimScreenManager?.dimScreenLayer
 
                             centerLabel = kakaoMap.labelManager?.layer?.addLabel(
@@ -193,10 +199,21 @@ fun sharedWalkCourseMapView(
 
             override fun onResume(owner: LifecycleOwner) {
                 mapView.resume()
+
+                kakaoMapState?.moveCamera(
+                    CameraUpdateFactory.newCenterPosition(
+                        currentUserLocation, 19
+                    )
+                )
             }
 
             override fun onPause(owner: LifecycleOwner) {
                 mapView.pause()
+                kakaoMapState?.moveCamera(
+                    CameraUpdateFactory.fitMapPoints(
+                        poiPoints.toTypedArray(), 150, 15
+                    )
+                )
             }
         }
 
@@ -213,21 +230,21 @@ fun sharedWalkCourseMapView(
     LaunchedEffect(currentUserLocation, isTrackingEnabled, centerLabel, kakaoMapState) {
         if (currentUserLocation != null && centerLabel != null && kakaoMapState != null) {
             centerLabel?.moveTo(currentUserLocation)
-
-            kakaoMapState?.moveCamera(
-                CameraUpdateFactory.newCenterPosition(
-                    currentUserLocation, 18
-                )
-            )
         }
+    }
+
+    LaunchedEffect(Unit) {
+        trackingManager?.startTracking(centerLabel)
     }
 
     LaunchedEffect(isPauseTracking) {
         if (!isPauseTracking) {
+            trackingManager?.stopTracking()
             mapView.isClickable = false
             dimScreenLayer?.setColor(Color.Black.copy(alpha = 0.5f).toArgb())
             dimScreenLayer?.setVisible(true)
         } else {
+            trackingManager?.stopTracking()
             mapView.isClickable = true
             dimScreenLayer?.setVisible(false)
         }

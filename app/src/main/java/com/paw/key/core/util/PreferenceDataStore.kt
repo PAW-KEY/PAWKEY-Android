@@ -38,14 +38,24 @@ private fun String.toLatLngList(): List<LatLng> =
     }
 
 object PreferenceDataStore {
+
+    private lateinit var appContext: Context
+
+    fun init(context: Context) {
+        appContext = context.applicationContext
+    }
+
+    private val summaryStore
+        get() = appContext.summaryStore
+
+
     suspend fun saveWalkSummary(
-        context: Context,
         points: List<LatLng>,
         totalDistance: Float,
         totalTime: Long,
         totalSteps: Int,
     ) {
-        context.summaryStore.edit { preferences ->
+        summaryStore.edit { preferences ->
             preferences[POINTS_KEY] = points.toPreferenceString()
             preferences[TOTAL_DISTANCE_KEY] = totalDistance
             preferences[TOTAL_TIME_KEY] = totalTime
@@ -53,120 +63,90 @@ object PreferenceDataStore {
         }
     }
 
-    fun getPoints(context: Context): Flow<List<LatLng>> {
-        return context.summaryStore.data.map { preferences ->
-            preferences[POINTS_KEY]?.toLatLngList() ?: emptyList()
+    fun getPoints(): Flow<List<LatLng>> = summaryStore.data.map {
+        it[POINTS_KEY]?.toLatLngList() ?: emptyList()
+    }
+
+    fun getTotalDistance(): Flow<Float> = summaryStore.data.map {
+        it[TOTAL_DISTANCE_KEY] ?: 0f
+    }
+
+    fun getTotalTime(): Flow<Long> = summaryStore.data.map {
+        it[TOTAL_TIME_KEY] ?: 0L
+    }
+
+    fun getTotalSteps(): Flow<Int> = summaryStore.data.map {
+        it[TOTAL_STEPS_KEY] ?: 0
+    }
+
+    suspend fun clearWalkSummary() {
+        summaryStore.edit {
+            it.remove(POINTS_KEY)
+            it.remove(TOTAL_DISTANCE_KEY)
+            it.remove(TOTAL_TIME_KEY)
+            it.remove(TOTAL_STEPS_KEY)
         }
     }
 
-    fun getTotalDistance(context: Context): Flow<Float> {
-        return context.summaryStore.data.map { preferences ->
-            preferences[TOTAL_DISTANCE_KEY] ?: 0f
+    suspend fun saveLoginInfo(email: String, password: String) {
+        summaryStore.edit {
+            it[LOGIN_EMAIL_KEY] = email
+            it[LOGIN_PASSWORD_KEY] = password
         }
     }
 
-    fun getTotalTime(context: Context): Flow<Long> {
-        return context.summaryStore.data.map { preferences ->
-            preferences[TOTAL_TIME_KEY] ?: 0L
-        }
+    fun getLoginEmail(): Flow<String> = summaryStore.data.map {
+        it[LOGIN_EMAIL_KEY] ?: ""
     }
 
-    fun getTotalSteps(context: Context): Flow<Int> {
-        return context.summaryStore.data.map { preferences ->
-            preferences[TOTAL_STEPS_KEY] ?: 0
-        }
+    fun getLoginPassword(): Flow<String> = summaryStore.data.map {
+        it[LOGIN_PASSWORD_KEY] ?: ""
     }
 
-    suspend fun clearWalkSummary(context: Context) {
-        context.summaryStore.edit { preferences ->
-            preferences.remove(POINTS_KEY)
-            preferences.remove(TOTAL_DISTANCE_KEY)
-            preferences.remove(TOTAL_TIME_KEY)
-            preferences.remove(TOTAL_STEPS_KEY)
-        }
+    data class LoginInfo(val email: String, val password: String)
+
+    fun getLoginInfo(): Flow<LoginInfo> = summaryStore.data.map {
+        LoginInfo(
+            email = it[LOGIN_EMAIL_KEY] ?: "",
+            password = it[LOGIN_PASSWORD_KEY] ?: ""
+        )
     }
 
-    suspend fun saveLoginInfo(
-        context: Context,
-        email: String,
-        password: String
-    ) {
-        context.summaryStore.edit { preferences ->
-            preferences[LOGIN_EMAIL_KEY] = email
-            preferences[LOGIN_PASSWORD_KEY] = password
-        }
-    }
-
-    fun getLoginEmail(context: Context): Flow<String> {
-        return context.summaryStore.data.map { preferences ->
-            preferences[LOGIN_EMAIL_KEY] ?: ""
-        }
-    }
-
-    fun getLoginPassword(context: Context): Flow<String> {
-        return context.summaryStore.data.map { preferences ->
-            preferences[LOGIN_PASSWORD_KEY] ?: ""
-        }
-    }
-
-    data class LoginInfo(
-        val email: String,
-        val password: String
-    )
-
-    fun getLoginInfo(context: Context): Flow<LoginInfo> {
-        return context.summaryStore.data.map { preferences ->
-            LoginInfo(
-                email = preferences[LOGIN_EMAIL_KEY] ?: "",
-                password = preferences[LOGIN_PASSWORD_KEY] ?: ""
-            )
-        }
-    }
-
-    suspend fun clearLoginInfo(context: Context) {
-        context.summaryStore.edit { preferences ->
-            preferences.remove(LOGIN_EMAIL_KEY)
-            preferences.remove(LOGIN_PASSWORD_KEY)
+    suspend fun clearLoginInfo() {
+        summaryStore.edit {
+            it.remove(LOGIN_EMAIL_KEY)
+            it.remove(LOGIN_PASSWORD_KEY)
         }
     }
 
     suspend fun saveUserInfo(
-        context: Context,
         userId: Int,
         userName: String,
         petId: Int,
         petName: String
     ) {
-        context.summaryStore.edit { preferences ->
-            preferences[USER_ID_KEY] = userId
-            preferences[USER_NAME_KEY] = userName
-            preferences[PET_ID_KEY] = petId
-            preferences[PET_NAME_KEY] = petName
+        summaryStore.edit {
+            it[USER_ID_KEY] = userId
+            it[USER_NAME_KEY] = userName
+            it[PET_ID_KEY] = petId
+            it[PET_NAME_KEY] = petName
         }
     }
 
-    fun getUserId(context: Context): Flow<Int> {
-        return context.summaryStore.data.map { preferences ->
-            preferences[USER_ID_KEY] ?: 0
-        }
+    fun getUserId(): Flow<Int> = summaryStore.data.map {
+        it[USER_ID_KEY] ?: 0
     }
 
-    fun getUserName(context: Context): Flow<String> {
-        return context.summaryStore.data.map { preferences ->
-            preferences[USER_NAME_KEY] ?: ""
-        }
+    fun getUserName(): Flow<String> = summaryStore.data.map {
+        it[USER_NAME_KEY] ?: ""
     }
 
-    fun getPetId(context: Context): Flow<Int> {
-        return context.summaryStore.data.map { preferences ->
-            preferences[PET_ID_KEY] ?: 0
-        }
+    fun getPetId(): Flow<Int> = summaryStore.data.map {
+        it[PET_ID_KEY] ?: 0
     }
 
-    fun getPetName(context: Context): Flow<String> {
-        return context.summaryStore.data.map { preferences ->
-            preferences[PET_NAME_KEY] ?: ""
-        }
+    fun getPetName(): Flow<String> = summaryStore.data.map {
+        it[PET_NAME_KEY] ?: ""
     }
 
     data class UserInfo(
@@ -176,29 +156,25 @@ object PreferenceDataStore {
         val petName: String
     )
 
-    fun getUserInfo(context: Context): Flow<UserInfo> {
-        return context.summaryStore.data.map { preferences ->
-            UserInfo(
-                userId = preferences[USER_ID_KEY] ?: 0,
-                userName = preferences[USER_NAME_KEY] ?: "",
-                petId = preferences[PET_ID_KEY] ?: 0,
-                petName = preferences[PET_NAME_KEY] ?: ""
-            )
+    fun getUserInfo(): Flow<UserInfo> = summaryStore.data.map {
+        UserInfo(
+            userId = it[USER_ID_KEY] ?: 0,
+            userName = it[USER_NAME_KEY] ?: "",
+            petId = it[PET_ID_KEY] ?: 0,
+            petName = it[PET_NAME_KEY] ?: ""
+        )
+    }
+
+    suspend fun clearUserInfo() {
+        summaryStore.edit {
+            it.remove(USER_ID_KEY)
+            it.remove(USER_NAME_KEY)
+            it.remove(PET_ID_KEY)
+            it.remove(PET_NAME_KEY)
         }
     }
 
-    suspend fun clearUserInfo(context: Context) {
-        context.summaryStore.edit { preferences ->
-            preferences.remove(USER_ID_KEY)
-            preferences.remove(USER_NAME_KEY)
-            preferences.remove(PET_ID_KEY)
-            preferences.remove(PET_NAME_KEY)
-        }
-    }
-
-    suspend fun clearAllData(context: Context) {
-        context.summaryStore.edit { preferences ->
-            preferences.clear()
-        }
+    suspend fun clearAllData() {
+        summaryStore.edit { it.clear() }
     }
 }
