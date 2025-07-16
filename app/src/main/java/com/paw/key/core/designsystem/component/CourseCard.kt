@@ -43,7 +43,8 @@ fun CourseCard(
     descriptionTags: List<String> = emptyList(), // 추가
     onCLickItem: () -> Unit,
     isShared: Boolean = false,
-    isRecord: Boolean = false
+    isRecord: Boolean = false,
+    onClickLike: (Boolean) -> Unit,
 ) {
     // 날짜 포맷 변환 함수
     fun formatDate(dateString: String): String {
@@ -148,10 +149,15 @@ fun CourseCard(
                         contentAlignment = Alignment.Center
                     ) {
                         Icon(
-                            imageVector = ImageVector.vectorResource(id = R.drawable.ic_heart_default),
-                            contentDescription = null,
-                            tint = PawKeyTheme.colors.gray400,
-                            modifier = Modifier.size(20.dp)
+                            imageVector = if (isLiked)
+                                ImageVector.vectorResource(id = R.drawable.ic_heart_filled)
+                            else
+                                ImageVector.vectorResource(id = R.drawable.ic_heart_default),
+                            contentDescription = "좋아요",
+                            tint = Color.Unspecified,
+                            modifier = Modifier
+                                .size(24.dp)
+                                .noRippleClickable { onClickLike(isLiked) } // 클릭 시 상태 전달
                         )
                     }
                 }
@@ -228,6 +234,7 @@ fun CourseCardPreview() {
             date = "2025/07/16",
             isShared = true,
             isRecord = true,
+            onClickLike = {}
         )
     }
 }

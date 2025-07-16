@@ -2,6 +2,7 @@ package com.paw.key.data.di
 
 import com.paw.key.data.repositoryimpl.ArchivedListRepositoryImpl
 import com.paw.key.data.repositoryimpl.DummyRepositoryImpl
+import com.paw.key.data.repositoryimpl.LikeRepositoryImpl
 import com.paw.key.data.repositoryimpl.PetProfileRepositoryImpl
 import com.paw.key.data.repositoryimpl.onboarding.OnboardingInfoRepositoryImpl
 import com.paw.key.data.repositoryimpl.onboarding.OnboardingRegionRepositoryImpl
@@ -18,6 +19,7 @@ import com.paw.key.data.repositoryimpl.walklist.WalkListDetailRepositoryImpl
 import com.paw.key.data.repositoryimpl.walkreview.WalkReviewRepositoryImpl
 import com.paw.key.domain.repository.ArchivedListRepository
 import com.paw.key.domain.repository.DummyRepository
+import com.paw.key.domain.repository.LikeRepository
 import com.paw.key.domain.repository.onboarding.OnboardingInfoRepository
 import com.paw.key.domain.repository.onboarding.OnboardingRegionRepository
 import com.paw.key.domain.repository.onboarding.OnboardingRepository
@@ -115,6 +117,12 @@ interface RepositoryModule {
     fun bindArchivedListRepository(
         impl: ArchivedListRepositoryImpl
     ): ArchivedListRepository
+
+    @Binds
+    @Singleton
+    fun bindLikeRepository(
+        impl: LikeRepositoryImpl
+    ): LikeRepository
 
     @Binds
     @Singleton

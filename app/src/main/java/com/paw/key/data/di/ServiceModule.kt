@@ -2,6 +2,7 @@ package com.paw.key.data.di
 
 import com.paw.key.data.service.ArchivedListService
 import com.paw.key.data.service.DummyService
+import com.paw.key.data.service.LikeService
 import com.paw.key.data.service.PetProfileService
 import com.paw.key.data.service.onboarding.OnboardingInfoService
 import com.paw.key.data.service.onboarding.OnboardingPetsService
@@ -81,6 +82,11 @@ object ServiceModule {
     @Provides
     @Singleton
     fun provideArchivedListService(retrofit: Retrofit): ArchivedListService =
+        retrofit.create()
+
+    @Provides
+    @Singleton
+    fun provideLikeService(retrofit: Retrofit): LikeService =
         retrofit.create()
 
     @Provides
