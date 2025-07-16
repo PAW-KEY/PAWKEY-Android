@@ -2,6 +2,7 @@ package com.paw.key.core.designsystem.component
 
 import android.util.Log
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -9,12 +10,15 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -49,6 +53,7 @@ fun CourseDetail(
     title : String,
     petName : String,
     date : String,
+    Icon : Int,
     location : String,
     onClickLike: (Boolean) -> Unit,
     petProfileImage : String,
@@ -63,40 +68,62 @@ fun CourseDetail(
 ) {
     val context = LocalContext.current
     val isLiked = remember { mutableStateOf(false) }
+
     LaunchedEffect(routeMapImageUrl) {
-        Log.d("LaunchedEffect", "LaunchedEffect: $routeMapImageUrl")
-        Log.d("LaunchedEffect", "LaunchedEffect: $walkingImageUrls")
-        Log.d("LaunchedEffect", "LaunchedEffect: $petProfileImage")
+        Log.d("LaunchedEffect", "routeMapImageUrl: $routeMapImageUrl")
+        Log.d("LaunchedEffect", "walkingImageUrls: $walkingImageUrls")
+        Log.d("LaunchedEffect", "petProfileImage: $petProfileImage")
     }
 
     Column(
         modifier = modifier
-            .fillMaxWidth()
+            .fillMaxSize()
+            .background(color = PawKeyTheme.colors.white1)
     ) {
-        AsyncImage(
-            model = ImageRequest.Builder(context)
-                .data(routeMapImageUrl)
-                .crossfade(true)
-                .build(),
-            contentDescription = null,
-            contentScale = ContentScale.Crop,
+        // 이미지 영역을 별도 Box로 분리
+        Box(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(244.dp)
-                .background(color = Gray100)
-                .background(Color.Gray)
-        )
+        ) {
+            AsyncImage(
+                model = ImageRequest.Builder(context)
+                    .data(routeMapImageUrl)
+                    .crossfade(true)
+                    .build(),
+                contentDescription = null,
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(color = Gray100)
+            )
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(10.dp)
+                    .background(
+                        color = PawKeyTheme.colors.white1,
+                        shape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp)
+                    )
+                    .clip(RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp))
+                    .align(Alignment.BottomCenter)
+            ){
 
+            }
+        }
+
+        // 컨텐츠 영역
         Column(
             modifier = Modifier
+                .fillMaxWidth()
                 .background(
                     color = PawKeyTheme.colors.white1,
                     shape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp)
                 )
-                .clip(RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp)
-                )
+                .clip(RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp))
                 .padding(horizontal = 16.dp)
         ) {
+            // 제목과 좋아요 버튼
             Row(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically,
@@ -111,21 +138,19 @@ fun CourseDetail(
                 )
 
                 Icon(
-                    imageVector = if (isLiked.value)
-                        ImageVector.vectorResource(id = R.drawable.ic_heart_filled)
-                    else
-                        ImageVector.vectorResource(id = R.drawable.ic_heart_default),
+                    imageVector = ImageVector.vectorResource(id = Icon),
                     contentDescription = "좋아요",
                     tint = Color.Unspecified,
                     modifier = Modifier
                         .size(24.dp)
                         .noRippleClickable {
-                            isLiked.value = !isLiked.value // 로컬 상태 먼저 변경
-                            onClickLike(!isLiked.value)    // 변경된 값을 넘김
+                            isLiked.value = !isLiked.value
+                            onClickLike(isLiked.value)
                         }
                 )
             }
 
+            // 펫 정보
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier
@@ -140,6 +165,7 @@ fun CourseDetail(
                     contentDescription = null,
                     modifier = Modifier
                         .size(44.dp)
+                        .clip(CircleShape)
                 )
 
                 Text(
@@ -149,8 +175,9 @@ fun CourseDetail(
                 )
             }
 
+            // 위치와 날짜 정보
             Column(modifier = Modifier.padding(vertical = 12.dp)) {
-                Row {
+                Row(verticalAlignment = Alignment.CenterVertically) {
                     Icon(
                         imageVector = ImageVector.vectorResource(id = R.drawable.ic_walk_review_location),
                         contentDescription = "장소",
@@ -163,7 +190,8 @@ fun CourseDetail(
                         color = PawKeyTheme.colors.gray400
                     )
                 }
-                Row {
+                Spacer(modifier = Modifier.height(4.dp))
+                Row(verticalAlignment = Alignment.CenterVertically) {
                     Icon(
                         imageVector = ImageVector.vectorResource(id = R.drawable.ic_walk_review_time),
                         contentDescription = "시간",
@@ -178,139 +206,150 @@ fun CourseDetail(
                 }
             }
 
-
+            // 카테고리 칩들
             Row(
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
-                modifier = Modifier
-                    .padding(vertical = 13.dp)
+                modifier = Modifier.padding(vertical = 13.dp)
             ) {
-                categorySummary.forEach {
-                    SubChip(
-                        text = it
-                    )
+                categorySummary.forEach { category ->
+                    SubChip(text = category)
                 }
             }
 
             Spacer(modifier = Modifier.height(12.dp))
 
-            LazyRow(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 12.dp),
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                items(walkingImageUrls.size) { index ->
-                    AsyncImage(
-                        model = ImageRequest.Builder(context)
-                            .data(walkingImageUrls[index])
-                            .crossfade(true)
-                            .build(),
-                        contentDescription = null,
-                        modifier = Modifier
-                            .width(100.dp)
-                            .height(100.dp)
-                            .clip(RoundedCornerShape(8.dp))
-                            .clickable { onImageClick(walkingImageUrls[index]) },
-                        contentScale = ContentScale.Crop
-                    )
+            // 산책 이미지들
+            if (walkingImageUrls.isNotEmpty()) {
+                LazyRow(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 12.dp),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    items(walkingImageUrls.size) { index ->
+                        AsyncImage(
+                            model = ImageRequest.Builder(context)
+                                .data(walkingImageUrls[index])
+                                .crossfade(true)
+                                .build(),
+                            contentDescription = null,
+                            modifier = Modifier
+                                .width(100.dp)
+                                .height(100.dp)
+                                .clip(RoundedCornerShape(8.dp))
+                                .clickable { onImageClick(walkingImageUrls[index]) },
+                            contentScale = ContentScale.Crop
+                        )
+                    }
                 }
             }
 
+            // 컨텐츠
             Text(
                 text = content,
-                style = PawKeyTheme.typography.body14R
+                style = PawKeyTheme.typography.body14R,
+                modifier = Modifier.padding(vertical = 12.dp)
             )
-            Spacer(modifier = Modifier.height(12.dp))
 
             Text(
                 text = "본인 위치에서의 거리",
                 style = PawKeyTheme.typography.caption12Sb1,
-                color = PawKeyTheme.colors.gray200
+                color = PawKeyTheme.colors.gray200,
+                modifier = Modifier.padding(vertical = 12.dp)
             )
-            Spacer(modifier = Modifier.height(12.dp))
 
             HorizontalDivider(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(8.dp)
-                    .zIndex(1F)
+                    .border(
+                        width = 8.dp,
+                        color = PawKeyTheme.colors.gray100,
+                    )
             )
 
+            // 리뷰 섹션
+            ReviewSection(
+                categoryTop3 = categoryTop3,
+                totalReviewCount = totalReviewCount
+            )
+        }
+    }
+}
+
+@Composable
+private fun ReviewSection(
+    categoryTop3: List<CategoryTop3Entity>,
+    totalReviewCount: Int
+) {
+    Column(modifier = Modifier.padding(horizontal = 16.dp)) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = "이런 점이 좋았어요",
+                style = PawKeyTheme.typography.head18Sb,
+                color = PawKeyTheme.colors.black,
+                modifier = Modifier.padding(vertical = 16.dp)
+            )
+            Spacer(modifier = Modifier.width(12.dp))
+            Icon(
+                imageVector = ImageVector.vectorResource(id = R.drawable.ic_edit),
+                contentDescription = "편집",
+                tint = Color.Unspecified
+            )
+            Spacer(modifier = Modifier.width(4.dp))
+            Text(
+                text = totalReviewCount.toString(),
+                style = PawKeyTheme.typography.caption12M,
+                color = PawKeyTheme.colors.gray200,
+            )
         }
 
-        Spacer(modifier = Modifier.height(8.dp))
+        if (categoryTop3.isEmpty()) {
+            Text(
+                text = "아직은 후기가 없어요.",
+                style = PawKeyTheme.typography.body16Sb,
+                color = PawKeyTheme.colors.gray400,
+                modifier = Modifier.align(Alignment.CenterHorizontally)
+            )
+        } else {
+            categoryTop3.forEach { tag ->
+                val fillRatio = (tag.percentage.coerceIn(0, 100)) / 100f
+                val backgroundColor = when (tag.rank) {
+                    1 -> PawKeyTheme.colors.green300
+                    2 -> PawKeyTheme.colors.green200
+                    3 -> PawKeyTheme.colors.green100
+                    else -> PawKeyTheme.colors.green500
+                }
 
-        Column(modifier = Modifier.padding(horizontal = 16.dp)) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    text = "이런 점이 좋았어요",
-                    style = PawKeyTheme.typography.head18Sb,
-                    color = PawKeyTheme.colors.black,
-                    modifier = Modifier.padding(vertical = 16.dp)
-                )
-                Spacer(modifier = Modifier.width(12.dp))
-                Icon(
-                    imageVector = ImageVector.vectorResource(id = R.drawable.ic_edit),
-                    contentDescription = "편집",
-                    tint = Color.Unspecified
-                )
-                Spacer(modifier = Modifier.width(4.dp))
-                Text(
-                    text = totalReviewCount.toString(),
-                    style = PawKeyTheme.typography.caption12M,
-                    color = PawKeyTheme.colors.gray200,
-                )
-            }
-
-            if (categoryTop3.isEmpty()) {
-                Text(
-                    text = "아직은 후기가 없어요.",
-                    style = PawKeyTheme.typography.body16Sb,
-                    color = PawKeyTheme.colors.gray400,
+                Box(
                     modifier = Modifier
-                        .align(Alignment.CenterHorizontally)
-                )
-            } else {
-                categoryTop3.forEach { tag ->
-                    val fillRatio = (tag.percentage.coerceIn(0, 100)) / 100f
-                    val backgroundColor = when (tag.rank) {
-                        1 -> PawKeyTheme.colors.green300
-                        2 -> PawKeyTheme.colors.green200
-                        3 -> PawKeyTheme.colors.green100
-                        else -> PawKeyTheme.colors.green500
-                    }
-
+                        .fillMaxWidth()
+                        .padding(vertical = 4.dp)
+                        .height(37.dp)
+                        .background(PawKeyTheme.colors.white2, RoundedCornerShape(6.dp))
+                ) {
                     Box(
                         modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = 4.dp)
-                            .height(37.dp)
-                            .background(PawKeyTheme.colors.white2, RoundedCornerShape(6.dp))
-                    ) {
-                        Box(
-                            modifier = Modifier
-                                .fillMaxWidth(fillRatio)
-                                .fillMaxHeight()
-                                .background(backgroundColor, RoundedCornerShape(6.dp))
-                        )
+                            .fillMaxWidth(fillRatio)
+                            .fillMaxHeight()
+                            .background(backgroundColor, RoundedCornerShape(6.dp))
+                    )
 
-                        Text(
-                            text = tag.optionText,
-                            color = PawKeyTheme.colors.black,
-                            modifier = Modifier
-                                .align(Alignment.CenterStart)
-                                .padding(horizontal = 16.dp)
-                                .zIndex(1f),
-                            style = PawKeyTheme.typography.caption12Sb2,
-                            maxLines = 1,
-                            softWrap = false,
-                            overflow = TextOverflow.Visible
-                        )
-                    }
+                    Text(
+                        text = tag.optionText,
+                        color = PawKeyTheme.colors.black,
+                        modifier = Modifier
+                            .align(Alignment.CenterStart)
+                            .padding(horizontal = 16.dp)
+                            .zIndex(1f),
+                        style = PawKeyTheme.typography.caption12Sb2,
+                        maxLines = 1,
+                        softWrap = false,
+                        overflow = TextOverflow.Visible
+                    )
                 }
             }
         }
@@ -326,6 +365,7 @@ fun CourseDetailPreview() {
             title = "홍대 주변 좋은 산책 코스",
             petName = "핑구",
             date = "2025/06/30",
+            Icon = R.drawable.ic_eye_linear_gray_valid,
             location = "홍대입구역",
             onClickLike = {},
             petProfileImage = "https://pawkey-server.com/image/profile.png",
