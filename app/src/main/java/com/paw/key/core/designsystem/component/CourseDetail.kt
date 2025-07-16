@@ -40,7 +40,9 @@ import coil.request.ImageRequest
 import com.paw.key.R
 import com.paw.key.core.designsystem.theme.PawKeyTheme
 import com.paw.key.core.designsystem.theme.Gray100
+import com.paw.key.core.util.noRippleClickable
 import com.paw.key.domain.model.entity.walklist.CategoryTop3Entity
+import kotlinx.serialization.json.JsonNull.content
 
 @Composable
 fun CourseDetail(
@@ -48,15 +50,14 @@ fun CourseDetail(
     petName : String,
     date : String,
     location : String,
-    isLike : Boolean,
-    content : String,
+    onClickLike: (Boolean) -> Unit,
     petProfileImage : String,
     routeMapImageUrl : String,
     categorySummary : List<String>,
     categoryTop3 : List<CategoryTop3Entity>,
     totalReviewCount : Int,
     walkingImageUrls : List<String>,
-
+    content: String,
     onImageClick: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -110,16 +111,18 @@ fun CourseDetail(
                 )
 
                 Icon(
-                    imageVector = if (isLiked.value) {
-                        ImageVector.vectorResource(id = R.drawable.ic_eye_linear_gray_valid)
-                    } else {
-                        ImageVector.vectorResource(id = R.drawable.ic_eye_linear_gray_invalid)
-                    },
+                    imageVector = if (isLiked.value)
+                        ImageVector.vectorResource(id = R.drawable.ic_heart_filled)
+                    else
+                        ImageVector.vectorResource(id = R.drawable.ic_heart_default),
                     contentDescription = "좋아요",
                     tint = Color.Unspecified,
-                    modifier = Modifier.clickable {
-                        isLiked.value = !isLiked.value
-                    }
+                    modifier = Modifier
+                        .size(24.dp)
+                        .noRippleClickable {
+                            isLiked.value = !isLiked.value // 로컬 상태 먼저 변경
+                            onClickLike(!isLiked.value)    // 변경된 값을 넘김
+                        }
                 )
             }
 
@@ -324,35 +327,13 @@ fun CourseDetailPreview() {
             petName = "핑구",
             date = "2025/06/30",
             location = "홍대입구역",
-            isLike = true,
-            content = "산책로가 깨끗하고 벚꽃이 예뻐요!",
+            onClickLike = {},
             petProfileImage = "https://pawkey-server.com/image/profile.png",
             routeMapImageUrl = "https://pawkey-server.com/image/map.png",
             categoryTop3 = listOf(
-                CategoryTop3Entity(
-                    rank = 1,
-                    optionText = "산책로가 어쩌구 저꾸",
-                    percentage = 42,
-                    categoryName = "산책로가 어쩌구 저꾸",
-                    categoryOptionId = 1,
-                    categoryId = 2
-                ),
-                CategoryTop3Entity(
-                    rank = 2,
-                    optionText = "산책로가 어쩌구 저꾸",
-                    percentage = 37,
-                    categoryName = "산책로가 어쩌구 저꾸",
-                    categoryOptionId = 1,
-                    categoryId = 2
-                ),
-                CategoryTop3Entity(
-                    rank = 3,
-                    optionText = "산책로가 어쩌구 저꾸",
-                    percentage = 35,
-                    categoryName = "산책로가 어쩌구 저꾸",
-                    categoryOptionId = 1,
-                    categoryId = 2
-                )
+                CategoryTop3Entity(rank = 1, optionText = "산책로가 어쩌구 저꾸", percentage = 42, categoryName = "", categoryOptionId = 1, categoryId = 2),
+                CategoryTop3Entity(rank = 2, optionText = "풍경이 예뻐요", percentage = 37, categoryName = "", categoryOptionId = 1, categoryId = 2),
+                CategoryTop3Entity(rank = 3, optionText = "깨끗해요", percentage = 35, categoryName = "", categoryOptionId = 1, categoryId = 2)
             ),
             totalReviewCount = 42,
             walkingImageUrls = listOf(
@@ -360,7 +341,8 @@ fun CourseDetailPreview() {
                 "https://pawkey-server.com/image/walk2.jpg"
             ),
             categorySummary = listOf("안전", "편리성"),
-            onImageClick = {},
+            content = "산책로가 깨끗하고 벚꽃이 예뻐요!",
+            onImageClick = {}
         )
     }
 }

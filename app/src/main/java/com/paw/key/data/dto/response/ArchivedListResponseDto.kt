@@ -36,7 +36,7 @@ data class ArchivedDto(
     val descriptionTags: List<String>
 ) {
     fun toEntity() = ArchivedListEntity(
-        postId = postId.toLong(),
+        postId = postId,
         createdAt = createdAt,
         isLiked = isLike,
         title = title,

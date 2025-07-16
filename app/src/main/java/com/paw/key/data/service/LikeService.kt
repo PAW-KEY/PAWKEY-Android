@@ -7,6 +7,7 @@ import retrofit2.http.POST
 import retrofit2.http.Path
 
 interface LikeService {
+
     @POST("/api/v1/likes/{courseId}")
     suspend fun likeCourse(
         @Header("X-USER-ID") userId: Int,

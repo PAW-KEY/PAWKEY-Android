@@ -56,9 +56,7 @@ fun SavedCourseListScreen(
                 .padding(16.dp)
                 .background(PawKeyTheme.colors.white1)
         ) {
-            itemsIndexed(
-                items = state.courseList
-            ) { _, item ->
+            itemsIndexed(state.courseList) { _, item ->
                 CourseCard(
                     postId = item.postId.toInt(),
                     title = item.title,
@@ -82,7 +80,8 @@ fun SavedCourseListScreen(
 @Composable
 fun SavedCourseListScreenPreview() {
     PawKeyTheme {
-        SavedCourseListScreen(state = SavedListState(),
+        SavedCourseListScreen(
+            state = SavedListState(),
             navigateUp = {},
             navigateNext = {},
             onClickLike = {}

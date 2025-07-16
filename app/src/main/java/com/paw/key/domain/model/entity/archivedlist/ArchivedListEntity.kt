@@ -5,7 +5,7 @@ data class ArchivedListPostsEntity(
 )
 
 data class ArchivedListEntity(
-    val postId: Long,
+    val postId: Int,
     val createdAt: String,
     val isLiked: Boolean,
     val title: String,

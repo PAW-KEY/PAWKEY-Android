@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -14,38 +13,40 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.paw.key.core.designsystem.component.CourseCard
 import com.paw.key.core.designsystem.component.TopBar
 import com.paw.key.core.designsystem.theme.PawKeyTheme
-import com.paw.key.presentation.ui.mypage.state.SavedListState
-import com.paw.key.presentation.ui.mypage.viewmodel.SavedListViewModel
+import com.paw.key.presentation.ui.mypage.state.ArchivedListState
+import com.paw.key.presentation.ui.mypage.viewmodel.ArchivedListViewModel
 
 @Composable
 fun ArchivedCourseRoute(
     navigateUp: () -> Unit,
     navigateNext: () -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: SavedListViewModel = hiltViewModel()
+    viewModel: ArchivedListViewModel = hiltViewModel()
 ) {
     val state = viewModel.state.collectAsStateWithLifecycle()
-    LaunchedEffect(Unit) {
-        viewModel.getSavedList(2)
-    }
+
     ArchivedCourseListScreen(
         state = state.value,
         navigateUp = navigateUp,
         navigateNext = navigateNext,
+        onClickLike = { postId, isLiked ->
+            viewModel.toggleLike(postId = postId, isLiked = isLiked)
+        },
         modifier = modifier
     )
 }
 
 @Composable
 fun ArchivedCourseListScreen(
-    state: SavedListState,
+    state: ArchivedListState,
     navigateUp: () -> Unit,
     navigateNext: () -> Unit,
+    onClickLike: (postId: Int, isLiked: Boolean) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column {
         TopBar(
-            title = "저장한 산책 루트",
+            title = "내가 기록한 산책 루트",
             onBackClick = navigateUp
         )
 
@@ -55,9 +56,7 @@ fun ArchivedCourseListScreen(
                 .padding(16.dp)
                 .background(PawKeyTheme.colors.white1)
         ) {
-            itemsIndexed(
-                items = state.courseList
-            ) { _, item ->
+            itemsIndexed(state.courseList) { _, item ->
                 CourseCard(
                     postId = item.postId.toInt(),
                     title = item.title,
@@ -69,6 +68,7 @@ fun ArchivedCourseListScreen(
                     isLiked = item.isLiked,
                     onClickItem = navigateNext,
                     onClickLike = {}
+
                 )
             }
         }
@@ -79,10 +79,12 @@ fun ArchivedCourseListScreen(
 @Composable
 fun ArchivedCourseListScreenPreview() {
     PawKeyTheme {
-        SavedCourseListScreen(state = SavedListState(),
+        ArchivedCourseListScreen(
+            state = ArchivedListState(),
             navigateUp = {},
             navigateNext = {},
             onClickLike = {}
+
         )
     }
 }
