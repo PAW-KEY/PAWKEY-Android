@@ -11,6 +11,7 @@ import com.paw.key.data.repositoryimpl.WalkSharedResultRepositoryImpl
 import com.paw.key.data.repositoryimpl.filter.FilterOptionRepositoryImpl
 import com.paw.key.data.repositoryimpl.sharedwalk.SharedWalkRepositoryImpl
 import com.paw.key.data.repositoryimpl.home.HomeRegionRepositoryImpl
+import com.paw.key.data.repositoryimpl.list.PostsListRepositoryImpl
 import com.paw.key.data.repositoryimpl.walklist.WalkListDetailRepositoryImpl
 import com.paw.key.data.repositoryimpl.walkreview.WalkReviewRepositoryImpl
 import com.paw.key.domain.repository.DummyRepository
@@ -22,6 +23,7 @@ import com.paw.key.domain.repository.WalkSharedResultRepository
 import com.paw.key.domain.repository.filter.FilterOptionRepository
 import com.paw.key.domain.repository.sharedwalk.SharedWalkRepository
 import com.paw.key.domain.repository.home.HomeRegionRepository
+import com.paw.key.domain.repository.list.PostsListRepository
 import com.paw.key.domain.repository.petprofile.PetProfileRepository
 import com.paw.key.domain.repository.walkcourse.WalkCourseRepository
 import com.paw.key.domain.repository.walklist.WalkListRepository
@@ -97,7 +99,7 @@ interface RepositoryModule {
     fun bindPetProfileRepository(
         impl: PetProfileRepositoryImpl
     ): PetProfileRepository
-  
+
     @Binds
     @Singleton
     fun bindWalkReviewRepository(
@@ -117,4 +119,10 @@ interface RepositoryModule {
         impl: FilterOptionRepositoryImpl
     ) : FilterOptionRepository
 
+    //게시물 리스트
+    @Binds
+    @Singleton
+    fun bindPostsListRepository(
+        impl: PostsListRepositoryImpl
+    ) : PostsListRepository
 }
