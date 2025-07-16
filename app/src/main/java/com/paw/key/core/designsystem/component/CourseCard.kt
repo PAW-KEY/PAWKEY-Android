@@ -2,26 +2,13 @@ package com.paw.key.core.designsystem.component
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.aspectRatio
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -31,7 +18,6 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -43,7 +29,16 @@ import com.paw.key.core.util.noRippleClickable
 
 @Composable
 fun CourseCard(
+    postId: Long,
     title: String,
+    createdAt: String,
+    representativeImageUrl: String,
+    petName: String,
+    petProfileImageUrl: String,
+    descriptionTags: List<String>,
+    isLiked: Boolean,
+    onClickItem: () -> Unit,
+    modifier: Modifier = Modifier
     petName: String,
     date: String,
     representativeImageUrl: String? = null, // 추가
@@ -71,9 +66,7 @@ fun CourseCard(
             .fillMaxWidth()
             .size(width = 328.dp, height = 240.dp)
             .background(Color.White, shape = RoundedCornerShape(20.dp))
-            .noRippleClickable {
-                onCLickItem()
-            }
+            .noRippleClickable { onClickItem() }
     ) {
         // 지도 썸네일
         Box(
@@ -82,6 +75,8 @@ fun CourseCard(
                 .aspectRatio(343f / 172f)
                 .clip(RoundedCornerShape(10.dp))
         ) {
+         
+
             // 서버 이미지 또는 기본 이미지
             if (representativeImageUrl != null) {
                 AsyncImage(
@@ -128,7 +123,6 @@ fun CourseCard(
                     .clip(RoundedCornerShape(8.dp))
             )
 
-            // 프로필 + 제목
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier
@@ -182,6 +176,7 @@ fun CourseCard(
                         )
                         Spacer(modifier = Modifier.width(8.dp))
                         Text(
+                            text = createdAt,
                             text = formatDate(date), // 포맷된 날짜 사용
                             style = PawKeyTheme.typography.caption12R,
                             color = PawKeyTheme.colors.gray100
@@ -189,39 +184,14 @@ fun CourseCard(
                     }
                 }
                 Spacer(modifier = Modifier.weight(1f))
-
-                when {
-                    isShared -> {
-                        Icon(
-                            imageVector = ImageVector.vectorResource(id = R.drawable.ic_eye_linear_valid),
-                            contentDescription = "공유됨",
-                            tint = PawKeyTheme.colors.gray200,
-                        )
-                    }
-                    isRecord -> {
-                        val isLiked = remember { mutableStateOf(false) }
-
-                        Icon(
-                            imageVector = if (isLiked.value) {
-                                ImageVector.vectorResource(id = R.drawable.ic_heart_filled)
-                            } else {
-                                ImageVector.vectorResource(id = R.drawable.ic_heart_default)
-                            },
-                            contentDescription = "좋아요",
-                            tint = Color.Unspecified,
-                            modifier = Modifier.clickable {
-                                isLiked.value = !isLiked.value
-                            }
-                        )
-                    }
-                    else -> {
-                        Icon(
-                            imageVector = ImageVector.vectorResource(id = R.drawable.ic_eye_linear_invalid),
-                            contentDescription = "공유 안됨",
-                            tint = PawKeyTheme.colors.gray200,
-                        )
-                    }
-                }
+                Icon(
+                    imageVector = if (isLiked)
+                        ImageVector.vectorResource(id = R.drawable.ic_heart_filled)
+                    else
+                        ImageVector.vectorResource(id = R.drawable.ic_heart_default),
+                    contentDescription = "좋아요",
+                    tint = Color.Unspecified
+                )
             }
         }
 
@@ -235,23 +205,29 @@ fun CourseCard(
         )
 
         Spacer(modifier = Modifier.height(12.dp))
-    }
 
-    HorizontalDivider(
-        color = PawKeyTheme.colors.gray50,
-        thickness = 1.dp,
-        modifier = Modifier.padding(start = 16.dp, end = 16.dp)
-    )
+        HorizontalDivider(
+            color = PawKeyTheme.colors.gray50,
+            thickness = 1.dp,
+            modifier = Modifier.padding(start = 16.dp, end = 16.dp)
+        )
+    }
 }
+
 @Preview(showBackground = true)
 @Composable
 fun CourseCardPreview() {
     PawKeyTheme {
         CourseCard(
+            postId = 1L,
             title = "홍대 주변 좋은 산책 코스",
-            petName = "반려견 이름",
-            date = "2025/05/17",
-            onCLickItem = {}
+            createdAt = "2025/07/16",
+            representativeImageUrl = "https://pawkey-server.com/image.jpg",
+            petName = "후추",
+            petProfileImageUrl = "https://pawkey-server.com/profile.jpg",
+            descriptionTags = listOf("이륜차 거의 없음", "물그릇 비치", "쉴 곳 있음"),
+            isLiked = true,
+            onClickItem = {}
         )
     }
 }

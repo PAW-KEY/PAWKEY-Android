@@ -1,11 +1,13 @@
 package com.paw.key.data.di
 
+import com.paw.key.data.repositoryimpl.ArchivedListRepositoryImpl
 import com.paw.key.data.repositoryimpl.DummyRepositoryImpl
 import com.paw.key.data.repositoryimpl.PetProfileRepositoryImpl
 import com.paw.key.data.repositoryimpl.onboarding.OnboardingInfoRepositoryImpl
 import com.paw.key.data.repositoryimpl.onboarding.OnboardingRegionRepositoryImpl
 import com.paw.key.data.repositoryimpl.onboarding.OnboardingRepositoryImpl
 import com.paw.key.data.repositoryimpl.RegionRepositoryImpl
+import com.paw.key.data.repositoryimpl.SavedListRepositoryImpl
 import com.paw.key.data.repositoryimpl.WalkCourseRepositoryImpl
 import com.paw.key.data.repositoryimpl.WalkSharedResultRepositoryImpl
 import com.paw.key.data.repositoryimpl.filter.FilterOptionRepositoryImpl
@@ -14,11 +16,13 @@ import com.paw.key.data.repositoryimpl.home.HomeRegionRepositoryImpl
 import com.paw.key.data.repositoryimpl.list.PostsListRepositoryImpl
 import com.paw.key.data.repositoryimpl.walklist.WalkListDetailRepositoryImpl
 import com.paw.key.data.repositoryimpl.walkreview.WalkReviewRepositoryImpl
+import com.paw.key.domain.repository.ArchivedListRepository
 import com.paw.key.domain.repository.DummyRepository
 import com.paw.key.domain.repository.onboarding.OnboardingInfoRepository
 import com.paw.key.domain.repository.onboarding.OnboardingRegionRepository
 import com.paw.key.domain.repository.onboarding.OnboardingRepository
 import com.paw.key.domain.repository.RegionRepository
+import com.paw.key.domain.repository.SavedListRepository
 import com.paw.key.domain.repository.WalkSharedResultRepository
 import com.paw.key.domain.repository.filter.FilterOptionRepository
 import com.paw.key.domain.repository.sharedwalk.SharedWalkRepository
@@ -99,6 +103,18 @@ interface RepositoryModule {
     fun bindPetProfileRepository(
         impl: PetProfileRepositoryImpl
     ): PetProfileRepository
+
+    @Binds
+    @Singleton
+    fun bindSavedListRepository(
+        impl: SavedListRepositoryImpl
+    ): SavedListRepository
+
+    @Binds
+    @Singleton
+    fun bindArchivedListRepository(
+        impl: ArchivedListRepositoryImpl
+    ): ArchivedListRepository
 
     @Binds
     @Singleton

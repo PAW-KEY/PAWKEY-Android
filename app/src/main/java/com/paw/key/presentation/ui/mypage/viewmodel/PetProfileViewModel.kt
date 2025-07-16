@@ -3,11 +3,7 @@ package com.paw.key.presentation.ui.mypage.viewmodel
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.paw.key.core.util.UiState
-import com.paw.key.core.util.handleError
-import com.paw.key.domain.model.entity.petprofile.PetProfileEntity
 import com.paw.key.domain.repository.petprofile.PetProfileRepository
-import com.paw.key.presentation.ui.course.sharedwalk.sharedroute.state.SharedWalkCourseSideEffect
 import com.paw.key.presentation.ui.mypage.state.PetProfileSideEffect
 import com.paw.key.presentation.ui.mypage.state.PetProfileState
 import dagger.hilt.android.lifecycle.HiltViewModel

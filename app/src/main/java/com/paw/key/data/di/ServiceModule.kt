@@ -1,11 +1,13 @@
 package com.paw.key.data.di
 
+import com.paw.key.data.service.ArchivedListService
 import com.paw.key.data.service.DummyService
 import com.paw.key.data.service.PetProfileService
 import com.paw.key.data.service.onboarding.OnboardingInfoService
 import com.paw.key.data.service.onboarding.OnboardingPetsService
 import com.paw.key.data.service.onboarding.OnboardingRegionService
 import com.paw.key.data.service.RegionService
+import com.paw.key.data.service.SavedListService
 import com.paw.key.data.service.filter.FilterOptionService
 import com.paw.key.data.service.sharedwalk.SharedWalkService
 import com.paw.key.data.service.home.HomeRegionService
@@ -69,6 +71,16 @@ object ServiceModule {
     @Provides
     @Singleton
     fun providePetProfileService(retrofit: Retrofit): PetProfileService =
+        retrofit.create()
+
+    @Provides
+    @Singleton
+    fun provideSavedListService(retrofit: Retrofit): SavedListService =
+        retrofit.create()
+
+    @Provides
+    @Singleton
+    fun provideArchivedListService(retrofit: Retrofit): ArchivedListService =
         retrofit.create()
 
     @Provides

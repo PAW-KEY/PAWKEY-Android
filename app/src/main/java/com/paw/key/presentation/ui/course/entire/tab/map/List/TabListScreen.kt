@@ -102,6 +102,9 @@ fun TabListScreen(
                 .background(PawKeyTheme.colors.white2)
                 .padding(bottom = 36.dp)
         ) {
+
+            // Todo : 나중에 서버용 리스트로 변경
+
             // 로딩 상태 표시
             if (listState.isLoading) {
                 item {

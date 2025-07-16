@@ -3,7 +3,9 @@ package com.paw.key.presentation.ui.mypage
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -12,20 +14,20 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.paw.key.core.designsystem.component.CourseCard
 import com.paw.key.core.designsystem.component.TopBar
 import com.paw.key.core.designsystem.theme.PawKeyTheme
-import com.paw.key.core.designsystem.theme.White1
-import com.paw.key.presentation.ui.mypage.state.ArchivedListContract
-import com.paw.key.presentation.ui.mypage.state.SavedListContract.CourseCardData
-import com.paw.key.presentation.ui.mypage.viewmodel.ArchivedListViewModel
+import com.paw.key.presentation.ui.mypage.state.SavedListState
+import com.paw.key.presentation.ui.mypage.viewmodel.SavedListViewModel
 
 @Composable
 fun ArchivedCourseRoute(
     navigateUp: () -> Unit,
     navigateNext: () -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: ArchivedListViewModel = hiltViewModel()
+    viewModel: SavedListViewModel = hiltViewModel()
 ) {
     val state = viewModel.state.collectAsStateWithLifecycle()
-
+    LaunchedEffect(Unit) {
+        viewModel.getSavedList(2)
+    }
     ArchivedCourseListScreen(
         state = state.value,
         navigateUp = navigateUp,
@@ -36,33 +38,14 @@ fun ArchivedCourseRoute(
 
 @Composable
 fun ArchivedCourseListScreen(
-    state: ArchivedListContract.ArchivedListState,
+    state: SavedListState,
     navigateUp: () -> Unit,
     navigateNext: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val courseList = listOf(
-        CourseCardData(
-            title = "홍대 주변 좋은 산책 코스",
-            petName = "초코",
-            date = "2025/05/17",
-            location = "홍대입구역",
-            distance = "3km",
-            time = "1시간 소요"
-        ),
-        CourseCardData(
-            title = "한강 산책로",
-            petName = "몽이",
-            date = "2025/06/02",
-            location = "뚝섬유원지",
-            distance = "4.5km",
-            time = "1시간 30분 소요"
-        )
-    )
-
     Column {
         TopBar(
-            title = "내가 기록한 산책 루트",
+            title = "저장한 산책 루트",
             onBackClick = navigateUp
         )
 
@@ -70,40 +53,32 @@ fun ArchivedCourseListScreen(
             modifier = modifier
                 .fillMaxWidth()
                 .padding(16.dp)
-                .background(color = White1)
+                .background(PawKeyTheme.colors.white1)
         ) {
-            item {
-                courseList.forEach { course ->
-                    CourseCard(
-                        title = course.title,
-                        petName = course.petName,
-                        date = course.date,
-                        onCLickItem = navigateNext
-                    )
-                }
+            itemsIndexed(
+                items = state.courseList
+            ) { _, item ->
+                CourseCard(
+                    postId = item.postId,
+                    title = item.title,
+                    createdAt = item.createdAt,
+                    representativeImageUrl = item.representativeImageUrl,
+                    petName = item.writer.first().petName,
+                    petProfileImageUrl = item.writer.first().petProfileImageUrl,
+                    descriptionTags = item.descriptionTags,
+                    isLiked = item.isLiked,
+                    onClickItem = navigateNext
+                )
             }
         }
     }
 }
 
-
 @Preview(showBackground = true)
 @Composable
 fun ArchivedCourseListScreenPreview() {
     PawKeyTheme {
-        ArchivedCourseListScreen(
-            state = ArchivedListContract.ArchivedListState(
-                courseList = listOf(
-                    ArchivedListContract.CourseCardData(
-                        title = "예시 산책로",
-                        petName = "하루",
-                        date = "2025/01/01",
-                        location = "강남",
-                        distance = "2.3km",
-                        time = "45분"
-                    )
-                )
-            ),
+        SavedCourseListScreen(state = SavedListState(),
             navigateUp = {},
             navigateNext = {}
         )
