@@ -30,7 +30,7 @@ import com.paw.key.core.util.noRippleClickable
 
 @Composable
 fun CourseCard(
-    postId: Long,
+    postId: Int,
     title: String,
     createdAt: String,
     petName: String,
@@ -149,15 +149,10 @@ fun CourseCard(
                         contentAlignment = Alignment.Center
                     ) {
                         Icon(
-                            imageVector = if (isLiked)
-                                ImageVector.vectorResource(id = R.drawable.ic_heart_filled)
-                            else
-                                ImageVector.vectorResource(id = R.drawable.ic_heart_default),
-                            contentDescription = "좋아요",
-                            tint = Color.Unspecified,
-                            modifier = Modifier
-                                .size(24.dp)
-                                .noRippleClickable { onClickLike(isLiked) } // 클릭 시 상태 전달
+                            imageVector = ImageVector.vectorResource(id = R.drawable.ic_heart_default),
+                            contentDescription = null,
+                            tint = PawKeyTheme.colors.gray400,
+                            modifier = Modifier.size(20.dp)
                         )
                     }
                 }
@@ -221,7 +216,7 @@ fun CourseCard(
 fun CourseCardPreview() {
     PawKeyTheme {
         CourseCard(
-            postId = 1L,
+            postId = 1,
             title = "홍대 주변 좋은 산책 코스",
             createdAt = "2025/07/16",
             representativeImageUrl = "https://pawkey-server.com/image.jpg",
@@ -229,11 +224,6 @@ fun CourseCardPreview() {
             petProfileImageUrl = "https://pawkey-server.com/profile.jpg",
             descriptionTags = listOf("이륜차 거의 없음", "물그릇 비치", "쉴 곳 있음"),
             isLiked = true,
-            onCLickItem = {},
-            onClickItem = {},
-            date = "2025/07/16",
-            isShared = true,
-            isRecord = true,
             onClickLike = {}
         )
     }

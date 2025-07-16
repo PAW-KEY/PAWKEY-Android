@@ -31,6 +31,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
@@ -295,16 +296,20 @@ fun CourseDetail(
                                 .fillMaxWidth(fillRatio)
                                 .fillMaxHeight()
                                 .background(backgroundColor, RoundedCornerShape(6.dp))
-                        ) {
-                            Text(
-                                text = tag.optionText,
-                                color = PawKeyTheme.colors.black,
-                                modifier = Modifier
-                                    .align(Alignment.CenterStart)
-                                    .padding(horizontal = 16.dp),
-                                style = PawKeyTheme.typography.caption12Sb2
-                            )
-                        }
+                        )
+
+                        Text(
+                            text = tag.optionText,
+                            color = PawKeyTheme.colors.black,
+                            modifier = Modifier
+                                .align(Alignment.CenterStart)
+                                .padding(horizontal = 16.dp)
+                                .zIndex(1f),
+                            style = PawKeyTheme.typography.caption12Sb2,
+                            maxLines = 1,
+                            softWrap = false,
+                            overflow = TextOverflow.Visible
+                        )
                     }
                 }
             }

@@ -55,6 +55,14 @@ android {
         compose = true
         buildConfig = true
     }
+    signingConfigs {
+        getByName("debug") {
+            keyAlias = "androiddebugkey"
+            keyPassword = "android"
+            storeFile = File("${project.rootDir.absolutePath}/keystore/debug.keystore")//project.rootProject.file("debug.keystore")
+            storePassword = "android"
+        }
+    }
 }
 
 dependencies {

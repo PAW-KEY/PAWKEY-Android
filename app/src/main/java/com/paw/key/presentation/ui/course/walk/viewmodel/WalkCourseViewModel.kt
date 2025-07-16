@@ -25,6 +25,7 @@ import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.sample
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -256,7 +257,7 @@ class WalkCourseViewModel @Inject constructor(
                     steps = currentWalkState.steps.toInt(),
                     points = currentWalkState.poiPoints.toList()
                 )
-                Log.e("WalkCourseViewModel", PreferenceDataStore.getTotalTime(context).toString())
+                //Log.e("WalkCourseViewModel", PreferenceDataStore.getTotalTime(context).toString())
                 _sideEffect.emit(WalkCourseSideEffect.ShowSnackBar("산책 기록이 성공적으로 저장되었습니다."))
             } catch (e: Exception) {
                 Log.e("WalkCourseViewModel", "Error saving all walk summary data: ${e.message}", e)

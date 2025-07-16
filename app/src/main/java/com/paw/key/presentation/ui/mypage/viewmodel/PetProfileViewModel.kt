@@ -30,7 +30,6 @@ class PetProfileViewModel @Inject constructor(
         viewModelScope.launch {
             petProfileRepository.getPetProfiles(userId)
                 .onSuccess { result ->
-                    Log.d("PetProfileViewModel", "펫 프로필 불러오기 성공: ${result}")
                     Log.d("PetProfileViewModel", "펫 프로필 불러오기 성공: ${result.size}마리")
                     _sideEffect.emit(PetProfileSideEffect.ShowSnackBar("펫 프로필 불러오기 성공 (${result.size}마리)"))
                     // 필요하면 내부 상태 저장
