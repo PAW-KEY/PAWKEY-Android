@@ -3,14 +3,14 @@ package com.paw.key.presentation.ui.mypage
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.paw.key.core.designsystem.component.TopBar
 import com.paw.key.core.designsystem.theme.PawKeyTheme
-import com.paw.key.presentation.ui.mypage.state.UserProfileState
 import com.paw.key.presentation.ui.mypage.viewmodel.UserProfileViewModel
 
 @Composable
@@ -21,8 +21,16 @@ fun UserProfileRoute(
 ) {
     val state = viewModel.state.collectAsStateWithLifecycle()
 
+    LaunchedEffect(Unit) {
+        viewModel.getUserProfiles(userId = 2) // 실제 유저 ID로 변경 필요
+    }
+
     UserProfileScreen(
-        state = state.value,
+        loginId = state.value.loginId,
+        name = state.value.name,
+        gender = state.value.gender,
+        age = state.value.age.toString(),
+        region = state.value.region,
         navigateUp = navigateUp,
         modifier = modifier
     )
@@ -30,14 +38,13 @@ fun UserProfileRoute(
 
 @Composable
 fun UserProfileScreen(
-    state: UserProfileState,
+    loginId: String,
+    name: String,
+    gender: String,
+    age: String,
+    region: String,
     navigateUp: () -> Unit,
-    modifier: Modifier = Modifier,
-    id: String = "sgh1261",
-    name: String = "김도기",
-    gender: String = "여성",
-    age: String = "24세",
-    region: String = "강남구 역삼동"
+    modifier: Modifier = Modifier
 ) {
     Column(
         modifier = modifier
@@ -54,29 +61,34 @@ fun UserProfileScreen(
         Column(
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            ProfileItem(label = "아이디", value = id)
-            ProfileItem(label = "이름", value = name)
-            ProfileItem(label = "성별", value = gender)
-            ProfileItem(label = "나이", value = age)
-            ProfileItem(label = "활동지역", value = region)
+            UserProfileItem(label = "아이디", value = loginId)
+            UserProfileItem(label = "이름", value = name)
+            UserProfileItem(label = "성별", value = gender)
+            UserProfileItem(label = "나이", value = age)
+            UserProfileItem(label = "활동지역", value = region)
         }
+
         Spacer(modifier = Modifier.weight(1f))
     }
 }
 
 @Composable
-fun ProfileItem(label: String, value: String) {
+fun UserProfileItem(label: String, value: String) {
     Column(modifier = Modifier.padding(vertical = 8.dp)) {
         Text(
             text = label,
-            style = PawKeyTheme.typography.body14Sb
+            style = PawKeyTheme.typography.body14Sb,
+            modifier = Modifier.padding(start = 16.dp)
         )
-        Spacer(modifier = Modifier.height(4.dp))
-        Text(
-            text = value,
-            style = PawKeyTheme.typography.head18Sb,
-            color = PawKeyTheme.colors.green500
-        )
+        if (value.isNotEmpty()) {
+            Spacer(modifier = Modifier.height(4.dp))
+            Text(
+                text = value,
+                style = PawKeyTheme.typography.head18Sb,
+                color = PawKeyTheme.colors.green500,
+                modifier = Modifier.padding(start = 16.dp)
+            )
+        }
     }
 }
 
@@ -85,13 +97,11 @@ fun ProfileItem(label: String, value: String) {
 fun UserProfileScreenPreview() {
     PawKeyTheme {
         UserProfileScreen(
-            state = UserProfileState(
-                id = "sgh1261",
-                name = "김도기",
-                gender = "여성",
-                age = "24세",
-                region = "강남구 역삼동"
-            ),
+            loginId = "sdfsd",
+            name = "김도기",
+            gender = "여성",
+            age = "24",
+            region = "강남구 역삼동",
             navigateUp = {}
         )
     }

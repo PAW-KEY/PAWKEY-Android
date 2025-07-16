@@ -4,10 +4,11 @@ import androidx.compose.runtime.Immutable
 
 @Immutable
 data class UserProfileState(
-    val id: String = "sgh1261",
+    val userId: Int = 0,
+    val loginId: String = "doggo",
     val name: String = "김도기",
     val gender: String = "여성",
-    val age: String = "24세",
+    val age: Int = 24,
     val region: String = "강남구 역삼동"
 )
 

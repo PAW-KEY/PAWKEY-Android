@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
@@ -125,16 +124,15 @@ fun TabListScreen(
                     if (posts.isNotEmpty()) {
                         items(posts) { post ->
                             CourseCard(
+                                postId = post.postId,
                                 title = post.title,
                                 petName = post.writer.petName,
-                                date = post.createdAt,
+                                createdAt = post.createdAt,
                                 representativeImageUrl = post.representativeImageUrl,
                                 petProfileImageUrl = post.writer.petProfileImageUrl,
                                 descriptionTags = post.descriptionTags,
-                                isRecord = post.isLike,
-                                onCLickItem = {
-                                    navigateToDetail()
-                                }
+                                isLiked = post.isLike,
+                                onClickItem = { navigateToDetail() }
                             )
                         }
                     } else {

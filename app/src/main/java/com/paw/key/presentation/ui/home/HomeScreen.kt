@@ -42,7 +42,6 @@ import com.paw.key.presentation.ui.home.component.SettingButton
 import com.paw.key.presentation.ui.home.component.TrackingCard
 import com.paw.key.presentation.ui.home.component.WeatherCard
 import com.paw.key.presentation.ui.home.viewmodel.HomeViewModel
-import kotlin.String
 
 
 @Preview
@@ -164,7 +163,7 @@ fun HomeScreen(
                     descriptionTags = listOf("이륜차 거의 없음", "물그릇 비치", "쉴 곳 있음"),
                     onClickItem = {},
                     isLiked = true,
-                    postId = 1L
+                    postId = 1
                 )
                 Spacer(modifier = Modifier.height(48.dp))
             }

@@ -59,7 +59,7 @@ fun ArchivedCourseListScreen(
                 items = state.courseList
             ) { _, item ->
                 CourseCard(
-                    postId = item.postId,
+                    postId = item.postId.toInt(),
                     title = item.title,
                     createdAt = item.createdAt,
                     representativeImageUrl = item.representativeImageUrl,

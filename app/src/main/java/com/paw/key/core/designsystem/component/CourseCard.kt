@@ -18,6 +18,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -29,22 +30,15 @@ import com.paw.key.core.util.noRippleClickable
 
 @Composable
 fun CourseCard(
-    postId: Long,
+    postId: Int,
     title: String,
     createdAt: String,
-    representativeImageUrl: String,
-    petName: String,
-    petProfileImageUrl: String,
-    descriptionTags: List<String>,
     isLiked: Boolean,
     onClickItem: () -> Unit,
-    modifier: Modifier = Modifier
     petName: String,
-    date: String,
     representativeImageUrl: String? = null, // 추가
     petProfileImageUrl: String? = null,     // 추가
     descriptionTags: List<String> = emptyList(), // 추가
-    onCLickItem: () -> Unit,
     modifier: Modifier = Modifier,
     isShared: Boolean = false,
     isRecord: Boolean = false
@@ -177,7 +171,6 @@ fun CourseCard(
                         Spacer(modifier = Modifier.width(8.dp))
                         Text(
                             text = createdAt,
-                            text = formatDate(date), // 포맷된 날짜 사용
                             style = PawKeyTheme.typography.caption12R,
                             color = PawKeyTheme.colors.gray100
                         )
@@ -219,7 +212,7 @@ fun CourseCard(
 fun CourseCardPreview() {
     PawKeyTheme {
         CourseCard(
-            postId = 1L,
+            postId = 1,
             title = "홍대 주변 좋은 산책 코스",
             createdAt = "2025/07/16",
             representativeImageUrl = "https://pawkey-server.com/image.jpg",

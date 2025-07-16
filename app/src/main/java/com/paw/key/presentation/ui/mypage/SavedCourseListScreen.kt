@@ -1,7 +1,6 @@
 package com.paw.key.presentation.ui.mypage
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -57,7 +56,7 @@ fun SavedCourseListScreen(
                 items = state.courseList
             ) { _, item ->
                 CourseCard(
-                    postId = item.postId,
+                    postId = item.postId.toInt(),
                     title = item.title,
                     createdAt = item.createdAt,
                     representativeImageUrl = item.representativeImageUrl,

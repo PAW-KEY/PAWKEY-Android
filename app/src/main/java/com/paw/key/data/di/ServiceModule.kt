@@ -8,6 +8,7 @@ import com.paw.key.data.service.onboarding.OnboardingPetsService
 import com.paw.key.data.service.onboarding.OnboardingRegionService
 import com.paw.key.data.service.RegionService
 import com.paw.key.data.service.SavedListService
+import com.paw.key.data.service.UserProfileService
 import com.paw.key.data.service.filter.FilterOptionService
 import com.paw.key.data.service.sharedwalk.SharedWalkService
 import com.paw.key.data.service.home.HomeRegionService
@@ -68,6 +69,11 @@ object ServiceModule {
         retrofit.create(HomeRegionService::class.java)
 
     //마이페이지
+    @Provides
+    @Singleton
+    fun provideUserProfileService(retrofit: Retrofit): UserProfileService =
+        retrofit.create()
+
     @Provides
     @Singleton
     fun providePetProfileService(retrofit: Retrofit): PetProfileService =
