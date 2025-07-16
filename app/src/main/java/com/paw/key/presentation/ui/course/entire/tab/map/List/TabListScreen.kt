@@ -11,7 +11,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -27,6 +30,7 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.paw.key.R
 import com.paw.key.core.designsystem.component.CourseCard
 import com.paw.key.core.designsystem.theme.PawKeyTheme
@@ -51,7 +55,8 @@ fun TapListRoute(
 ) {
     TabListScreen(
         modifier = modifier,
-        navigateToDetail = navigateToDetail
+        navigateToDetail = navigateToDetail,
+        viewModel = viewModel
     )
 }
 
@@ -62,6 +67,7 @@ fun TabListScreen(
     viewModel: TapListViewModel = hiltViewModel(),
 ) {
     var showBottomSheet by remember { mutableStateOf(false) }
+    val listState by viewModel.state.collectAsStateWithLifecycle()
 
     Column(
         modifier = modifier
@@ -85,57 +91,84 @@ fun TabListScreen(
                     }
             )
             OptionChip(
-                text = "선택한 옵션이 없어요",
+                text = if (viewModel.isFilterApplied()) "필터 적용됨" else "선택한 옵션이 없어요",
                 isActionChip = true
             )
         }
 
         LazyColumn(
-            modifier = modifier
+            modifier = Modifier
                 .fillMaxSize()
                 .background(PawKeyTheme.colors.white2)
                 .padding(bottom = 36.dp)
         ) {
-            // Todo : 나중에 서버용 리스트로 변경
-            item {
-                CourseCard(
-                    title = "제목을 입력해주세요",
-                    petName = "안녕꼬리",
-                    date = "21/1/1",
-                    isRecord = true,
-                    onCLickItem = {
-                        navigateToDetail()
+            // 로딩 상태 표시
+            if (listState.isLoading) {
+                item {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        CircularProgressIndicator(
+                            color = PawKeyTheme.colors.green500
+                        )
                     }
-                )
-            }
-            item {
-                CourseCard(
-                    title = "제목을 입력해주세요",
-                    petName = "안녕꼬리",
-                    date = "21/1/1",
-                    isRecord = true,
-                    onCLickItem = {}
-                )
-            }
-            item {
-                CourseCard(
-                    title = "제목을 입력해주세요",
-                    petName = "안녕꼬리",
-                    date = "21/1/1",
-                    isRecord = true,
-                    onCLickItem = {}
-                )
-            }
-            item {
-                CourseCard(
-                    title = "제목을 입력해주세요",
-                    petName = "안녕꼬리",
-                    date = "21/1/1",
-                    isRecord = true,
-                    onCLickItem = {}
-                )
+                }
+            } else {
+                listState.postsResult?.let { postsResult ->
+                    val posts = postsResult.posts
+                    if (posts.isNotEmpty()) {
+                        items(posts) { post ->
+                            CourseCard(
+                                title = post.title,
+                                petName = post.writer.petName,
+                                date = post.createdAt,
+                                representativeImageUrl = post.representativeImageUrl,
+                                petProfileImageUrl = post.writer.petProfileImageUrl,
+                                descriptionTags = post.descriptionTags,
+                                isRecord = post.isLike,
+                                onCLickItem = {
+                                    navigateToDetail()
+                                }
+                            )
+                        }
+                    } else {
+                        item {
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(32.dp),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Text(
+                                    text = "조건에 맞는 게시물이 없습니다",
+                                    style = PawKeyTheme.typography.body14R,
+                                    color = PawKeyTheme.colors.gray500
+                                )
+                            }
+                        }
+                    }
+                } ?: run {
+                    item {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(32.dp),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text(
+                                text = "데이터를 불러오는 중...",
+                                style = PawKeyTheme.typography.body14R,
+                                color = PawKeyTheme.colors.gray500
+                            )
+                        }
+                    }
+                }
             }
         }
+
         if (showBottomSheet) {
             CourseOptionBottomSheet(
                 viewModel = viewModel,
@@ -173,4 +206,3 @@ private fun OptionChip(
         )
     }
 }
-
