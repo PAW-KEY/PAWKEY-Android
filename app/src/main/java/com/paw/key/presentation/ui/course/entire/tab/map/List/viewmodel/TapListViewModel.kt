@@ -90,6 +90,38 @@ class TapListViewModel @Inject constructor(
         _state.update { it.copy(selectedSortOption = option) }
     }
 
+    fun toggleLike(postId: Int, isLiked: Boolean) {
+        viewModelScope.launch {
+            _state.update { currentState ->
+                val updatedPostsResult = currentState.postsResult?.let { postsResult ->
+                    postsResult.copy(
+                        posts = postsResult.posts.map { post ->
+                            if (post.postId == postId) {
+                                post.copy(isLike = isLiked)
+                            } else {
+                                post
+                            }
+                        }
+                    )
+                }
+
+//                val updatedCourseList = currentState.courseList.map { course ->
+//                    if (course.postId == postId) {
+//                        // ArchivedListEntity의 실제 프로퍼티명에 맞게 수정
+//                        // isLiked 대신 isLike 또는 liked 등의 프로퍼티를 확인하고 사용
+//                        course.copy(isLike = isLiked) // 또는 course.copy(liked = isLiked)
+//                    } else {
+//                        course
+//                    }
+//                }
+
+                currentState.copy(
+                    postsResult = updatedPostsResult,
+//                    courseList = updatedCourseList
+                )
+            }
+        }
+    }
     fun updateMood(option: String) {
         _state.update {
             it.copy(

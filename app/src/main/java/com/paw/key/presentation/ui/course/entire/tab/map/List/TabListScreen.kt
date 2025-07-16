@@ -122,7 +122,8 @@ fun TabListScreen(
                                 descriptionTags = post.descriptionTags,
                                 isLiked = post.isLike,
                                 onClickLike = { isLiked ->
-                                    onClickLike(post.postId, isLiked)
+                                    viewModel.toggleLike(post.postId, isLiked)
+
                                 },
                                 onClickItem = { navigateToDetail() }
                             )

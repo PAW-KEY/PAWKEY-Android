@@ -75,22 +75,12 @@ fun SplashScreen(
             .background(color = PawKeyTheme.colors.green500),
         contentAlignment = Alignment.Center
     ) {
-        Column(horizontalAlignment = Alignment.CenterHorizontally) {
             Icon(
-                imageVector = ImageVector.vectorResource(id = R.drawable.ic_logo_draft),
+                imageVector = ImageVector.vectorResource(id = R.drawable.ic_splash_logo),
                 contentDescription = stringResource(id = R.string.ic_logo),
                 tint = Color.Unspecified,
                 modifier = Modifier.size(154.dp)
             )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            Text(
-                text = stringResource(id = R.string.ic_logo),
-                color = PawKeyTheme.colors.white1,
-                style = PawKeyTheme.typography.head22B
-            )
-        }
     }
 }
 

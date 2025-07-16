@@ -67,7 +67,8 @@ fun ArchivedCourseListScreen(
                     descriptionTags = item.descriptionTags,
                     isLiked = item.isLiked,
                     onClickItem = navigateNext,
-                    onClickLike = { isLiked -> onClickLike(item.postId.toInt(), isLiked) },
+                    onClickLike = {}
+
                 )
             }
         }
@@ -82,7 +83,8 @@ fun ArchivedCourseListScreenPreview() {
             state = ArchivedListState(),
             navigateUp = {},
             navigateNext = {},
-            onClickLike = { _, _ -> }
+            onClickLike = {}
+
         )
     }
 }

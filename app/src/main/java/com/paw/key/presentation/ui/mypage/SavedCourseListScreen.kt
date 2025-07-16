@@ -29,8 +29,8 @@ fun SavedCourseRoute(
         state = state.value,
         navigateUp = navigateUp,
         navigateNext = navigateNext,
-        onClickLike = { postId, isLiked ->
-            viewModel.toggleLike(postId = postId, isLiked = isLiked)
+        onClickLike = {
+            //viewModel.onClickLike()
         },
         modifier = modifier
     )
@@ -41,7 +41,7 @@ fun SavedCourseListScreen(
     state: SavedListState,
     navigateUp: () -> Unit,
     navigateNext: () -> Unit,
-    onClickLike: (postId: Int, isLiked: Boolean) -> Unit,
+    onClickLike: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column {
@@ -67,7 +67,9 @@ fun SavedCourseListScreen(
                     descriptionTags = item.descriptionTags,
                     isLiked = item.isLiked,
                     onClickItem = navigateNext,
-                    onClickLike = { isLiked -> onClickLike(item.postId.toInt(), isLiked) },
+                    onClickLike = {
+                        onClickLike()
+                    }
                 )
             }
         }
@@ -82,7 +84,7 @@ fun SavedCourseListScreenPreview() {
             state = SavedListState(),
             navigateUp = {},
             navigateNext = {},
-            onClickLike = { _, _ -> }
+            onClickLike = {}
         )
     }
 }

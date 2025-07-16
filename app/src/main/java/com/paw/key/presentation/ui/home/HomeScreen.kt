@@ -15,6 +15,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
@@ -42,8 +44,6 @@ import com.paw.key.presentation.ui.home.component.SettingButton
 import com.paw.key.presentation.ui.home.component.TrackingCard
 import com.paw.key.presentation.ui.home.component.WeatherCard
 import com.paw.key.presentation.ui.home.viewmodel.HomeViewModel
-import kotlin.String
-
 
 @Preview
 @Composable
@@ -51,9 +51,11 @@ private fun HomeScreenPreview() {
     PawKeyTheme {
         HomeScreen(
             paddingValues = PaddingValues(),
+            onClickLike = { _, _ -> },
             navigateUp = {},
             navigateNext = {},
-            navigateHomeLocationSetting = {}
+            navigateHomeLocationSetting = {},
+            viewModel = hiltViewModel()
         )
     }
 }
@@ -67,14 +69,16 @@ fun HomeRoute(
     modifier: Modifier = Modifier,
     viewModel: HomeViewModel = hiltViewModel(),
 ) {
-
     HomeScreen(
         paddingValues = paddingValues,
         navigateUp = navigateUp,
         navigateNext = navigateNext,
         navigateHomeLocationSetting = navigateHomeLocationSetting,
         modifier = modifier,
-        viewModel = viewModel
+        viewModel = viewModel,
+        onClickLike = { postId, isLiked ->
+            viewModel.toggleLike(postId = postId, isLiked = isLiked)
+        }
     )
 }
 
@@ -86,92 +90,120 @@ fun HomeScreen(
     navigateHomeLocationSetting: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: HomeViewModel = hiltViewModel(),
+    onClickLike: (postId: Int, isLiked: Boolean) -> Unit
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     val view = LocalView.current
     val window = (view.context as? Activity)?.window
+    val postsResult = state.postsResult
+    val posts = postsResult?.posts
 
     SideEffect {
         window?.let {
             it.statusBarColor = Color.Black.toArgb()
-            ViewCompat.getWindowInsetsController(view)?.let { controller ->
-                controller.isAppearanceLightStatusBars = false
-            }
+            ViewCompat.getWindowInsetsController(view)?.isAppearanceLightStatusBars = false
         }
     }
 
     Column(
         modifier = modifier
             .padding(paddingValues)
-            .background(color = PawKeyTheme.colors.white2)
+            .background(PawKeyTheme.colors.white2)
             .fillMaxSize()
     ) {
-        HomeTopBar(location = "강남구 역삼동", onLocationClick = { viewModel.toggleLocationMenu() })
+        HomeTopBar(
+            location = state.selectedLocation.displayLocation,
+            onLocationClick = { viewModel.toggleLocationMenu() }
+        )
 
-        LazyColumn (
-            verticalArrangement = Arrangement.spacedBy(12.dp),
-            modifier = Modifier
-                .padding(horizontal = 16.dp)
-                .background(color = PawKeyTheme.colors.white2),
-        ) {
-            item{
-                Spacer(modifier = Modifier.height(12.dp))
-
-                WeatherCard(
-                    weathertitle = "35°",
-                    weathersub1 = "35°",
-                    weathersub2 = "21°",
-                    rating = "0",
-                    weatherIcon = R.drawable.ic_home_weather,
-                )
+        // 로딩 상태 표시
+        if (state.uiState.isLoading) {
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                CircularProgressIndicator()
             }
-            item{
-                Spacer(modifier = Modifier.height(12.dp))
-
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                ) {
-                    DaytimeCard(
-                        daytime = "05:06",
-                        daystate = "일출",
+        } else {
+            LazyColumn(
+                verticalArrangement = Arrangement.spacedBy(12.dp),
+                modifier = Modifier
+                    .padding(horizontal = 16.dp)
+                    .background(PawKeyTheme.colors.white2),
+            ) {
+                item {
+                    Spacer(modifier = Modifier.height(12.dp))
+                    WeatherCard(
+                        weathertitle = "35°",
+                        weathersub1 = "35°",
+                        weathersub2 = "21°",
+                        rating = "0",
+                        weatherIcon = R.drawable.ic_home_weather,
                     )
-
-                    Spacer(modifier = Modifier.weight(1F))
-
-                    TrackingCard(onClick = { navigateNext() })
                 }
-            }
-            item{
-                RowCalendar(date = "7월")
-            }
-            item{
-                Spacer(modifier = Modifier.height(12.dp))
 
-                Text(
-                    text = stringResource(R.string.ic_home_current_word),
-                    color = PawKeyTheme.colors.black,
-                    style = PawKeyTheme.typography.head18Sb,
-                )
-            }
-            item{
-                CourseCard(
-                    title = "제목을 입력해주세요",
-                    petName = "반려견 이름",
-                    createdAt = "년도/월/일",
-                    representativeImageUrl = "시:분",
-                    petProfileImageUrl = "",
-                    descriptionTags = listOf("이륜차 거의 없음", "물그릇 비치", "쉴 곳 있음"),
-                    onClickItem = {},
-                    isLiked = true,
-                    postId = 1
-                )
-                Spacer(modifier = Modifier.height(48.dp))
-            }
+                item {
+                    Spacer(modifier = Modifier.height(12.dp))
+                    Row(
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        DaytimeCard(daytime = "05:06", daystate = "일출")
+                        Spacer(modifier = Modifier.weight(1F))
+                        TrackingCard(onClick = { navigateNext() })
+                    }
+                }
 
+                item { RowCalendar(date = "7월") }
+
+                item {
+                    Spacer(modifier = Modifier.height(12.dp))
+                    Text(
+                        text = stringResource(R.string.ic_home_current_word),
+                        color = PawKeyTheme.colors.black,
+                        style = PawKeyTheme.typography.head18Sb,
+                    )
+                }
+
+                // 에러 상태 표시
+                state.uiState.error?.let { error ->
+                    item {
+                        Text(
+                            text = "오류: $error",
+                            color = Color.Red,
+                            modifier = Modifier.padding(16.dp)
+                        )
+                    }
+                }
+
+                // posts가 null이 아닐 때만 items를 표시
+                posts?.let { postList ->
+                    items(
+                        items = postList,
+                        key = { post -> post.postId }
+                    ) { post ->
+                        CourseCard(
+                            postId = post.postId,
+                            title = post.title,
+                            petName = post.writer.petName,
+                            createdAt = post.createdAt,
+                            representativeImageUrl = post.representativeImageUrl,
+                            petProfileImageUrl = post.writer.petProfileImageUrl,
+                            descriptionTags = post.descriptionTags,
+                            isLiked = post.isLike,
+                            onClickLike = { isLiked ->
+                                onClickLike(post.postId, isLiked)
+                            },
+                            onClickItem = { navigateNext() }
+                        )
+                    }
+                }
+
+                item { Spacer(modifier = Modifier.height(48.dp)) }
+            }
         }
-
     }
+
+    // 위치 메뉴 오버레이
     if (state.isLocationMenuVisible) {
         Box(
             modifier = Modifier
@@ -180,9 +212,7 @@ fun HomeScreen(
                 .clickable(
                     indication = null,
                     interactionSource = remember { MutableInteractionSource() }
-                ) {
-                    viewModel.toggleLocationMenu()
-                }
+                ) { viewModel.toggleLocationMenu() }
         ) {
             SettingButton(
                 modifier = Modifier
