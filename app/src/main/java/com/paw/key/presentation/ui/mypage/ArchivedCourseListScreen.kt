@@ -83,7 +83,9 @@ fun ArchivedCourseListScreenPreview() {
             state = ArchivedListState(),
             navigateUp = {},
             navigateNext = {},
-            onClickLike = {}
+            onClickLike = {
+                    _, _ ->
+            }
 
         )
     }

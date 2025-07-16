@@ -147,7 +147,8 @@ fun OwnerCard(
         Spacer(modifier = Modifier.weight(1f))
         Icon(
             imageVector = ImageVector.vectorResource(id = R.drawable.ic_arrow_right),
-            contentDescription = "견주 프로필 이동"
+            contentDescription = "견주 프로필 이동",
+            tint = PawKeyTheme.colors.gray300
         )
     }
 }
@@ -187,7 +188,9 @@ fun PetCard(
                 Icon(
                     imageVector = ImageVector.vectorResource(id = R.drawable.ic_personal_card),
                     contentDescription = "반려견 프로필",
-                    tint = Color.White
+                    modifier = Modifier.padding(top = 4.dp),
+
+                            tint = Color.White
                 )
             }
             Spacer(modifier.width(4.dp)
@@ -202,7 +205,7 @@ fun PetCard(
                 imageVector = ImageVector.vectorResource(id = R.drawable.ic_arrow_right),
                 modifier = modifier.clickable { navigatePetProfile() },
                 contentDescription = "반려견 프로필 이동",
-                tint = PawKeyTheme.colors.gray300
+                tint = PawKeyTheme.colors.white1
             )
         }
 
@@ -318,8 +321,11 @@ fun WalkRouteList(
                     contentDescription = "산책루트 아이콘"
                 )
                 Text(
+
                     text = route,
-                    modifier = Modifier.weight(1f),
+                    modifier = Modifier
+                        .padding(start = 8.dp)
+                        .weight(1f),
                     style = PawKeyTheme.typography.body16Sb,
                     color = PawKeyTheme.colors.gray950
                 )
