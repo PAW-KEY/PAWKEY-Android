@@ -18,6 +18,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -32,20 +33,15 @@ fun CourseCard(
     postId: Long,
     title: String,
     createdAt: String,
-    representativeImageUrl: String,
     petName: String,
-    petProfileImageUrl: String,
-    descriptionTags: List<String>,
     isLiked: Boolean,
     onClickItem: () -> Unit,
-    modifier: Modifier = Modifier
-    petName: String,
+    modifier: Modifier = Modifier,
     date: String,
     representativeImageUrl: String? = null, // 추가
     petProfileImageUrl: String? = null,     // 추가
     descriptionTags: List<String> = emptyList(), // 추가
     onCLickItem: () -> Unit,
-    modifier: Modifier = Modifier,
     isShared: Boolean = false,
     isRecord: Boolean = false
 ) {
@@ -175,8 +171,8 @@ fun CourseCard(
                             color = Color.White
                         )
                         Spacer(modifier = Modifier.width(8.dp))
+
                         Text(
-                            text = createdAt,
                             text = formatDate(date), // 포맷된 날짜 사용
                             style = PawKeyTheme.typography.caption12R,
                             color = PawKeyTheme.colors.gray100
@@ -227,7 +223,11 @@ fun CourseCardPreview() {
             petProfileImageUrl = "https://pawkey-server.com/profile.jpg",
             descriptionTags = listOf("이륜차 거의 없음", "물그릇 비치", "쉴 곳 있음"),
             isLiked = true,
-            onClickItem = {}
+            onCLickItem = {},
+            onClickItem = {},
+            date = "2025/07/16",
+            isShared = true,
+            isRecord = true,
         )
     }
 }

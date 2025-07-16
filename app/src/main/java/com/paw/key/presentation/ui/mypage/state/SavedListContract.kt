@@ -1,11 +1,12 @@
 package com.paw.key.presentation.ui.mypage.state
 
 import androidx.compose.runtime.Immutable
+import com.paw.key.domain.model.entity.archivedlist.ArchivedListEntity
 import com.paw.key.domain.model.entity.savedlist.SavedListEntity
 
 @Immutable
 data class SavedListState(
-    val courseList: List<SavedListEntity> = emptyList()
+    val courseList: List<ArchivedListEntity> = emptyList()
 )
 
 //@Immutable

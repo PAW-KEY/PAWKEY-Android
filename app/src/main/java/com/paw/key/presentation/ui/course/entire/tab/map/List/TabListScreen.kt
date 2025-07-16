@@ -132,8 +132,14 @@ fun TabListScreen(
                                 petProfileImageUrl = post.writer.petProfileImageUrl,
                                 descriptionTags = post.descriptionTags,
                                 isRecord = post.isLike,
+                                postId = post.postId.toLong(),
+                                createdAt = post.createdAt,
+                                isLiked = post.isLike,
                                 onCLickItem = {
                                     navigateToDetail()
+                                },
+                                onClickItem = {
+                                    //showBottomSheet = true
                                 }
                             )
                         }
