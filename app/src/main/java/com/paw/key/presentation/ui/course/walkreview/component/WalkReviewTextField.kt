@@ -28,7 +28,7 @@ fun WalkReviewTextField(
         onValueChange = {
             onTextChanged(it)
         },
-        singleLine = true,
+        singleLine = false,
         textStyle = PawKeyTheme.typography.body14R,
         decorationBox = { innerTextField ->
              Box(
