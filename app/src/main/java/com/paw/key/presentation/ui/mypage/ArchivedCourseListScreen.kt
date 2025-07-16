@@ -67,7 +67,9 @@ fun ArchivedCourseListScreen(
                     petProfileImageUrl = item.writer.first().petProfileImageUrl,
                     descriptionTags = item.descriptionTags,
                     isLiked = item.isLiked,
-                    onClickItem = navigateNext
+                    onClickItem = navigateNext,
+                    onCLickItem = navigateNext,
+                    date = item.createdAt
                 )
             }
         }

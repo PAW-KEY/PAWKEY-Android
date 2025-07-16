@@ -10,9 +10,11 @@ data class ArchivedListEntity(
     val isLiked: Boolean,
     val title: String,
     val representativeImageUrl: String,
+    val routeId: Long,
     val writer: List<WriterEntity>,
     val descriptionTags: List<String>
 )
+
 data class WriterEntity(
     val userId: Long,
     val petName: String,
