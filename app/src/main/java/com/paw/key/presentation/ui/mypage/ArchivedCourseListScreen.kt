@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -24,6 +25,11 @@ fun ArchivedCourseRoute(
     viewModel: ArchivedListViewModel = hiltViewModel()
 ) {
     val state = viewModel.state.collectAsStateWithLifecycle()
+
+    LaunchedEffect(Unit) {
+        // Todo : userId 네비게이션 연결
+        viewModel.getArchivedList(userId = 2)
+    }
 
     ArchivedCourseListScreen(
         state = state.value,
@@ -83,7 +89,9 @@ fun ArchivedCourseListScreenPreview() {
             state = ArchivedListState(),
             navigateUp = {},
             navigateNext = {},
-            onClickLike = {}
+            onClickLike = {
+                    _, _ ->
+            }
 
         )
     }

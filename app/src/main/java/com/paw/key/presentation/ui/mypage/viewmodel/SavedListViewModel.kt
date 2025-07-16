@@ -3,11 +3,8 @@ package com.paw.key.presentation.ui.mypage.viewmodel
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.paw.key.core.designsystem.component.CourseCard
-import com.paw.key.domain.repository.ArchivedListRepository
+import com.paw.key.domain.repository.LikeRepository
 import com.paw.key.domain.repository.SavedListRepository
-import com.paw.key.presentation.ui.mypage.state.MyPageSideEffect
-import com.paw.key.presentation.ui.mypage.state.PetProfileSideEffect.NavigateNext
 import com.paw.key.presentation.ui.mypage.state.SavedListSideEffect
 import com.paw.key.presentation.ui.mypage.state.SavedListState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -21,7 +18,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SavedListViewModel @Inject constructor(
-    private val savedListRepository: ArchivedListRepository
+    private val savedListRepository: SavedListRepository,
+    private val likeRepository: LikeRepository
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(SavedListState())
@@ -30,9 +28,13 @@ class SavedListViewModel @Inject constructor(
     private val _sideEffect = MutableSharedFlow<SavedListSideEffect>()
     val sideEffect: MutableSharedFlow<SavedListSideEffect> = _sideEffect
 
+    init {
+        getSavedList(userId = 2)
+    }
+
     fun getSavedList(userId: Int) {
         viewModelScope.launch {
-            savedListRepository.getArchivedList(userId)
+            savedListRepository.getSavedList(userId)
                 .onSuccess { result ->
                     _state.update {
                         it.copy(
@@ -46,15 +48,31 @@ class SavedListViewModel @Inject constructor(
                 }
         }
     }
-    fun toggleLike(postId: Int, isLiked: Boolean) {
+
+//    fun toggleLike(postId: Int, isLiked: Boolean) {
+//        viewModelScope.launch {
+//            _state.update { state ->
+//                state.copy(
+//                    courseList = state.courseList.map {
+//                        if (it.postId == postId) it.copy(isLiked = isLiked) else it
+//                    }
+//                )
+//            }
+//        }
+//    }
+
+    fun toggleLike(
+        postId: Int,
+        isLiked: Boolean
+    ) {
+        // Todo : userId 네비게이션 연결, postId 네비게이션 연결
+//        viewModelScope.launch {
+//            likeRepository.unlikeCourse(userId = 2, postId = postId)
+//            savedListRepository.getSavedList(userId = 2)
+//        }
         viewModelScope.launch {
-            _state.update { state ->
-                state.copy(
-                    courseList = state.courseList.map {
-                        if (it.postId == postId) it.copy(isLiked = isLiked) else it
-                    }
-                )
-            }
+            likeRepository.likeCourse(userId = 2, postId = 6)
+            savedListRepository.getSavedList(userId = 2)
         }
     }
 }

@@ -30,7 +30,8 @@ fun SavedCourseRoute(
         navigateUp = navigateUp,
         navigateNext = navigateNext,
         onClickLike = {
-            //viewModel.onClickLike()
+            // Todo : postid 네비게이션 연결
+            viewModel.toggleLike(postId = 28, isLiked = false)
         },
         modifier = modifier
     )
@@ -44,7 +45,12 @@ fun SavedCourseListScreen(
     onClickLike: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Column {
+    Column(
+        modifier = modifier
+            .fillMaxSize()
+            .background(PawKeyTheme.colors.white2)
+    ) {
+
         TopBar(
             title = "저장한 산책 루트",
             onBackClick = navigateUp
@@ -62,8 +68,8 @@ fun SavedCourseListScreen(
                     title = item.title,
                     createdAt = item.createdAt,
                     representativeImageUrl = item.representativeImageUrl,
-                    petName = item.writer.first().petName,
-                    petProfileImageUrl = item.writer.first().petProfileImageUrl,
+                    petName = item.writer.petName,
+                    petProfileImageUrl = item.writer.petProfileImageUrl,
                     descriptionTags = item.descriptionTags,
                     isLiked = item.isLiked,
                     onClickItem = navigateNext,

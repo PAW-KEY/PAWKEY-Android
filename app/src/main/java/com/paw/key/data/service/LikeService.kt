@@ -8,15 +8,15 @@ import retrofit2.http.Path
 
 interface LikeService {
 
-    @POST("/api/v1/likes/{courseId}")
+    @POST("/api/v1/likes/{postId}")
     suspend fun likeCourse(
         @Header("X-USER-ID") userId: Int,
-        @Path("courseId") courseId: Int
+        @Path("postId") postId: Int
     ): BaseResponse<Unit>
 
-    @DELETE("/api/v1/likes/{courseId}")
+    @DELETE("/api/v1/likes/{postId}")
     suspend fun unlikeCourse(
         @Header("X-USER-ID") userId: Int,
-        @Path("courseId") courseId: Int
+        @Path("postId") postId: Int
     ): BaseResponse<Unit>
 }

@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.paw.key.data.dto.request.list.PostsListRequestDto
 import com.paw.key.data.dto.request.list.TraitList
+import com.paw.key.domain.repository.LikeRepository
 import com.paw.key.domain.repository.filter.FilterOptionRepository
 import com.paw.key.domain.repository.list.PostsListRepository
 import com.paw.key.presentation.ui.course.entire.tab.map.List.state.TapListContract
@@ -18,7 +19,8 @@ import javax.inject.Inject
 @HiltViewModel
 class TapListViewModel @Inject constructor(
     private val filterOptionRepository: FilterOptionRepository,
-    private val postsListRepository: PostsListRepository
+    private val postsListRepository: PostsListRepository,
+    private val likeRepository: LikeRepository
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(TapListContract.TapListState())
@@ -122,6 +124,13 @@ class TapListViewModel @Inject constructor(
             }
         }
     }
+
+    fun toggleLike(userId: Int, postId: Int) {
+        viewModelScope.launch {
+            likeRepository.likeCourse(userId = 2, postId = 6)
+        }
+    }
+
     fun updateMood(option: String) {
         _state.update {
             it.copy(
@@ -315,19 +324,19 @@ class TapListViewModel @Inject constructor(
         return isAllOptionsSelected()
     }
 
-    fun toggleLike(postId: Int, isLiked: Boolean) {
-        viewModelScope.launch {
-            _state.update { state ->
-                val updatedPosts = state.postsResult?.posts?.map {
-                    if (it.postId == postId) it.copy(isLike = isLiked) else it
-                } ?: emptyList()
-
-                val updatedPostsResult = state.postsResult?.copy(posts = updatedPosts)
-
-                state.copy(
-                    postsResult = updatedPostsResult
-                )
-            }
-        }
-    }
+//    fun toggleLike(postId: Int, isLiked: Boolean) {
+//        viewModelScope.launch {
+//            _state.update { state ->
+//                val updatedPosts = state.postsResult?.posts?.map {
+//                    if (it.postId == postId) it.copy(isLike = isLiked) else it
+//                } ?: emptyList()
+//
+//                val updatedPostsResult = state.postsResult?.copy(posts = updatedPosts)
+//
+//                state.copy(
+//                    postsResult = updatedPostsResult
+//                )
+//            }
+//        }
+//    }
 }
