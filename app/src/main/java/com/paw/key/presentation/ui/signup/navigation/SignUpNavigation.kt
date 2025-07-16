@@ -49,7 +49,7 @@ fun NavGraphBuilder.signUpNavGraph(
             val signUpViewModel: SignUpViewModel = hiltViewModel(parentEntry)
 
             val context = LocalContext.current
-            val loginInfo by PreferenceDataStore.getLoginInfo(context).collectAsState(
+            val loginInfo by PreferenceDataStore.getLoginInfo().collectAsState(
                 initial = PreferenceDataStore.LoginInfo("", "")
             )
 
