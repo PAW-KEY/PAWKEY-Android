@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.paw.key.core.designsystem.component.CourseCard
+import com.paw.key.domain.repository.ArchivedListRepository
 import com.paw.key.domain.repository.SavedListRepository
 import com.paw.key.presentation.ui.mypage.state.MyPageSideEffect
 import com.paw.key.presentation.ui.mypage.state.PetProfileSideEffect.NavigateNext
@@ -20,7 +21,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SavedListViewModel @Inject constructor(
-    private val savedListRepository: SavedListRepository
+    private val savedListRepository: ArchivedListRepository
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(SavedListState())
@@ -31,15 +32,12 @@ class SavedListViewModel @Inject constructor(
 
     fun getSavedList(userId: Int) {
         viewModelScope.launch {
-            savedListRepository.getSavedList(userId)
+            savedListRepository.getArchivedList(userId)
                 .onSuccess { result ->
-                    Log.d("SavedListViewModel", "저장한 게시물 불러오기 성공: $result")
-                    Log.d("SavedListViewModel", "총 ${result.size}개")
-
-                    _sideEffect.emit(SavedListSideEffect.ShowSnackBar("SavedList 불러오기 성공 (${result.size}개)"))
-
                     _state.update {
-                        it.copy(courseList = result)
+                        it.copy(
+                            courseList = result.posts
+                        )
                     }
                 }
                 .onFailure { e ->

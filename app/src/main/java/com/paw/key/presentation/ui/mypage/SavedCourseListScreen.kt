@@ -65,7 +65,10 @@ fun SavedCourseListScreen(
                     petProfileImageUrl = item.writer.first().petProfileImageUrl,
                     descriptionTags = item.descriptionTags,
                     isLiked = item.isLiked,
-                    onClickItem = navigateNext
+                    onClickItem = navigateNext,
+                    onCLickItem = {},
+                    isRecord = true,
+                    date = "년도/월/일"
                 )
             }
         }
