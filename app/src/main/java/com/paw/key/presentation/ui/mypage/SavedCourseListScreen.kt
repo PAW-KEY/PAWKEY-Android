@@ -29,6 +29,9 @@ fun SavedCourseRoute(
         state = state.value,
         navigateUp = navigateUp,
         navigateNext = navigateNext,
+        onClickLike = {
+            //viewModel.onClickLike()
+        },
         modifier = modifier
     )
 }
@@ -38,6 +41,7 @@ fun SavedCourseListScreen(
     state: SavedListState,
     navigateUp: () -> Unit,
     navigateNext: () -> Unit,
+    onClickLike: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column {
@@ -65,7 +69,9 @@ fun SavedCourseListScreen(
                     descriptionTags = item.descriptionTags,
                     isLiked = item.isLiked,
                     onClickItem = navigateNext,
-                    isRecord = true
+                    onClickLike = {
+                        onClickLike()
+                    }
                 )
             }
         }
@@ -78,7 +84,8 @@ fun SavedCourseListScreenPreview() {
     PawKeyTheme {
         SavedCourseListScreen(state = SavedListState(),
             navigateUp = {},
-            navigateNext = {}
+            navigateNext = {},
+            onClickLike = {}
         )
     }
 }

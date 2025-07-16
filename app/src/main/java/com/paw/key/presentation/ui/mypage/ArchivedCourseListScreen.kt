@@ -67,7 +67,8 @@ fun ArchivedCourseListScreen(
                     petProfileImageUrl = item.writer.first().petProfileImageUrl,
                     descriptionTags = item.descriptionTags,
                     isLiked = item.isLiked,
-                    onClickItem = navigateNext
+                    onClickItem = navigateNext,
+                    onClickLike = {}
                 )
             }
         }
@@ -80,7 +81,8 @@ fun ArchivedCourseListScreenPreview() {
     PawKeyTheme {
         SavedCourseListScreen(state = SavedListState(),
             navigateUp = {},
-            navigateNext = {}
+            navigateNext = {},
+            onClickLike = {}
         )
     }
 }
