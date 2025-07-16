@@ -100,6 +100,7 @@ fun SavedCourseDetailScreen(
                         title = title,
                         petName = petName,
                         date = date,
+                        Icon = if(isLike) com.paw.key.R.drawable.ic_heart_default else com.paw.key.R.drawable.ic_heart_filled,
                         location = location,
                         onClickLike = {},
                         content = content,
