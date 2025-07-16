@@ -13,6 +13,7 @@ import com.paw.key.data.service.UserProfileService
 import com.paw.key.data.service.filter.FilterOptionService
 import com.paw.key.data.service.sharedwalk.SharedWalkService
 import com.paw.key.data.service.home.HomeRegionService
+import com.paw.key.data.service.home.RegionCurrentService
 import com.paw.key.data.service.list.PostsListService
 import com.paw.key.data.service.walkcourse.WalkCourseService
 import com.paw.key.data.service.walklist.WalkListDetailService
@@ -114,5 +115,10 @@ object ServiceModule {
     @Provides
     @Singleton
     fun providePostsListService(retrofit: Retrofit): PostsListService =
+        retrofit.create()
+
+    @Provides
+    @Singleton
+    fun provideRegionCurrentService(retrofit: Retrofit): RegionCurrentService =
         retrofit.create()
 }
