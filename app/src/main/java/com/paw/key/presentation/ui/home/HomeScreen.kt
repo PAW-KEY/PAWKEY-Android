@@ -112,7 +112,7 @@ fun HomeScreen(
             .fillMaxSize()
     ) {
         HomeTopBar(
-            location = state.selectedLocation.displayLocation,
+            location = state.currentRegion.currentName,
             onLocationClick = { viewModel.toggleLocationMenu() }
         )
 

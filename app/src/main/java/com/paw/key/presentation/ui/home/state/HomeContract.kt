@@ -1,9 +1,11 @@
-
 package com.paw.key.presentation.ui.home.state
 
 import androidx.compose.runtime.Immutable
+import com.paw.key.core.util.PreferenceDataStore
 import com.paw.key.domain.model.entity.archivedlist.ArchivedListEntity
 import com.paw.key.domain.model.entity.list.ListEntity
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.runBlocking
 
 class HomeContract {
 
@@ -14,10 +16,13 @@ class HomeContract {
         val selectedLocation: LocationInfo = LocationInfo(),
         val courseList: List<ArchivedListEntity> = emptyList(),
         val uiState: HomeUiState = HomeUiState(),
-        val selectedGuId: Int = 0,
-        val selectedDongId: Int = 0,
-        val selectedGu: String = "",
-        val selectedDong: String = ""
+        val currentRegion: CurrentRegionInfo = CurrentRegionInfo()
+    )
+
+    @Immutable
+    data class CurrentRegionInfo(
+        val currentId: Int = 0,
+        val currentName: String = ""
     )
 
     @Immutable
@@ -28,12 +33,27 @@ class HomeContract {
         val selectedDong: String = ""
     ) {
         val displayLocation: String
-            get() = if (selectedGu.isNotEmpty() && selectedDong.isNotEmpty()) {
-                "$selectedGu $selectedDong"
-            } else if (selectedGu.isNotEmpty()) {
-                selectedGu
-            } else {
-                "위치를 선택해주세요"
+            get() = when {
+                // 구/동이 모두 선택된 경우
+                selectedGu.isNotEmpty() && selectedDong.isNotEmpty() -> {
+                    "$selectedGu $selectedDong"
+                }
+                // 구만 선택된 경우
+                selectedGu.isNotEmpty() -> {
+                    selectedGu
+                }
+                // 아무것도 선택되지 않은 경우 - activeRegion 사용
+                else -> {
+                    try {
+                        // 코루틴 블로킹 호출 (UI에서는 이미 로드된 상태여야 함)
+                        runBlocking {
+                            val activeRegion = PreferenceDataStore.getActiveRegion().first()
+                            activeRegion.ifEmpty { "위치를 선택해주세요" }
+                        }
+                    } catch (e: Exception) {
+                        "위치를 선택해주세요"
+                    }
+                }
             }
 
         val isLocationSelected: Boolean

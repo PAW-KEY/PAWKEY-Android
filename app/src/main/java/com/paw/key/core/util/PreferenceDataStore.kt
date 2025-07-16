@@ -25,6 +25,13 @@ private val USER_NAME_KEY = stringPreferencesKey("user_name")
 private val PET_ID_KEY = intPreferencesKey("pet_id")
 private val PET_NAME_KEY = stringPreferencesKey("pet_name")
 
+// 위치 정보를 위한 새로운 키들
+private val SELECTED_GU_ID_KEY = intPreferencesKey("selected_gu_id")
+private val SELECTED_DONG_ID_KEY = intPreferencesKey("selected_dong_id")
+private val SELECTED_GU_NAME_KEY = stringPreferencesKey("selected_gu_name")
+private val SELECTED_DONG_NAME_KEY = stringPreferencesKey("selected_dong_name")
+private val ACTIVE_REGION_KEY = stringPreferencesKey("active_region")
+
 private fun List<LatLng>.toPreferenceString(): String =
     joinToString(";") { "${it.latitude},${it.longitude}" }
 
@@ -48,7 +55,7 @@ object PreferenceDataStore {
     private val summaryStore
         get() = appContext.summaryStore
 
-
+    // 기존 함수들...
     suspend fun saveWalkSummary(
         points: List<LatLng>,
         totalDistance: Float,
@@ -171,6 +178,125 @@ object PreferenceDataStore {
             it.remove(USER_NAME_KEY)
             it.remove(PET_ID_KEY)
             it.remove(PET_NAME_KEY)
+        }
+    }
+
+    // ===== 위치 정보 관련 새로운 함수들 =====
+
+    /**
+     * 선택된 위치 정보를 저장합니다
+     */
+    suspend fun saveLocationInfo(
+        guId: Int,
+        dongId: Int,
+        guName: String,
+        dongName: String
+    ) {
+        summaryStore.edit { preferences ->
+            preferences[SELECTED_GU_ID_KEY] = guId
+            preferences[SELECTED_DONG_ID_KEY] = dongId
+            preferences[SELECTED_GU_NAME_KEY] = guName
+            preferences[SELECTED_DONG_NAME_KEY] = dongName
+        }
+    }
+
+    /**
+     * 구 정보만 저장합니다 (동 선택 전)
+     */
+    suspend fun saveGuInfo(guId: Int, guName: String) {
+        summaryStore.edit { preferences ->
+            preferences[SELECTED_GU_ID_KEY] = guId
+            preferences[SELECTED_GU_NAME_KEY] = guName
+            // 구가 변경되면 기존 동 정보 초기화
+            preferences.remove(SELECTED_DONG_ID_KEY)
+            preferences.remove(SELECTED_DONG_NAME_KEY)
+        }
+    }
+
+    /**
+     * 동 정보만 저장합니다
+     */
+    suspend fun saveDongInfo(dongId: Int, dongName: String) {
+        summaryStore.edit { preferences ->
+            preferences[SELECTED_DONG_ID_KEY] = dongId
+            preferences[SELECTED_DONG_NAME_KEY] = dongName
+        }
+    }
+
+    /**
+     * 활동 지역 정보를 저장합니다 (activeRegion)
+     */
+    suspend fun saveActiveRegion(activeRegion: String) {
+        summaryStore.edit { preferences ->
+            preferences[ACTIVE_REGION_KEY] = activeRegion
+        }
+    }
+
+    // 개별 조회 함수들
+    fun getSelectedGuId(): Flow<Int> = summaryStore.data.map {
+        it[SELECTED_GU_ID_KEY] ?: 0
+    }
+
+    fun getSelectedDongId(): Flow<Int> = summaryStore.data.map {
+        it[SELECTED_DONG_ID_KEY] ?: 0
+    }
+
+    fun getSelectedGuName(): Flow<String> = summaryStore.data.map {
+        it[SELECTED_GU_NAME_KEY] ?: ""
+    }
+
+    fun getSelectedDongName(): Flow<String> = summaryStore.data.map {
+        it[SELECTED_DONG_NAME_KEY] ?: ""
+    }
+
+    fun getActiveRegion(): Flow<String> = summaryStore.data.map {
+        it[ACTIVE_REGION_KEY] ?: ""
+    }
+
+    // 위치 정보 통합 조회
+    data class LocationInfo(
+        val guId: Int,
+        val dongId: Int,
+        val guName: String,
+        val dongName: String,
+        val activeRegion: String
+    ) {
+        val displayLocation: String
+            get() = if (guName.isNotEmpty() && dongName.isNotEmpty()) {
+                "$guName $dongName"
+            } else if (guName.isNotEmpty()) {
+                guName
+            } else {
+                "위치를 선택해주세요"
+            }
+
+        val isLocationSelected: Boolean
+            get() = guId != 0 && dongId != 0
+    }
+
+    /**
+     * 모든 위치 정보를 한번에 조회합니다
+     */
+    fun getLocationInfo(): Flow<LocationInfo> = summaryStore.data.map { preferences ->
+        LocationInfo(
+            guId = preferences[SELECTED_GU_ID_KEY] ?: 0,
+            dongId = preferences[SELECTED_DONG_ID_KEY] ?: 0,
+            guName = preferences[SELECTED_GU_NAME_KEY] ?: "",
+            dongName = preferences[SELECTED_DONG_NAME_KEY] ?: "",
+            activeRegion = preferences[ACTIVE_REGION_KEY] ?: ""
+        )
+    }
+
+    /**
+     * 위치 정보를 초기화합니다
+     */
+    suspend fun clearLocationInfo() {
+        summaryStore.edit { preferences ->
+            preferences.remove(SELECTED_GU_ID_KEY)
+            preferences.remove(SELECTED_DONG_ID_KEY)
+            preferences.remove(SELECTED_GU_NAME_KEY)
+            preferences.remove(SELECTED_DONG_NAME_KEY)
+            preferences.remove(ACTIVE_REGION_KEY)
         }
     }
 

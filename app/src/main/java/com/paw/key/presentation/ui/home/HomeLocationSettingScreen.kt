@@ -1,6 +1,5 @@
 package com.paw.key.presentation.ui.home
 
-import android.util.Log
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -14,7 +13,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -31,12 +29,9 @@ import com.paw.key.core.designsystem.theme.PawKeyTheme
 import com.paw.key.core.util.noRippleClickable
 import com.paw.key.presentation.ui.home.viewmodel.HomeViewModel
 import com.paw.key.presentation.ui.signup.component.FormField
-import com.paw.key.presentation.ui.signup.component.LocationButton
 import com.paw.key.presentation.ui.signup.component.LocationItem
 import com.paw.key.presentation.ui.signup.component.LocationItemList
 import com.paw.key.presentation.ui.signup.component.LocationList
-import com.paw.key.presentation.ui.signup.component.SignUpHeader
-import com.paw.key.presentation.ui.signup.viewmodel.SignUpViewModel
 
 @Preview(showBackground = true)
 @Composable
@@ -81,8 +76,9 @@ fun HomeLocationSettingScreen(
     val state by viewModel.state.collectAsStateWithLifecycle()
     val regionList by viewModel.regionList.collectAsStateWithLifecycle()
 
-    val selectedGu = state.selectedGu
-    val selectedDong = state.selectedDong
+    // 올바른 필드 접근
+    val selectedGu = state.selectedLocation.selectedGu
+    val selectedDong = state.selectedLocation.selectedDong
 
     val guOptions = regionList.map { it.gu.name }
 
@@ -168,17 +164,8 @@ fun HomeLocationSettingScreen(
             enabled = isFormValid,
             onClick = {
                 if (isFormValid) {
-                    /*viewModel.patchRegion(
-                        userId = 2,
-                        onSuccess = {
-                            val selectedDongId = state.selectedDongId
-                            navigateNext(selectedDongId)
-                        },
-                        onFailure = { message ->
-                            Log.e("HomeScreen", "지역 설정 실패: $message")
-                        }
-                    )*/
-                    navigateNext(state.selectedDongId)
+                    // 올바른 필드 접근
+                    navigateNext(state.selectedLocation.selectedDongId)
                 }
             }
         )
