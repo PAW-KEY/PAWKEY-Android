@@ -439,7 +439,6 @@ class SignUpViewModel @Inject constructor(
                     // 회원가입 성공 시 사용자 정보를 DataStore에 저장
                     try {
                         PreferenceDataStore.saveUserInfo(
-                            context = context,
                             userId = response.data.userId,
                             userName = response.data.userName,
                             petId = response.data.petId,
@@ -448,7 +447,6 @@ class SignUpViewModel @Inject constructor(
 
                         // 로그인 정보도 함께 저장
                         PreferenceDataStore.saveLoginInfo(
-                            context = context,
                             email = loginEmail,
                             password = loginPassword
                         )

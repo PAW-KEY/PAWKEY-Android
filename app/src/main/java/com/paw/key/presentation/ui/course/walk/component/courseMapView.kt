@@ -70,6 +70,9 @@ fun courseMapView(
 
     // ------------------------------------------------
     // 트래킹
+    var trackingManager by remember {
+        mutableStateOf<TrackingManager?>(null)
+    }
 
     var dimScreenLayer by remember {
         mutableStateOf<DimScreenLayer?>(null)
@@ -168,6 +171,7 @@ fun courseMapView(
                         override fun onMapReady(kakaoMap: KakaoMap) {
                             kakaoMapState = kakaoMap
                             dimScreenLayer = kakaoMap.dimScreenManager?.dimScreenLayer
+                            trackingManager = kakaoMap.trackingManager
 
                             centerLabel = kakaoMap.labelManager?.layer?.addLabel(
                                 // userLocation이 null일 경우
@@ -205,10 +209,28 @@ fun courseMapView(
 
             override fun onResume(owner: LifecycleOwner) {
                 mapView.resume()
+
+                kakaoMapState?.moveCamera(
+                    CameraUpdateFactory.fitMapPoints(
+                        poiPoints.toTypedArray(), 150, 15
+                    )
+                )
+
+                kakaoMapState?.moveCamera(
+                    CameraUpdateFactory.newCenterPosition(
+                        currentUserLocation, 19
+                    )
+                )
             }
 
             override fun onPause(owner: LifecycleOwner) {
                 mapView.pause()
+
+                kakaoMapState?.moveCamera(
+                    CameraUpdateFactory.fitMapPoints(
+                        poiPoints.toTypedArray(), 150, 15
+                    )
+                )
             }
         }
 
@@ -226,20 +248,26 @@ fun courseMapView(
         if (currentUserLocation != null && centerLabel != null && kakaoMapState != null) {
             centerLabel?.moveTo(currentUserLocation)
 
-            kakaoMapState?.moveCamera(
+            /*kakaoMapState?.moveCamera(
                 CameraUpdateFactory.newCenterPosition(
                     currentUserLocation, 18
                 )
-            )
+            )*/
         }
+    }
+
+    LaunchedEffect(Unit) {
+        trackingManager?.startTracking(centerLabel)
     }
 
     LaunchedEffect(isPauseTracking) {
         if (!isPauseTracking) {
+            trackingManager?.stopTracking()
             mapView.isClickable = false
             dimScreenLayer?.setColor(Color.Black.copy(alpha = 0.5f).toArgb())
             dimScreenLayer?.setVisible(true)
         } else {
+            trackingManager?.startTracking(centerLabel)
             mapView.isClickable = true
             dimScreenLayer?.setVisible(false)
         }
