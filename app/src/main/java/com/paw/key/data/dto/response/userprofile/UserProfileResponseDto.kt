@@ -6,13 +6,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class UserProfileResponseDto(
-    @SerialName("userId")
-    val userId: Int,
-
-    @SerialName("loginId")
-    val loginId: String,
-
-    @SerialName("name")
+@SerialName("name")
     val name: String,
 
     @SerialName("gender")
@@ -21,16 +15,14 @@ data class UserProfileResponseDto(
     @SerialName("age")
     val age: Int,
 
-    @SerialName("region")
-    val region: String
+    @SerialName("activeRegion")
+    val activeRegion: String
 )
 {
     fun toEntity() = UserProfileEntity(
-        userId = userId,
-        loginId = loginId,
         name = name,
         gender = gender,
         age = age,
-        region = region
+        activeRegion = activeRegion
     )
 }

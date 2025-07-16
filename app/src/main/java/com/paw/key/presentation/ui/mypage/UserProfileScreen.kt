@@ -22,27 +22,24 @@ fun UserProfileRoute(
     val state = viewModel.state.collectAsStateWithLifecycle()
 
     LaunchedEffect(Unit) {
-        viewModel.getUserProfiles(userId = 2) // 실제 유저 ID로 변경 필요
+        viewModel.getUserProfiles(userId = 2)
     }
 
     UserProfileScreen(
-        loginId = state.value.loginId,
         name = state.value.name,
         gender = state.value.gender,
         age = state.value.age.toString(),
-        region = state.value.region,
+        activeRegion = state.value.activeRegion,
         navigateUp = navigateUp,
         modifier = modifier
     )
 }
 
 @Composable
-fun UserProfileScreen(
-    loginId: String,
-    name: String,
+fun UserProfileScreen(name: String,
     gender: String,
     age: String,
-    region: String,
+    activeRegion: String,
     navigateUp: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -61,11 +58,10 @@ fun UserProfileScreen(
         Column(
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            UserProfileItem(label = "아이디", value = loginId)
             UserProfileItem(label = "이름", value = name)
             UserProfileItem(label = "성별", value = gender)
             UserProfileItem(label = "나이", value = age)
-            UserProfileItem(label = "활동지역", value = region)
+            UserProfileItem(label = "활동지역", value = activeRegion)
         }
 
         Spacer(modifier = Modifier.weight(1f))
@@ -97,11 +93,10 @@ fun UserProfileItem(label: String, value: String) {
 fun UserProfileScreenPreview() {
     PawKeyTheme {
         UserProfileScreen(
-            loginId = "sdfsd",
             name = "김도기",
             gender = "여성",
             age = "24",
-            region = "강남구 역삼동",
+            activeRegion = "강남구 역삼동",
             navigateUp = {}
         )
     }

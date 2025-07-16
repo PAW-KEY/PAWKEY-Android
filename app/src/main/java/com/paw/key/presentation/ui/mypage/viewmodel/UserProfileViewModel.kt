@@ -36,12 +36,10 @@ class UserProfileViewModel @Inject constructor(
 
                     _state.update { state ->
                         state.copy(
-                            userId = result.userId,
-                            loginId = result.loginId,
                             name = result.name,
                             gender = result.gender,
                             age = result.age,
-                            region = result.region
+                            activeRegion = result.activeRegion
                         )
                     }
                 }
