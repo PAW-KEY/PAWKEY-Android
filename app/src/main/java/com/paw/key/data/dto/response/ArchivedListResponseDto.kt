@@ -7,17 +7,8 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class ArchivedListResponseDto(
-    @SerialName("code")
-    val code: String,
-    @SerialName("message")
-    val message: String,
-    @SerialName("data")
-    val data: ArchivedListResponseDataDto
-)
-
-@Serializable
 data class ArchivedListResponseDataDto(
+    @SerialName("posts")
     val posts: List<ArchivedDto>
 ) {
     fun toEntity() = ArchivedListPostsEntity(
@@ -38,7 +29,7 @@ data class ArchivedDto(
     @SerialName("representativeImageUrl")
     val representativeImageUrl: String? = null,
     @SerialName("routeId")
-    val routeId: String,
+    val routeId: Int,
     @SerialName("writer")
     val writer: WriterDto,
     @SerialName("descriptionTags")
@@ -50,6 +41,7 @@ data class ArchivedDto(
         isLiked = isLike,
         title = title,
         representativeImageUrl = representativeImageUrl ?: "",
+        routeId = routeId.toLong(),
         writer = listOf(writer.toEntity()),
         descriptionTags = descriptionTags
     )
@@ -64,7 +56,7 @@ data class WriterDto(
     @SerialName("petProfileImageUrl")
     val petProfileImageUrl: String
 ) {
-    fun toEntity() = WriterEntity (
+    fun toEntity() = WriterEntity(
         userId = userId.toLong(),
         petName = petName,
         petProfileImageUrl = petProfileImageUrl
