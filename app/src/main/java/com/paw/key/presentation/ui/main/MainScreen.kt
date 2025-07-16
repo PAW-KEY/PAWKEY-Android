@@ -102,7 +102,7 @@ private fun MainScreenContent(
 ) {
     Box(
         modifier = Modifier
-            .windowInsetsPadding(WindowInsets.systemBars.only(WindowInsetsSides.Top))
+            .windowInsetsPadding(WindowInsets.systemBars.only(WindowInsetsSides.Top)) // 시스템 바들 중 현재는 탑만, 유연성을 위해 사용
             .systemBarsPadding()
             .fillMaxSize()
             .pointerInput(Unit) {

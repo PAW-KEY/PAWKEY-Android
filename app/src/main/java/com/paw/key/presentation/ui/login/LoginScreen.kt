@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.material3.Icon
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
@@ -56,7 +57,6 @@ fun LoginRoute(
         navigateNext = {
             coroutineScope.launch {
                 PreferenceDataStore.saveLoginInfo(
-                    context = context,
                     email = state.email,
                     password = state.password
                 )
@@ -90,9 +90,10 @@ fun LoginScreen(
     isLoginFormValid: Boolean,
     modifier: Modifier = Modifier,
 ) {
-    Box(
+    Column(
         modifier = modifier
             .fillMaxSize()
+            .statusBarsPadding()
             .background(PawKeyTheme.colors.white1)
     ) {
         TopBar(
@@ -100,21 +101,20 @@ fun LoginScreen(
             onBackClick = navigateUp,
             modifier = Modifier.padding(
                 top = paddingValues.calculateTopPadding()
-            ).padding(top = 10.dp)
+            )
         )
 
         Column(
             modifier = Modifier
+                .padding(top = 80.dp)
                 .padding(horizontal = 16.dp)
-                .align(Alignment.Center)
-                .imePadding(),
-            horizontalAlignment = Alignment.CenterHorizontally
+                .imePadding()
         ) {
+            Spacer(modifier = Modifier.height(60.dp))
+
             Text(
-                text = "로그인",
-                modifier = Modifier
-                    .align(Alignment.Start)
-                    .padding(10.dp),
+                text = "아이디",
+                modifier = Modifier.padding(bottom = 8.dp),
                 color = PawKeyTheme.colors.black,
                 style = PawKeyTheme.typography.body14Sb
             )
@@ -122,7 +122,7 @@ fun LoginScreen(
             LoginTextField(
                 textValue = email,
                 placeHolder = "사용하실 아이디를 입력해주세요",
-                isPassword = true,
+                isPassword = false,
                 onTextChanged = onEmailChanged
             )
 
@@ -130,9 +130,7 @@ fun LoginScreen(
 
             Text(
                 text = "비밀번호",
-                modifier = Modifier
-                    .align(Alignment.Start)
-                    .padding(10.dp),
+                modifier = Modifier.padding(bottom = 8.dp),
                 color = PawKeyTheme.colors.black,
                 style = PawKeyTheme.typography.body14Sb
             )
@@ -140,7 +138,7 @@ fun LoginScreen(
             LoginTextField(
                 textValue = password,
                 placeHolder = "사용하실 비밀번호를 입력해주세요",
-                isPassword = isPasswordVisible,
+                isPassword = !isPasswordVisible,
                 onTextChanged = onPasswordChanged,
                 suffix = {
                     Icon(
@@ -154,14 +152,16 @@ fun LoginScreen(
                     )
                 },
             )
-
-            Spacer(modifier = Modifier.height(60.dp))
         }
+
+        Spacer(modifier = Modifier.weight(1f))
 
         Column(
             modifier = Modifier
-                .align(Alignment.BottomCenter)
+                .fillMaxWidth()
                 .padding(horizontal = 16.dp, vertical = 24.dp)
+                .navigationBarsPadding()
+                .padding(bottom = 60.dp)
         ) {
             PawkeyButton(
                 text = "신규 계정으로 회원가입",
@@ -178,9 +178,7 @@ fun LoginScreen(
                 text = "로그인",
                 onClick = navigateNext,
                 enabled = isLoginFormValid,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .navigationBarsPadding()
+                modifier = Modifier.fillMaxWidth()
             )
         }
     }

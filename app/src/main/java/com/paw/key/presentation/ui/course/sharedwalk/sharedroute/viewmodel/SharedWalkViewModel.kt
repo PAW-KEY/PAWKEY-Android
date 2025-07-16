@@ -223,7 +223,7 @@ class SharedWalkCourseViewModel @Inject constructor(
                     points = currentWalkState.poiPoints.toList()
                 )
                 Log.d("WalkCourseViewModel", "All walk summary data saved successfully using PreferenceDataStore.")
-                Log.e("WalkCourseViewModel", PreferenceDataStore.getTotalTime(context).toString())
+                //Log.e("WalkCourseViewModel", PreferenceDataStore.getTotalTime(context).toString())
                 _sideEffect.emit(SharedWalkCourseSideEffect.ShowSnackBar("산책 기록이 성공적으로 저장되었습니다."))
             } catch (e: Exception) {
                 Log.e("WalkCourseViewModel", "Error saving all walk summary data: ${e.message}", e)
