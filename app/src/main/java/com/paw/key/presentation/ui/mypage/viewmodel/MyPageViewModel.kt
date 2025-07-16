@@ -2,6 +2,7 @@ package com.paw.key.presentation.ui.mypage.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.paw.key.domain.repository.SavedListRepository
 import com.paw.key.domain.repository.petprofile.PetProfileRepository
 import com.paw.key.domain.repository.userprofile.UserProfileRepository
 import com.paw.key.presentation.ui.mypage.state.MyPageSideEffect
@@ -19,7 +20,7 @@ import javax.inject.Inject
 @HiltViewModel
 class MyPageViewModel @Inject constructor(
     private val petProfileRepository: PetProfileRepository,
-    private val userProfileRepository: UserProfileRepository
+    private val userProfileRepository: UserProfileRepository,
 ) : ViewModel() {
     private val _state = MutableStateFlow(MyPageState())
     val state: StateFlow<MyPageState>

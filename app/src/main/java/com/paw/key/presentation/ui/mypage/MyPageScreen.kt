@@ -332,7 +332,9 @@ fun WalkRouteList(
                 Icon(
                     imageVector = ImageVector.vectorResource(id = R.drawable.ic_arrow_right),
                     modifier = modifier.clickable {
-                        if (index == 0) navigateSavedCourse() else navigateArchivedCourse()
+                        if (index == 0)
+                            navigateSavedCourse()
+                        else navigateArchivedCourse()
                     },
                     contentDescription = "산책루트 메뉴 이동"
                 )

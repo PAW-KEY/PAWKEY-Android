@@ -1,41 +1,51 @@
 package com.paw.key.data.dto.response
 
+import com.paw.key.domain.model.entity.archivedlist.ArchivedListEntity
+import com.paw.key.domain.model.entity.archivedlist.ArchivedListPostsEntity
+import com.paw.key.domain.model.entity.archivedlist.WriterEntity
 import com.paw.key.domain.model.entity.savedlist.SavedListEntity
+import com.paw.key.domain.model.entity.savedlist.SavedListPostEntity
 import com.paw.key.domain.model.entity.savedlist.SavedWriterEntity
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class SavedListResponseDto(
-    @SerialName("postId")
-    val postId: Long,
+data class SavedListResponseDataDto(
+    @SerialName("posts")
+    val posts: List<SavedDto>
+) {
+    fun toEntity() = SavedListPostEntity(
+        posts = posts.map { it.toEntity() }
+    )
+}
 
+@Serializable
+data class SavedDto(
+    @SerialName("postId")
+    val postId: Int,
     @SerialName("createdAt")
     val createdAt: String,
-
-    @SerialName("isLiked")
-    val isLiked: Boolean,
-
+    @SerialName("isLike")
+    val isLike: Boolean,
     @SerialName("title")
     val title: String,
-
     @SerialName("representativeImageUrl")
-    val representativeImageUrl: String,
-
+    val representativeImageUrl: String? = null,
+    @SerialName("routeId")
+    val routeId: Int,
     @SerialName("writer")
-    val writer: List<SavedWriterDto>,
-
+    val writer: SavedWriterDto,
     @SerialName("descriptionTags")
     val descriptionTags: List<String>
-
-){
+) {
     fun toEntity() = SavedListEntity(
         postId = postId,
         createdAt = createdAt,
-        isLiked = isLiked,
+        isLiked = isLike,
         title = title,
-        representativeImageUrl = representativeImageUrl,
-        writer = writer.map { it.toEntity() },
+        representativeImageUrl = representativeImageUrl ?: "",
+        routeId = routeId,
+        writer = writer.toEntity(),
         descriptionTags = descriptionTags
     )
 }
@@ -43,14 +53,12 @@ data class SavedListResponseDto(
 @Serializable
 data class SavedWriterDto(
     @SerialName("userId")
-    val userId: Long,
-
+    val userId: Int,
     @SerialName("petName")
     val petName: String,
-
     @SerialName("petProfileImageUrl")
     val petProfileImageUrl: String
-){
+) {
     fun toEntity() = SavedWriterEntity(
         userId = userId,
         petName = petName,

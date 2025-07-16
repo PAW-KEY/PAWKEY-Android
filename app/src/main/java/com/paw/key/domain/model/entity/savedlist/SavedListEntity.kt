@@ -1,16 +1,21 @@
 package com.paw.key.domain.model.entity.savedlist
 
+
+data class SavedListPostEntity(
+    val posts: List<SavedListEntity>
+)
 data class SavedListEntity(
-    val postId: Long,
+    val postId: Int,
     val createdAt: String,
     val isLiked: Boolean,
     val title: String,
     val representativeImageUrl: String,
-    val writer: List<SavedWriterEntity>,
+    val routeId: Int,
+    val writer: SavedWriterEntity,
     val descriptionTags: List<String>
 )
 data class SavedWriterEntity(
-    val userId: Long,
+    val userId: Int,
     val petName: String,
     val petProfileImageUrl: String
 )
