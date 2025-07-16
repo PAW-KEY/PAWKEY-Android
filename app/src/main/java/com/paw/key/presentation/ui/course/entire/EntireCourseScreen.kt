@@ -159,6 +159,8 @@ fun EntireCourseScreen(
     onTabSelected : (Int) -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val scope = rememberCoroutineScope()
+
     Column (
         modifier = modifier
             .padding(paddingValues)
@@ -176,15 +178,24 @@ fun EntireCourseScreen(
 
         when (currentPage) {
             0 -> {
-                TapMapRoute(
-                    paddingValues = paddingValues,
-                    navigateUp = {},
-                    navigateNext = {
-                        navigateNext()
-                    },
-                    isGranted = isGranted,
-                    snackBarHostState = snackBarHostState,
-                )
+                if (!isGranted) {
+                    TapMapRoute(
+                        paddingValues = paddingValues,
+                        navigateUp = {},
+                        navigateNext = {
+                            navigateNext()
+                        },
+                        isGranted = isGranted,
+                        snackBarHostState = snackBarHostState,
+                    )
+                } else {
+                    // 스낵바 알림만 띄우고 아무 것도 렌더링하지 않음
+                    LaunchedEffect(Unit) {
+                        scope.launch {
+                            snackBarHostState.showSnackbar("위치 권한이 필요합니다.")
+                        }
+                    }
+                }
             }
 
             1 -> {
