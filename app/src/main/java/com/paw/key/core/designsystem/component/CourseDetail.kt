@@ -1,5 +1,6 @@
 package com.paw.key.core.designsystem.component
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -19,6 +20,7 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -54,18 +56,23 @@ fun CourseDetail(
     totalReviewCount : Int,
     walkingImageUrls : List<String>,
 
-
     onImageClick: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val context = LocalContext.current
     val isLiked = remember { mutableStateOf(false) }
+    LaunchedEffect(routeMapImageUrl) {
+        Log.d("LaunchedEffect", "LaunchedEffect: $routeMapImageUrl")
+        Log.d("LaunchedEffect", "LaunchedEffect: $walkingImageUrls")
+        Log.d("LaunchedEffect", "LaunchedEffect: $petProfileImage")
+    }
 
     Column(
         modifier = modifier
             .fillMaxWidth()
     ) {
         AsyncImage(
-            model = ImageRequest.Builder(LocalContext.current)
+            model = ImageRequest.Builder(context)
                 .data(routeMapImageUrl)
                 .crossfade(true)
                 .build(),
@@ -122,7 +129,7 @@ fun CourseDetail(
                     .padding(vertical = 12.dp)
             ) {
                 AsyncImage(
-                    model = ImageRequest.Builder(LocalContext.current)
+                    model = ImageRequest.Builder(context)
                         .data(petProfileImage)
                         .crossfade(true)
                         .build(),
@@ -190,7 +197,7 @@ fun CourseDetail(
             ) {
                 items(walkingImageUrls.size) { index ->
                     AsyncImage(
-                        model = ImageRequest.Builder(LocalContext.current)
+                        model = ImageRequest.Builder(context)
                             .data(walkingImageUrls[index])
                             .crossfade(true)
                             .build(),
@@ -317,7 +324,31 @@ fun CourseDetailPreview() {
             petProfileImage = "https://pawkey-server.com/image/profile.png",
             routeMapImageUrl = "https://pawkey-server.com/image/map.png",
             categoryTop3 = listOf(
+                CategoryTop3Entity(
+                    rank = 1,
+                    optionText = "산책로가 어쩌구 저꾸",
+                    percentage = 42,
+                    categoryName = "산책로가 어쩌구 저꾸",
+                    categoryOptionId = 1,
+                    categoryId = 2
                 ),
+                CategoryTop3Entity(
+                    rank = 2,
+                    optionText = "산책로가 어쩌구 저꾸",
+                    percentage = 37,
+                    categoryName = "산책로가 어쩌구 저꾸",
+                    categoryOptionId = 1,
+                    categoryId = 2
+                ),
+                CategoryTop3Entity(
+                    rank = 3,
+                    optionText = "산책로가 어쩌구 저꾸",
+                    percentage = 35,
+                    categoryName = "산책로가 어쩌구 저꾸",
+                    categoryOptionId = 1,
+                    categoryId = 2
+                )
+            ),
             totalReviewCount = 42,
             walkingImageUrls = listOf(
                 "https://pawkey-server.com/image/walk1.jpg",

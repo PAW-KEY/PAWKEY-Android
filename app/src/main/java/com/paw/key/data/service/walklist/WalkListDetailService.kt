@@ -17,6 +17,6 @@ interface WalkListDetailService {
     @GET("posts/{routeId}/reviews/top")
     suspend fun getWalkReviewSummary(
         @Header("X-USER-ID") userId: Int,
-        @Path("postId") postId: Int
+        @Path("routeId") routeId: Int
     ): BaseResponse<WalkReviewSummaryResponseDto>
 }

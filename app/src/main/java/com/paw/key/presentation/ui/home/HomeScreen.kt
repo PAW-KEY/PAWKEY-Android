@@ -56,7 +56,6 @@ private fun HomeScreenPreview() {
             navigateHomeLocationSetting = {}
         )
     }
-
 }
 
 @Composable
