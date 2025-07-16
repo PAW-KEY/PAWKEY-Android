@@ -49,7 +49,10 @@ fun TapListRoute(
         viewModel = viewModel,
         onClickLike = {
             postId, isLiked ->
-            viewModel.toggleLike(postId = postId, isLiked = isLiked)
+            viewModel.toggleLike(
+                userId = 2,
+                postId = postId
+            )
         }
     )
 }
@@ -118,12 +121,20 @@ fun TabListScreen(
                                 title = post.title,
                                 petName = post.writer.petName,
                                 createdAt = post.createdAt,
+                                isLiked = post.isLike,
                                 representativeImageUrl = post.representativeImageUrl,
                                 petProfileImageUrl = post.writer.petProfileImageUrl,
                                 descriptionTags = post.descriptionTags,
-                                isLiked = post.isLike,
                                 onClickLike = { isLiked ->
-                                    viewModel.toggleLike(post.postId, isLiked)
+                                    viewModel.toggleLike(
+                                        userId = 2,
+                                        postId = post.postId
+                                    )
+                                    onClickLike(
+                                        post.postId,
+                                        isLiked
+
+                                    )
 
                                 },
                                 onClickItem = { navigateToDetail() }

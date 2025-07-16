@@ -5,6 +5,7 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.paw.key.core.util.PreferenceDataStore
+import com.paw.key.domain.repository.home.RegionCurrentRepository
 import com.paw.key.domain.repository.onboarding.OnboardingRegionRepository
 import com.paw.key.presentation.ui.home.state.HomeContract
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -19,6 +20,7 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val regionRepository: OnboardingRegionRepository,
+    private val regionCurrentRepository: RegionCurrentRepository
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(HomeContract.HomeState())
@@ -31,6 +33,51 @@ class HomeViewModel @Inject constructor(
 
     init {
         fetchRegion()
+//        loadSavedLocationInfo()
+        regionCurrent() // 현재 지역 정보 가져오기 추가
+    }
+
+    /**
+     * 저장된 위치 정보를 불러와서 상태에 반영
+     */
+    private fun loadSavedLocationInfo() {
+        viewModelScope.launch {
+            try {
+                // LocationInfo와 ActiveRegion을 모두 가져오기
+                val locationInfo = PreferenceDataStore.getLocationInfo().first()
+                val activeRegion = PreferenceDataStore.getActiveRegion().first()
+
+                Log.d("HomeViewModel", "저장된 위치 정보 불러오기:")
+                Log.d("HomeViewModel", "  - 구: ${locationInfo.guName} (ID: ${locationInfo.guId})")
+                Log.d("HomeViewModel", "  - 동: ${locationInfo.dongName} (ID: ${locationInfo.dongId})")
+                Log.d("HomeViewModel", "  - 활동지역: $activeRegion")
+
+                _state.update { currentState ->
+                    currentState.copy(
+                        selectedLocation = HomeContract.LocationInfo(
+                            selectedGuId = locationInfo.guId,
+                            selectedDongId = locationInfo.dongId,
+                            selectedGu = locationInfo.guName,
+                            selectedDong = locationInfo.dongName
+                        )
+                    )
+                }
+
+                // 위치 정보가 있으면 표시용 로그
+                val displayLocation = if (locationInfo.guName.isNotEmpty() && locationInfo.dongName.isNotEmpty()) {
+                    "${locationInfo.guName} ${locationInfo.dongName}"
+                } else if (activeRegion.isNotEmpty()) {
+                    activeRegion
+                } else {
+                    "위치를 선택해주세요"
+                }
+
+                Log.d("HomeViewModel", "TopBar 표시 위치: $displayLocation")
+
+            } catch (e: Exception) {
+                Log.e("HomeViewModel", "저장된 위치 정보 불러오기 실패: ${e.message}")
+            }
+        }
     }
 
     fun toggleLocationMenu() {
@@ -42,29 +89,113 @@ class HomeViewModel @Inject constructor(
     }
 
     fun onGuSelected(guName: String, guId: Int) {
-        _state.update { currentState ->
-            currentState.copy(
-                selectedLocation = currentState.selectedLocation.copy(
-                    selectedGu = guName,
-                    selectedGuId = guId,
-                    // 구를 새로 선택하면 기존 동 선택 초기화
-                    selectedDong = "",
-                    selectedDongId = 0
-                ),
-                // 구 선택 후 메뉴 닫기
-                isLocationMenuVisible = false
-            )
+        viewModelScope.launch {
+            try {
+                // DataStore에 구 정보 저장
+                PreferenceDataStore.saveGuInfo(guId, guName)
+
+                // 상태 업데이트
+                _state.update { currentState ->
+                    currentState.copy(
+                        selectedLocation = currentState.selectedLocation.copy(
+                            selectedGu = guName,
+                            selectedGuId = guId,
+                            // 구를 새로 선택하면 기존 동 선택 초기화
+                            selectedDong = "",
+                            selectedDongId = 0
+                        ),
+                        // 구 선택 후 메뉴 닫기
+                        isLocationMenuVisible = false
+                    )
+                }
+
+                Log.d("HomeViewModel", "구 선택 완료: $guName (ID: $guId)")
+            } catch (e: Exception) {
+                Log.e("HomeViewModel", "구 선택 저장 실패: ${e.message}")
+            }
         }
     }
 
     fun onDongSelected(dongName: String, dongId: Int) {
-        _state.update { currentState ->
-            currentState.copy(
-                selectedLocation = currentState.selectedLocation.copy(
-                    selectedDong = dongName,
-                    selectedDongId = dongId
+        viewModelScope.launch {
+            try {
+                // 현재 구 정보와 함께 전체 위치 정보 저장
+                val currentLocation = _state.value.selectedLocation
+                PreferenceDataStore.saveLocationInfo(
+                    guId = currentLocation.selectedGuId,
+                    dongId = dongId,
+                    guName = currentLocation.selectedGu,
+                    dongName = dongName
                 )
-            )
+
+                // 상태 업데이트
+                _state.update { currentState ->
+                    currentState.copy(
+                        selectedLocation = currentState.selectedLocation.copy(
+                            selectedDong = dongName,
+                            selectedDongId = dongId
+                        )
+                    )
+                }
+
+                Log.d("HomeViewModel", "동 선택 완료: $dongName (ID: $dongId)")
+                Log.d("HomeViewModel", "전체 위치: ${currentLocation.selectedGu} $dongName")
+            } catch (e: Exception) {
+                Log.e("HomeViewModel", "동 선택 저장 실패: ${e.message}")
+            }
+        }
+    }
+
+    private fun regionCurrent() {
+        _state.update { it.copy(uiState = it.uiState.copy(isLoading = true)) }
+
+        viewModelScope.launch {
+            try {
+                val result = regionCurrentRepository.RegionCurrent(userId.first())
+                result.onSuccess { response ->
+                    Log.d("HomeViewModel", "RegionCurrent 성공: ${response.fullRegionName}")
+
+                    _state.update { currentState ->
+                        currentState.copy(
+                            currentRegion = HomeContract.CurrentRegionInfo(
+                                currentId = response.currentRegionId,
+                                currentName = response.fullRegionName
+                            ),
+                            uiState = currentState.uiState.copy(
+                                isLoading = false,
+                                error = null
+                            )
+                        )
+                    }
+                    try {
+                        PreferenceDataStore.saveActiveRegion(response.fullRegionName)
+                        Log.d("HomeViewModel", "activeRegion 저장 완료: ${response.fullRegionName}")
+                    } catch (e: Exception) {
+                        Log.e("HomeViewModel", "activeRegion 저장 실패: ${e.message}")
+                    }
+
+                }.onFailure { exception ->
+                    Log.e("HomeViewModel", "RegionCurrent 실패: ${exception.message}")
+                    _state.update { currentState ->
+                        currentState.copy(
+                            uiState = currentState.uiState.copy(
+                                isLoading = false,
+                                error = exception.message
+                            )
+                        )
+                    }
+                }
+            } catch (e: Exception) {
+                Log.e("HomeViewModel", "RegionCurrent Exception: ${e.message}")
+                _state.update { currentState ->
+                    currentState.copy(
+                        uiState = currentState.uiState.copy(
+                            isLoading = false,
+                            error = e.message
+                        )
+                    )
+                }
+            }
         }
     }
 
@@ -125,19 +256,8 @@ class HomeViewModel @Inject constructor(
                     )
                 }
 
-//                val updatedCourseList = currentState.courseList.map { course ->
-//                    if (course.postId == postId) {
-//                        // ArchivedListEntity의 실제 프로퍼티명에 맞게 수정
-//                        // isLiked 대신 isLike 또는 liked 등의 프로퍼티를 확인하고 사용
-//                        course.copy(isLike = isLiked) // 또는 course.copy(liked = isLiked)
-//                    } else {
-//                        course
-//                    }
-//                }
-
                 currentState.copy(
-                    postsResult = updatedPostsResult,
-//                    courseList = updatedCourseList
+                    postsResult = updatedPostsResult
                 )
             }
         }
