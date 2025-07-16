@@ -132,6 +132,9 @@ fun TabListScreen(
                                 petProfileImageUrl = post.writer.petProfileImageUrl,
                                 descriptionTags = post.descriptionTags,
                                 isLiked = post.isLike,
+                                onClickLike = { isLiked ->
+                                    viewModel.toggleLike(post.postId, isLiked)
+                                },
                                 onClickItem = { navigateToDetail() }
                             )
                         }
