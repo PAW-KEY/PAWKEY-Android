@@ -40,6 +40,7 @@ import com.paw.key.core.designsystem.component.PawkeyButton
 import com.paw.key.core.designsystem.component.SubChip
 import com.paw.key.core.designsystem.component.TopBar
 import com.paw.key.core.designsystem.theme.PawKeyTheme
+import com.paw.key.core.util.PreferenceDataStore
 import com.paw.key.presentation.ui.course.sharedwalk.review.state.SharedWalkReviewSideEffect
 import com.paw.key.presentation.ui.course.sharedwalk.review.viewmodel.SharedWalkReviewViewModel
 import com.paw.key.presentation.ui.course.walkreview.WalkReviewCategoryUiModel
@@ -48,9 +49,7 @@ import com.paw.key.presentation.ui.course.walkreview.component.WalkReviewFeedbac
 import com.paw.key.presentation.ui.course.walkreview.component.WalkReviewFeedbackHeader
 import com.paw.key.presentation.ui.course.walkreview.component.WalkReviewImageRow
 import com.paw.key.presentation.ui.course.walkreview.component.WalkReviewInfoHolder
-import com.paw.key.presentation.ui.course.walkreview.component.WalkReviewTextField
-import com.paw.key.presentation.ui.course.walkreview.state.WalkReviewContract
-import com.paw.key.presentation.ui.course.walkreview.viewmodel.WalkReviewViewModel
+import kotlinx.coroutines.flow.first
 
 @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
 @Composable
@@ -58,15 +57,25 @@ fun SharedWalkReviewRoute(
     navigateUp: () -> Unit,
     navigateNext: () -> Unit,
     routeId : Int,
+    pageId : Int,
     snackBarHostState: SnackbarHostState,
     modifier: Modifier = Modifier,
     viewModel: SharedWalkReviewViewModel = hiltViewModel(),
     isSharedWalk : Boolean = true
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
-    val isValid = viewModel.state.collectAsStateWithLifecycle().value.isValidForm
+    val isValid = state.isValidForm
+    val userId = PreferenceDataStore.getUserId()
 
     val lifecycleOwner = LocalLifecycleOwner.current
+
+    LaunchedEffect(Unit) {
+        viewModel.getSharedWalkReviewCategory(userId.first())
+        viewModel.getSharedWalkReviewInfo(
+            routeId = routeId,
+            userId = userId.first()
+        )
+    }
 
     LaunchedEffect(viewModel.sideEffect, lifecycleOwner) {
         viewModel.sideEffect.flowWithLifecycle(lifecycleOwner.lifecycle)
@@ -137,89 +146,7 @@ fun SharedWalkReviewScreen(
             modifier = modifier
                 .background(PawKeyTheme.colors.white1)
                 .padding(bottom = 16.dp)
-        ){
-            item {
-                Text(
-                    text = "제목",
-                    style = PawKeyTheme.typography.head20Sb,
-                    color = PawKeyTheme.colors.green500,
-                    modifier = Modifier
-                        .padding(bottom = 10.dp)
-                )
-
-                Row (
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(bottom = 10.dp)
-                ) {
-                    AsyncImage(
-                        model = "",
-                        contentDescription = "profile",
-                        modifier = Modifier
-                            .size(48.dp)
-                            .background(
-                                color = PawKeyTheme.colors.gray50,
-                                shape = CircleShape
-                            )
-                            .clip(CircleShape)
-                            .padding(end = 10.dp)
-                    )
-
-                    Text(
-                        text = "강아지 이름 작성",
-                        style = PawKeyTheme.typography.body16Sb,
-                        color = PawKeyTheme.colors.gray600
-                    )
-                }
-            }
-
-            item {
-                Column(
-                    modifier = Modifier
-                        .padding(bottom = 12.dp, start = 16.dp, end = 16.dp)
-                        .background(PawKeyTheme.colors.white1)
-                ) {
-                    WalkReviewInfoHolder(
-                        icon = R.drawable.ic_walk_review_location,
-                        content = "강남구 역삼동"
-                    )
-
-                    WalkReviewInfoHolder(
-                        icon = R.drawable.ic_walk_review_time,
-                        content = "2025.06.26(금) | 23:20-23:30"
-                    )
-                }
-            }
-
-            item {
-                Row (
-                    modifier = Modifier
-                        .padding(bottom = 12.dp, start = 16.dp, end = 16.dp)
-                        .fillMaxWidth()
-                        .background(PawKeyTheme.colors.white1)
-                ) {
-                    val chips = listOf("2.2km", "30분", "3208걸음")
-
-                    chips.forEach {
-                        SubChip(
-                            text = it,
-                            modifier = Modifier
-                                .padding(end = 6.dp)
-                        )
-                    }
-                }
-            }
-
-            item {
-                HorizontalDivider(
-                    thickness = 10.dp,
-                    color = PawKeyTheme.colors.gray50,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(bottom = 12.dp)
-                )
-            }
-
+        ) {
             item {
                 WalkReviewFeedbackHeader(
                     petName = petName,
@@ -230,11 +157,19 @@ fun SharedWalkReviewScreen(
             }
 
             item {
+                val emoji = listOf(
+                    "\uD83D\uDE0C",
+                    "\uD83D\uDC36",
+                    "\uD83D\uDEB8",
+                    "\uD83E\uDDFA",
+                    "\uD83C\uDF3F"
+                )
+
                 feedbackList.forEachIndexed { index, category ->
                     WalkReviewFeedbackForm(
                         icon = R.drawable.ic_walk_review_location,
-                        title = category.categoryDescription,
-                        selectedFeedbackItem = category.options.firstOrNull { it.isSelected }?.optionText,
+                        title = "${emoji[index]}${category.categoryDescription}",
+                        selectedFeedbackItems = category.options.filter { it.isSelected }.map { it.optionText },
                         feedbackList = category.options.map { it.optionText },
                         onClickFeedback = { selectedText ->
                             val selectedOption = category.options.find { it.optionText == selectedText }
@@ -243,7 +178,8 @@ fun SharedWalkReviewScreen(
                             }
                         },
                         modifier = Modifier
-                            .padding(top = 12.dp, bottom = 12.dp, start = 16.dp, end = 16.dp)
+                            .padding(top = 12.dp, bottom = 12.dp, start = 16.dp, end = 16.dp),
+                        selectedFeedbackItem = category.options.find { it.isSelected }?.optionText
                     )
                 }
             }
