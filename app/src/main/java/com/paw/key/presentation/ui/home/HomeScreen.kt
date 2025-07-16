@@ -164,10 +164,7 @@ fun HomeScreen(
                     descriptionTags = listOf("이륜차 거의 없음", "물그릇 비치", "쉴 곳 있음"),
                     onClickItem = {},
                     isLiked = true,
-                    postId = 1L,
-                    onCLickItem = {},
-                    isRecord = true,
-                    date = "년도/월/일"
+                    postId = 1
                 )
                 Spacer(modifier = Modifier.height(48.dp))
             }

@@ -59,7 +59,7 @@ fun ArchivedCourseListScreen(
                 items = state.courseList
             ) { _, item ->
                 CourseCard(
-                    postId = item.postId,
+                    postId = item.postId.toInt(),
                     title = item.title,
                     createdAt = item.createdAt,
                     representativeImageUrl = item.representativeImageUrl,
@@ -67,9 +67,7 @@ fun ArchivedCourseListScreen(
                     petProfileImageUrl = item.writer.first().petProfileImageUrl,
                     descriptionTags = item.descriptionTags,
                     isLiked = item.isLiked,
-                    onClickItem = navigateNext,
-                    onCLickItem = navigateNext,
-                    date = item.createdAt
+                    onClickItem = navigateNext
                 )
             }
         }

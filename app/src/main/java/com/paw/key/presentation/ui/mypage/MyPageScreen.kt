@@ -11,16 +11,20 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
 import com.paw.key.R
 import com.paw.key.core.designsystem.component.SubChip
 import com.paw.key.core.designsystem.theme.PawKeyTheme
@@ -40,6 +44,11 @@ fun MyPageRoute(
     viewModel: MyPageViewModel = hiltViewModel()
 ) {
     val state = viewModel.state.collectAsStateWithLifecycle()
+
+    LaunchedEffect(Unit) {
+        viewModel.getUserProfiles(userId = 2)
+        viewModel.getMyPagePetProfiles(userId = 2)
+    }
 
     MyPageScreen(
         state = state.value,
@@ -80,7 +89,6 @@ fun MyPageScreen(
             )
             OwnerCard(
                 ownerName = state.ownerName,
-                role = state.role,
                 navigateUserProfile = navigateUserProfile
             )
             Spacer(modifier = Modifier.height(19.dp))
@@ -92,6 +100,7 @@ fun MyPageScreen(
                 tags = state.petTags,
                 walkCount = state.walkCount,
                 totalDistance = state.totalDistance,
+                image = state.petImageUrl,
                 navigatePetProfile = navigatePetProfile
             )
 
@@ -109,7 +118,6 @@ fun MyPageScreen(
 @Composable
 fun OwnerCard(
     ownerName: String,
-    role: String,
     navigateUserProfile: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -126,7 +134,7 @@ fun OwnerCard(
     ) {
         Text(text = ownerName, style = PawKeyTheme.typography.head20B2)
         Spacer(Modifier.width(10.dp))
-        Text(text = role, style = PawKeyTheme.typography.body14M)
+        Text(text = "견주", style = PawKeyTheme.typography.body14M)
 
         Spacer(modifier = Modifier.weight(1f))
         Icon(
@@ -142,6 +150,7 @@ fun PetCard(
     age: String,
     gender: String,
     tags: List<String>,
+    image: String,
     walkCount: String,
     totalDistance: String,
     navigatePetProfile: () -> Unit,
@@ -185,12 +194,17 @@ fun PetCard(
 
         Column(modifier = modifier.padding(16.dp)) {
             Row(verticalAlignment = Alignment.CenterVertically) {
-                Box(
+                AsyncImage(
+                    model = ImageRequest.Builder(LocalContext.current)
+                        .data(image)
+                        .crossfade(true)
+                        .build(),
+                    contentDescription = null,
                     modifier = modifier
-                        .size(60.dp)
+                        .size(64.dp)
                         .clip(CircleShape)
-                        .background(Color.LightGray)
                 )
+
                 Spacer(modifier.width(16.dp))
                 Column {
                     Text(name, style = PawKeyTheme.typography.head20B2)
@@ -304,7 +318,6 @@ private fun MyPageScreenPreview() {
     PawKeyTheme {
         MyPageScreen(state = MyPageState(
             ownerName = "김도기님",
-            role = "견주",
             petName = "포비",
             petAge = "12세",
             petGender = "여아",

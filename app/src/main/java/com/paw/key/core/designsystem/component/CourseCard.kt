@@ -30,18 +30,16 @@ import com.paw.key.core.util.noRippleClickable
 
 @Composable
 fun CourseCard(
-    postId: Long,
+    postId: Int,
     title: String,
     createdAt: String,
-    petName: String,
     isLiked: Boolean,
     onClickItem: () -> Unit,
-    modifier: Modifier = Modifier,
-    date: String,
+    petName: String,
     representativeImageUrl: String? = null, // 추가
     petProfileImageUrl: String? = null,     // 추가
     descriptionTags: List<String> = emptyList(), // 추가
-    onCLickItem: () -> Unit,
+    modifier: Modifier = Modifier,
     isShared: Boolean = false,
     isRecord: Boolean = false
 ) {
@@ -171,9 +169,8 @@ fun CourseCard(
                             color = Color.White
                         )
                         Spacer(modifier = Modifier.width(8.dp))
-
                         Text(
-                            text = formatDate(date), // 포맷된 날짜 사용
+                            text = createdAt,
                             style = PawKeyTheme.typography.caption12R,
                             color = PawKeyTheme.colors.gray100
                         )
@@ -215,7 +212,7 @@ fun CourseCard(
 fun CourseCardPreview() {
     PawKeyTheme {
         CourseCard(
-            postId = 1L,
+            postId = 1,
             title = "홍대 주변 좋은 산책 코스",
             createdAt = "2025/07/16",
             representativeImageUrl = "https://pawkey-server.com/image.jpg",
@@ -223,11 +220,7 @@ fun CourseCardPreview() {
             petProfileImageUrl = "https://pawkey-server.com/profile.jpg",
             descriptionTags = listOf("이륜차 거의 없음", "물그릇 비치", "쉴 곳 있음"),
             isLiked = true,
-            onCLickItem = {},
-            onClickItem = {},
-            date = "2025/07/16",
-            isShared = true,
-            isRecord = true,
+            onClickItem = {}
         )
     }
 }
