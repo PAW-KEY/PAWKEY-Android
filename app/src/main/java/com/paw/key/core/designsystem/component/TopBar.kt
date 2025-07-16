@@ -1,5 +1,6 @@
 package com.paw.key.core.designsystem.component
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -26,6 +27,7 @@ fun TopBar(
     Box(
         modifier = modifier
             .fillMaxWidth()
+            .background(color = PawKeyTheme.colors.white1)
             .padding(vertical = 12.dp, horizontal = 16.dp)
     ) {
         if (isBackVisible) {

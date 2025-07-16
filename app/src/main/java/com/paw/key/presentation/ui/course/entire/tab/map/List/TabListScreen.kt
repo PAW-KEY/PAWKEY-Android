@@ -47,7 +47,8 @@ fun TapListRoute(
         modifier = modifier,
         navigateToDetail = navigateToDetail,
         viewModel = viewModel,
-        onClickLike = { postId, isLiked ->
+        onClickLike = {
+            postId, isLiked ->
             viewModel.toggleLike(postId = postId, isLiked = isLiked)
         }
     )

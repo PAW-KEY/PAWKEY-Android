@@ -9,6 +9,7 @@ data class ArchivedDetailState(
     val routeId: Int = 0,
     val postTitle: String = "",
     val postContent: String = "",
+    val isPublic : Boolean = false,
     val isLiked: Boolean = false,
     val petName: String = "",
     val petProfileImage: String = "",
