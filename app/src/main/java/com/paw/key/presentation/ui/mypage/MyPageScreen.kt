@@ -79,7 +79,7 @@ fun MyPageScreen(
     Box(
         modifier = modifier
             .fillMaxSize()
-            .background(PawKeyTheme.colors.white2) // ⬅️ 전체 배경 설정
+            .background(PawKeyTheme.colors.white2)
             .padding(paddingValues)
     ){
         LazyColumn(
@@ -142,7 +142,7 @@ fun OwnerCard(
     ) {
         Text(text = ownerName, style = PawKeyTheme.typography.head20B2)
         Spacer(Modifier.width(10.dp))
-        Text(text = "견주", style = PawKeyTheme.typography.body14M)
+        Text(text = "견주", style = PawKeyTheme.typography.body14M, color = PawKeyTheme.colors.gray400)
 
         Spacer(modifier = Modifier.weight(1f))
         Icon(
@@ -266,7 +266,7 @@ fun PetCard(
                 modifier = modifier
                     .height(32.dp)
                     .width(1.dp)
-                    .background(color = PawKeyTheme.colors.white1)
+                    .background(color = PawKeyTheme.colors.gray100)
             )
 
             Column(
