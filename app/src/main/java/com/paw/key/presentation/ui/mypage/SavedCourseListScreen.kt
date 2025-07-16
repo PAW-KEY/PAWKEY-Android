@@ -65,9 +65,7 @@ fun SavedCourseListScreen(
                     descriptionTags = item.descriptionTags,
                     isLiked = item.isLiked,
                     onClickItem = navigateNext,
-                    onCLickItem = {},
-                    isRecord = true,
-                    date = "년도/월/일"
+                    isRecord = true
                 )
             }
         }
