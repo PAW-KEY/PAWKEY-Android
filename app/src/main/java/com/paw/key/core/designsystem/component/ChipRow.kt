@@ -3,6 +3,7 @@ package com.paw.key.core.designsystem.component
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -36,7 +37,7 @@ fun ChipRow(
     val hiddenCount = tags.size - 3 //가려진 칩 개수
 
     FlowRow(
-        modifier = modifier,
+        modifier = modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.spacedBy(8.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
