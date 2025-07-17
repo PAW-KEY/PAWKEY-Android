@@ -21,6 +21,7 @@ import com.paw.key.presentation.ui.course.walkreview.state.WalkReviewContract
 fun WalkReviewFeedbackForm(
     icon: Int,
     title: String,
+    selectedFeedbackItems: List<String>,
     selectedFeedbackItem: String?, // 선택된 옵션 텍스트
     feedbackList: List<String>,
     onClickFeedback: (String) -> Unit,
@@ -53,7 +54,7 @@ fun WalkReviewFeedbackForm(
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         feedbackList.forEach { itemText ->
-            val isSelected = selectedFeedbackItem == itemText
+            val isSelected = selectedFeedbackItems.contains(itemText)
             val textColor = if (isSelected) PawKeyTheme.colors.green500 else PawKeyTheme.colors.gray400
             val borderColor = if (isSelected) PawKeyTheme.colors.green500 else PawKeyTheme.colors.gray50
 
@@ -61,7 +62,7 @@ fun WalkReviewFeedbackForm(
                 item = itemText,
                 textColor = textColor,
                 borderColor = borderColor,
-                onClickFeedback = onClickFeedback
+                onClickFeedback = { onClickFeedback(itemText) }
             )
         }
     }
@@ -83,7 +84,8 @@ private fun WalkReviewFeedbackFormPreview() {
             icon = com.paw.key.R.drawable.ic_walk_review_location,
             title = "위치",
             selectedFeedbackItem = null,
-            onClickFeedback = {}
+            onClickFeedback = {},
+            selectedFeedbackItems = listOf()
         )
     }
 }

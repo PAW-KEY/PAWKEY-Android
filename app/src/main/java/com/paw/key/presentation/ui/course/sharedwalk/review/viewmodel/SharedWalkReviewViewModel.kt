@@ -11,6 +11,7 @@ import com.paw.key.domain.repository.walkreview.WalkReviewRepository
 import com.paw.key.presentation.ui.course.sharedwalk.review.state.SharedWalkReviewSideEffect
 import com.paw.key.presentation.ui.course.sharedwalk.review.state.SharedWalkReviewState
 import com.paw.key.presentation.ui.course.walkreview.util.toUiModel
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -22,6 +23,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+@HiltViewModel
 class SharedWalkReviewViewModel @Inject constructor(
     private val repository: WalkReviewRepository,
     private val sharedRepository : SharedWalkRepository
@@ -80,10 +82,10 @@ class SharedWalkReviewViewModel @Inject constructor(
         }
     }
 
-    fun getSharedWalkReviewInfo(routeId: Int) {
+    fun getSharedWalkReviewInfo(routeId: Int, userId: Int) {
         viewModelScope.launch {
             repository.getWalkReviewInfo(
-                userId = 2,
+                userId = userId,
                 routeId = routeId
             ).onSuccess {
                 _state.update { currentState ->
@@ -103,20 +105,24 @@ class SharedWalkReviewViewModel @Inject constructor(
     }
 
     fun onClickFeedback(categoryId: Int, optionId: Int) {
-        _state.update { current ->
-            val updatedCategories = current.categoryList.map { category ->
-                if (category.categoryId == categoryId) {
-                    category.copy(
-                        options = category.options.map { option ->
-                            option.copy(isSelected = option.optionId == optionId)
-                        }
-                    )
-                } else category
+        val updatedCategories = state.value.categoryList.map { category ->
+            if (category.categoryId == categoryId) {
+                val updatedOptions = category.options.map { option ->
+                    if (option.optionId == optionId) {
+                        option.copy(isSelected = !option.isSelected)
+                    } else {
+                        option
+                    }
+                }
+                category.copy(options = updatedOptions)
+            } else {
+                category
             }
-
-            current.copy(categoryList = updatedCategories)
         }
+
+        _state.update { it.copy(categoryList = updatedCategories) }
     }
+
 
     fun onClickSharedReview() {
         _state.update {

@@ -1,5 +1,6 @@
 package com.paw.key.presentation.ui.onboard.component
 
+import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -37,6 +38,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import com.paw.key.R
+import com.paw.key.core.designsystem.component.PageIndicator
 import com.paw.key.core.designsystem.theme.PawKeyTheme
 
 @Preview(showBackground = true)
@@ -59,163 +61,114 @@ private fun PreviewOnboardPager() {
 @Composable
 fun OnboardPager(
     jobList: List<OnboardingPosting>,
+    modifier: Modifier = Modifier,
 ) {
     val pageCount = jobList.size
     val pagerState = rememberPagerState(pageCount = { pageCount })
 
+    val currentPage = pagerState.currentPage
+    val currentItem = jobList.getOrNull(currentPage)
+
     Box(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
-            .height(620.dp)
+            .height(LocalConfiguration.current.screenHeightDp.dp * 0.7f)
             .background(
                 color = PawKeyTheme.colors.white1,
-                shape = RoundedCornerShape(bottomStart = 16.dp, bottomEnd = 16.dp))
+                shape = RoundedCornerShape(bottomStart = 16.dp, bottomEnd = 16.dp)
+            )
             .clip(RoundedCornerShape(bottomStart = 16.dp, bottomEnd = 16.dp))
     ) {
         HorizontalPager(
             state = pagerState,
-            modifier = Modifier
-                .fillMaxSize()
+            modifier = Modifier.fillMaxSize()
         ) { page ->
-            val job = jobList[page]
-            OnboardingListItem(
-                title = job.title,
-                subtitle = job.subtitle,
-                backImg = job.backImg
-            )
+            OnboardingListItem(backImg = jobList[page].backImg)
         }
 
-        AnimatedPagerIndicator(
-            pagerState = pagerState,
+        Column(
+            modifier = Modifier
+                .align(Alignment.TopStart)
+                .padding(top = 80.dp, start = 24.dp, end = 24.dp)
+                .zIndex(2f)
+        ) {
+            Crossfade(targetState = currentItem?.title) { title ->
+                title?.let {
+                    val annotated = buildAnnotatedString {
+                        when (currentPage) {
+                            0 -> {
+                                val start = it.indexOf("PAWKEY")
+                                val end = start + "PAWKEY".length
+                                if (start != -1) {
+                                    append(it.substring(0, start))
+                                    withStyle(SpanStyle(color = PawKeyTheme.colors.green500)) {
+                                        append("PAWKEY")
+                                    }
+                                    append(it.substring(end))
+                                } else {
+                                    append(it)
+                                }
+                            }
+
+                            1 -> {
+                                withStyle(SpanStyle(color = PawKeyTheme.colors.green500)) {
+                                    append(it)
+                                }
+                            }
+
+                            else -> {
+                                withStyle(SpanStyle(color = PawKeyTheme.colors.green500)) {
+                                    append(it)
+                                }
+                            }
+                        }
+                    }
+
+                    Text(
+                        text = annotated,
+                        style = PawKeyTheme.typography.head24B.copy(lineHeight = 36.sp),
+                        color = PawKeyTheme.colors.black,
+                    )
+                }
+            }
+
+            Crossfade(targetState = currentItem?.subtitle) { subtitle ->
+                subtitle?.takeIf { it.isNotEmpty() }?.let {
+                    Text(
+                        text = it,
+                        style = PawKeyTheme.typography.body16M,
+                        color = PawKeyTheme.colors.gray400,
+                    )
+                }
+            }
+        }
+
+        PageIndicator(
+            numberOfPages = pageCount,
+            selectedPage = currentPage,
+            selectedColor = PawKeyTheme.colors.green500,
+            defaultColor = PawKeyTheme.colors.green200,
             modifier = Modifier
                 .align(Alignment.BottomCenter)
-                .padding(bottom = 20.dp),
-            activeColor = PawKeyTheme.colors.green500,
-            inactiveColor = PawKeyTheme.colors.green200
+                .padding(bottom = 20.dp)
         )
     }
 }
 
 @Composable
-fun OnboardingListItem(
-    title: String,
-    subtitle: String,
-    backImg: Int,
-) {
+fun OnboardingListItem(backImg: Int) {
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(
-                color = PawKeyTheme.colors.white1,
-                shape = RoundedCornerShape(bottomStart = 24.dp, bottomEnd = 24.dp)
-            )
-            .clip(
-                shape = RoundedCornerShape(bottomStart = 24.dp, bottomEnd = 24.dp)
-            )
+            .clip(RoundedCornerShape(bottomStart = 24.dp, bottomEnd = 24.dp))
+            .background(PawKeyTheme.colors.white1)
     ) {
-
         Image(
             painter = painterResource(id = backImg),
-            contentDescription = "sibal",
-            modifier = Modifier
-                .fillMaxSize()
-                .height(596.dp)
-                .align(Alignment.Center),
+            contentDescription = null,
+            modifier = Modifier.fillMaxSize(),
             contentScale = ContentScale.FillBounds
         )
-        Column(
-            modifier = Modifier
-                .padding(top = 80.dp, start = 24.dp, end = 24.dp)
-                .zIndex(2F)
-        ) {
-            val annotatedTitle = if (title.contains("PAWKEY")) {
-                buildAnnotatedString {
-                    val pawkeyStart = title.indexOf("PAWKEY")
-                    val pawkeyEnd = pawkeyStart + "PAWKEY".length
-
-                    withStyle(style = SpanStyle(color = PawKeyTheme.colors.black)) {
-                        append(title.substring(0, pawkeyStart))
-                    }
-
-                    withStyle(style = SpanStyle(color = PawKeyTheme.colors.green500)) {
-                        append("PAWKEY")
-                    }
-
-                    withStyle(style = SpanStyle(color = PawKeyTheme.colors.black)) {
-                        append(title.substring(pawkeyEnd))
-                    }
-                }
-            } else {
-                buildAnnotatedString {
-                    withStyle(style = SpanStyle(color = PawKeyTheme.colors.green500)) {
-                        append(title)
-                    }
-                }
-            }
-            Text(
-                text = annotatedTitle,
-                style = PawKeyTheme.typography.head24B.copy(lineHeight = 36.sp),
-                color = PawKeyTheme.colors.green500,
-                modifier = Modifier
-            )
-
-            if (subtitle.isNotEmpty()) {
-                Spacer(modifier = Modifier.height(16.dp))
-                Text(
-                    text = subtitle,
-                    style = PawKeyTheme.typography.body16M,
-                    color = PawKeyTheme.colors.gray400,
-                )
-            }
-        }
-
-    }
-}
-
-@Composable
-fun AnimatedPagerIndicator(
-    pagerState: PagerState,
-    modifier: Modifier = Modifier,
-    activeColor: Color = Color.Blue,
-    inactiveColor: Color = Color.Gray,
-    indicatorWidth: Dp = 12.dp,
-    indicatorHeight: Dp = 12.dp,
-    spacing: Dp = 12.dp,
-) {
-    val density = LocalDensity.current
-    val activeIndicatorWidth = 24.dp
-
-    Canvas(
-        modifier = modifier
-            .height(indicatorHeight)
-            .width(
-                activeIndicatorWidth + (indicatorWidth * (pagerState.pageCount - 1)) +
-                        spacing * (pagerState.pageCount - 1)
-            )
-    ) {
-        val canvasWidth = size.width
-        val canvasHeight = size.height
-
-        val indicatorWidthPx = with(density) { indicatorWidth.toPx() }
-        val activeIndicatorWidthPx = with(density) { activeIndicatorWidth.toPx() }
-        val indicatorHeightPx = with(density) { indicatorHeight.toPx() }
-        val spacingPx = with(density) { spacing.toPx() }
-
-        var startX = 0f
-
-        for (i in 0 until pagerState.pageCount) {
-            val isActive = i == pagerState.currentPage
-            val currentWidth = if (isActive) activeIndicatorWidthPx else indicatorWidthPx
-
-            drawRoundRect(
-                color = if (isActive) activeColor else inactiveColor,
-                topLeft = Offset(startX, (canvasHeight - indicatorHeightPx) / 2),
-                size = Size(currentWidth, indicatorHeightPx),
-                cornerRadius = CornerRadius(indicatorHeightPx / 2)
-            )
-
-            startX += currentWidth + spacingPx
-        }
     }
 }
 

@@ -122,7 +122,7 @@ fun LoginScreen(
             LoginTextField(
                 textValue = email,
                 placeHolder = "사용하실 아이디를 입력해주세요",
-                isPassword = false,
+                isPassword = true,
                 onTextChanged = onEmailChanged
             )
 
@@ -138,7 +138,7 @@ fun LoginScreen(
             LoginTextField(
                 textValue = password,
                 placeHolder = "사용하실 비밀번호를 입력해주세요",
-                isPassword = !isPasswordVisible,
+                isPassword = isPasswordVisible,
                 onTextChanged = onPasswordChanged,
                 suffix = {
                     Icon(

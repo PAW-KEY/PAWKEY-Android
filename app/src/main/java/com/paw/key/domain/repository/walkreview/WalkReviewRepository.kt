@@ -3,6 +3,7 @@ package com.paw.key.domain.repository.walkreview
 import com.paw.key.data.dto.request.walkreview.WalkCourseReviewRequestDto
 import com.paw.key.data.dto.response.walkcourse.WalkCourseResponseDto
 import com.paw.key.domain.model.entity.walkreview.WalkReviewCategoryListEntity
+import com.paw.key.domain.model.entity.walkreview.WalkReviewIdEntity
 import com.paw.key.domain.model.entity.walkreview.WalkReviewInfoEntity
 import com.paw.key.domain.model.entity.walkreview.WalkReviewRecordEntity
 import okhttp3.MultipartBody
@@ -12,7 +13,7 @@ interface WalkReviewRepository {
         userId: Int,
         imageFiles: List<MultipartBody.Part>,
         walkReviewRequest: WalkReviewRecordEntity
-    ) : Result<Unit>
+    ) : Result<WalkReviewIdEntity>
 
     suspend fun getWalkReviewInfo(
         userId: Int,

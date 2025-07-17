@@ -3,6 +3,7 @@ package com.paw.key.presentation.ui.mypage.viewmodel
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.paw.key.core.util.PreferenceDataStore
 import com.paw.key.domain.repository.LikeRepository
 import com.paw.key.domain.repository.SavedListRepository
 import com.paw.key.presentation.ui.mypage.state.SavedListSideEffect
@@ -12,6 +13,7 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -28,13 +30,15 @@ class SavedListViewModel @Inject constructor(
     private val _sideEffect = MutableSharedFlow<SavedListSideEffect>()
     val sideEffect: MutableSharedFlow<SavedListSideEffect> = _sideEffect
 
+    private val userId = PreferenceDataStore.getUserId()
+
     init {
-        getSavedList(userId = 2)
+        getSavedList()
     }
 
-    fun getSavedList(userId: Int) {
+    fun getSavedList() {
         viewModelScope.launch {
-            savedListRepository.getSavedList(userId)
+            savedListRepository.getSavedList(userId.first())
                 .onSuccess { result ->
                     _state.update {
                         it.copy(

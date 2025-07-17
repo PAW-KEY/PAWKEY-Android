@@ -136,22 +136,37 @@ class MainNavigator(
 //    fun navigateRegional(navOptions: NavOptions? = null) {
 //        navController.navigateRegional(navOptions = navOptions)
 //    }
-    fun navigateSharedWalkCourse(navOptions: NavOptions? = null) {
-        navController.navigateSharedWalkCourse(navOptions = navOptions)
+    fun navigateSharedWalkCourse(
+        routeId: Int,
+        pageId : Int,
+        navOptions: NavOptions? = null)
+    {
+        navController.navigateSharedWalkCourse(
+            routeId = routeId,
+            pageId = pageId,
+            navOptions = navOptions
+        )
     }
 
-    fun navigateSharedWalkReview(routeId: Int, navOptions: NavOptions? = null) {
+    fun navigateSharedWalkReview(
+        pageId: Int,
+        routeId: Int,
+        navOptions: NavOptions? = null
+    ) {
         navController.navigateSharedWalkReview(
+            pageId = pageId,
             routeId = routeId,
             navOptions = navOptions
         )
     }
 
     fun navigateSharedWalkCompletion(
+        pageId: Int,
         routeId: Int,
         navOptions: NavOptions? = null
     ) {
         navController.navigateSharedWalkCompletion(
+            pageId = pageId,
             routeId = routeId,
             navOptions = navOptions
         )

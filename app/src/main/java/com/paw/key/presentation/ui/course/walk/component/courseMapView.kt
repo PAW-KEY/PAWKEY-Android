@@ -256,8 +256,10 @@ fun courseMapView(
         }
     }
 
-    LaunchedEffect(Unit) {
-        trackingManager?.startTracking(centerLabel)
+    LaunchedEffect(centerLabel, trackingManager) {
+        if (centerLabel != null && trackingManager != null) {
+            trackingManager?.startTracking(centerLabel)
+        }
     }
 
     LaunchedEffect(isPauseTracking) {

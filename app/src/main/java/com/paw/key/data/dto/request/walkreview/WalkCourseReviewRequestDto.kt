@@ -15,7 +15,10 @@ data class WalkCourseReviewRequestDto(
     @SerialName("isPublic")
     val isPublic: Boolean,
 
-    @SerialName("selectedCategories")
+    @SerialName("isMine")
+    val isMine: Boolean,
+
+    @SerialName("selectedOptionsForCategories")
     val selectedCategories: List<SelectedCategoryDto>,
 
     @SerialName("routeId")

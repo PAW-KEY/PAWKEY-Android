@@ -22,13 +22,13 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class SharedWalkCourseViewModel @Inject constructor(
-    @ApplicationContext private val context: Context,
     private val walkSharedResultRepository : WalkSharedResultRepository,
     private val sharedWalkRepository: SharedWalkRepository
 ) : ViewModel() {
@@ -40,13 +40,15 @@ class SharedWalkCourseViewModel @Inject constructor(
     val sideEffect: MutableSharedFlow<SharedWalkCourseSideEffect>
         get() = _sideEffect
 
+    private val userId = PreferenceDataStore.getUserId()
+
     private val _totalTime = MutableStateFlow(0L)
     val totalTime: StateFlow<Long> = _totalTime.asStateFlow()
 
     fun getWalkSharedTrack(routeId : Int) {
         viewModelScope.launch {
             sharedWalkRepository.getSharedWalkTrack(
-                userId = 2,
+                userId = userId.first(),
                 routeId = routeId
             ).onSuccess {
                 _state.update { state ->

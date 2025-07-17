@@ -14,8 +14,10 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.paw.key.core.designsystem.component.CourseCard
 import com.paw.key.core.designsystem.component.TopBar
 import com.paw.key.core.designsystem.theme.PawKeyTheme
+import com.paw.key.core.util.PreferenceDataStore
 import com.paw.key.presentation.ui.mypage.state.ArchivedListState
 import com.paw.key.presentation.ui.mypage.viewmodel.ArchivedListViewModel
+import kotlinx.coroutines.flow.first
 
 @Composable
 fun ArchivedCourseRoute(
@@ -25,10 +27,10 @@ fun ArchivedCourseRoute(
     viewModel: ArchivedListViewModel = hiltViewModel()
 ) {
     val state = viewModel.state.collectAsStateWithLifecycle()
-
+    val userId = PreferenceDataStore.getUserId()
     LaunchedEffect(Unit) {
         // Todo : userId 네비게이션 연결
-        viewModel.getArchivedList(userId = 2)
+        viewModel.getArchivedList(userId = userId.first())
     }
 
     ArchivedCourseListScreen(
@@ -89,10 +91,8 @@ fun ArchivedCourseListScreenPreview() {
             state = ArchivedListState(),
             navigateUp = {},
             navigateNext = {},
-            onClickLike = {
-                    _, _ ->
+            onClickLike = { _, _ ->
             }
-
         )
     }
 }

@@ -6,6 +6,7 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.paw.key.core.util.PhotoUtils
+import com.paw.key.core.util.PreferenceDataStore
 import com.paw.key.data.dto.request.walkreview.WalkCourseReviewRequestDto
 import com.paw.key.domain.model.entity.walkreview.WalkReviewRecordCategory
 import com.paw.key.domain.model.entity.walkreview.WalkReviewRecordEntity
@@ -20,6 +21,7 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -37,9 +39,11 @@ class WalkReviewViewModel @Inject constructor(
     val sideEffect : MutableSharedFlow<WalkReviewSideEffect>
         get() = _sideEffect
 
+    private val userId = PreferenceDataStore.getUserId()
 
     fun postWalkReview(routeId : Int, isShare : Boolean) {
         viewModelScope.launch {
+            Log.d("WalkReviewViewModel", "${userId.first()}")
             val category = state.value.categoryList.map { category ->
                 WalkReviewRecordCategory(
                     categoryId = category.categoryId,
@@ -52,7 +56,8 @@ class WalkReviewViewModel @Inject constructor(
                 description = state.value.content,
                 isPublic = isShare,
                 categories = category,
-                routeId = routeId.toLong()
+                routeId = routeId.toLong(),
+                isMine = state.value.isMine
             )
 
             val imageFiles = PhotoUtils.uriListToMultipartParts(
@@ -61,7 +66,7 @@ class WalkReviewViewModel @Inject constructor(
             )
 
             repository.postWalkReview(
-                userId = 2,
+                userId = userId.first(),
                 imageFiles = imageFiles,
                 walkReviewRequest = requestEntity
             ).onSuccess {
@@ -78,7 +83,7 @@ class WalkReviewViewModel @Inject constructor(
     fun getWalkReviewCategory() {
         viewModelScope.launch {
             repository.getWalkReviewCategory(
-                userId = 2
+                userId = userId.first()
             ).onSuccess {
                 _state.update { currentState ->
                     currentState.copy(
@@ -96,7 +101,7 @@ class WalkReviewViewModel @Inject constructor(
     fun getWalkReviewInfo(routeId: Int) {
         viewModelScope.launch {
             repository.getWalkReviewInfo(
-                userId = 2,
+                userId = userId.first(),
                 routeId = routeId
             ).onSuccess {
                 _state.update { currentState ->
@@ -124,19 +129,22 @@ class WalkReviewViewModel @Inject constructor(
     }
 
     fun onOptionSelected(categoryId: Int, optionId: Int) {
-        _state.update { current ->
-            val updatedCategories = current.categoryList.map { category ->
-                if (category.categoryId == categoryId) {
-                    category.copy(
-                        options = category.options.map { option ->
-                            option.copy(isSelected = option.optionId == optionId)
-                        }
-                    )
-                } else category
+        val updatedList = state.value.categoryList.map { category ->
+            if (category.categoryId == categoryId) {
+                val newOptions = category.options.map { option ->
+                    if (option.optionId == optionId) {
+                        option.copy(isSelected = !option.isSelected)
+                    } else {
+                        option
+                    }
+                }
+                category.copy(options = newOptions)
+            } else {
+                category
             }
-
-            current.copy(categoryList = updatedCategories)
         }
+
+        _state.update { it.copy(categoryList = updatedList) }
     }
 
     fun onTitleTextChanged(text : String) {

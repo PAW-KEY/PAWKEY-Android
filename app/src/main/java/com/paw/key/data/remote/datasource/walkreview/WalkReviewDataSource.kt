@@ -3,6 +3,7 @@ package com.paw.key.data.remote.datasource.walkreview
 import com.paw.key.data.dto.request.walkcourse.WalkCourseRequestDto
 import com.paw.key.data.dto.request.walkreview.WalkCourseReviewRequestDto
 import com.paw.key.data.dto.response.BaseResponse
+import com.paw.key.data.dto.response.walkreview.WalkReviewResponseDto
 import com.paw.key.data.service.walkreview.WalkReviewService
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
@@ -17,7 +18,7 @@ class WalkReviewDataSource @Inject constructor(
         userId: Int,
         imageFiles: List<MultipartBody.Part>,
         walkReviewRequestDto: WalkCourseReviewRequestDto
-    ) : BaseResponse<Unit> {
+    ) : BaseResponse<WalkReviewResponseDto> {
         val jsonString = Json.encodeToString(WalkCourseReviewRequestDto.serializer(), walkReviewRequestDto)
         val requestBody = jsonString.toRequestBody("application/json".toMediaType())
 

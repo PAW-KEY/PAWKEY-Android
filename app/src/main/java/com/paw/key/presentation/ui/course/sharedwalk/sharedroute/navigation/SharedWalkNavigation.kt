@@ -8,33 +8,42 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
+import androidx.navigation.toRoute
 import com.paw.key.core.navigation.Route
 import com.paw.key.presentation.ui.course.sharedwalk.sharedroute.SharedWalkCourseRoute
 import com.paw.key.presentation.ui.course.walk.navigation.WalkCourse
 import kotlinx.serialization.Serializable
 
 fun NavController.navigateSharedWalkCourse(
+    routeId: Int,
+    pageId : Int,
     navOptions: NavOptions?,
 ) {
-    navigate(SharedWalkCourse, navOptions)
+    navigate(SharedWalkCourse(routeId = routeId, pageId = pageId), navOptions)
 }
 
 @RequiresApi(Build.VERSION_CODES.Q)
 fun NavGraphBuilder.sharedWalkCourseNavGraph(
     paddingValues: PaddingValues,
     navigateUp: () -> Unit,
-    navigateNext: () -> Unit,
+    navigateNext: (Int, Int) -> Unit,
     snackBarHostState: SnackbarHostState,
 ) {
-    composable<SharedWalkCourse> {
+    composable<SharedWalkCourse> { backStackEntry ->
+        val ids = backStackEntry.toRoute<SharedWalkCourse>()
+
         SharedWalkCourseRoute(
             paddingValues = paddingValues,
             navigateUp = navigateUp,
-            navigateNext = navigateNext,
+            navigateNext = { routeId, pageId ->
+                navigateNext(routeId, pageId)
+            },
+            routeId = ids.routeId,
+            pageId = ids.pageId,
             snackBarHostState = snackBarHostState,
         )
     }
 }
 
 @Serializable
-data object SharedWalkCourse : Route
+data class SharedWalkCourse(val pageId: Int, val routeId: Int) : Route

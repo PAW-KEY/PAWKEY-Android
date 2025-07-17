@@ -19,6 +19,7 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import okhttp3.MediaType.Companion.toMediaType
@@ -45,6 +46,8 @@ class SignUpViewModel @Inject constructor(
 
     private var loginEmail: String = ""
     private var loginPassword: String = ""
+
+    private val userId = PreferenceDataStore.getUserId()
 
     init {
         fetchPetTraits()
@@ -225,7 +228,7 @@ class SignUpViewModel @Inject constructor(
     private fun fetchPetTraits() {
         viewModelScope.launch {
             try {
-                val result = repository.getOnboardingPets(userId = 2)
+                val result = repository.getOnboardingPets(userId = userId.first())
                 result.onSuccess { response ->
                     Log.d(
                         "SignUpViewModel",
@@ -272,7 +275,7 @@ class SignUpViewModel @Inject constructor(
     fun fetchRegion() {
         viewModelScope.launch {
             try {
-                val result = regionRepository.getOnboardingRegion(userId = 2)
+                val result = regionRepository.getOnboardingRegion(userId = userId.first())
                 result.onSuccess { response ->
                     Log.d("SignUpViewModel", "Region loaded: ${response.data.districtDtos.size}")
                     _regionList.value = response.data.districtDtos
@@ -426,9 +429,10 @@ class SignUpViewModel @Inject constructor(
                     return@launch
                 }
 
+                Log.d("SignUpViewModel", "Image processing successful ${userId.first()}")
                 // 서버 요청
                 val result = infoRepository.postOnboardingInfo(
-                    userId = 2,
+                    userId = userId.first(),
                     image = imagePart,
                     onboardingInfoRequest = request
                 )

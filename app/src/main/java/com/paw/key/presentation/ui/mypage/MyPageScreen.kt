@@ -17,6 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
@@ -28,9 +29,11 @@ import coil.request.ImageRequest
 import com.paw.key.R
 import com.paw.key.core.designsystem.component.SubChip
 import com.paw.key.core.designsystem.theme.PawKeyTheme
+import com.paw.key.core.util.PreferenceDataStore
 import com.paw.key.presentation.ui.mypage.component.GrayChip
 import com.paw.key.presentation.ui.mypage.state.MyPageState
 import com.paw.key.presentation.ui.mypage.viewmodel.MyPageViewModel
+import kotlinx.coroutines.flow.first
 
 @Composable
 fun MyPageRoute(
@@ -45,10 +48,11 @@ fun MyPageRoute(
     viewModel: MyPageViewModel = hiltViewModel()
 ) {
     val state = viewModel.state.collectAsStateWithLifecycle()
+    val userId = PreferenceDataStore.getUserId()
 
     LaunchedEffect(Unit) {
-        viewModel.getUserProfiles(userId = 2)
-        viewModel.getMyPagePetProfiles(userId = 2)
+        viewModel.getUserProfiles(userId = userId.first())
+        viewModel.getMyPagePetProfiles(userId = userId.first())
     }
 
     MyPageScreen(
@@ -219,7 +223,8 @@ fun PetCard(
                     contentDescription = null,
                     modifier = modifier
                         .size(64.dp)
-                        .clip(CircleShape)
+                        .clip(CircleShape),
+                    contentScale = ContentScale.Crop
                 )
 
                 Spacer(modifier.width(16.dp))

@@ -318,11 +318,19 @@ fun WalkReviewScreen(
             }
 
             item {
+                val emoji = listOf(
+                    "\uD83D\uDE0C",
+                    "\uD83D\uDC36",
+                    "\uD83D\uDEB8",
+                    "\uD83E\uDDFA",
+                    "\uD83C\uDF3F"
+                )
+
                 feedbackList.forEachIndexed { index, category ->
                     WalkReviewFeedbackForm(
                         icon = R.drawable.ic_walk_review_location,
-                        title = category.categoryDescription,
-                        selectedFeedbackItem = category.options.firstOrNull { it.isSelected }?.optionText,
+                        title = "${emoji[index]}${category.categoryDescription}",
+                        selectedFeedbackItems = category.options.filter { it.isSelected }.map { it.optionText },
                         feedbackList = category.options.map { it.optionText },
                         onClickFeedback = { selectedText ->
                             val selectedOption = category.options.find { it.optionText == selectedText }
@@ -331,7 +339,8 @@ fun WalkReviewScreen(
                             }
                         },
                         modifier = Modifier
-                            .padding(top = 12.dp, bottom = 12.dp, start = 16.dp, end = 16.dp)
+                            .padding(top = 12.dp, bottom = 12.dp, start = 16.dp, end = 16.dp),
+                        selectedFeedbackItem = category.options.find { it.isSelected }?.optionText
                     )
                 }
             }
@@ -375,7 +384,6 @@ fun WalkReviewScreen(
                         modifier = Modifier
                             .heightIn(min = 200.dp, max = 400.dp)
                             .padding(top = 10.dp, bottom = 24.dp, start = 16.dp, end = 16.dp)
-                            .imePadding()
                     )
                 }
             }

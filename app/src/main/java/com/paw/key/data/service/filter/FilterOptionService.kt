@@ -7,7 +7,7 @@ import retrofit2.http.Header
 
 
 interface FilterOptionService {
-    @GET ("posts/categories")
+    @GET ("posts/filter")
     suspend fun getFilterOptions(
         @Header("X-USER-ID") userId: Int,
     ): BaseResponse<FilterOptionResponse>

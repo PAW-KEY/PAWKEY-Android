@@ -1,5 +1,7 @@
 package com.paw.key.presentation.ui.home
 
+import DistrictDto
+import android.util.Log
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -13,6 +15,8 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -54,7 +58,6 @@ fun HomeLocationSettingRoute(
     navigateHomeLocationSetting: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-
     HomeLocationSettingScreen(
         paddingValues = paddingValues,
         navigateUp = navigateUp,
@@ -76,7 +79,6 @@ fun HomeLocationSettingScreen(
     val state by viewModel.state.collectAsStateWithLifecycle()
     val regionList by viewModel.regionList.collectAsStateWithLifecycle()
 
-    // 올바른 필드 접근
     val selectedGu = state.selectedLocation.selectedGu
     val selectedDong = state.selectedLocation.selectedDong
 
@@ -164,7 +166,6 @@ fun HomeLocationSettingScreen(
             enabled = isFormValid,
             onClick = {
                 if (isFormValid) {
-                    // 올바른 필드 접근
                     navigateNext(state.selectedLocation.selectedDongId)
                 }
             }

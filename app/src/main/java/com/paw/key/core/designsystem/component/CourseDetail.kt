@@ -7,6 +7,8 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -48,6 +50,7 @@ import com.paw.key.core.util.noRippleClickable
 import com.paw.key.domain.model.entity.walklist.CategoryTop3Entity
 import kotlinx.serialization.json.JsonNull.content
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun CourseDetail(
     title : String,
@@ -164,8 +167,9 @@ fun CourseDetail(
                         .build(),
                     contentDescription = null,
                     modifier = Modifier
-                        .size(44.dp)
-                        .clip(CircleShape)
+                        .size(48.dp)
+                        .clip(CircleShape),
+                    contentScale = ContentScale.Crop
                 )
 
                 Text(
@@ -207,9 +211,10 @@ fun CourseDetail(
             }
 
             // 카테고리 칩들
-            Row(
+            FlowRow (
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
-                modifier = Modifier.padding(vertical = 13.dp)
+                modifier = Modifier.padding(vertical = 13.dp),
+                maxItemsInEachRow = 3,
             ) {
                 categorySummary.forEach { category ->
                     SubChip(text = category)

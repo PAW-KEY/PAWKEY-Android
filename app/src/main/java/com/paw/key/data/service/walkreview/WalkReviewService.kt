@@ -3,6 +3,7 @@ package com.paw.key.data.service.walkreview
 import com.paw.key.data.dto.response.BaseResponse
 import com.paw.key.data.dto.response.walkreview.WalkReviewCategoryResponseDto
 import com.paw.key.data.dto.response.walkreview.WalkReviewInfoResponseDto
+import com.paw.key.data.dto.response.walkreview.WalkReviewResponseDto
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.http.GET
@@ -19,7 +20,7 @@ interface WalkReviewService {
         @Header("X-USER-ID") userId: Int,
         @Part imageFiles: List<MultipartBody.Part>,
         @Part("data") data: RequestBody
-    ): BaseResponse<Unit>
+    ): BaseResponse<WalkReviewResponseDto>
 
     @GET("posts/categories")
     suspend fun getWalkReviewCategory(
