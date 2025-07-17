@@ -22,7 +22,7 @@ import kotlinx.coroutines.flow.first
 @Composable
 fun SavedCourseRoute(
     navigateUp: () -> Unit,
-    navigateNext: () -> Unit,
+    navigateNext: (Int, Int) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: SavedListViewModel = hiltViewModel()
 ) {
@@ -36,10 +36,14 @@ fun SavedCourseRoute(
     SavedCourseListScreen(
         state = state.value,
         navigateUp = navigateUp,
-        navigateNext = navigateNext,
-        onClickLike = {
-            // Todo : postid 네비게이션 연결
-            viewModel.toggleLike(postId = 28, isLiked = false)
+        navigateNext = { routeId, pageId ->
+            navigateNext(routeId, pageId)
+        },
+        /*onClickLike = {
+            //viewModel.toggleLike(postId = , isLiked = false)
+        },*/
+        onClickItem = {
+            //navigateNext(state.)
         },
         modifier = modifier
     )
@@ -49,8 +53,8 @@ fun SavedCourseRoute(
 fun SavedCourseListScreen(
     state: SavedListState,
     navigateUp: () -> Unit,
-    navigateNext: () -> Unit,
-    onClickLike: () -> Unit,
+    navigateNext: (Int, Int) -> Unit,
+    onClickItem: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -80,10 +84,11 @@ fun SavedCourseListScreen(
                     petProfileImageUrl = item.writer.petProfileImageUrl,
                     descriptionTags = item.descriptionTags,
                     isLiked = item.isLiked,
-                    onClickItem = navigateNext,
-                    onClickLike = {
-                        onClickLike()
-                    }
+                    isPublic = item.isPublic,
+                    isMine = item.isMine,
+                    onClickItem = {
+                        navigateNext(item.routeId, item.postId)
+                    },
                 )
             }
         }
@@ -97,8 +102,11 @@ fun SavedCourseListScreenPreview() {
         SavedCourseListScreen(
             state = SavedListState(),
             navigateUp = {},
-            navigateNext = {},
-            onClickLike = {}
+            navigateNext = { _, _ ->
+            },
+            onClickItem = {}
+
+            //onClickLike = {}
         )
     }
 }
