@@ -10,6 +10,8 @@ data class TapMapState(
     val currentLocation: LatLng? = null,
     val isLocationTracking: Boolean = false,
     val isTrackingEnabled: Boolean = false,
+
+    val currentRegion : String? = null,
 )
 
 sealed class TapMapSideEffect {
