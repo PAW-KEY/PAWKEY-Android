@@ -23,7 +23,9 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.paw.key.core.designsystem.component.TopBar
 import com.paw.key.core.designsystem.theme.PawKeyTheme
+import com.paw.key.core.util.PreferenceDataStore
 import com.paw.key.presentation.ui.mypage.viewmodel.PetProfileViewModel
+import kotlinx.coroutines.flow.first
 
 @Composable
 fun PetProfileRoute(
@@ -32,9 +34,10 @@ fun PetProfileRoute(
     viewModel: PetProfileViewModel = hiltViewModel()
 ) {
     val state = viewModel.state.collectAsStateWithLifecycle()
+    val userId = PreferenceDataStore.getUserId()
 
     LaunchedEffect(Unit) {
-        viewModel.getPetProfiles(2)
+        viewModel.getPetProfiles(userId.first())
     }
 
     PetProfileScreen(
@@ -43,6 +46,7 @@ fun PetProfileRoute(
         gender = state.value.gender,
         breed = state.value.breed,
         age = state.value.age,
+        isNeutered = state.value.isNeutered,
         energyLevel = state.value.energyLevel,
         socialLevel = state.value.socialLevel,
         navigateUp = navigateUp,
@@ -59,6 +63,7 @@ fun PetProfileScreen(
     gender: String,
     breed: String,
     age: String,
+    isNeutered: Boolean,
     energyLevel: String,
     socialLevel: String
 ) {
@@ -101,12 +106,22 @@ fun PetProfileScreen(
         PetProfileItem(label = "이름", value = name)
         PetProfileItem(label = "성별", value = displayGender)
 
-        Text(
-            text = "중성화했어요",
-            style = PawKeyTheme.typography.caption12Sb2,
-            color = PawKeyTheme.colors.gray300,
-            modifier = Modifier.padding(start = 16.dp, top = 8.dp, bottom = 8.dp)
-        )
+        if (isNeutered) {
+            Text(
+                text = "중성화했어요",
+                style = PawKeyTheme.typography.caption12Sb2,
+                color = PawKeyTheme.colors.gray300,
+                modifier = Modifier.padding(start = 16.dp, top = 8.dp, bottom = 8.dp)
+            )
+        } else {
+            Text(
+                text = "중성화했어요",
+                style = PawKeyTheme.typography.caption12Sb2,
+                color = PawKeyTheme.colors.gray300,
+                modifier = Modifier.padding(start = 16.dp, top = 8.dp, bottom = 8.dp)
+            )
+        }
+
 
         PetProfileItem(label = "견종", value = breed)
         PetProfileItem(label = "나이", value = age)
@@ -166,7 +181,10 @@ fun PetProfileItem(
     label: String,
     value: String
 ) {
-    Column(modifier = Modifier.padding(start = 16.dp, bottom = 8.dp)) {
+    Column(
+        modifier = Modifier
+            .padding(start = 16.dp, bottom = 8.dp)
+    ) {
         Text(
             text = label,
             style = PawKeyTheme.typography.body14R,
@@ -175,7 +193,7 @@ fun PetProfileItem(
         Text(
             text = value,
             style = PawKeyTheme.typography.head18Sb,
-            color = PawKeyTheme.colors.black
+            color = PawKeyTheme.colors.green500
         )
     }
 }
@@ -192,7 +210,8 @@ fun PetProfileScreenPreview() {
             energyLevel = "활동적이에요",
             socialLevel = "불편해해요",
             imageUrl = null,
-            navigateUp = {}
+            navigateUp = {},
+            isNeutered = true
         )
     }
 }
