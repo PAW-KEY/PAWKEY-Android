@@ -22,7 +22,7 @@ import kotlinx.coroutines.flow.first
 @Composable
 fun ArchivedCourseRoute(
     navigateUp: () -> Unit,
-    navigateNext: () -> Unit,
+    navigateNext: (Int, Int) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: ArchivedListViewModel = hiltViewModel()
 ) {
@@ -36,7 +36,9 @@ fun ArchivedCourseRoute(
     ArchivedCourseListScreen(
         state = state.value,
         navigateUp = navigateUp,
-        navigateNext = navigateNext,
+        navigateNext = { routeId, pageId ->
+            navigateNext(routeId, pageId)
+        },
         onClickLike = { postId, isLiked ->
             viewModel.toggleLike(postId = postId, isLiked = isLiked)
         },
@@ -48,7 +50,7 @@ fun ArchivedCourseRoute(
 fun ArchivedCourseListScreen(
     state: ArchivedListState,
     navigateUp: () -> Unit,
-    navigateNext: () -> Unit,
+    navigateNext: (Int, Int) -> Unit,
     onClickLike: (postId: Int, isLiked: Boolean) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -75,8 +77,11 @@ fun ArchivedCourseListScreen(
                     descriptionTags = item.descriptionTags,
                     isLiked = null,
                     isPublic = item.isPublic, // 눈아이콘만 표시
-                    onClickItem = navigateNext,
-                    onClickLike = null
+                    onClickItem = {
+                        navigateNext(item.routeId.toInt(), item.postId)
+                    },
+                    onClickLike = null,
+                    isMine = false
                 )
             }
         }
@@ -90,7 +95,8 @@ fun ArchivedCourseListScreenPreview() {
         ArchivedCourseListScreen(
             state = ArchivedListState(),
             navigateUp = {},
-            navigateNext = {},
+            navigateNext = { _, _ ->
+            },
             onClickLike = { _, _ ->
             }
         )
