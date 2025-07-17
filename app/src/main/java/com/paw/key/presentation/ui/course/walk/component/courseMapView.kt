@@ -125,6 +125,15 @@ fun courseMapView(
         }
     }
 
+
+    LaunchedEffect(poiPoints) {
+        kakaoMapState?.moveCamera(
+            CameraUpdateFactory.fitMapPoints(
+                poiPoints.toTypedArray(), 150, 15
+            )
+        )
+    }
+
     /*val fusedLocationClient = remember { LocationServices.getFusedLocationProviderClient(context) }
 
     val locationRequest = remember {
