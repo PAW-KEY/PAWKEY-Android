@@ -159,6 +159,7 @@ fun TabListScreen(
                                 descriptionTags = post.descriptionTags,
                                 postId = post.postId,
                                 createdAt = post.createdAt,
+                                isMine = post.isMine,
                                 isLiked = post.isLike,
                                 onClickItem = {
                                     navigateToDetail(post.postId, post.routeId)
