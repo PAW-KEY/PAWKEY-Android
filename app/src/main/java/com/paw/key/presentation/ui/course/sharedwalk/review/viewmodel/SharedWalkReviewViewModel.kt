@@ -40,16 +40,16 @@ class SharedWalkReviewViewModel @Inject constructor(
         viewModelScope.launch {
             val categoryList = state.value.categoryList.map { category ->
                 SharedWalkReviewCategory(
-                    categoryId = category.categoryId,
-                    selectedOptionIds = category.options.filter { it.isSelected }.map { it.optionId }
+                    reviewCategoryId = category.categoryId,
+                    selectedReviewOptionIds = category.options.filter { it.isSelected }.map { it.optionId }
                 )
             }
 
             val review = SharedWalkReviewEntity (
                 routeId = routeId,
-                categories = categoryList,
+                selectedReviewSetList = categoryList,
             )
-
+            Log.e("sharedWalkReview", "${routeId}, ${userId}")
             Log.d("SharedWalkReviewSideEffect", "리뷰 : $review")
             sharedRepository.postSharedWalkReviewRegister(
                 userId = userId,
@@ -124,11 +124,16 @@ class SharedWalkReviewViewModel @Inject constructor(
     }
 
 
-    fun onClickSharedReview() {
+    fun onClickSharedReview(userId: Int, routeId: Int) {
         _state.update {
             it.copy(
                 isDialogVisible = true
             )
         }
+
+        postSharedWalkReview(
+            userId = userId,
+            routeId = routeId
+        )
     }
 }
