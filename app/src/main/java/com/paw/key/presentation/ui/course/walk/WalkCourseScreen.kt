@@ -72,6 +72,7 @@ import com.paw.key.R
 import com.paw.key.core.designsystem.component.LoadingScreen
 import com.paw.key.core.designsystem.component.PawkeyButton
 import com.paw.key.core.designsystem.theme.PawKeyTheme
+import com.paw.key.core.util.PreferenceDataStore
 import com.paw.key.core.util.UiState
 import com.paw.key.core.util.noRippleClickable
 import com.paw.key.presentation.ui.course.walk.component.WalkRecordItem
@@ -85,6 +86,7 @@ import com.paw.key.presentation.ui.course.walk.viewmodel.WalkCourseViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
@@ -114,6 +116,8 @@ fun WalkCourseRoute(
     val scope = rememberCoroutineScope()
     val lifecycleOwner = LocalLifecycleOwner.current
     val context = LocalContext.current
+
+    val userId = PreferenceDataStore.getUserId()
 
     val totalTime by viewModel.totalTime.collectAsStateWithLifecycle()
 
@@ -398,7 +402,9 @@ fun WalkCourseRoute(
                         )
                     }
 
-                    viewModel.postWalkCourseData(2)
+                    scope.launch {
+                        viewModel.postWalkCourseData(userId = userId.first())
+                    }
                 },
                 onCaptured = { bitmap ->
                     viewModel.onMapCaptured(bitmap)

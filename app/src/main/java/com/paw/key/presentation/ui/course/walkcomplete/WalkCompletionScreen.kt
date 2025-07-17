@@ -116,12 +116,12 @@ fun WalkCompletionScreen(
                     shape = RoundedCornerShape(12.dp)
                 )
         ) {
-            // Todo : 사진 받아올 곳
+            /*// Todo : 사진 받아올 곳
             WalkCompleteHeader(
                 bitmap = null,
                 modifier = Modifier
                     .padding(top = 16.dp, start = 16.dp, end = 16.dp)
-            )
+            )*/
 
             bitmap?.asImageBitmap()?.let {
                 Image(
@@ -129,7 +129,7 @@ fun WalkCompletionScreen(
                     contentDescription = "My Image",
                     modifier = Modifier
                         .padding(start = 8.dp, end = 8.dp)
-                        .padding(top = 12.dp)
+                        .padding(top = 32.dp)
                         .clip(RoundedCornerShape(8.dp))
                 )
             }

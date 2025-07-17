@@ -86,7 +86,7 @@ class WalkCourseViewModel @Inject constructor(
                     CoordinateEntity(it.longitude, it.latitude)
                 },
                 distance = state.value.totalDistance.toInt(),
-                duration = (_totalTime.value).toInt(),
+                duration = (_totalTime.value / 1000).toInt(),
                 startedAt = state.value.startedAt,
                 endedAt = state.value.endedAt,
                 stepCount = state.value.steps.toInt()
