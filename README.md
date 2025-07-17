@@ -1,10 +1,5 @@
 # PAWKEY
-### 36th AT SOPT - PAWKEY 안드로이드 레포지토리
-![image](https://github.com/user-attachments/assets/c4f5ed8f-bc90-4e61-a045-ff4da259d441)
-<br>
-
-`📅 2025.06.21 ~ ing 📅`
-
+### 36th AT SOPT - PAWKEY 안드로이드 레포지토리   `📅 2025.06.21 ~ ing 📅`
 <br>
 
 ##  PAWKEY
@@ -46,10 +41,10 @@
 <br><br>
 
 ## 🖥️ Contributors
-| [손민성](https://github.com/sonms) | [손주완](https://github.com/vvan2) | [송지우](https://github.com/JiWoo1261) |
+| 👑[손민성](https://github.com/sonms) | [손주완](https://github.com/vvan2) | [송지우](https://github.com/JiWoo1261) |
 |:------------------------------------:|:-------------------------:|:------------------------------:|
-| <img src="https://avatars.githubusercontent.com/u/71806591?v=4" alt="" width="210"/> | <img src="https://avatars.githubusercontent.com/u/113279387?v=4" alt="" width="210"/> | <img src="https://avatars.githubusercontent.com/u/133748256?v=4" alt="" width="210"/> |
-|        |            |          |
+| <img src="https://github.com/user-attachments/assets/768c5d45-7bf4-4f6d-89a3-760d210a0f48" alt="" width="210"/> | <img src="https://github.com/user-attachments/assets/beee5163-e3bf-4381-b341-1848845ed49a" alt="" width="210"/> | <img src="https://github.com/user-attachments/assets/004db389-122d-4a8b-9974-3edce104ee61" alt="" width="210"/> |
+|`트랙킹`  `산책기록하기`  `산책 탭`<br> `루트 상세보기`  `공유루트`  `후기 작성`| `스플래시`  `온보딩`  `회원가입/정보입력`<br>`로그인` `홈`  `옵션선택/경로추천`  | `마이페이지`  `저장한 산책 루트` <br> `유저/반려견 프로필`  `내가 기록한 산책 루트`        |
 
 <br>
 
