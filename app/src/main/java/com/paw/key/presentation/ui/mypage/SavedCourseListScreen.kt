@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -13,8 +14,10 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.paw.key.core.designsystem.component.CourseCard
 import com.paw.key.core.designsystem.component.TopBar
 import com.paw.key.core.designsystem.theme.PawKeyTheme
+import com.paw.key.core.util.PreferenceDataStore
 import com.paw.key.presentation.ui.mypage.state.SavedListState
 import com.paw.key.presentation.ui.mypage.viewmodel.SavedListViewModel
+import kotlinx.coroutines.flow.first
 
 @Composable
 fun SavedCourseRoute(
@@ -24,6 +27,11 @@ fun SavedCourseRoute(
     viewModel: SavedListViewModel = hiltViewModel()
 ) {
     val state = viewModel.state.collectAsStateWithLifecycle()
+    val userId = PreferenceDataStore.getUserId()
+//    LaunchedEffect(Unit) {
+//        viewModel.getSavedList(userId = userId.first())
+//    }
+
 
     SavedCourseListScreen(
         state = state.value,
