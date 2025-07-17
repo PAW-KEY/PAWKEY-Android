@@ -22,6 +22,10 @@ data class PostDto (
     val isLike : Boolean,
     @SerialName("title")
     val title : String,
+    @SerialName("isMine")
+    val isMine : Boolean,
+    @SerialName("isPublic")
+    val isPublic : Boolean,
     @SerialName("representativeImageUrl")
     val representativeImageUrl : String,
     @SerialName("routeId")
@@ -56,7 +60,9 @@ fun PostDto.toEntity(): PostEntity {
         title = title,
         representativeImageUrl = representativeImageUrl,
         routeId = routeId,
+        isMine = isMine,
         writer = writer.toEntity(),
+        isPublic = isPublic,
         descriptionTags = descriptionTags
     )
 }

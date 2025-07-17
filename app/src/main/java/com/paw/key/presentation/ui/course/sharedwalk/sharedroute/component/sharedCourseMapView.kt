@@ -131,6 +131,12 @@ fun sharedWalkCourseMapView(
 
             currentDrawnRouteLine = kakaoMap.routeLineManager?.layer?.addRouteLine(routeLineOptions)
             currentDrawnRouteLine?.show()
+
+            kakaoMapState?.moveCamera(
+                CameraUpdateFactory.fitMapPoints(
+                    poiPoints.toTypedArray(), 150, 15
+                )
+            )
         }
     }
 
@@ -233,8 +239,10 @@ fun sharedWalkCourseMapView(
         }
     }
 
-    LaunchedEffect(Unit) {
-        trackingManager?.startTracking(centerLabel)
+    LaunchedEffect(centerLabel, trackingManager) {
+        if (centerLabel != null && trackingManager != null) {
+            trackingManager?.startTracking(centerLabel)
+        }
     }
 
     LaunchedEffect(isPauseTracking) {

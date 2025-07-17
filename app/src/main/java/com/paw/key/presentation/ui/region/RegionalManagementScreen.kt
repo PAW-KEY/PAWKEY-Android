@@ -21,6 +21,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -37,10 +38,13 @@ import com.kakao.vectormap.MapView
 import com.paw.key.core.designsystem.component.CustomSnackBar
 import com.paw.key.core.designsystem.component.PawkeyButton
 import com.paw.key.core.designsystem.theme.PawKeyTheme
+import com.paw.key.core.util.PreferenceDataStore
 import com.paw.key.core.util.UiState
 import com.paw.key.presentation.ui.region.component.regionalMapView
 import com.paw.key.presentation.ui.region.state.RegionContract
 import com.paw.key.presentation.ui.region.viewmodel.RegionViewModel
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 
 @Composable
 fun RegionalManagementRoute(
@@ -56,11 +60,12 @@ fun RegionalManagementRoute(
 
     val lifecycleOwner = LocalLifecycleOwner.current
     val context = LocalContext.current
+    val userId = PreferenceDataStore.getUserId()
+    val scope = rememberCoroutineScope()
 
     LaunchedEffect(Unit) {
-        Log.e("regregionId", regionId.toString())
         viewModel.getRegionGeometry(
-            userId = 2,
+            userId = userId.first(),
             regionId = regionId,
         )
     }
@@ -69,9 +74,12 @@ fun RegionalManagementRoute(
         viewModel.sideEffect.flowWithLifecycle(lifecycleOwner.lifecycle)
             .collect { sideEffect ->
                 when (sideEffect) {
-                    is RegionContract.RegionSideEffect.ShowSnackBar -> snackBarHostState.showSnackbar(
-                        sideEffect.message
-                    )
+                    is RegionContract.RegionSideEffect.ShowSnackBar -> {
+                        snackBarHostState.showSnackbar(
+                            sideEffect.message
+                        )
+                        navigateNext()
+                    }
 
                     RegionContract.RegionSideEffect.NavigateNext -> navigateNext()
                     RegionContract.RegionSideEffect.NavigateUp -> navigateUp()
@@ -96,8 +104,12 @@ fun RegionalManagementRoute(
                 preRegionName = state.preRegionName,
                 regionName = state.regionName,
                 onClickButton = {
-                    viewModel.patchRegion(userId = 2, regionId = regionId)
-                    navigateNext()
+                    scope.launch {
+                        viewModel.patchRegion(
+                            userId = userId.first(),
+                            regionId = regionId
+                        )
+                    }
                 },
                 modifier = modifier
             )
