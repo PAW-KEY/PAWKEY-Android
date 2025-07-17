@@ -42,7 +42,7 @@ class SavedListViewModel @Inject constructor(
                 .onSuccess { result ->
                     _state.update {
                         it.copy(
-                            courseList = result.posts
+                            courseList = result.posts.filter { post -> !post.isMine }
                         )
                     }
                 }

@@ -51,7 +51,8 @@ class MyPageViewModel @Inject constructor(
                         petAge = it.first().age.toString(),
                         petGender = it.first().gender,
                         petImageUrl = it.first().imageUrl,
-                        petTags = it.first().traits.map { trait -> trait.category }
+                        petTags = it.first().traits.map { trait -> trait.option},
+                        walkCount = it.first().walkCount.toString()
                     )
                 }.onFailure {
                     _sideEffect.emit(MyPageSideEffect.ShowSnackBar("펫 프로필 불러오기 실패"))

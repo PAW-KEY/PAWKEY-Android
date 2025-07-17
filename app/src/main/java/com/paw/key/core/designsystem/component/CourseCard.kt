@@ -34,9 +34,10 @@ fun CourseCard(
     postId: Int,
     title: String,
     createdAt: String,
-    isLiked: Boolean,
+    isLiked: Boolean? = null,   // 저장한 루트에서만 사용
+    isPublic: Boolean? = null, // 기록한 루트에서만 사용
     onClickItem: () -> Unit,
-    onClickLike: (Boolean) -> Unit,
+    onClickLike: ((Boolean) -> Unit)? = null, // null이면 클릭 불가
     petName: String,
     modifier: Modifier = Modifier,
     representativeImageUrl: String? = null,
@@ -127,21 +128,6 @@ fun CourseCard(
                             .clip(CircleShape),
                         contentScale = ContentScale.Crop
                     )
-                } else {
-                    Box(
-                        modifier = Modifier
-                            .size(40.dp)
-                            .clip(CircleShape)
-                            .background(PawKeyTheme.colors.gray200),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Icon(
-                            imageVector = ImageVector.vectorResource(id = R.drawable.ic_heart_default),
-                            contentDescription = null,
-                            tint = PawKeyTheme.colors.gray400,
-                            modifier = Modifier.size(20.dp)
-                        )
-                    }
                 }
 
                 Spacer(modifier = Modifier.width(10.dp))
@@ -170,15 +156,32 @@ fun CourseCard(
 
                 Spacer(modifier = Modifier.weight(1f))
 
-                Icon(
-                    imageVector = if (isLiked)
-                        ImageVector.vectorResource(id = R.drawable.ic_heart_filled)
-                    else
-                        ImageVector.vectorResource(id = R.drawable.ic_heart_default),
-                    contentDescription = "좋아요",
-                    tint = Color.Unspecified,
-                    modifier = Modifier.clickable { onClickLike(!isLiked) } //클릭하면 외부에 알려줌
-                )
+                when {
+                    isLiked != null -> {
+                        Icon(
+                            imageVector = if (isLiked)
+                                ImageVector.vectorResource(id = R.drawable.ic_heart_filled)
+                            else
+                                ImageVector.vectorResource(id = R.drawable.ic_heart_default),
+                            contentDescription = "좋아요",
+                            tint = Color.Unspecified,
+                            modifier = Modifier.clickable {
+                                onClickLike?.invoke(!isLiked)
+                            }
+                        )
+                    }
+
+                    isPublic != null -> {
+                        Icon(
+                            imageVector = if (isPublic)
+                                ImageVector.vectorResource(id = R.drawable.ic_eye_filled_valid)
+                            else
+                                ImageVector.vectorResource(id = R.drawable.ic_eye_filled_invalid),
+                            contentDescription = "공개여부",
+                            tint = Color.Unspecified
+                        )
+                    }
+                }
             }
         }
 

@@ -24,6 +24,10 @@ data class ArchivedDto(
     val createdAt: String,
     @SerialName("isLike")
     val isLike: Boolean,
+    @SerialName("isPublic")
+    val isPublic: Boolean,
+    @SerialName("isMine")
+    val isMine: Boolean,
     @SerialName("title")
     val title: String,
     @SerialName("representativeImageUrl")
@@ -43,7 +47,9 @@ data class ArchivedDto(
         representativeImageUrl = representativeImageUrl ?: "",
         routeId = routeId.toLong(),
         writer = listOf(writer.toEntity()),
-        descriptionTags = descriptionTags
+        descriptionTags = descriptionTags,
+        isPublic = isPublic,
+        isMine = isMine
     )
 }
 
