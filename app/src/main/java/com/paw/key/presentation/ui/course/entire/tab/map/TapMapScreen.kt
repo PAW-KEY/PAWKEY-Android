@@ -126,6 +126,10 @@ fun TapMapRoute(
         }
     }
 
+    LaunchedEffect(Unit) {
+        viewModel.loadInitialLocation()
+    }
+
     when (state.initialLocationState) {
         is UiState.Loading -> {
             LoadingScreen()
@@ -147,6 +151,7 @@ fun TapMapRoute(
                 navigateUp = navigateUp,
                 navigateNext = navigateNext,
                 snackBarHostState = snackBarHostState,
+                regionName = state.currentRegion ?: "영등포구 여의도동",
                 mapView = mapView,
                 onClickTracking = {
                     viewModel.updateState {
@@ -170,6 +175,7 @@ fun TapMapScreen(
     navigateUp: () -> Unit,
     navigateNext: () -> Unit,
     snackBarHostState: SnackbarHostState,
+    regionName: String,
     onClickTracking: () -> Unit,
     mapView: MapView,
     modifier: Modifier = Modifier,
@@ -194,7 +200,7 @@ fun TapMapScreen(
             )
 
             Text(
-                text = "강남구 역삼동",
+                text = regionName,
                 modifier = Modifier
                     .align(Alignment.TopStart)
                     .padding(top = 18.dp, start = 18.dp)
