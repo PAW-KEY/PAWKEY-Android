@@ -81,7 +81,7 @@ fun TapMapRoute(
                             currentLocation = newLocation
                         )
                     }
-               }
+                }
             }
         }
     }

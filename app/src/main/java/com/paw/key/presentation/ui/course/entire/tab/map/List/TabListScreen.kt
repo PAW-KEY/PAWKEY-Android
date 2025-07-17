@@ -3,14 +3,26 @@ package com.paw.key.presentation.ui.course.entire.tab.map.List
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -30,45 +42,42 @@ import com.paw.key.presentation.ui.course.entire.tab.map.List.viewmodel.TapListV
 @Composable
 private fun PreviewTabListScreen() {
     PawKeyTheme {
-        TabListScreen(
-            navigateToDetail = {},
-            onClickLike = { _, _ -> }
-        )
     }
 }
 
 @Composable
 fun TapListRoute(
-    navigateToDetail: () -> Unit,
+    navigateToDetail: (Int, Int) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: TapListViewModel = hiltViewModel(),
 ) {
+    LaunchedEffect(Unit) {
+        viewModel.loadInitialPosts()
+        viewModel.loadFilterOptions()
+    }
+
     TabListScreen(
         modifier = modifier,
-        navigateToDetail = navigateToDetail,
-        viewModel = viewModel,
-        onClickLike = {
-            postId, isLiked ->
-            viewModel.toggleLike(
-                userId = 2,
-                postId = postId
-            )
-        }
+        navigateToDetail = { postId, routeId ->
+            navigateToDetail(postId, routeId)
+        },
+        viewModel = viewModel
     )
 }
 
 @Composable
 fun TabListScreen(
-    navigateToDetail: () -> Unit,
+    navigateToDetail: (Int, Int) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: TapListViewModel = hiltViewModel(),
-    onClickLike: (postId: Int, isLiked: Boolean) -> Unit
 ) {
     var showBottomSheet by remember { mutableStateOf(false) }
     val listState by viewModel.state.collectAsStateWithLifecycle()
+    val filterValid = listState.isValid
 
     Column(
-        modifier = modifier.fillMaxSize()
+        modifier = modifier
+            .fillMaxSize()
     ) {
         Row(
             horizontalArrangement = Arrangement.spacedBy(8.dp),
@@ -82,14 +91,37 @@ fun TabListScreen(
                 imageVector = ImageVector.vectorResource(R.drawable.ic_course_optin_filter),
                 contentDescription = "filter",
                 tint = Color.Unspecified,
-                modifier = Modifier.noRippleClickable {
-                    showBottomSheet = true
+                modifier = Modifier
+                    .noRippleClickable {
+                        showBottomSheet = true
+                    }
+            )
+
+            if (filterValid) {
+                if (listState.selectedSortTime.isNotEmpty()) {
+                    OptionChip(text = listState.selectedSortTime)
                 }
-            )
-            OptionChip(
-                text = if (viewModel.isFilterApplied()) "필터 적용됨" else "선택한 옵션이 없어요",
-                isActionChip = true
-            )
+                if (listState.selectedMood.isNotEmpty()) {
+                    OptionChip(text = listState.selectedMood)
+                }
+                if (listState.selectedDogFriend.isNotEmpty()) {
+                    OptionChip(text = listState.selectedDogFriend)
+                }
+                listState.selectedSafety.forEach {
+                    OptionChip(text = it)
+                }
+                listState.selectedConvenience.forEach {
+                    OptionChip(text = it)
+                }
+                listState.selectedEnvironment.forEach {
+                    OptionChip(text = it)
+                }
+            } else {
+                OptionChip(
+                    text = "선택한 옵션이 없어요",
+                    isActionChip = true
+                )
+            }
         }
 
         LazyColumn(
@@ -117,27 +149,21 @@ fun TabListScreen(
                     if (posts.isNotEmpty()) {
                         items(posts) { post ->
                             CourseCard(
-                                postId = post.postId,
                                 title = post.title,
                                 petName = post.writer.petName,
-                                createdAt = post.createdAt,
-                                isLiked = post.isLike,
                                 representativeImageUrl = post.representativeImageUrl,
                                 petProfileImageUrl = post.writer.petProfileImageUrl,
                                 descriptionTags = post.descriptionTags,
-                                onClickLike = { isLiked ->
-                                    viewModel.toggleLike(
-                                        userId = 2,
-                                        postId = post.postId
-                                    )
-                                    onClickLike(
-                                        post.postId,
-                                        isLiked
-
-                                    )
-
+                                postId = post.postId,
+                                createdAt = post.createdAt,
+                                isLiked = post.isLike,
+                                onClickItem = {
+                                    //showBottomSheet = true
+                                    navigateToDetail(post.postId, post.routeId)
                                 },
-                                onClickItem = { navigateToDetail() }
+                                onClickLike = {
+                                    //viewModel.toggleLike(postId = post.postId)
+                                }
                             )
                         }
                     } else {

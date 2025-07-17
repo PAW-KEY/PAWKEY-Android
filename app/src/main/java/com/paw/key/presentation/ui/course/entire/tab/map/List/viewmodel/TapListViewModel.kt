@@ -1,7 +1,9 @@
 package com.paw.key.presentation.ui.course.entire.tab.map.List.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.paw.key.core.util.PreferenceDataStore
 import com.paw.key.data.dto.request.list.PostsListRequestDto
 import com.paw.key.data.dto.request.list.TraitList
 import com.paw.key.domain.repository.LikeRepository
@@ -12,6 +14,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -22,16 +25,12 @@ class TapListViewModel @Inject constructor(
     private val postsListRepository: PostsListRepository,
     private val likeRepository: LikeRepository
 ) : ViewModel() {
-
     private val _state = MutableStateFlow(TapListContract.TapListState())
     val state: StateFlow<TapListContract.TapListState> = _state.asStateFlow()
 
-    init {
-        loadFilterOptions()
-        loadInitialPosts()
-    }
+    private val userId = PreferenceDataStore.getUserId()
 
-    private fun loadInitialPosts() {
+    fun loadInitialPosts() {
         viewModelScope.launch {
             _state.update { it.copy(isLoading = true) }
             println("POST 요청 시작 - 초기 데이터 로딩 (null 값들)")
@@ -51,14 +50,16 @@ class TapListViewModel @Inject constructor(
                 println("요청 데이터: $request")
 
                 postsListRepository.postList(
-                    userId = 2,
+                    userId = userId.first(),
                     request = request
                 ).onSuccess { listEntity ->
-                    println("응답 성공 - posts 개수: ${listEntity.posts.size}")
+                    val filteredPosts = listEntity.posts.filter { !it.isMine }
+                    println("응답 성공 - 내 게시물 제외된 posts 개수: ${filteredPosts.size}")
+
                     _state.update {
                         it.copy(
                             isLoading = false,
-                            postsResult = listEntity
+                            postsResult = listEntity.copy(posts = filteredPosts)
                         )
                     }
                 }.onFailure { exception ->
@@ -76,11 +77,14 @@ class TapListViewModel @Inject constructor(
 
     fun loadFilterOptions() {
         viewModelScope.launch {
-            filterOptionRepository.getFilterOptions(userId = 2)
+            filterOptionRepository.getFilterOptions(userId = userId.first())
                 .onSuccess { filterEntity ->
                     _state.update {
-                        it.copy(filterOptions = filterEntity)
+                        it.copy(
+                            filterOptions = filterEntity
+                        )
                     }
+                    Log.e("filterOptions", filterEntity.toString())
                 }
                 .onFailure { exception ->
                     exception.printStackTrace()
@@ -92,11 +96,64 @@ class TapListViewModel @Inject constructor(
         _state.update { it.copy(selectedSortOption = option) }
     }
 
+    fun updateSortTime(option: String) {
+        when (option) {
+            "21분 이내" -> {
+                _state.update {
+                    it.copy(
+                        selectedSortTimeStart = 0,
+                        selectedSortTimeEnd = 21
+                    )
+                }
+            }
+            "21~40분" -> {
+                _state.update {
+                    it.copy(
+                        selectedSortTimeStart = 21,
+                        selectedSortTimeEnd = 40
+                    )
+                }
+            }
+            "41~60분" -> {
+                _state.update {
+                    it.copy(
+                        selectedSortTimeStart = 41,
+                        selectedSortTimeEnd = 60
+                    )
+                }
+            }
+            "1시간 이상" -> {
+                _state.update {
+                    it.copy(
+                        selectedSortTimeStart = 61,
+                        selectedSortTimeEnd = null
+                    )
+                }
+            }
+            else -> {
+                _state.update {
+                    it.copy(
+                        selectedSortTimeStart = null,
+                        selectedSortTimeEnd = null
+                    )
+                }
+            }
+        }
 
+        _state.update {
+            it.copy(
+                selectedSortTime = if (it.selectedSortTime == option) "" else option
+            )
+        }
+    }
 
-    fun toggleLike(userId: Int, postId: Int) {
+    fun toggleLike(postId: Int, isLiked: Boolean) {
         viewModelScope.launch {
-            likeRepository.likeCourse(userId = 2, postId = 6)
+            if (isLiked) {
+                likeRepository.unlikeCourse(userId = userId.first(), postId = postId)
+            } else {
+                likeRepository.likeCourse(userId = userId.first(), postId = postId)
+            }
         }
     }
 
@@ -149,6 +206,10 @@ class TapListViewModel @Inject constructor(
         }
     }
 
+    fun toggleTimeExpanded() {
+        _state.update { it.copy(isTimeExpanded = !it.isTimeExpanded) }
+    }
+
     fun toggleMoodExpanded() {
         _state.update { it.copy(isMoodExpanded = !it.isMoodExpanded) }
     }
@@ -175,6 +236,7 @@ class TapListViewModel @Inject constructor(
                 selectedSortOption = "",
                 selectedMood = "",
                 selectedDogFriend = "",
+                selectedSortTime = "",
                 selectedSafety = emptyList(),
                 selectedConvenience = emptyList(),
                 selectedEnvironment = emptyList(),
@@ -183,6 +245,7 @@ class TapListViewModel @Inject constructor(
                 isSafetyExpanded = false,
                 isConvenienceExpanded = false,
                 isEnvironmentExpanded = false,
+                isTimeExpanded = false
             )
         }
         loadInitialPosts()
@@ -198,13 +261,13 @@ class TapListViewModel @Inject constructor(
                 val selectedOptions = buildSelectedOptionsList(currentState)
 
                 val request = PostsListRequestDto(
-                    durationStart = 0,
-                    durationEnd = 0,
+                    durationStart = state.value.selectedSortTimeStart,
+                    durationEnd = state.value.selectedSortTimeEnd,
                     selectedOptions = selectedOptions.ifEmpty { null }
                 )
 
                 postsListRepository.postList(
-                    userId = 2,
+                    userId = userId.first(),
                     request = request
                 ).onSuccess { listEntity ->
                     _state.update {
@@ -229,6 +292,8 @@ class TapListViewModel @Inject constructor(
     private fun buildSelectedOptionsList(state: TapListContract.TapListState): List<TraitList> {
         val selectedOptions = mutableListOf<TraitList>()
         val filterOptions = state.filterOptions ?: return emptyList()
+
+
 
         filterOptions.categoryList?.forEach { category ->
             val selectedOptionIds = mutableListOf<Int>()
@@ -292,20 +357,4 @@ class TapListViewModel @Inject constructor(
     fun isFilterApplied(): Boolean {
         return isAllOptionsSelected()
     }
-
-//    fun toggleLike(postId: Int, isLiked: Boolean) {
-//        viewModelScope.launch {
-//            _state.update { state ->
-//                val updatedPosts = state.postsResult?.posts?.map {
-//                    if (it.postId == postId) it.copy(isLike = isLiked) else it
-//                } ?: emptyList()
-//
-//                val updatedPostsResult = state.postsResult?.copy(posts = updatedPosts)
-//
-//                state.copy(
-//                    postsResult = updatedPostsResult
-//                )
-//            }
-//        }
-//    }
 }
