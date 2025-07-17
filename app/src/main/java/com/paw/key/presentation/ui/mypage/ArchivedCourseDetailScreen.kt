@@ -3,7 +3,6 @@ package com.paw.key.presentation.ui.mypage
 import android.app.Activity
 import android.util.Log
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -12,16 +11,16 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -35,24 +34,27 @@ import com.paw.key.core.designsystem.component.PawkeyButton
 import com.paw.key.core.designsystem.component.TopBar
 import com.paw.key.core.designsystem.theme.PawKeyTheme
 import com.paw.key.core.designsystem.theme.White1
+import com.paw.key.core.util.PreferenceDataStore
 import com.paw.key.domain.model.entity.walklist.CategoryTop3Entity
 import com.paw.key.presentation.ui.mypage.viewmodel.ArchivedDetailViewModel
+import kotlinx.coroutines.flow.first
 
 @Composable
 fun ArchivedDetailRoute(
     navigateUp: () -> Unit,
-    navigateToSharedWalk: () -> Unit,
-    routeId: Int,
-    pageId: Int,
+    navigateToSharedWalk: (Int, Int) -> Unit,
+    routeId : Int,
+    pageId : Int,
     modifier: Modifier = Modifier,
     viewModel: ArchivedDetailViewModel = hiltViewModel(),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+    val userId = PreferenceDataStore.getUserId()
 
     LaunchedEffect(Unit) {
-        Log.d("LaunchedEffect", "LaunchedEffect: $routeId")
-        viewModel.getWalkDetail(2, 20)
-        viewModel.getWalkTopPopular(2, 3)
+        Log.e("ArchivedDetailRoute", "userId: ${userId.first()}, pageId: $pageId")
+        viewModel.getWalkDetail(userId.first(), pageId)
+        viewModel.getWalkTopPopular(userId.first(), routeId)
     }
 
     ArchivedCourseDetailScreen(
@@ -76,7 +78,10 @@ fun ArchivedDetailRoute(
         },
 
         navigateUp = navigateUp,
-        navigateToSharedWalk = navigateToSharedWalk,
+        navigateToSharedWalk = {
+            Log.e("TAG", "ArchivedDetailRoute: $routeId, $pageId", )
+            navigateToSharedWalk(routeId, pageId)
+        },
         modifier = modifier
     )
 }
@@ -104,19 +109,27 @@ fun ArchivedCourseDetailScreen(
     var isImageExpanded by remember { mutableStateOf(false) }
     val isLiked = remember { mutableStateOf(false) }
     val view = LocalView.current
-    val window = (view.context as? Activity)?.window
     val statusBarColor = PawKeyTheme.colors.green500
 
-    SideEffect {
-        window?.let {
-            it.statusBarColor = statusBarColor.toArgb()
-            // it.statusBarColor = PawKeyTheme.colors.green500.toArgb()
+    val context = LocalContext.current
+    val window = (context as? Activity)?.window
+    val previousNavBarColor = remember { window?.navigationBarColor }
+
+    DisposableEffect(Unit) {
+        window?.navigationBarColor = statusBarColor.toArgb()
+
+        onDispose {
+            // 화면에서 벗어날 때 원래 색으로 복원
+            previousNavBarColor?.let {
+                window?.navigationBarColor = it
+            }
         }
     }
 
     Column(
         modifier = modifier
             .fillMaxSize()
+            .background(color = White1)
     ) {
         TopBar(
             title = "내가 기록한 산책 루트",
@@ -163,14 +176,12 @@ fun ArchivedCourseDetailScreen(
                 )
             }
         }
-
-        if (isImageExpanded) {
-            ImageModal(
-                imageUrl = clickImage,
-                onDismiss = { isImageExpanded = false }
-            )
-        }
-
+    }
+    if (isImageExpanded) {
+        ImageModal(
+            imageUrl = clickImage,
+            onDismiss = { isImageExpanded = false }
+        )
     }
 }
 

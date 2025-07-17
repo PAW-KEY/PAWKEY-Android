@@ -5,8 +5,10 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
+import androidx.navigation.toRoute
 import com.paw.key.core.navigation.Route
 import com.paw.key.presentation.ui.mypage.ArchivedDetailRoute
+import com.paw.key.presentation.ui.region.navigation.Regional
 import kotlinx.serialization.Serializable
 
 fun NavController.navigateArchivedDetail(
@@ -19,18 +21,19 @@ fun NavController.navigateArchivedDetail(
 
 fun NavGraphBuilder.archivedDetailNavGraph(
     navigateUp: () -> Unit,
-    navigateToSharedWalk: () -> Unit,
+    navigateToSharedWalk: (Int, Int) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     composable<ArchivedDetail> { backStackEntry ->
-        val routeId = backStackEntry.arguments?.getInt("routeId") ?: 0
-        val pageId = backStackEntry.arguments?.getInt("pageId") ?: 0
+        val archivedDetail = backStackEntry.toRoute<ArchivedDetail>()
 
         ArchivedDetailRoute(
             navigateUp = navigateUp,
-            navigateToSharedWalk = navigateToSharedWalk,
-            routeId = routeId,
-            pageId = pageId,
+            navigateToSharedWalk = { routeId, pageId ->
+                navigateToSharedWalk(routeId, pageId)
+            },
+            routeId = archivedDetail.routeId,
+            pageId = archivedDetail.pageId,
             modifier = modifier
         )
     }
