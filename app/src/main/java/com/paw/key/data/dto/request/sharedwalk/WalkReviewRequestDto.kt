@@ -8,15 +8,15 @@ data class SharedWalkReviewRequestDto(
     @SerialName("routeId")
     val routeId: Int,
 
-    @SerialName("selectedCategories")
-    val selectedCategories: List<SharedWalkReviewCategoryDto>
+    @SerialName("selectedReviewSetList")
+    val selectedReviewSetList: List<SharedWalkReviewCategoryDto>
 )
 
 @Serializable
 data class SharedWalkReviewCategoryDto(
-    @SerialName("categoryId")
-    val categoryId: Int,
+    @SerialName("reviewCategoryId")
+    val reviewCategoryId: Int,
 
-    @SerialName("selectedOptionIds")
-    val selectedOptionIds: List<Int>
+    @SerialName("selectedReviewOptionIds")
+    val selectedReviewOptionIds: List<Int>
 )
