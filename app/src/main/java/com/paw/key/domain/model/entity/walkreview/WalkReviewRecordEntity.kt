@@ -7,6 +7,7 @@ data class WalkReviewRecordEntity(
     val title: String,
     val description: String,
     val isPublic: Boolean,
+    val isMine: Boolean,
     val categories: List<WalkReviewRecordCategory>,
     val routeId: Long
 ) {
@@ -15,6 +16,7 @@ data class WalkReviewRecordEntity(
             title = title,
             description = description,
             isPublic = isPublic,
+            isMine = isMine,
             selectedCategories = categories.map { category ->
                 SelectedCategoryDto(
                     categoryId = category.categoryId,

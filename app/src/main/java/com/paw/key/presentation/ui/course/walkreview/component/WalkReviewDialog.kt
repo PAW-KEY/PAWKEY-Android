@@ -37,7 +37,7 @@ fun WalkReviewDialog(
     
     val progress by animateLottieCompositionAsState(
         composition,
-        iterations = Int.MAX_VALUE,
+        iterations = 1,
     )
 
     Dialog (
