@@ -8,6 +8,8 @@ data class PostEntity(
     val postId: Int,
     val createdAt: String,
     val isLike: Boolean,
+    val isMine: Boolean,
+    val isPublic: Boolean,
     val title: String,
     val representativeImageUrl: String,
     val routeId: Int,
