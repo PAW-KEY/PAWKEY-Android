@@ -18,10 +18,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
 import com.paw.key.R
 import com.paw.key.core.designsystem.component.PawkeyButton
 import com.paw.key.core.designsystem.component.TopBar
@@ -36,7 +39,9 @@ import com.paw.key.presentation.ui.course.walkcomplete.viewmodel.WalkCompleteVie
 fun SharedWalkCompletionRoute(
     paddingValues: PaddingValues,
     navigateUp: () -> Unit,
-    navigateNext: () -> Unit,
+    navigateNext: (Int, Int) -> Unit,
+    routeId: Int,
+    pageId: Int,
     modifier: Modifier = Modifier,
     viewModel: WalkCompleteViewModel = hiltViewModel(),
     isSharedWalk : Boolean = true
@@ -54,7 +59,9 @@ fun SharedWalkCompletionRoute(
     SharedWalkCompletionScreen(
         paddingValues = paddingValues,
         navigateUp = navigateUp,
-        navigateNext = navigateNext,
+        navigateNext = {
+            navigateNext(routeId, pageId)
+        },
         bitmap = state.bitmap,
         walkRecordList = walkRecordList,
         totalDistance = state.totalDistance,
@@ -110,13 +117,13 @@ fun SharedWalkCompletionScreen(
                 )
         ) {
             // Todo : 사진 받아올 곳
-            WalkCompleteHeader(
+            /*WalkCompleteHeader(
                 bitmap = null,
                 modifier = Modifier
                     .padding(top = 16.dp, start = 16.dp, end = 16.dp)
-            )
+            )*/
 
-            bitmap?.asImageBitmap()?.let {
+            /*bitmap?.asImageBitmap()?.let {
                 Image(
                     bitmap = it,
                     contentDescription = "My Image",
@@ -125,7 +132,17 @@ fun SharedWalkCompletionScreen(
                         .padding(top = 12.dp)
                         .clip(RoundedCornerShape(8.dp))
                 )
-            }
+            }*/
+            AsyncImage(
+                model = ImageRequest.Builder(LocalContext.current)
+                    .data("https://pawkey-bucket.s3.ap-northeast-2.amazonaws.com/route/69a9c758-csnapshot.jpg")
+                    .crossfade(true)
+                    .build(),
+                contentDescription = "My Image",
+                modifier = Modifier
+                    .padding(start = 8.dp, end = 8.dp)
+                    .padding(top = 12.dp)
+            )
 
             HorizontalDivider(
                 thickness = 1.dp,

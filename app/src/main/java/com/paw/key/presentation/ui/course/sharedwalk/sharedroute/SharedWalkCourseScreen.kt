@@ -108,7 +108,9 @@ import kotlin.coroutines.resumeWithException
 fun SharedWalkCourseRoute(
     paddingValues: PaddingValues,
     navigateUp: () -> Unit,
-    navigateNext: () -> Unit,
+    navigateNext: (Int, Int) -> Unit,
+    routeId : Int,
+    pageId : Int,
     snackBarHostState: SnackbarHostState,
     modifier: Modifier = Modifier,
     isSharedWalk : Boolean = true,
@@ -120,7 +122,7 @@ fun SharedWalkCourseRoute(
     val context = LocalContext.current
 
     LaunchedEffect(Unit) {
-        viewModel.getWalkSharedTrack(1)
+        viewModel.getWalkSharedTrack(routeId)
     }
 
     val totalTime by viewModel.totalTime.collectAsStateWithLifecycle()
@@ -223,14 +225,13 @@ fun SharedWalkCourseRoute(
                         sideEffect.message
                     )
 
-                    SharedWalkCourseSideEffect.NavigateNext -> navigateNext()
+                    SharedWalkCourseSideEffect.NavigateNext -> navigateNext(routeId, pageId)
                     SharedWalkCourseSideEffect.NavigateUp -> navigateUp()
                 }
             }
     }
 
     LaunchedEffect(state.isRecording) {
-        Log.d("WalkCourseRoute", "isRecording: ${state.isRecording}")
         if (state.isRecording) {
             try {
                 fusedLocationClient.requestLocationUpdates(
@@ -347,7 +348,9 @@ fun SharedWalkCourseRoute(
             SharedWalkCourseScreen(
                 paddingValues = paddingValues,
                 navigateUp = navigateUp,
-                navigateNext = navigateNext,
+                navigateNext = {
+                    navigateNext(routeId, pageId)
+                },
                 scope = scope,
                 snackBarHostState = snackBarHostState,
                 mapView = mapView,
@@ -419,9 +422,7 @@ fun SharedWalkCourseScreen(
         modifier = modifier
             .padding(paddingValues),
         snackbarHost = {
-            SnackbarHost(
-                hostState = snackBarHostState,
-            )
+
         }
     ) { pv ->
         Box(
