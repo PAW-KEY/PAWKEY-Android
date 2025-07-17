@@ -21,25 +21,35 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -58,7 +68,7 @@ import com.paw.key.presentation.ui.signup.viewmodel.SignUpViewModel
 @Composable
 private fun PreviewSignUpDogScreen() {
     PawKeyTheme {
-
+        // Preview content
     }
 }
 
@@ -96,6 +106,13 @@ fun SignUpDogScreen(
     viewModel: SignUpViewModel
 ) {
     val state by viewModel.state.collectAsState()
+    val keyboardController = LocalSoftwareKeyboardController.current
+    val focusManager = LocalFocusManager.current
+
+    val dogNameFocusRequester = remember { FocusRequester() }
+    val dogBreedFocusRequester = remember { FocusRequester() }
+    val dogAgeFocusRequester = remember { FocusRequester() }
+
     val animatedProgress by animateFloatAsState(
         targetValue = progress,
         animationSpec = tween(
@@ -145,9 +162,40 @@ fun SignUpDogScreen(
         }
     }
 
-    Box(modifier = modifier.fillMaxSize()) {
-        Column(modifier = Modifier.fillMaxSize()) {
+    val isFormValid = remember(state.dogName, state.dogGender, state.dogBreed, state.ageKnown, state.dogAge) {
+        state.dogName.isNotEmpty() &&
+                state.dogGender != SignUpContract.DogGender.UNKNOWN &&
+                state.dogBreed.isNotEmpty() &&
+                isAgeValid(state.ageKnown, state.dogAge)
+    }
 
+    val hideKeyboardAndClearFocus = {
+        keyboardController?.hide()
+        focusManager.clearFocus()
+    }
+
+    val proceedToNext = {
+        if (isFormValid) {
+            hideKeyboardAndClearFocus()
+            navigateNext()
+        }
+    }
+
+    val requestFocusSafely = { focusRequester: FocusRequester ->
+        try {
+            focusRequester.requestFocus()
+        } catch (e: Exception) {
+
+        }
+    }
+
+    Box(
+        modifier = modifier
+            .fillMaxSize()
+            .imePadding()
+    ) {
+        Column(modifier = Modifier.fillMaxSize()) {
+            // 헤더
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center,
@@ -156,8 +204,7 @@ fun SignUpDogScreen(
                     text = stringResource(id = R.string.ic_onboarding_signup),
                     color = PawKeyTheme.colors.black,
                     style = PawKeyTheme.typography.body16Sb,
-                    modifier = Modifier
-                        .padding(top = 16.dp),
+                    modifier = Modifier.padding(top = 16.dp),
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))
@@ -180,15 +227,15 @@ fun SignUpDogScreen(
                 contentPadding = PaddingValues(16.dp),
                 modifier = Modifier.fillMaxSize()
             ) {
-                item{
+                item {
                     Text(
                         text = stringResource(id = R.string.ic_onboarding_signup_subtitle_step3),
                         color = PawKeyTheme.colors.black,
                         style = PawKeyTheme.typography.head22Sb,
-                        modifier = Modifier
-                            .padding(top = 20.dp)
+                        modifier = Modifier.padding(top = 20.dp)
                     )
                 }
+
                 item {
                     DogProfileImage(
                         dogImage = state.dogImage,
@@ -199,16 +246,20 @@ fun SignUpDogScreen(
                 item {
                     DogNameField(
                         value = state.dogName,
-                        onValueChange = viewModel::onDogNameChanged
+                        onValueChange = viewModel::onDogNameChanged,
+                        focusRequester = dogNameFocusRequester,
+                        onNext = { requestFocusSafely(dogBreedFocusRequester) }
                     )
                 }
 
                 item {
-                    Column(
-                    ) {
+                    Column {
                         DogGenderSection(
                             selectedGender = state.dogGender,
-                            onGenderSelected = viewModel::selectDogGender
+                            onGenderSelected = { gender ->
+                                viewModel.selectDogGender(gender)
+                                requestFocusSafely(dogBreedFocusRequester)
+                            }
                         )
                         Spacer(modifier = Modifier.height(10.dp))
                         NeuteringCheckbox(
@@ -221,7 +272,9 @@ fun SignUpDogScreen(
                 item {
                     DogBreedField(
                         value = state.dogBreed,
-                        onValueChange = viewModel::onDogBreedChanged
+                        onValueChange = viewModel::onDogBreedChanged,
+                        focusRequester = dogBreedFocusRequester,
+                        onNext = { focusManager.clearFocus() }
                     )
                 }
 
@@ -229,8 +282,15 @@ fun SignUpDogScreen(
                     DogAgeSection(
                         ageKnown = state.ageKnown,
                         dogAge = state.dogAge,
-                        onAgeKnownSelected = viewModel::selectAgeKnown,
-                        onDogAgeChanged = viewModel::onDogAgeChanged
+                        onAgeKnownSelected = { ageKnown ->
+                            viewModel.selectAgeKnown(ageKnown)
+                            if (ageKnown == SignUpContract.AgeKnown.KNOWN) {
+                                requestFocusSafely(dogAgeFocusRequester)
+                            }
+                        },
+                        onDogAgeChanged = viewModel::onDogAgeChanged,
+                        focusRequester = dogAgeFocusRequester,
+                        onDone = proceedToNext
                     )
                 }
 
@@ -238,21 +298,15 @@ fun SignUpDogScreen(
             }
         }
 
-        val isFormValid = state.dogName.isNotEmpty() &&
-                state.dogGender != SignUpContract.DogGender.UNKNOWN &&
-                state.dogBreed.isNotEmpty() &&
-                isAgeValid(state.ageKnown, state.dogAge)
-
         PawkeyButton(
             text = "다음으로",
             enabled = isFormValid,
-            onClick = navigateNext,
+            onClick = proceedToNext,
             modifier = Modifier
                 .align(Alignment.BottomCenter)
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp, vertical = 46.dp)
         )
-
     }
 }
 
@@ -306,6 +360,8 @@ private fun DogProfileImage(
 private fun DogNameField(
     value: String,
     onValueChange: (String) -> Unit,
+    focusRequester: FocusRequester,
+    onNext: () -> Unit
 ) {
     FormField(
         label = stringResource(id = R.string.ic_onboarding_signup_dog_name),
@@ -313,7 +369,15 @@ private fun DogNameField(
             SignUpTextField(
                 value = value,
                 onValueChange = onValueChange,
-                placeholder = "강아지 이름을 입력해주세요"
+                placeholder = "강아지 이름을 입력해주세요",
+                modifier = Modifier.focusRequester(focusRequester),
+                keyboardOptions = KeyboardOptions(
+                    imeAction = ImeAction.Next,
+                    keyboardType = KeyboardType.Text
+                ),
+                keyboardActions = KeyboardActions(
+                    onNext = { onNext() }
+                )
             )
         }
     )
@@ -373,7 +437,6 @@ private fun NeuteringCheckbox(
                 PawKeyTheme.colors.black
             else PawKeyTheme.colors.gray300,
             style = PawKeyTheme.typography.body14Sb
-
         )
     }
 }
@@ -382,6 +445,8 @@ private fun NeuteringCheckbox(
 private fun DogBreedField(
     value: String,
     onValueChange: (String) -> Unit,
+    focusRequester: FocusRequester,
+    onNext: () -> Unit
 ) {
     FormField(
         label = stringResource(id = R.string.ic_onboarding_signup_dog_breed),
@@ -389,7 +454,15 @@ private fun DogBreedField(
             SignUpTextField(
                 value = value,
                 onValueChange = onValueChange,
-                placeholder = "견종을 입력해주세요"
+                placeholder = "견종을 입력해주세요",
+                modifier = Modifier.focusRequester(focusRequester),
+                keyboardOptions = KeyboardOptions(
+                    imeAction = ImeAction.Next,
+                    keyboardType = KeyboardType.Text
+                ),
+                keyboardActions = KeyboardActions(
+                    onNext = { onNext() }
+                )
             )
         }
     )
@@ -401,6 +474,8 @@ private fun DogAgeSection(
     dogAge: String,
     onAgeKnownSelected: (SignUpContract.AgeKnown) -> Unit,
     onDogAgeChanged: (String) -> Unit,
+    focusRequester: FocusRequester,
+    onDone: () -> Unit
 ) {
     FormField(
         label = stringResource(id = R.string.ic_onboarding_signup_age),
@@ -437,7 +512,15 @@ private fun DogAgeSection(
                     SignUpTextField(
                         value = dogAge,
                         onValueChange = onDogAgeChanged,
-                        placeholder = "나이를 입력해주세요"
+                        placeholder = "나이를 입력해주세요",
+                        modifier = Modifier.focusRequester(focusRequester),
+                        keyboardOptions = KeyboardOptions(
+                            imeAction = ImeAction.Done,
+                            keyboardType = KeyboardType.Number
+                        ),
+                        keyboardActions = KeyboardActions(
+                            onDone = { onDone() }
+                        )
                     )
                 }
             }

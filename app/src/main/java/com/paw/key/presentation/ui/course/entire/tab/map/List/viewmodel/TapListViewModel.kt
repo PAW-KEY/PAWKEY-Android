@@ -11,8 +11,11 @@ import com.paw.key.domain.repository.filter.FilterOptionRepository
 import com.paw.key.domain.repository.list.PostsListRepository
 import com.paw.key.presentation.ui.course.entire.tab.map.List.state.TapListContract
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
@@ -23,12 +26,22 @@ import javax.inject.Inject
 class TapListViewModel @Inject constructor(
     private val filterOptionRepository: FilterOptionRepository,
     private val postsListRepository: PostsListRepository,
-    private val likeRepository: LikeRepository
+    private val likeRepository: LikeRepository,
 ) : ViewModel() {
     private val _state = MutableStateFlow(TapListContract.TapListState())
     val state: StateFlow<TapListContract.TapListState> = _state.asStateFlow()
 
+    private val _sideEffect = MutableSharedFlow<TapListSideEffect>()
+    val sideEffect: SharedFlow<TapListSideEffect> = _sideEffect.asSharedFlow()
+
     private val userId = PreferenceDataStore.getUserId()
+    private val _likingPosts = MutableStateFlow<Set<Int>>(emptySet())
+
+    // SideEffect 정의
+    sealed class TapListSideEffect {
+        data class ShowToast(val message: String) : TapListSideEffect()
+        data class ShowSnackBar(val message: String) : TapListSideEffect()
+    }
 
     fun loadInitialPosts() {
         viewModelScope.launch {
@@ -106,6 +119,7 @@ class TapListViewModel @Inject constructor(
                     )
                 }
             }
+
             "21~40분" -> {
                 _state.update {
                     it.copy(
@@ -114,6 +128,7 @@ class TapListViewModel @Inject constructor(
                     )
                 }
             }
+
             "41~60분" -> {
                 _state.update {
                     it.copy(
@@ -122,6 +137,7 @@ class TapListViewModel @Inject constructor(
                     )
                 }
             }
+
             "1시간 이상" -> {
                 _state.update {
                     it.copy(
@@ -130,6 +146,7 @@ class TapListViewModel @Inject constructor(
                     )
                 }
             }
+
             else -> {
                 _state.update {
                     it.copy(
@@ -147,214 +164,256 @@ class TapListViewModel @Inject constructor(
         }
     }
 
-    fun toggleLike(postId: Int, isLiked: Boolean) {
-        viewModelScope.launch {
-            if (isLiked) {
-                likeRepository.unlikeCourse(userId = userId.first(), postId = postId)
-            } else {
-                likeRepository.likeCourse(userId = userId.first(), postId = postId)
-            }
+
+    fun toggleLike(postId: Int, newLikeState: Boolean) {
+        if (_likingPosts.value.contains(postId)) {
+            return
         }
-    }
-
-    fun updateMood(option: String) {
-        _state.update {
-            it.copy(
-                selectedMood = if (it.selectedMood == option) "" else option
-            )
-        }
-    }
-
-    fun updateDogFriend(option: String) {
-        _state.update {
-            it.copy(
-                selectedDogFriend = if (it.selectedDogFriend == option) "" else option
-            )
-        }
-    }
-
-    fun updateSafety(option: String) {
-        _state.update { currentState ->
-            val newSafety = if (currentState.selectedSafety.contains(option)) {
-                currentState.selectedSafety.filter { it != option }
-            } else {
-                currentState.selectedSafety + option
-            }
-            currentState.copy(selectedSafety = newSafety)
-        }
-    }
-
-    fun updateConvenience(option: String) {
-        _state.update { currentState ->
-            val newConvenience = if (currentState.selectedConvenience.contains(option)) {
-                currentState.selectedConvenience.filter { it != option }
-            } else {
-                currentState.selectedConvenience + option
-            }
-            currentState.copy(selectedConvenience = newConvenience)
-        }
-    }
-
-    fun updateEnvironment(option: String) {
-        _state.update { currentState ->
-            val newEnvironment = if (currentState.selectedEnvironment.contains(option)) {
-                currentState.selectedEnvironment.filter { it != option }
-            } else {
-                currentState.selectedEnvironment + option
-            }
-            currentState.copy(selectedEnvironment = newEnvironment)
-        }
-    }
-
-    fun toggleTimeExpanded() {
-        _state.update { it.copy(isTimeExpanded = !it.isTimeExpanded) }
-    }
-
-    fun toggleMoodExpanded() {
-        _state.update { it.copy(isMoodExpanded = !it.isMoodExpanded) }
-    }
-
-    fun toggleDogFriendExpanded() {
-        _state.update { it.copy(isDogFriendExpanded = !it.isDogFriendExpanded) }
-    }
-
-    fun toggleSafetyExpanded() {
-        _state.update { it.copy(isSafetyExpanded = !it.isSafetyExpanded) }
-    }
-
-    fun toggleConvenienceExpanded() {
-        _state.update { it.copy(isConvenienceExpanded = !it.isConvenienceExpanded) }
-    }
-
-    fun toggleEnvironmentExpanded() {
-        _state.update { it.copy(isEnvironmentExpanded = !it.isEnvironmentExpanded) }
-    }
-
-    fun resetAllOptions() {
-        _state.update { currentState ->
-            currentState.copy(
-                selectedSortOption = "",
-                selectedMood = "",
-                selectedDogFriend = "",
-                selectedSortTime = "",
-                selectedSafety = emptyList(),
-                selectedConvenience = emptyList(),
-                selectedEnvironment = emptyList(),
-                isMoodExpanded = false,
-                isDogFriendExpanded = false,
-                isSafetyExpanded = false,
-                isConvenienceExpanded = false,
-                isEnvironmentExpanded = false,
-                isTimeExpanded = false
-            )
-        }
-        loadInitialPosts()
-    }
-
-    fun applyOptions() {
-        val currentState = _state.value
 
         viewModelScope.launch {
-            _state.update { it.copy(isLoading = true) }
-
             try {
-                val selectedOptions = buildSelectedOptionsList(currentState)
+                _likingPosts.update { it + postId }
 
-                val request = PostsListRequestDto(
-                    durationStart = state.value.selectedSortTimeStart,
-                    durationEnd = state.value.selectedSortTimeEnd,
-                    selectedOptions = selectedOptions.ifEmpty { null }
-                )
+                val result = if (newLikeState) {
+                    likeRepository.likeCourse(userId = userId.first(), postId = postId)
+                } else {
+                    likeRepository.unlikeCourse(userId = userId.first(), postId = postId)
+                }
 
-                postsListRepository.postList(
-                    userId = userId.first(),
-                    request = request
-                ).onSuccess { listEntity ->
-                    _state.update {
-                        it.copy(
-                            isLoading = false,
-                            postsResult = listEntity
-                        )
-                    }
-                    println("필터링된 게시물 로드 성공: ${listEntity.posts.size}개")
+                result.onSuccess {
+                    updateLocalLikeState(postId, newLikeState)
+                    Log.d("TapListViewModel", "좋아요 상태 변경 성공: postId=$postId, isLiked=$newLikeState")
                 }.onFailure { exception ->
-                    _state.update { it.copy(isLoading = false) }
-                    exception.printStackTrace()
-                    println("필터링된 게시물 로드 실패: ${exception.message}")
+                    Log.e("TapListViewModel", "좋아요 상태 변경 실패: ${exception.message}")
                 }
             } catch (e: Exception) {
-                _state.update { it.copy(isLoading = false) }
-                e.printStackTrace()
+                Log.e("TapListViewModel", "toggleLike Exception: ${e.message}")
+            } finally {
+                _likingPosts.update { it - postId }
             }
         }
     }
 
-    private fun buildSelectedOptionsList(state: TapListContract.TapListState): List<TraitList> {
-        val selectedOptions = mutableListOf<TraitList>()
-        val filterOptions = state.filterOptions ?: return emptyList()
-
-
-
-        filterOptions.categoryList?.forEach { category ->
-            val selectedOptionIds = mutableListOf<Int>()
-
-            when (category.categoryName) {
-                "분위기" -> {
-                    if (state.selectedMood.isNotEmpty()) {
-                        category.categoryOptions?.find { it.categoryOptionText == state.selectedMood }
-                            ?.let { selectedOptionIds.add(it.categoryOptionId) }
+    private fun updateLocalLikeState(postId: Int, isLiked: Boolean) {
+        _state.update { currentState ->
+            val updatedPostsResult = currentState.postsResult?.let { postsResult ->
+                postsResult.copy(
+                    posts = postsResult.posts.map { post ->
+                        if (post.postId == postId) {
+                            post.copy(isLike = isLiked)
+                        } else {
+                            post
+                        }
                     }
-                }
-                "강아지 친구" -> {
-                    if (state.selectedDogFriend.isNotEmpty()) {
-                        category.categoryOptions?.find { it.categoryOptionText == state.selectedDogFriend }
-                            ?.let { selectedOptionIds.add(it.categoryOptionId) }
-                    }
-                }
-                "안전" -> {
-                    state.selectedSafety.forEach { selectedSafety ->
-                        category.categoryOptions?.find { it.categoryOptionText == selectedSafety }
-                            ?.let { selectedOptionIds.add(it.categoryOptionId) }
-                    }
-                }
-                "편의성" -> {
-                    state.selectedConvenience.forEach { selectedConvenience ->
-                        category.categoryOptions?.find { it.categoryOptionText == selectedConvenience }
-                            ?.let { selectedOptionIds.add(it.categoryOptionId) }
-                    }
-                }
-                "환경" -> {
-                    state.selectedEnvironment.forEach { selectedEnvironment ->
-                        category.categoryOptions?.find { it.categoryOptionText == selectedEnvironment }
-                            ?.let { selectedOptionIds.add(it.categoryOptionId) }
-                    }
-                }
-            }
-
-            if (selectedOptionIds.isNotEmpty()) {
-                selectedOptions.add(
-                    TraitList(
-                        categoryId = category.categoryId,
-                        optionIds = selectedOptionIds
-                    )
                 )
             }
+            currentState.copy(postsResult = updatedPostsResult)
+        }
+    }
+
+
+fun updateMood(option: String) {
+    _state.update {
+        it.copy(
+            selectedMood = if (it.selectedMood == option) "" else option
+        )
+    }
+}
+
+fun updateDogFriend(option: String) {
+    _state.update {
+        it.copy(
+            selectedDogFriend = if (it.selectedDogFriend == option) "" else option
+        )
+    }
+}
+
+fun updateSafety(option: String) {
+    _state.update { currentState ->
+        val newSafety = if (currentState.selectedSafety.contains(option)) {
+            currentState.selectedSafety.filter { it != option }
+        } else {
+            currentState.selectedSafety + option
+        }
+        currentState.copy(selectedSafety = newSafety)
+    }
+}
+
+fun updateConvenience(option: String) {
+    _state.update { currentState ->
+        val newConvenience = if (currentState.selectedConvenience.contains(option)) {
+            currentState.selectedConvenience.filter { it != option }
+        } else {
+            currentState.selectedConvenience + option
+        }
+        currentState.copy(selectedConvenience = newConvenience)
+    }
+}
+
+fun updateEnvironment(option: String) {
+    _state.update { currentState ->
+        val newEnvironment = if (currentState.selectedEnvironment.contains(option)) {
+            currentState.selectedEnvironment.filter { it != option }
+        } else {
+            currentState.selectedEnvironment + option
+        }
+        currentState.copy(selectedEnvironment = newEnvironment)
+    }
+}
+
+fun toggleTimeExpanded() {
+    _state.update { it.copy(isTimeExpanded = !it.isTimeExpanded) }
+}
+
+fun toggleMoodExpanded() {
+    _state.update { it.copy(isMoodExpanded = !it.isMoodExpanded) }
+}
+
+fun toggleDogFriendExpanded() {
+    _state.update { it.copy(isDogFriendExpanded = !it.isDogFriendExpanded) }
+}
+
+fun toggleSafetyExpanded() {
+    _state.update { it.copy(isSafetyExpanded = !it.isSafetyExpanded) }
+}
+
+fun toggleConvenienceExpanded() {
+    _state.update { it.copy(isConvenienceExpanded = !it.isConvenienceExpanded) }
+}
+
+fun toggleEnvironmentExpanded() {
+    _state.update { it.copy(isEnvironmentExpanded = !it.isEnvironmentExpanded) }
+}
+
+fun resetAllOptions() {
+    _state.update { currentState ->
+        currentState.copy(
+            selectedSortOption = "",
+            selectedMood = "",
+            selectedDogFriend = "",
+            selectedSortTime = "",
+            selectedSafety = emptyList(),
+            selectedConvenience = emptyList(),
+            selectedEnvironment = emptyList(),
+            isMoodExpanded = false,
+            isDogFriendExpanded = false,
+            isSafetyExpanded = false,
+            isConvenienceExpanded = false,
+            isEnvironmentExpanded = false,
+            isTimeExpanded = false
+        )
+    }
+    loadInitialPosts()
+}
+
+fun applyOptions() {
+    val currentState = _state.value
+
+    viewModelScope.launch {
+        _state.update { it.copy(isLoading = true) }
+
+        try {
+            val selectedOptions = buildSelectedOptionsList(currentState)
+
+            val request = PostsListRequestDto(
+                durationStart = state.value.selectedSortTimeStart,
+                durationEnd = state.value.selectedSortTimeEnd,
+                selectedOptions = selectedOptions.ifEmpty { null }
+            )
+
+            postsListRepository.postList(
+                userId = userId.first(),
+                request = request
+            ).onSuccess { listEntity ->
+                _state.update {
+                    it.copy(
+                        isLoading = false,
+                        postsResult = listEntity
+                    )
+                }
+                println("필터링된 게시물 로드 성공: ${listEntity.posts.size}개")
+            }.onFailure { exception ->
+                _state.update { it.copy(isLoading = false) }
+                exception.printStackTrace()
+                println("필터링된 게시물 로드 실패: ${exception.message}")
+            }
+        } catch (e: Exception) {
+            _state.update { it.copy(isLoading = false) }
+            e.printStackTrace()
+        }
+    }
+}
+
+private fun buildSelectedOptionsList(state: TapListContract.TapListState): List<TraitList> {
+    val selectedOptions = mutableListOf<TraitList>()
+    val filterOptions = state.filterOptions ?: return emptyList()
+
+
+
+    filterOptions.categoryList?.forEach { category ->
+        val selectedOptionIds = mutableListOf<Int>()
+
+        when (category.categoryName) {
+            "분위기" -> {
+                if (state.selectedMood.isNotEmpty()) {
+                    category.categoryOptions?.find { it.categoryOptionText == state.selectedMood }
+                        ?.let { selectedOptionIds.add(it.categoryOptionId) }
+                }
+            }
+
+            "강아지 친구" -> {
+                if (state.selectedDogFriend.isNotEmpty()) {
+                    category.categoryOptions?.find { it.categoryOptionText == state.selectedDogFriend }
+                        ?.let { selectedOptionIds.add(it.categoryOptionId) }
+                }
+            }
+
+            "안전" -> {
+                state.selectedSafety.forEach { selectedSafety ->
+                    category.categoryOptions?.find { it.categoryOptionText == selectedSafety }
+                        ?.let { selectedOptionIds.add(it.categoryOptionId) }
+                }
+            }
+
+            "편의성" -> {
+                state.selectedConvenience.forEach { selectedConvenience ->
+                    category.categoryOptions?.find { it.categoryOptionText == selectedConvenience }
+                        ?.let { selectedOptionIds.add(it.categoryOptionId) }
+                }
+            }
+
+            "환경" -> {
+                state.selectedEnvironment.forEach { selectedEnvironment ->
+                    category.categoryOptions?.find { it.categoryOptionText == selectedEnvironment }
+                        ?.let { selectedOptionIds.add(it.categoryOptionId) }
+                }
+            }
         }
 
-        return selectedOptions
+        if (selectedOptionIds.isNotEmpty()) {
+            selectedOptions.add(
+                TraitList(
+                    categoryId = category.categoryId,
+                    optionIds = selectedOptionIds
+                )
+            )
+        }
     }
 
-    fun isAllOptionsSelected(): Boolean {
-        val currentState = _state.value
-        return currentState.selectedSortOption.isNotEmpty() ||
-                currentState.selectedMood.isNotEmpty() ||
-                currentState.selectedDogFriend.isNotEmpty() ||
-                currentState.selectedSafety.isNotEmpty() ||
-                currentState.selectedConvenience.isNotEmpty() ||
-                currentState.selectedEnvironment.isNotEmpty()
-    }
+    return selectedOptions
+}
 
-    fun isFilterApplied(): Boolean {
-        return isAllOptionsSelected()
-    }
+fun isAllOptionsSelected(): Boolean {
+    val currentState = _state.value
+    return currentState.selectedSortOption.isNotEmpty() ||
+            currentState.selectedMood.isNotEmpty() ||
+            currentState.selectedDogFriend.isNotEmpty() ||
+            currentState.selectedSafety.isNotEmpty() ||
+            currentState.selectedConvenience.isNotEmpty() ||
+            currentState.selectedEnvironment.isNotEmpty()
+}
+
+fun isFilterApplied(): Boolean {
+    return isAllOptionsSelected()
+}
 }

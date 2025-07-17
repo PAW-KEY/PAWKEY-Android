@@ -147,7 +147,10 @@ fun TabListScreen(
                 listState.postsResult?.let { postsResult ->
                     val posts = postsResult.posts
                     if (posts.isNotEmpty()) {
-                        items(posts) { post ->
+                        items(
+                            items = posts,
+                            key = { post -> post.postId }
+                        ) { post ->
                             CourseCard(
                                 title = post.title,
                                 petName = post.writer.petName,
@@ -158,11 +161,10 @@ fun TabListScreen(
                                 createdAt = post.createdAt,
                                 isLiked = post.isLike,
                                 onClickItem = {
-                                    //showBottomSheet = true
                                     navigateToDetail(post.postId, post.routeId)
                                 },
-                                onClickLike = {
-                                    //viewModel.toggleLike(postId = post.postId)
+                                onClickLike = { newLikeState ->
+                                    viewModel.toggleLike(post.postId, newLikeState)
                                 }
                             )
                         }
