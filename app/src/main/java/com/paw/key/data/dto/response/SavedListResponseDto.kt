@@ -27,6 +27,10 @@ data class SavedDto(
     val createdAt: String,
     @SerialName("isLike")
     val isLike: Boolean,
+    @SerialName("isPublic")
+    val isPublic: Boolean,
+    @SerialName("isMine")
+    val isMine: Boolean,
     @SerialName("title")
     val title: String,
     @SerialName("representativeImageUrl")
@@ -46,7 +50,9 @@ data class SavedDto(
         representativeImageUrl = representativeImageUrl ?: "",
         routeId = routeId,
         writer = writer.toEntity(),
-        descriptionTags = descriptionTags
+        descriptionTags = descriptionTags,
+        isPublic = true,
+        isMine = true
     )
 }
 

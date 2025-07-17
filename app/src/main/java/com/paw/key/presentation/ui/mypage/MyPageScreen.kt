@@ -52,8 +52,13 @@ fun MyPageRoute(
 
     LaunchedEffect(Unit) {
         viewModel.getUserProfiles(userId = userId.first())
-        viewModel.getMyPagePetProfiles(userId = userId.first())
+        viewModel.getPetProfiles(userId = userId.first())
     }
+//    LaunchedEffect(Unit) {
+//        val userId = 2 // ← 임시 테스트용
+//        viewModel.getUserProfiles(userId = userId)
+//        viewModel.getPetProfiles(userId = userId)
+//    }
 
     MyPageScreen(
         state = state.value,
@@ -107,7 +112,11 @@ fun MyPageScreen(
                 PetCard(
                     name = state.petName,
                     age = state.petAge,
-                    gender = state.petGender,
+                    gender = if (state.petGender == "M") {
+                        "남아"
+                    } else {
+                        "여아"
+                    },
                     tags = state.petTags,
                     walkCount = state.walkCount,
                     totalDistance = state.totalDistance,
@@ -164,7 +173,7 @@ fun PetCard(
     gender: String,
     tags: List<String>,
     image: String,
-    walkCount: String,
+    walkCount: Int,
     totalDistance: String,
     navigatePetProfile: () -> Unit,
     modifier: Modifier = Modifier
@@ -261,7 +270,7 @@ fun PetCard(
             ) {
                 Text("산책 횟수", style = PawKeyTheme.typography.caption12Sb1)
                 Text(
-                    walkCount,
+                    text = "${walkCount}회",
                     style = PawKeyTheme.typography.head20Sb,
                     color = PawKeyTheme.colors.green500
                 )
@@ -358,7 +367,7 @@ private fun MyPageScreenPreview() {
             petAge = "12세",
             petGender = "여아",
             petTags = listOf("조금 느긋해요", "#오토바이소리", "#대형견"),
-            walkCount = "7회",
+            walkCount = 7,
             totalDistance = "14km"
         ),
             paddingValues = PaddingValues(),

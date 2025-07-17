@@ -80,3 +80,53 @@ class SavedListViewModel @Inject constructor(
         }
     }
 }
+
+//@HiltViewModel
+//class SavedListViewModel @Inject constructor(
+//    private val savedListRepository: SavedListRepository,
+//    private val likeRepository: LikeRepository
+//) : ViewModel() {
+//
+//    private val _state = MutableStateFlow(SavedListState())
+//    val state: StateFlow<SavedListState> = _state.asStateFlow()
+//
+//    private val _sideEffect = MutableSharedFlow<SavedListSideEffect>()
+//    val sideEffect: MutableSharedFlow<SavedListSideEffect> = _sideEffect
+//
+//    // ✅ 테스트용 고정 유저 ID
+//    private val testUserId = 2
+//
+//    init {
+//        getSavedList(testUserId)
+//    }
+//
+//    // ✅ 하드코딩된 userId 사용
+//    fun getSavedList(userId: Int) {
+//        viewModelScope.launch {
+//            savedListRepository.getSavedList(userId)
+//                .onSuccess { result ->
+//                    _state.update {
+//                        it.copy(courseList = result.posts)
+//                    }
+//                }
+//                .onFailure { e ->
+//                    Log.e("SavedListViewModel", "저장한 게시물 불러오기 실패", e)
+//                    _sideEffect.emit(SavedListSideEffect.ShowSnackBar(e.message ?: "알 수 없는 오류"))
+//                }
+//        }
+//    }
+//
+//    // ✅ 테스트용 좋아요 토글
+//    fun toggleLike(postId: Int, isLiked: Boolean) {
+//        viewModelScope.launch {
+//            if (isLiked) {
+//                likeRepository.unlikeCourse(userId = testUserId, postId = postId)
+//            } else {
+//                likeRepository.likeCourse(userId = testUserId, postId = postId)
+//            }
+//
+//            // 갱신
+//            getSavedList(testUserId)
+//        }
+//    }
+//}

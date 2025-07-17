@@ -73,10 +73,10 @@ fun ArchivedCourseListScreen(
                     petName = item.writer.first().petName,
                     petProfileImageUrl = item.writer.first().petProfileImageUrl,
                     descriptionTags = item.descriptionTags,
-                    isLiked = item.isLiked,
+                    isLiked = null,
+                    isPublic = item.isPublic, // 눈아이콘만 표시
                     onClickItem = navigateNext,
-                    onClickLike = {}
-
+                    onClickLike = null
                 )
             }
         }

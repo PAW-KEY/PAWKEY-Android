@@ -10,7 +10,7 @@ import androidx.compose.runtime.Immutable
         val petGender: String = "여아",
         val petImageUrl: String = "",
         val petTags: List<String> = listOf("조금 느긋해요", "#오토바이소리", "#대형견"),
-        val walkCount: String = "7회",
+        val walkCount: Int = 0,
         val totalDistance: String = "14km"
     )
 

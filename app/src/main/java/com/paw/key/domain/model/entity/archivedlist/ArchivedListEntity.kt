@@ -12,7 +12,9 @@ data class ArchivedListEntity(
     val representativeImageUrl: String,
     val routeId: Long,
     val writer: List<WriterEntity>,
-    val descriptionTags: List<String>
+    val descriptionTags: List<String>,
+    val isPublic: Boolean,
+    val isMine: Boolean
 )
 
 data class WriterEntity(

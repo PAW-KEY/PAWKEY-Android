@@ -62,13 +62,19 @@ fun PetProfileScreen(
     energyLevel: String,
     socialLevel: String
 ) {
+    // 여기서 바로 가공
+    val displayGender = when (gender.uppercase()) {
+        "M" -> "남아"
+        "F" -> "여아"
+        else -> gender
+    }
+
     Column(
         modifier = modifier
             .fillMaxSize()
             .padding(horizontal = 20.dp)
     ) {
-        TopBar(title = "반려견 프로필",
-            onBackClick = { navigateUp() })
+        TopBar(title = "반려견 프로필", onBackClick = navigateUp)
 
         Spacer(modifier = Modifier.height(40.dp))
 
@@ -92,11 +98,9 @@ fun PetProfileScreen(
 
         Spacer(modifier = Modifier.height(36.dp))
 
-        // 정보 항목
         PetProfileItem(label = "이름", value = name)
-        PetProfileItem(label = "성별", value = gender)
+        PetProfileItem(label = "성별", value = displayGender)
 
-        // 중성화 여부 (단일 텍스트)
         Text(
             text = "중성화했어요",
             style = PawKeyTheme.typography.caption12Sb2,
@@ -107,7 +111,6 @@ fun PetProfileScreen(
         PetProfileItem(label = "견종", value = breed)
         PetProfileItem(label = "나이", value = age)
 
-        // 성향
         Text(
             text = "성향",
             style = PawKeyTheme.typography.body14Sb,
@@ -158,28 +161,22 @@ fun PetProfileScreen(
         Spacer(modifier = Modifier.weight(1f))
     }
 }
-
 @Composable
 fun PetProfileItem(
     label: String,
-    value: String,
-    modifier: Modifier = Modifier
+    value: String
 ) {
-    Column(modifier = modifier.padding(vertical = 8.dp)) {
+    Column(modifier = Modifier.padding(start = 16.dp, bottom = 8.dp)) {
         Text(
             text = label,
-            style = PawKeyTheme.typography.body14Sb,
-            modifier = Modifier.padding(start = 16.dp)
+            style = PawKeyTheme.typography.body14R,
+            color = PawKeyTheme.colors.gray600
         )
-        if (value.isNotEmpty()) {
-            Spacer(modifier = Modifier.height(4.dp))
-            Text(
-                text = value,
-                style = PawKeyTheme.typography.head18Sb,
-                color = PawKeyTheme.colors.green500,
-                modifier = Modifier.padding(start = 16.dp)
-            )
-        }
+        Text(
+            text = value,
+            style = PawKeyTheme.typography.head18Sb,
+            color = PawKeyTheme.colors.black
+        )
     }
 }
 

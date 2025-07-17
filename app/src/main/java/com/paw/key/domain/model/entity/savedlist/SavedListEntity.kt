@@ -12,7 +12,9 @@ data class SavedListEntity(
     val representativeImageUrl: String,
     val routeId: Int,
     val writer: SavedWriterEntity,
-    val descriptionTags: List<String>
+    val descriptionTags: List<String>,
+    val isPublic: Boolean,
+    val isMine: Boolean
 )
 data class SavedWriterEntity(
     val userId: Int,
