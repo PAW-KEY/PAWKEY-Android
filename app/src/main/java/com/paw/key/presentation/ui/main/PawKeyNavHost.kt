@@ -140,9 +140,9 @@ fun PawKeyNavHost(
         walkCompletionNavGraph(
             paddingValues = paddingValues,
             navigateUp = navigator::navigateUp,
-            navigateNext = {
+            navigateNext = { routeId ->
                 navigator.navigateWalkReview(
-                    routeId = it,
+                    routeId = routeId,
                 )
             },
         )
@@ -150,10 +150,10 @@ fun PawKeyNavHost(
         walkReviewNavGraph(
             navigateUp = navigator::navigateUp,
             navigateNext = navigator::navigateCourse,
-            navigateShared = {
-                navigator.navigateArchivedDetail( // Todo 새로 생성 시라 pageId 변경
-                    pageId = 0,
-                    routeId = it
+            navigateShared = { routeId, pageId ->
+                navigator.navigateArchivedDetail(
+                    pageId = pageId,
+                    routeId = routeId
                 )
             },
             snackBarHostState = snackbarHostState
@@ -179,17 +179,21 @@ fun PawKeyNavHost(
         savedCourseNavGraph(
             paddingValues = paddingValues,
             navigateUp = navigator::navigateUp,
-            navigateNext = navigator::navigateSavedDetail,
+            navigateNext = { routeId, pageId ->
+                navigator.navigateSavedDetail(
+                    pageId = pageId,
+                    routeId = routeId
+                )
+            },
             snackBarHostState = snackbarHostState
         )
 
         archivedCourseNavGraph(
             navigateUp = navigator::navigateUp,
-            navigateNext = {
+            navigateNext = { routeId, pageId ->
                 navigator.navigateArchivedDetail(
-                    // Todo : 내가 기록 저장한 리스트에서 상세정보 item id 넣어놓기 일단2
-                    pageId = 0,
-                    routeId = 2
+                    pageId = pageId,
+                    routeId = routeId
                 )
             },
             modifier = modifier

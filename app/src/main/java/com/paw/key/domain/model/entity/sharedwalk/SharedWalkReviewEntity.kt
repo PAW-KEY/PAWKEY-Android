@@ -5,15 +5,15 @@ import com.paw.key.data.dto.request.sharedwalk.SharedWalkReviewRequestDto
 
 data class SharedWalkReviewEntity(
     val routeId: Int,
-    val categories: List<SharedWalkReviewCategory>
+    val selectedReviewSetList: List<SharedWalkReviewCategory>
 ) {
     fun toDto(): SharedWalkReviewRequestDto {
         return SharedWalkReviewRequestDto(
             routeId = routeId,
-            selectedCategories = categories.map { category ->
+            selectedReviewSetList = selectedReviewSetList.map { category ->
                 SharedWalkReviewCategoryDto(
-                    categoryId = category.categoryId,
-                    selectedOptionIds = category.selectedOptionIds
+                    reviewCategoryId = category.reviewCategoryId,
+                    selectedReviewOptionIds = category.selectedReviewOptionIds
                 )
             }
         )
@@ -21,6 +21,6 @@ data class SharedWalkReviewEntity(
 }
 
 data class SharedWalkReviewCategory(
-    val categoryId: Int,
-    val selectedOptionIds: List<Int>
+    val reviewCategoryId: Int,
+    val selectedReviewOptionIds: List<Int>
 )

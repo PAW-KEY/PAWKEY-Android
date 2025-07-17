@@ -42,7 +42,8 @@ class PetProfileViewModel @Inject constructor(
                             breed = result.first().breed,
                             age = result.first().age.toString(),
                             energyLevel = result.first().traits.first().option,
-                            socialLevel = result.first().traits.first().option
+                            socialLevel = result.first().traits.first().option,
+                            isNeutered = result.first().isNeutered
                         )
                     }
                 }

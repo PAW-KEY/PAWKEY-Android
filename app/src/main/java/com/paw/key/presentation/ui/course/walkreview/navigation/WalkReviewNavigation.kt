@@ -23,7 +23,7 @@ fun NavController.navigateWalkReview(
 fun NavGraphBuilder.walkReviewNavGraph(
     navigateUp: () -> Unit,
     navigateNext: (routeId : Int) -> Unit,
-    navigateShared : (routeId : Int) -> Unit,
+    navigateShared : (routeId : Int, pageId : Int) -> Unit,
     snackBarHostState: SnackbarHostState,
 ) {
     composable<WalkReview> { backStackEntry ->
@@ -34,8 +34,8 @@ fun NavGraphBuilder.walkReviewNavGraph(
             navigateNext = {
                 navigateNext(ids.routeId)
             },
-            navigateShared = {
-                navigateShared(ids.routeId)
+            navigateShared = { routeId, pageId ->
+                navigateShared(routeId, pageId)
             },
             snackBarHostState = snackBarHostState,
             routeId = ids.routeId

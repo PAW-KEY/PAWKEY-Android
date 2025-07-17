@@ -37,6 +37,6 @@ class WalkReviewContract {
     sealed class WalkReviewSideEffect {
         data class ShowSnackBar(val message: String) : WalkReviewSideEffect()
         data object NavigateUp: WalkReviewSideEffect()
-        data class NavigateNext(val routeId : Int): WalkReviewSideEffect()
+        data class NavigateNext(val routeId : Int, val pageId : Int): WalkReviewSideEffect()
     }
 }

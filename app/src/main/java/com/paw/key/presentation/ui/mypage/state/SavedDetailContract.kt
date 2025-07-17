@@ -9,6 +9,7 @@ data class SavedDetailState(
     val routeId: Int = 0,
     val postTitle: String = "",
     val postContent: String = "",
+    val isPublic : Boolean = false,
     val isLiked: Boolean = false,
     val petName: String = "",
     val petProfileImage: String = "",
@@ -19,5 +20,7 @@ data class SavedDetailState(
     val walkingImageUrls: List<String> = emptyList(),
 
     val categoryTop3: List<CategoryTop3Entity> = emptyList(),
-    val totalReviewCount: Int = 0
+    val totalReviewCount: Int = 0,
+
+    val clickImage : String = ""
 )

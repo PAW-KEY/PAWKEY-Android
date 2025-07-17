@@ -105,8 +105,16 @@ class MainNavigator(
         navController.navigateSavedCourse(navOptions = navOptions)
     }
     
-    fun navigateSavedDetail(navOptions: NavOptions? = null) {
-        navController.navigateSavedDetail(navOptions = navOptions)
+    fun navigateSavedDetail(
+        pageId: Int,
+        routeId: Int,
+        navOptions: NavOptions? = null)
+    {
+        navController.navigateSavedDetail(
+            pageId = pageId,
+            routeId = routeId,
+            navOptions = navOptions
+        )
     }
 
     fun navigateSignUpFlow(navOptions: NavOptions? = null) {

@@ -62,7 +62,11 @@ fun UserProfileScreen(name: String,
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             UserProfileItem(label = "이름", value = name)
-            UserProfileItem(label = "성별", value = gender)
+            UserProfileItem(label = "성별", value = if (gender == "M") {
+                "남아"
+            } else {
+                "여아"
+            })
             UserProfileItem(label = "나이", value = age)
             UserProfileItem(label = "활동지역", value = activeRegion)
         }

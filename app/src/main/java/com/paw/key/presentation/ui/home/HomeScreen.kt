@@ -185,6 +185,7 @@ fun HomeScreen(
                         petProfileImageUrl = "",
                         descriptionTags = listOf("2.2km"),
                         isLiked = true,
+                        isMine = true,
                         onClickLike = { isLiked ->
                             //onClickLike(post.postId, isLiked)
                         },

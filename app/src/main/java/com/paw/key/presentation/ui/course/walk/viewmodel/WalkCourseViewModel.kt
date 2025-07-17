@@ -83,7 +83,7 @@ class WalkCourseViewModel @Inject constructor(
 
             val routeEntity = WalkCourseEntity(
                 coordinates = state.value.poiPoints.map { // la, lo
-                    CoordinateEntity(it.longitude, it.latitude)
+                    CoordinateEntity(it.latitude, it.longitude)
                 },
                 distance = state.value.totalDistance.toInt(),
                 duration = (_totalTime.value / 1000).toInt(),

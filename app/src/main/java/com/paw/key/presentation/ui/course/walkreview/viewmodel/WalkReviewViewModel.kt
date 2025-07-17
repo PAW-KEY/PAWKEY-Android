@@ -19,7 +19,9 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
@@ -36,8 +38,8 @@ class WalkReviewViewModel @Inject constructor(
         get() = _state.asStateFlow()
 
     private val _sideEffect = MutableSharedFlow<WalkReviewSideEffect>()
-    val sideEffect : MutableSharedFlow<WalkReviewSideEffect>
-        get() = _sideEffect
+    val sideEffect : SharedFlow<WalkReviewSideEffect>
+        get() = _sideEffect.asSharedFlow()
 
     private val userId = PreferenceDataStore.getUserId()
 
@@ -69,10 +71,10 @@ class WalkReviewViewModel @Inject constructor(
                 userId = userId.first(),
                 imageFiles = imageFiles,
                 walkReviewRequest = requestEntity
-            ).onSuccess {
-                _sideEffect.emit(WalkReviewSideEffect.ShowSnackBar("리뷰 전송 성공!"))
-                _sideEffect.emit(WalkReviewSideEffect.NavigateNext(routeId))
+            ).onSuccess { response ->
+                _sideEffect.emit(WalkReviewSideEffect.NavigateNext(response.routeId, response.postId))
                 Log.d("WalkReviewViewModel", "리뷰 전송 성공!")
+                Log.d("WalkReviewViewModel", "routeId : ${response.routeId}, postId : ${response.postId}")
             }.onFailure {
                 _sideEffect.emit(WalkReviewSideEffect.ShowSnackBar("리뷰 전송 실패!"))
                 Log.e("WalkReviewViewModel", "리뷰 전송 실패!")

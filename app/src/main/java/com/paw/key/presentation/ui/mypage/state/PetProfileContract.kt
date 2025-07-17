@@ -9,6 +9,7 @@ data class PetProfileState(
     val gender: String = "남아",
     val breed: String = "코리안 숏헤어",
     val age: String = "4세",
+    val isNeutered: Boolean = true,
     val energyLevel: String = "활동적이에요",
     val socialLevel: String = "불편해해요"
 )

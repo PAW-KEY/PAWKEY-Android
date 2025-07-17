@@ -55,7 +55,7 @@ import com.paw.key.presentation.ui.course.walkreview.viewmodel.WalkReviewViewMod
 fun WalkReviewRoute(
     navigateUp: () -> Unit,
     navigateNext: (routeId : Int) -> Unit,
-    navigateShared : (routeId : Int) -> Unit,
+    navigateShared : (routeId : Int, pageId : Int) -> Unit,
     routeId : Int,
     snackBarHostState: SnackbarHostState,
     modifier: Modifier = Modifier,
@@ -63,7 +63,7 @@ fun WalkReviewRoute(
     isSharedWalk : Boolean = false
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
-    val isValid = viewModel.state.collectAsStateWithLifecycle().value.isValidForm
+    val isValid = state.isValidForm
 
     val lifecycleOwner = LocalLifecycleOwner.current
 
@@ -99,7 +99,6 @@ fun WalkReviewRoute(
     }
 
     LaunchedEffect(routeId) {
-        Log.e("routeid", "$routeId")
         viewModel.getWalkReviewCategory()
         viewModel.getWalkReviewInfo(routeId)
     }
@@ -112,7 +111,10 @@ fun WalkReviewRoute(
                         sideEffect.message
                     )
 
-                    is WalkReviewContract.WalkReviewSideEffect.NavigateNext -> navigateShared(sideEffect.routeId)
+                    is WalkReviewContract.WalkReviewSideEffect.NavigateNext -> {
+                        Log.d("WalkReviewRoute", "navigateNext")
+                        navigateShared(sideEffect.routeId, sideEffect.pageId)
+                    }
                     WalkReviewContract.WalkReviewSideEffect.NavigateUp -> navigateUp()
                 }
             }
@@ -329,7 +331,7 @@ fun WalkReviewScreen(
                 feedbackList.forEachIndexed { index, category ->
                     WalkReviewFeedbackForm(
                         icon = R.drawable.ic_walk_review_location,
-                        title = "${emoji[index]}${category.categoryDescription}",
+                        title = "${emoji[index]} ${category.categoryDescription}",
                         selectedFeedbackItems = category.options.filter { it.isSelected }.map { it.optionText },
                         feedbackList = category.options.map { it.optionText },
                         onClickFeedback = { selectedText ->
@@ -413,6 +415,10 @@ fun WalkReviewScreen(
                         // 공유뷰 아님 / 현재 그냥 리뷰
                         if (!isSharedWalk) {
                             onClickPublic(true)
+                            Log.d("TAG", "WalkReviewScreen: 공유 안됨")
+                        } else {
+                            onClickPublic(false)
+                            Log.d("TAG", "WalkReviewScreen: 공유 됨")
                         }
                     },
                     enabled = isFormValid,

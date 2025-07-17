@@ -154,7 +154,8 @@ class HomeViewModel @Inject constructor(
                 val result = regionCurrentRepository.RegionCurrent(userId.first())
                 result.onSuccess { response ->
                     Log.d("HomeViewModel", "RegionCurrent 성공: ${response.fullRegionName}")
-
+                    PreferenceDataStore.saveActiveRegion(response.fullRegionName)
+                    Log.d("HomeViewModel", "activeRegion 저장 완료: ${response.fullRegionName}")
                     _state.update { currentState ->
                         currentState.copy(
                             currentRegion = HomeContract.CurrentRegionInfo(
@@ -167,13 +168,6 @@ class HomeViewModel @Inject constructor(
                             )
                         )
                     }
-                    try {
-                        PreferenceDataStore.saveActiveRegion(response.fullRegionName)
-                        Log.d("HomeViewModel", "activeRegion 저장 완료: ${response.fullRegionName}")
-                    } catch (e: Exception) {
-                        Log.e("HomeViewModel", "activeRegion 저장 실패: ${e.message}")
-                    }
-
                 }.onFailure { exception ->
                     Log.e("HomeViewModel", "RegionCurrent 실패: ${exception.message}")
                     _state.update { currentState ->

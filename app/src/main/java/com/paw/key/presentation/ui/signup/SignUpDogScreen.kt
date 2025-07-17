@@ -81,7 +81,7 @@ fun SignUpDogRoute(
 ) {
     val actualViewModel = viewModel ?: hiltViewModel<SignUpViewModel>()
     SignUpDogScreen(
-        step = 0.75F,
+        progress = 0.75F,
         navigateNext = navigateNext,
         modifier = modifier,
         viewModel = actualViewModel
@@ -99,7 +99,6 @@ private fun isAgeValid(ageKnown: SignUpContract.AgeKnown, dogAge: String): Boole
 @RequiresApi(Build.VERSION_CODES.TIRAMISU)
 @Composable
 fun SignUpDogScreen(
-    step: Float,
     navigateNext: () -> Unit,
     modifier: Modifier = Modifier,
     progress: Float = 1F,
@@ -192,7 +191,6 @@ fun SignUpDogScreen(
     Box(
         modifier = modifier
             .fillMaxSize()
-            .imePadding()
     ) {
         Column(modifier = Modifier.fillMaxSize()) {
             // 헤더

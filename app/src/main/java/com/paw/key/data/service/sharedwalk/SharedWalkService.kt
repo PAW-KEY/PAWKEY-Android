@@ -20,5 +20,5 @@ interface SharedWalkService {
     suspend fun postSharedWalkReview(
         @Header("X-USER-ID") userId: Int,
         @Body reviewDto: SharedWalkReviewRequestDto
-    ) : BaseResponse<Unit>
+    ) : BaseResponse<Unit?>
 }

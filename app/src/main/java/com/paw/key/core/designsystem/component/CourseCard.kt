@@ -34,15 +34,16 @@ fun CourseCard(
     postId: Int,
     title: String,
     createdAt: String,
+    modifier: Modifier = Modifier,
     isLiked: Boolean? = null,   // 저장한 루트에서만 사용
     isPublic: Boolean? = null, // 기록한 루트에서만 사용
+    isMine : Boolean,
     onClickItem: () -> Unit,
     onClickLike: ((Boolean) -> Unit)? = null, // null이면 클릭 불가
     petName: String,
-    modifier: Modifier = Modifier,
     representativeImageUrl: String? = null,
     petProfileImageUrl: String? = null,
-    descriptionTags: List<String> = emptyList()
+    descriptionTags: List<String> = emptyList(),
 ) {
     fun formatDate(dateString: String): String {
         return try {
@@ -57,7 +58,6 @@ fun CourseCard(
         modifier = modifier
             .padding(8.dp)
             .fillMaxWidth()
-            .size(width = 328.dp, height = 240.dp)
             .background(Color.White, shape = RoundedCornerShape(20.dp))
             .noRippleClickable { onClickItem() }
     ) {
@@ -128,6 +128,21 @@ fun CourseCard(
                             .clip(CircleShape),
                         contentScale = ContentScale.Crop
                     )
+                } else {
+                    Box(
+                        modifier = Modifier
+                            .size(40.dp)
+                            .clip(CircleShape)
+                            .background(PawKeyTheme.colors.gray200),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Icon(
+                            imageVector = ImageVector.vectorResource(id = R.drawable.ic_heart_default),
+                            contentDescription = null,
+                            tint = PawKeyTheme.colors.gray400,
+                            modifier = Modifier.size(20.dp)
+                        )
+                    }
                 }
 
                 Spacer(modifier = Modifier.width(10.dp))
@@ -197,7 +212,8 @@ fun CourseCard(
         HorizontalDivider(
             color = PawKeyTheme.colors.gray50,
             thickness = 1.dp,
-            modifier = Modifier.padding(horizontal = 16.dp)
+            modifier = Modifier
+                .padding(horizontal = 16.dp)
         )
     }
 }
@@ -216,7 +232,8 @@ fun CourseCardPreview() {
             petName = "후추",
             representativeImageUrl = "https://pawkey-server.com/image.jpg",
             petProfileImageUrl = "https://pawkey-server.com/profile.jpg",
-            descriptionTags = listOf("이륜차 거의 없음", "물그릇 비치", "쉴 곳 있음")
+            descriptionTags = listOf("이륜차 거의 없음", "물그릇 비치", "쉴 곳 있음"),
+            isMine = true
         )
     }
 }

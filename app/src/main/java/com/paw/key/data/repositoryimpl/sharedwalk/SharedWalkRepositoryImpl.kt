@@ -17,9 +17,9 @@ class SharedWalkRepositoryImpl @Inject constructor(
     override suspend fun postSharedWalkReviewRegister(
         userId: Int,
         review: SharedWalkReviewEntity
-    ): Result<Unit> {
+    ): Result<Unit?> {
         return runCatching {
-            sharedWalkDataSource.postSharedWalkReviewRegister(userId, review.toDto())
+            sharedWalkDataSource.postSharedWalkReviewRegister(userId, review.toDto()).data
         }
     }
 }

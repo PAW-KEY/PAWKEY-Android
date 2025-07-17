@@ -10,6 +10,7 @@ import com.paw.key.presentation.ui.mypage.ArchivedCourseRoute
 import kotlinx.serialization.Serializable
 
 fun NavController.navigateArchivedCourse(
+
     navOptions: NavOptions?
 ) {
     navigate(ArchivedCourse, navOptions)
@@ -17,13 +18,15 @@ fun NavController.navigateArchivedCourse(
 
 fun NavGraphBuilder.archivedCourseNavGraph(
     navigateUp: () -> Unit,
-    navigateNext: () -> Unit,
+    navigateNext: (Int, Int) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     composable<ArchivedCourse> {
         ArchivedCourseRoute(
             navigateUp = navigateUp,
-            navigateNext = navigateNext,
+            navigateNext = { routeId, pageId ->
+                navigateNext(routeId, pageId)
+            },
             modifier = modifier
         )
     }

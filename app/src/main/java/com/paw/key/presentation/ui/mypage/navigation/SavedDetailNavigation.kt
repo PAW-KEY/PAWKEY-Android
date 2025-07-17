@@ -9,14 +9,17 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
+import androidx.navigation.toRoute
 import com.paw.key.core.navigation.Route
 import com.paw.key.presentation.ui.mypage.SavedCourseRoute
 import kotlinx.serialization.Serializable
 
 fun NavController.navigateSavedDetail(
-    navOptions: NavOptions?
+    navOptions: NavOptions?,
+    routeId : Int,
+    pageId : Int
 ) {
-    navigate(SavedDetail, navOptions)
+    navigate(SavedDetail(routeId, pageId), navOptions)
 }
 
 fun NavGraphBuilder.savedDetailNavGraph(
@@ -25,14 +28,18 @@ fun NavGraphBuilder.savedDetailNavGraph(
     snackBarHostState: SnackbarHostState,
     modifier: Modifier = Modifier,
 ) {
-    composable<SavedDetail> {
+    composable<SavedDetail> { backStackEntry ->
+        val ids = backStackEntry.toRoute<SavedDetail>()
+
         SavedDetailRoute(
             navigateUp = navigateUp,
-            navigateToWalk = navigateToWalk,
+            navigateToSharedWalk = navigateToWalk,
+            routeId = ids.routeId,
+            pageId = ids.pageId,
             modifier = modifier
         )
     }
 }
 
 @Serializable
-data object SavedDetail : Route
+data class SavedDetail(val routeId : Int, val pageId : Int) : Route

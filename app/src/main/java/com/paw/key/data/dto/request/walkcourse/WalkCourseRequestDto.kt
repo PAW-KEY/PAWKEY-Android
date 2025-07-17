@@ -23,7 +23,7 @@ data class WalkCourseRequestDto(
 ) {
     fun toEntity(): WalkCourseEntity {
         return WalkCourseEntity(
-            coordinates = coordinates.map { CoordinateEntity(it.longitude, it.latitude) },
+            coordinates = coordinates.map { CoordinateEntity(it.latitude, it.longitude) },
             distance = distance,
             duration = duration,
             startedAt = startedAt,
