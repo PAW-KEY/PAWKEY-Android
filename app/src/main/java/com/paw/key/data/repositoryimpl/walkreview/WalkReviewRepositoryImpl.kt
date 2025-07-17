@@ -2,6 +2,7 @@ package com.paw.key.data.repositoryimpl.walkreview
 
 import com.paw.key.data.remote.datasource.walkreview.WalkReviewDataSource
 import com.paw.key.domain.model.entity.walkreview.WalkReviewCategoryListEntity
+import com.paw.key.domain.model.entity.walkreview.WalkReviewIdEntity
 import com.paw.key.domain.model.entity.walkreview.WalkReviewInfoEntity
 import com.paw.key.domain.model.entity.walkreview.WalkReviewRecordEntity
 import com.paw.key.domain.repository.walkreview.WalkReviewRepository
@@ -15,13 +16,13 @@ class WalkReviewRepositoryImpl @Inject constructor(
         userId: Int,
         imageFiles: List<MultipartBody.Part>,
         walkReviewRequest: WalkReviewRecordEntity
-    ): Result<Unit> {
+    ): Result<WalkReviewIdEntity> {
         return runCatching {
             dataSource.postWalkReview(
                 userId = userId,
                 imageFiles = imageFiles,
                 walkReviewRequestDto = walkReviewRequest.toDto()
-            )
+            ).data.toEntity()
         }
     }
 
