@@ -22,6 +22,7 @@ class WalkReviewContract {
         val petName: String = "포비",
 
         val isPublic: Boolean = false,
+        val isMine: Boolean = false,
 
         val categoryList: List<WalkReviewCategoryUiModel> = emptyList()
     ) {

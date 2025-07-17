@@ -7,6 +7,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
+import androidx.navigation.toRoute
 import com.paw.key.core.navigation.Route
 import com.paw.key.presentation.ui.course.walkreview.WalkReviewRoute
 import kotlinx.serialization.Serializable
@@ -26,18 +27,18 @@ fun NavGraphBuilder.walkReviewNavGraph(
     snackBarHostState: SnackbarHostState,
 ) {
     composable<WalkReview> { backStackEntry ->
-        val routeId = backStackEntry.arguments?.getInt("routeId") ?: 0
+        val ids = backStackEntry.toRoute<WalkReview>()
 
         WalkReviewRoute(
             navigateUp = navigateUp,
             navigateNext = {
-                navigateNext(routeId)
+                navigateNext(ids.routeId)
             },
             navigateShared = {
-                navigateShared(routeId)
+                navigateShared(ids.routeId)
             },
             snackBarHostState = snackBarHostState,
-            routeId = routeId
+            routeId = ids.routeId
         )
     }
 }
