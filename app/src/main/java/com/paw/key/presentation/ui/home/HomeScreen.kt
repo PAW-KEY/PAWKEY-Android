@@ -175,27 +175,21 @@ fun HomeScreen(
                     }
                 }
 
-                // posts가 null이 아닐 때만 items를 표시
-                posts?.let { postList ->
-                    items(
-                        items = postList,
-                        key = { post -> post.postId }
-                    ) { post ->
-                        CourseCard(
-                            postId = post.postId,
-                            title = post.title,
-                            petName = post.writer.petName,
-                            createdAt = post.createdAt,
-                            representativeImageUrl = post.representativeImageUrl,
-                            petProfileImageUrl = post.writer.petProfileImageUrl,
-                            descriptionTags = post.descriptionTags,
-                            isLiked = post.isLike,
-                            onClickLike = { isLiked ->
-                                onClickLike(post.postId, isLiked)
-                            },
-                            onClickItem = { navigateNext() }
-                        )
-                    }
+                item {
+                    CourseCard(
+                        postId = -1,
+                        title = "제목을 입력해주세요",
+                        petName = "반려견 이름",
+                        createdAt = "2025/07/19",
+                        representativeImageUrl = "https://pawkey-bucket.s3.ap-northeast-2.amazonaws.com/route/69a9c758-csnapshot.jpg",
+                        petProfileImageUrl = "",
+                        descriptionTags = listOf("2.2km"),
+                        isLiked = true,
+                        onClickLike = { isLiked ->
+                            //onClickLike(post.postId, isLiked)
+                        },
+                        onClickItem = { navigateNext() }
+                    )
                 }
 
                 item { Spacer(modifier = Modifier.height(48.dp)) }
