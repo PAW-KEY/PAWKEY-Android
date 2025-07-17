@@ -6,9 +6,9 @@ import javax.inject.Inject
 class LikeDataSource @Inject constructor(
     private val likeService: LikeService
 ) {
-    suspend fun likeCourse(userId: Int, courseId: Int) =
-        likeService.likeCourse(userId, courseId)
+    suspend fun likeCourse(userId: Int, postId: Int) =
+        likeService.likeCourse(userId, postId)
 
-    suspend fun unlikeCourse(userId: Int, courseId: Int) =
-        likeService.unlikeCourse(userId, courseId)
+    suspend fun unlikeCourse(userId: Int, postId: Int) =
+        likeService.unlikeCourse(userId, postId)
 }

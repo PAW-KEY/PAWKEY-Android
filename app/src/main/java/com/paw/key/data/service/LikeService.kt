@@ -12,11 +12,11 @@ interface LikeService {
     suspend fun likeCourse(
         @Header("X-USER-ID") userId: Int,
         @Path("postId") postId: Int
-    ): BaseResponse<Unit>
+    ): BaseResponse<Unit?>
 
     @DELETE("/api/v1/likes/{postId}")
     suspend fun unlikeCourse(
         @Header("X-USER-ID") userId: Int,
         @Path("postId") postId: Int
-    ): BaseResponse<Unit>
+    ): BaseResponse<Unit?>
 }
