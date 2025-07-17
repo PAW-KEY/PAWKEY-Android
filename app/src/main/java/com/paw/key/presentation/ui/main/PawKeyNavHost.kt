@@ -79,11 +79,11 @@ fun PawKeyNavHost(
             paddingValues = paddingValues,
             navigateUp = navigator::navigateUp,
             navigateNext = navigator::navigateWalkCourse,
-            navigateToDetail = {
+            navigateToDetail = { postId, routeId ->
                 // Todo : 마찬가지로 이것도 그냥 넣어놓음 나중에 리스트 연결 후 예쩡 / 리스트 아이템이동
                 navigator.navigateArchivedDetail(
-                    pageId = 20,
-                    routeId = 3
+                    pageId = postId,
+                    routeId = routeId
                 )
             },
             setOnVisibleRecord = navigator::setOnVisibleRecord,
@@ -93,9 +93,11 @@ fun PawKeyNavHost(
         sharedWalkCourseNavGraph(
             paddingValues = paddingValues,
             navigateUp = navigator::navigateUp,
-            navigateNext = {
-                // Todo : 마찬가지로 이것도 그냥 넣어놓음 나중에 리스트 연결 후 예쩡
-                navigator::navigateSharedWalkCompletion
+            navigateNext = { routeId, pageId ->
+                navigator.navigateSharedWalkCompletion(
+                    routeId = routeId,
+                    pageId = pageId
+                )
             },
             snackBarHostState = snackbarHostState
         )
@@ -103,10 +105,11 @@ fun PawKeyNavHost(
         sharedWalkCompletionNavGraph(
             paddingValues = paddingValues,
             navigateUp = navigator::navigateUp,
-            navigateNext = {
+            navigateNext = { routeId, pageId ->
                 // Todo : 마찬가지로 이것도 그냥 넣어놓음 나중에 리스트 연결 후 예쩡
                 navigator.navigateSharedWalkReview(
-                    routeId = 2
+                    routeId = routeId,
+                    pageId = pageId
                 )
             },
             snackBarHostState = snackbarHostState
@@ -184,7 +187,7 @@ fun PawKeyNavHost(
             navigateUp = navigator::navigateUp,
             navigateNext = {
                 navigator.navigateArchivedDetail(
-                    // Todo : 리스트에서 상세정보 item id 넣어놓기 일단2
+                    // Todo : 내가 기록 저장한 리스트에서 상세정보 item id 넣어놓기 일단2
                     pageId = 0,
                     routeId = 2
                 )
@@ -200,7 +203,13 @@ fun PawKeyNavHost(
 
         archivedDetailNavGraph(
             navigateUp = navigator::navigateUp,
-            navigateToSharedWalk = navigator::navigateSharedWalkCourse,
+            navigateToSharedWalk = { routeId, pageId ->
+                Log.e("navigateNext", "navigateNext : $routeId")
+                navigator.navigateSharedWalkCourse(
+                    routeId = routeId,
+                    pageId = pageId
+                )
+            },
             modifier = modifier
         )
 
