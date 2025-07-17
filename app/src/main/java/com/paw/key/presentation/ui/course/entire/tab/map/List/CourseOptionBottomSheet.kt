@@ -1,5 +1,6 @@
 package com.paw.key.presentation.ui.course.entire.tab.map.List
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -250,6 +251,8 @@ private fun SuccessContent(
 ) {
     val filterOptions = listState.filterOptions!!
 
+    val timeOptions = filterOptions.selectList?.find { it.selectName == "산책 소요 시간" }
+    Log.e("timeoptions", timeOptions.toString())
     val moodOptions = filterOptions.categoryList?.find { it.categoryName == "분위기" }
     val dogFriendOptions = filterOptions.categoryList?.find { it.categoryName == "강아지 친구" }
     val safetyOptions = filterOptions.categoryList?.find { it.categoryName == "안전" }
@@ -278,6 +281,35 @@ private fun SuccessContent(
             )
         }
 
+        timeOptions?.let { selectList ->
+            item {
+                CourseOptionToggle(
+                    title = selectList.selectName,
+                    selecttitle = listState.selectedSortTime,
+                    isExpanded = listState.isTimeExpanded,
+                    onClick = { viewModel.toggleTimeExpanded() }
+                )
+            }
+
+            if (listState.isTimeExpanded) {
+                val options = filterOptions.selectList.flatMap {
+                    it.options ?: emptyList()
+                }
+
+                items(options) { option ->
+                    SingleOptionItem(
+                        title = option.selectText,
+                        isSelected = listState.selectedSortTime == option.selectText,
+                        onSelect = { viewModel.updateSortTime(option.selectText) }
+                    )
+                }
+            }
+
+            item {
+                HorizontalDivider(color = PawKeyTheme.colors.gray50, thickness = 1.dp)
+            }
+        }
+
         moodOptions?.let { mood ->
             item {
                 CourseOptionToggle(
@@ -290,6 +322,7 @@ private fun SuccessContent(
 
             if (listState.isMoodExpanded) {
                 val options = mood.categoryOptions ?: emptyList()
+
                 items(options) { option ->
                     SingleOptionItem(
                         title = option.categoryOptionText,
@@ -439,14 +472,13 @@ private fun BottomButtons(
                 viewModel.applyOptions()
                 onDismissRequest()
             },
-            modifier = Modifier.width(300.dp)
+            modifier = Modifier
+                .weight(0.7f)
         )
-
-        Spacer(modifier = Modifier.weight(1F))
 
         IconButton(
             onClick = { viewModel.resetAllOptions() },
-            modifier = Modifier.size(56.dp)
+            modifier = Modifier.size(56.dp).weight(0.3f)
         ) {
             Icon(
                 imageVector = ImageVector.vectorResource(R.drawable.ic_course_list_refresh),
