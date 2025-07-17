@@ -9,7 +9,5 @@ import javax.inject.Inject
 class FilterOptionDataSource @Inject constructor(
     private val filterOptionService: FilterOptionService
 ) {
-    suspend fun getFilterOptions(userId: Int): BaseResponse<FilterOptionResponse> {
-        return filterOptionService.getFilterOptions(userId)
-    }
+    suspend fun getFilterOptions(userId: Int) = filterOptionService.getFilterOptions(userId).data
 }
