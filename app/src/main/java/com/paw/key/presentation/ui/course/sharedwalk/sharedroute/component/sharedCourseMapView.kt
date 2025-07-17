@@ -140,6 +140,14 @@ fun sharedWalkCourseMapView(
         }
     }
 
+    LaunchedEffect(poiPoints) {
+        kakaoMapState?.moveCamera(
+            CameraUpdateFactory.fitMapPoints(
+                poiPoints.toTypedArray(), 150, 15
+            )
+        )
+    }
+
     /*LaunchedEffect(poiPoints) {
         kakaoMapState?.let { map ->
             drawRouteOnMap(map, poiPoints)

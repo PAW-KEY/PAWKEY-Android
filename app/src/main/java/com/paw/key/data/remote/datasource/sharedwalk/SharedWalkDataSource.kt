@@ -12,4 +12,6 @@ class SharedWalkDataSource @Inject constructor(
 
     suspend fun postSharedWalkReviewRegister(userId: Int, reviewDto: SharedWalkReviewRequestDto) =
         sharedWalkService.postSharedWalkReview(userId, reviewDto)
+
+
 }
