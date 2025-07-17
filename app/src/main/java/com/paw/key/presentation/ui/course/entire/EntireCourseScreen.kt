@@ -4,6 +4,7 @@ import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
+import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
@@ -39,7 +40,7 @@ fun EntireCourseRoute(
     paddingValues: PaddingValues,
     navigateUp: () -> Unit,
     navigateNext: () -> Unit,
-    navigateToDetail: () -> Unit,
+    navigateToDetail: (Int, Int) -> Unit,
     routeIndex: Int,
     snackBarHostState: SnackbarHostState,
     setOnVisibleRecord: (Boolean) -> Unit,
@@ -137,7 +138,9 @@ fun EntireCourseRoute(
             }
             setOnVisibleRecord(it)
         },
-        navigateToDetail = navigateToDetail,
+        navigateToDetail = { postId, routeId ->
+            navigateToDetail(postId, routeId)
+        },
         isGranted = state.isLocationPermissionGranted,
         tabs = state.courseTabs,
         modifier = modifier,
@@ -154,7 +157,7 @@ fun EntireCourseScreen(
     currentPage : Int,
     navigateUp: () -> Unit,
     navigateNext: () -> Unit,
-    navigateToDetail : () -> Unit,
+    navigateToDetail : (Int, Int) -> Unit,
     setOnVisibleRecord : (Boolean) -> Unit,
     onTabSelected : (Int) -> Unit,
     modifier: Modifier = Modifier,
@@ -178,29 +181,23 @@ fun EntireCourseScreen(
 
         when (currentPage) {
             0 -> {
-                if (!isGranted) {
-                    TapMapRoute(
-                        paddingValues = paddingValues,
-                        navigateUp = {},
-                        navigateNext = {
-                            navigateNext()
-                        },
-                        isGranted = isGranted,
-                        snackBarHostState = snackBarHostState,
-                    )
-                } else {
-                    // 스낵바 알림만 띄우고 아무 것도 렌더링하지 않음
-                    LaunchedEffect(Unit) {
-                        scope.launch {
-                            snackBarHostState.showSnackbar("위치 권한이 필요합니다.")
-                        }
-                    }
-                }
+                TapMapRoute(
+                    paddingValues = paddingValues,
+                    navigateUp = {},
+                    navigateNext = {
+                        navigateNext()
+                    },
+                    isGranted = isGranted,
+                    snackBarHostState = snackBarHostState,
+                )
             }
 
             1 -> {
                 TapListRoute(
-                    navigateToDetail = navigateToDetail
+                    navigateToDetail = { postId, routeId ->
+                        Log.e("TabListScreen", "postId: $postId, routeId: $routeId")
+                        navigateToDetail(postId, routeId)
+                    }
                 )
             }
         }
@@ -246,7 +243,8 @@ private fun EntireCourseScreenPreview() {
             onTabSelected = {},
             isGranted = true,
             setOnVisibleRecord = {},
-            navigateToDetail = {},
+            navigateToDetail = { postId, routeId ->
+            },
             modifier = Modifier,
         )
     }

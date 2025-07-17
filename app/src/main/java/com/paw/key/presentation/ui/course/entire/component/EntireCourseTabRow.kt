@@ -1,5 +1,6 @@
 package com.paw.key.presentation.ui.course.entire.component
 
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.height
 import androidx.compose.material3.ScrollableTabRow
 import androidx.compose.material3.Tab
@@ -7,11 +8,13 @@ import androidx.compose.material3.TabRowDefaults
 import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.paw.key.core.designsystem.theme.PawKeyTheme
+import com.paw.key.core.util.NoRippleInteractionSource
 import com.paw.key.presentation.ui.course.entire.state.EntireCourseContract.CourseTab
 
 @Composable
@@ -68,6 +71,7 @@ fun EntireCourseTabRow(
                 onClick = {
                     onTabSelected(index)
                 },
+                interactionSource = remember { NoRippleInteractionSource() },
             )
         }
     }
