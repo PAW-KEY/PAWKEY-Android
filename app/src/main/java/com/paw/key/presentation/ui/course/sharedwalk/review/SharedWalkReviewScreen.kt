@@ -26,6 +26,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
@@ -50,6 +51,7 @@ import com.paw.key.presentation.ui.course.walkreview.component.WalkReviewFeedbac
 import com.paw.key.presentation.ui.course.walkreview.component.WalkReviewImageRow
 import com.paw.key.presentation.ui.course.walkreview.component.WalkReviewInfoHolder
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 
 @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
 @Composable
@@ -64,6 +66,7 @@ fun SharedWalkReviewRoute(
     isSharedWalk : Boolean = true
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+    val scope = rememberCoroutineScope()
     val isValid = state.isValidForm
     val userId = PreferenceDataStore.getUserId()
 
@@ -103,7 +106,13 @@ fun SharedWalkReviewRoute(
         petName = state.petName,
         feedbackList = state.categoryList,
         onClickSharedReview = {
-            viewModel.onClickSharedReview()
+            // 다이얼로그용
+            scope.launch {
+                viewModel.onClickSharedReview(
+                    routeId = routeId,
+                    userId = userId.first()
+                )
+            }
         },
         modifier = modifier,
     )
@@ -168,7 +177,7 @@ fun SharedWalkReviewScreen(
                 feedbackList.forEachIndexed { index, category ->
                     WalkReviewFeedbackForm(
                         icon = R.drawable.ic_walk_review_location,
-                        title = "${emoji[index]}${category.categoryDescription}",
+                        title = "${emoji[index]} ${category.categoryDescription}",
                         selectedFeedbackItems = category.options.filter { it.isSelected }.map { it.optionText },
                         feedbackList = category.options.map { it.optionText },
                         onClickFeedback = { selectedText ->
