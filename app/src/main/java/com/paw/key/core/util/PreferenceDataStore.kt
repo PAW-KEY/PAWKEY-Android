@@ -141,7 +141,7 @@ object PreferenceDataStore {
     }
 
     fun getUserId(): Flow<Int> = summaryStore.data.map {
-        it[USER_ID_KEY] ?: 0
+        it[USER_ID_KEY] ?: 41
     }
 
     fun getUserName(): Flow<String> = summaryStore.data.map {

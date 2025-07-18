@@ -53,9 +53,6 @@ fun regionalMapView(
 
     // ------------------------------------------------
     //
-
-
-
     DisposableEffect(lifeCycle) {
         val observer = object : DefaultLifecycleObserver {
             override fun onCreate(owner: LifecycleOwner) {

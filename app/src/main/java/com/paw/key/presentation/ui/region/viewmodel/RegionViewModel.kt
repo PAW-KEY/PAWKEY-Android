@@ -34,10 +34,6 @@ class RegionViewModel @Inject constructor(
     fun getRegionGeometry(userId: Int, regionId: Int) = viewModelScope.launch {
         regionRepository.getRegionGeometry(userId, regionId)
             .onSuccess { data ->
-                Log.d("RegionViewModel", "API 응답 성공: $data")
-                Log.d("RegionViewModel", "geometry type: ${data.geometry.type}")
-                Log.d("RegionViewModel", "coordinates size: ${data.geometry.coordinates.size}")
-
                 val coordinates = data.geometry.coordinates
                 val flattenedLatLng = flattenCoordinatesToLatLng(coordinates)
 
