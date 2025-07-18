@@ -474,6 +474,7 @@ class SignUpViewModel @Inject constructor(
                     _sideEffect.emit(SignUpContract.SignUpSideEffect.NavigateNext)
                 }.onFailure { error ->
                     Log.e("SignUpViewModel", "SignUp failed: ${error.message}")
+                    Log.e("SignUpViewModel", "SignUp failed: ${request}")
                     _sideEffect.emit(SignUpContract.SignUpSideEffect.ShowSnackBar("회원가입 실패: ${error.message}"))
                 }
             } catch (e: Exception) {

@@ -247,20 +247,28 @@ fun sharedWalkCourseMapView(
         }
     }
 
-    LaunchedEffect(centerLabel, trackingManager) {
+    LaunchedEffect(isTrackingEnabled) {
+        kakaoMapState?.moveCamera(
+            CameraUpdateFactory.newCenterPosition(
+                currentUserLocation, 19
+            )
+        )
+    }
+
+    /*LaunchedEffect(centerLabel, trackingManager) {
         if (centerLabel != null && trackingManager != null) {
             trackingManager?.startTracking(centerLabel)
         }
-    }
+    }*/
 
     LaunchedEffect(isPauseTracking) {
         if (!isPauseTracking) {
-            trackingManager?.stopTracking()
+            //trackingManager?.stopTracking()
             mapView.isClickable = false
             dimScreenLayer?.setColor(Color.Black.copy(alpha = 0.5f).toArgb())
             dimScreenLayer?.setVisible(true)
         } else {
-            trackingManager?.stopTracking()
+            //trackingManager?.stopTracking()
             mapView.isClickable = true
             dimScreenLayer?.setVisible(false)
         }

@@ -54,7 +54,7 @@ class SharedWalkCourseViewModel @Inject constructor(
                 _state.update { state ->
                     state.copy(
                         poiPoints = it.geometry.coordinates.map { coord ->
-                            LatLng.from(coord[0], coord[1])
+                            LatLng.from(coord[1], coord[0])
                         }.toPersistentList()
                     )
                 }
