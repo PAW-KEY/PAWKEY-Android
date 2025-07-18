@@ -10,8 +10,10 @@ import android.hardware.SensorEventListener
 import android.hardware.SensorManager
 import android.opengl.GLException
 import android.os.Build
+import android.os.Handler
 import android.os.Looper
 import android.util.Log
+import android.view.PixelCopy
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -308,7 +310,6 @@ fun WalkCourseRoute(
                 onLabelClick = { _, _ -> },
                 currentUserLocation = state.currentLocation,
                 poiPoints = if (isSharedWalk) {
-                    //Todo : 여기 공유용 루트 좌표값용
                     listOf()
                 } else {
                     state.poiPoints
@@ -475,12 +476,11 @@ fun WalkCourseScreen(
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.Center
                     ) {
-                        // Todo : 텍스트 스타일 24b로 변경 예쩡
                         if (!isSharedWalk) {
                             Text(
                                 text = "산책이 중단되었어요!",
                                 textAlign = TextAlign.Center,
-                                style = PawKeyTheme.typography.head22B,
+                                style = PawKeyTheme.typography.head24B,
                                 color = PawKeyTheme.colors.white1,
                                 modifier = Modifier.fillMaxWidth()
                             )
@@ -492,6 +492,7 @@ fun WalkCourseScreen(
                                 style = PawKeyTheme.typography.body16M,
                                 color = PawKeyTheme.colors.white2,
                                 modifier = Modifier.fillMaxWidth()
+                                    .padding(top = 12.dp)
                             )
                         } else {
                             Text(
@@ -572,6 +573,7 @@ fun WalkCourseScreen(
                             },
                             modifier = Modifier
                                 .padding(top = 16.dp)
+                                .padding(bottom = 44.dp)
                         )
                     } else {
                         Row (
@@ -613,7 +615,7 @@ fun WalkCourseScreen(
                                     .noRippleClickable {
                                         onStopTracking()
                                     }
-                                    .padding(horizontal = 24.dp, vertical = 16.dp),
+                                    .padding(horizontal = 28.dp, vertical = 16.dp),
                                 color = PawKeyTheme.colors.white1,
                                 style = PawKeyTheme.typography.body16Sb
                             )
@@ -626,19 +628,94 @@ fun WalkCourseScreen(
 }
 
 fun captureMapToBitmap(surfaceView: GLSurfaceView, onCaptured: (Bitmap?) -> Unit) {
-    surfaceView.queueEvent {
-        val egl = EGLContext.getEGL() as EGL10
-        val gl = egl.eglGetCurrentContext().gl as GL10
-      
-        // 원하는 최종 크기를 먼저 계산
-        val screenWidth = surfaceView.context.resources.displayMetrics.widthPixels
-        val contentWidth = (screenWidth - 32)
-        val targetHeight = (156 * surfaceView.context.resources.displayMetrics.density).toInt()
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        captureUsingPixelCopy(surfaceView, onCaptured)
+    } else {
+        surfaceView.queueEvent {
+            val egl = EGLContext.getEGL() as EGL10
+            val gl = egl.eglGetCurrentContext().gl as GL10
 
-        val bitmap = createBitmapFromGLSurface(0, 0, surfaceView.width, surfaceView.height, gl)
-        onCaptured(bitmap)
+            val context = surfaceView.context
+            val density = context.resources.displayMetrics.density
+            val screenWidth = context.resources.displayMetrics.widthPixels
+
+            val contentWidth = (screenWidth - 32)
+            val targetHeight = (156 * density).toInt()
+
+            // OpenGL로 전체 비트맵 캡처
+            val fullBitmap = createBitmapFromGLSurface(0, 0, surfaceView.width, surfaceView.height, gl)
+
+            val croppedBitmap = fullBitmap?.let { bitmap ->
+                val centerX = bitmap.width / 2
+                val centerY = bitmap.height / 2
+
+                val cropStartX = (centerX - contentWidth / 2).coerceAtLeast(0)
+                val cropStartY = (centerY - targetHeight / 2).coerceAtLeast(0)
+
+                val safeWidth = minOf(contentWidth, bitmap.width - cropStartX)
+                val safeHeight = minOf(targetHeight, bitmap.height - cropStartY)
+
+                Bitmap.createBitmap(bitmap, cropStartX, cropStartY, safeWidth, safeHeight)
+            }
+
+            onCaptured(croppedBitmap)
+        }
     }
 }
+
+@RequiresApi(Build.VERSION_CODES.O)
+fun captureUsingPixelCopy(
+    surfaceView: GLSurfaceView,
+    onCaptured: (Bitmap?) -> Unit
+) {
+    val rawBitmap = Bitmap.createBitmap(surfaceView.width, surfaceView.height, Bitmap.Config.ARGB_8888)
+
+    try {
+        PixelCopy.request(surfaceView, rawBitmap, { copyResult ->
+            if (copyResult == PixelCopy.SUCCESS) {
+                val croppedBitmap = cropCenterWithAspectRatio(rawBitmap, 16f / 11f)
+                onCaptured(croppedBitmap)
+            } else {
+                Log.e("PixelCopy", "PixelCopy 실패: $copyResult")
+                onCaptured(null)
+            }
+        }, Handler(Looper.getMainLooper()))
+    } catch (e: IllegalArgumentException) {
+        e.printStackTrace()
+        onCaptured(null)
+    }
+}
+
+fun cropCenterWithAspectRatio(
+    bitmap: Bitmap,
+    targetAspectRatio: Float
+): Bitmap {
+    val width = bitmap.width
+    val height = bitmap.height
+    val currentAspectRatio = width.toFloat() / height.toFloat()
+
+    val cropWidth: Int
+    val cropHeight: Int
+
+    if (currentAspectRatio > targetAspectRatio) {
+        // 현재 이미지가 더 넓음 → 좌우 잘라야 함
+        cropHeight = height
+        cropWidth = (height * targetAspectRatio).toInt()
+    } else {
+        // 현재 이미지가 더 높음 → 위아래 잘라야 함
+        cropWidth = width
+        cropHeight = (width / targetAspectRatio).toInt()
+    }
+
+    val startX = ((width - cropWidth) / 2).coerceAtLeast(0)
+    val startY = ((height - cropHeight) / 2).coerceAtLeast(0)
+
+    val safeWidth = minOf(cropWidth, width - startX)
+    val safeHeight = minOf(cropHeight, height - startY)
+
+    return Bitmap.createBitmap(bitmap, startX, startY, safeWidth, safeHeight)
+}
+
 
 fun createBitmapFromGLSurface(x: Int, y: Int, w: Int, h: Int, gl: GL10): Bitmap? {
     val bitmapBuffer = IntArray(w * h)

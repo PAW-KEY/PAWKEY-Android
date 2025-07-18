@@ -577,7 +577,7 @@ fun SharedWalkCourseScreen(
                                         color = PawKeyTheme.colors.green500,
                                         shape = RoundedCornerShape(8.dp)
                                     )
-                                    .padding(horizontal = 28.dp, vertical = 16.dp),
+                                    .padding(horizontal = 24.dp, vertical = 16.dp),
                                 color = PawKeyTheme.colors.green500,
                                 style = PawKeyTheme.typography.body16Sb
                             )

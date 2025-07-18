@@ -206,7 +206,7 @@ fun PawKeyNavHost(
         )
 
         archivedDetailNavGraph(
-            navigateUp = navigator::navigateUp,
+            navigateUp = navigator::navigateHome,
             navigateToSharedWalk = { routeId, pageId ->
                 Log.e("navigateNext", "navigateNext : $routeId")
                 navigator.navigateSharedWalkCourse(
@@ -264,10 +264,10 @@ fun PawKeyNavHost(
 
         loginNavGraph(
             paddingValues = paddingValues,
-            navigateUp = navigator::navigateHome,
-            navigateNext = {
+            navigateUp = {
                 navigator.navigateSignUpFlow()
             },
+            navigateNext = navigator::navigateHome,
             snackBarHostState = snackbarHostState
         )
 
@@ -285,7 +285,7 @@ fun PawKeyNavHost(
                     popUpTo(0) { inclusive = true }
                     launchSingleTop = true
                 }
-                navigator.navigateHome(navOptions = options)
+                navigator.navigateHome(options)
             }
         )
 

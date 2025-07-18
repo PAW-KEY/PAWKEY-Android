@@ -227,7 +227,7 @@ fun TapMapScreen(
                 contentAlignment = Alignment.BottomCenter
             ) {
                 Text(
-                    text = "산책 기록 시작하기",
+                    text = "산책 기록하기",
                     color = PawKeyTheme.colors.white1,
                     fontSize = 16.sp,
                     modifier = Modifier

@@ -75,8 +75,11 @@ class WalkReviewViewModel @Inject constructor(
                 _sideEffect.emit(WalkReviewSideEffect.NavigateNext(response.routeId, response.postId))
                 Log.d("WalkReviewViewModel", "리뷰 전송 성공!")
                 Log.d("WalkReviewViewModel", "routeId : ${response.routeId}, postId : ${response.postId}")
-            }.onFailure {
+            }.onFailure { respon ->
+                _sideEffect.emit(WalkReviewSideEffect.SHowToastMessage("${respon.message}"))
                 _sideEffect.emit(WalkReviewSideEffect.ShowSnackBar("리뷰 전송 실패!"))
+
+
                 Log.e("WalkReviewViewModel", "리뷰 전송 실패!")
             }
         }

@@ -1,5 +1,6 @@
 package com.paw.key.presentation.ui.login
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -12,17 +13,28 @@ import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.relocation.BringIntoViewRequester
+import androidx.compose.foundation.relocation.bringIntoViewRequester
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Icon
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -75,6 +87,7 @@ fun LoginRoute(
     )
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun LoginScreen(
     paddingValues: PaddingValues,
@@ -90,11 +103,18 @@ fun LoginScreen(
     isLoginFormValid: Boolean,
     modifier: Modifier = Modifier,
 ) {
+    val bringIntoViewRequester = remember { BringIntoViewRequester() }
+    val focusRequester = remember { FocusRequester() }
+    val coroutineScope = rememberCoroutineScope()
+    val scrollState = rememberScrollState()
+    val passwordFocusRequester = remember { FocusRequester() }
+
     Column(
         modifier = modifier
             .fillMaxSize()
             .statusBarsPadding()
             .background(PawKeyTheme.colors.white1)
+            .verticalScroll(scrollState)
     ) {
         TopBar(
             title = "기존 계정으로 로그인",
@@ -123,7 +143,13 @@ fun LoginScreen(
                 textValue = email,
                 placeHolder = "사용하실 아이디를 입력해주세요",
                 isPassword = true,
-                onTextChanged = onEmailChanged
+                onTextChanged = onEmailChanged,
+                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
+                keyboardActions = KeyboardActions(
+                    onNext = {
+                        passwordFocusRequester.requestFocus()
+                    }
+                )
             )
 
             Spacer(modifier = Modifier.height(40.dp))
@@ -140,10 +166,12 @@ fun LoginScreen(
                 placeHolder = "사용하실 비밀번호를 입력해주세요",
                 isPassword = isPasswordVisible,
                 onTextChanged = onPasswordChanged,
+                focusRequester = passwordFocusRequester,
+                keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Done),
                 suffix = {
                     Icon(
                         imageVector = ImageVector.vectorResource(
-                            if (!isPasswordVisible) R.drawable.ic_eye_linear_gray_valid
+                            if (isPasswordVisible) R.drawable.ic_eye_linear_gray_valid
                             else R.drawable.ic_eye_linear_invalid
                         ),
                         contentDescription = null,
@@ -151,6 +179,16 @@ fun LoginScreen(
                         tint = PawKeyTheme.colors.gray200
                     )
                 },
+                modifier = Modifier
+                    .bringIntoViewRequester(bringIntoViewRequester)
+                    .focusRequester(focusRequester)
+                    .onFocusChanged { focusState ->
+                        if (focusState.isFocused) {
+                            coroutineScope.launch {
+                                bringIntoViewRequester.bringIntoView()
+                            }
+                        }
+                    },
             )
         }
 
