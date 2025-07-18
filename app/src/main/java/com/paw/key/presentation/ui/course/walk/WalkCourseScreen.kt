@@ -476,12 +476,11 @@ fun WalkCourseScreen(
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.Center
                     ) {
-                        // Todo : 텍스트 스타일 24b로 변경 예쩡
                         if (!isSharedWalk) {
                             Text(
                                 text = "산책이 중단되었어요!",
                                 textAlign = TextAlign.Center,
-                                style = PawKeyTheme.typography.head22B,
+                                style = PawKeyTheme.typography.head24B,
                                 color = PawKeyTheme.colors.white1,
                                 modifier = Modifier.fillMaxWidth()
                             )
@@ -493,6 +492,7 @@ fun WalkCourseScreen(
                                 style = PawKeyTheme.typography.body16M,
                                 color = PawKeyTheme.colors.white2,
                                 modifier = Modifier.fillMaxWidth()
+                                    .padding(top = 12.dp)
                             )
                         } else {
                             Text(
@@ -573,6 +573,7 @@ fun WalkCourseScreen(
                             },
                             modifier = Modifier
                                 .padding(top = 16.dp)
+                                .padding(bottom = 44.dp)
                         )
                     } else {
                         Row (

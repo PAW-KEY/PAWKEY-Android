@@ -16,6 +16,8 @@ import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.relocation.BringIntoViewRequester
 import androidx.compose.foundation.relocation.bringIntoViewRequester
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Icon
 import androidx.compose.material3.SnackbarHostState
@@ -32,6 +34,7 @@ import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -104,6 +107,7 @@ fun LoginScreen(
     val focusRequester = remember { FocusRequester() }
     val coroutineScope = rememberCoroutineScope()
     val scrollState = rememberScrollState()
+    val passwordFocusRequester = remember { FocusRequester() }
 
     Column(
         modifier = modifier
@@ -139,7 +143,13 @@ fun LoginScreen(
                 textValue = email,
                 placeHolder = "사용하실 아이디를 입력해주세요",
                 isPassword = true,
-                onTextChanged = onEmailChanged
+                onTextChanged = onEmailChanged,
+                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
+                keyboardActions = KeyboardActions(
+                    onNext = {
+                        passwordFocusRequester.requestFocus()
+                    }
+                )
             )
 
             Spacer(modifier = Modifier.height(40.dp))
@@ -156,6 +166,8 @@ fun LoginScreen(
                 placeHolder = "사용하실 비밀번호를 입력해주세요",
                 isPassword = isPasswordVisible,
                 onTextChanged = onPasswordChanged,
+                focusRequester = passwordFocusRequester,
+                keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Done),
                 suffix = {
                     Icon(
                         imageVector = ImageVector.vectorResource(
