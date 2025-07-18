@@ -4,6 +4,7 @@ import android.Manifest
 import android.net.Uri
 import android.os.Build
 import android.util.Log
+import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -29,6 +30,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -64,6 +66,7 @@ fun WalkReviewRoute(
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     val isValid = state.isValidForm
+    val context = LocalContext.current
 
     val lifecycleOwner = LocalLifecycleOwner.current
 
@@ -110,6 +113,10 @@ fun WalkReviewRoute(
                     is WalkReviewContract.WalkReviewSideEffect.ShowSnackBar -> snackBarHostState.showSnackbar(
                         sideEffect.message
                     )
+
+                    is WalkReviewContract.WalkReviewSideEffect.SHowToastMessage -> {
+                        Toast.makeText(context, sideEffect.message, Toast.LENGTH_SHORT).show()
+                    }
 
                     is WalkReviewContract.WalkReviewSideEffect.NavigateNext -> {
                         Log.d("WalkReviewRoute", "navigateNext")

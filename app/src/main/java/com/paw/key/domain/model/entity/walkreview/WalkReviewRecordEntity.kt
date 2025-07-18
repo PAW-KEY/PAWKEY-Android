@@ -16,13 +16,13 @@ data class WalkReviewRecordEntity(
             title = title,
             description = description,
             isPublic = isPublic,
-            isMine = isMine,
             selectedCategories = categories.map { category ->
                 SelectedCategoryDto(
                     categoryId = category.categoryId,
                     selectedOptionIds = category.selectedOptionIds
                 )
             },
+            isMine = isMine,
             routeId = routeId,
         )
     }
