@@ -1,43 +1,19 @@
 package com.paw.key.presentation.ui.course.walk.state
 
-import android.graphics.Bitmap
 import androidx.annotation.StringRes
 import androidx.compose.runtime.Immutable
-import com.kakao.vectormap.LatLng
 import com.paw.key.R
-import com.paw.key.core.util.UiState
-import kotlinx.collections.immutable.PersistentList
-import kotlinx.collections.immutable.persistentListOf
+import com.paw.key.presentation.ui.course.walk.model.MapState
+import com.paw.key.presentation.ui.course.walk.model.RecordingState
+import com.paw.key.presentation.ui.course.walk.model.StepCounterState
 
 class WalkCourseContract {
     @Immutable
     data class WalkCourseState(
-        val uiState: UiState<PersistentList<LatLng>> = UiState.Loading,
-        val poiPoints: PersistentList<LatLng> = persistentListOf(),
-
-        val startedAt: String = "",
-        val endedAt: String = "",
-
-        val bitmap: Bitmap? = null,
-
-        // 현재 걸음 수
-        val steps: Long = 0,
-        val totalDistance: Float = 0f,
-
-        val initialSensorSteps: Long? = null,
-        val prevSteps: Long = 0,
-        val isWalking: Boolean = false,
-
-        val initialLocationState : UiState<LatLng> = UiState.Loading,
-        val currentLocation: LatLng? = null,
-        val lastLocation: LatLng? = null,
-        val cameraState : Boolean = false,
-        val isLocationTracking: Boolean = false,
-
-        val isTrackingEnabled : Boolean = false,
-        val isRecording : Boolean = false, // 기록 중 상태관리
-
-        val shouldCaptureMap: Boolean = false
+        val recordingState: RecordingState = RecordingState(),
+        val mapState: MapState = MapState(),
+        val stepCounterState: StepCounterState = StepCounterState(),
+        val totalTimeMillis: Long = 0L,
     )
 
     sealed class WalkCourseSideEffect {
