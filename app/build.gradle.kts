@@ -28,6 +28,8 @@ android {
         buildConfigField("String", "BASE_URL", properties["base.url"].toString())
         buildConfigField("String", "KAKAO_NATIVE_KEY", properties["kakao.native.key"].toString())
         buildConfigField("String", "KAKAO_REST_API_KEY", properties["kakao.rest.api"].toString())
+        buildConfigField("String", "NAVERMAP_CLIENT_SECRET", properties["NAVERMAP_CLIENT_SECRET"].toString())
+        buildConfigField("String", "NAVERMAP_CLIENT_ID", properties["NAVERMAP_CLIENT_ID"].toString())
 
         manifestPlaceholders["KAKAO_NATIVE_KEY"] = properties["kakao.native.key"].toString()
     }
@@ -103,4 +105,7 @@ dependencies {
 
     //로띠 - 애니메이션
     implementation(libs.lottie.compose)
+
+    // 네이버
+    implementation(libs.bundles.naverMaps)
 }
