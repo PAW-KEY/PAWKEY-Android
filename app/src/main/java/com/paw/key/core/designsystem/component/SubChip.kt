@@ -1,7 +1,6 @@
 package com.paw.key.core.designsystem.component
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -11,7 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.paw.key.core.designsystem.theme.PawKeyTheme
-import com.paw.key.core.util.noRippleClickable
+import com.paw.key.core.extension.noRippleClickable
 
 @Preview
 @Composable

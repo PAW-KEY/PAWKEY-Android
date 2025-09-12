@@ -27,7 +27,7 @@ import com.paw.key.presentation.ui.dummy.state.DummyContract.DummySideEffect
 import com.paw.key.R
 import com.paw.key.core.designsystem.theme.PawKeyTheme
 import com.paw.key.core.util.UiState
-import com.paw.key.core.util.noRippleClickable
+import com.paw.key.core.extension.noRippleClickable
 import com.paw.key.domain.model.entity.DummyUser
 import com.paw.key.presentation.ui.dummy.component.DummyItem
 

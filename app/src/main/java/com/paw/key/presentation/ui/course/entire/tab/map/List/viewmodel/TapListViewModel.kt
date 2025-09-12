@@ -110,12 +110,13 @@ class TapListViewModel @Inject constructor(
     }
 
     fun updateSortTime(option: String) {
+        Log.e("updateSortTime", option)
         when (option) {
-            "21분 이내" -> {
+            "20분 이내" -> {
                 _state.update {
                     it.copy(
                         selectedSortTimeStart = 0,
-                        selectedSortTimeEnd = 21
+                        selectedSortTimeEnd = 20
                     )
                 }
             }
@@ -123,7 +124,7 @@ class TapListViewModel @Inject constructor(
             "21~40분" -> {
                 _state.update {
                     it.copy(
-                        selectedSortTimeStart = 21,
+                        selectedSortTimeStart = 20,
                         selectedSortTimeEnd = 40
                     )
                 }
@@ -132,7 +133,7 @@ class TapListViewModel @Inject constructor(
             "41~60분" -> {
                 _state.update {
                     it.copy(
-                        selectedSortTimeStart = 41,
+                        selectedSortTimeStart = 40,
                         selectedSortTimeEnd = 60
                     )
                 }
@@ -141,7 +142,7 @@ class TapListViewModel @Inject constructor(
             "1시간 이상" -> {
                 _state.update {
                     it.copy(
-                        selectedSortTimeStart = 61,
+                        selectedSortTimeStart = 60,
                         selectedSortTimeEnd = null
                     )
                 }
@@ -320,6 +321,8 @@ class TapListViewModel @Inject constructor(
                     durationEnd = state.value.selectedSortTimeEnd,
                     selectedOptions = selectedOptions.ifEmpty { null }
                 )
+
+                Log.e("TapListViewModel", "요청 데이터: $request")
 
                 postsListRepository.postList(
                     userId = userId.first(),

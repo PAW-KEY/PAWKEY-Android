@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
@@ -35,7 +34,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.paw.key.R
 import com.paw.key.core.designsystem.component.CourseCard
 import com.paw.key.core.designsystem.theme.PawKeyTheme
-import com.paw.key.core.util.noRippleClickable
+import com.paw.key.core.extension.noRippleClickable
 import com.paw.key.presentation.ui.course.entire.tab.map.List.viewmodel.TapListViewModel
 
 @Preview(showBackground = true)

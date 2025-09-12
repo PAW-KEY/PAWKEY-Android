@@ -16,11 +16,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.onFocusChanged
-import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import com.paw.key.core.designsystem.theme.PawKeyTheme
-import com.paw.key.core.util.noRippleClickable
 
 @Composable
 fun SignUpTextField(

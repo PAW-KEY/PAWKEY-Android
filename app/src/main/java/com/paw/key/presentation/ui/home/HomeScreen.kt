@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -36,7 +35,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.paw.key.R
 import com.paw.key.core.designsystem.component.CourseCard
 import com.paw.key.core.designsystem.theme.PawKeyTheme
-import com.paw.key.core.util.noRippleClickable
+import com.paw.key.core.extension.noRippleClickable
 import com.paw.key.presentation.ui.home.component.DaytimeCard
 import com.paw.key.presentation.ui.home.component.HomeTopBar
 import com.paw.key.presentation.ui.home.component.RowCalendar
@@ -145,11 +144,22 @@ fun HomeScreen(
                 item {
                     Spacer(modifier = Modifier.height(12.dp))
                     Row(
-                        modifier = Modifier.fillMaxWidth()
+                        modifier = Modifier
+                            .fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(12.dp)
                     ) {
-                        DaytimeCard(daytime = "05:06", daystate = "일출")
-                        Spacer(modifier = Modifier.weight(1F))
-                        TrackingCard(onClick = { navigateNext() })
+                        DaytimeCard(
+                            daytime = "05:06",
+                            daystate = "일출",
+                            modifier = Modifier
+                                .weight(0.3f)
+                        )
+
+                        TrackingCard(
+                            onClick = { navigateNext() },
+                            modifier = Modifier
+                                .weight(0.7f)
+                        )
                     }
                 }
 
