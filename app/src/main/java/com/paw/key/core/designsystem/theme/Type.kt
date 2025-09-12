@@ -11,6 +11,7 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.LineHeightStyle
 import androidx.compose.ui.unit.TextUnit
+import androidx.compose.ui.unit.em
 import androidx.compose.ui.unit.sp
 import com.paw.key.R
 
@@ -38,7 +39,21 @@ class PawKeyTypography internal constructor(
     caption12Sb1: TextStyle,
     caption12Sb2: TextStyle,
     caption12M: TextStyle,
-    caption12R: TextStyle
+    caption12R: TextStyle,
+    /*--- 이 위에는 전체 디자인 확정 시 전부 삭제 예정 지금은 오류 방지용으로 남김*/
+    header1: TextStyle,
+    header2: TextStyle,
+    header3: TextStyle,
+    subTitle: TextStyle,
+    bodyDefault: TextStyle,
+    bodyActive: TextStyle,
+    bodySmall: TextStyle,
+    mainButtonDefault: TextStyle,
+    mainButtonActive: TextStyle,
+    subButtonDefault: TextStyle,
+    subButtonActive: TextStyle,
+    buttonSmall: TextStyle,
+    buttonLink: TextStyle,
 ) {
     var head24B: TextStyle by mutableStateOf(head24B)
         private set
@@ -75,6 +90,34 @@ class PawKeyTypography internal constructor(
     var caption12R: TextStyle by mutableStateOf(caption12R)
         private set
 
+    /*------------------------------------------------------------*/
+    var header1: TextStyle by mutableStateOf(header1)
+        private set
+    var header2: TextStyle by mutableStateOf(header2)
+        private set
+    var header3: TextStyle by mutableStateOf(header3)
+        private set
+    var subTitle: TextStyle by mutableStateOf(subTitle)
+        private set
+    var bodyDefault: TextStyle by mutableStateOf(bodyDefault)
+        private set
+    var bodyActive: TextStyle by mutableStateOf(bodyActive)
+        private set
+    var bodySmall: TextStyle by mutableStateOf(bodySmall)
+        private set
+    var mainButtonDefault: TextStyle by mutableStateOf(mainButtonDefault)
+        private set
+    var mainButtonActive: TextStyle by mutableStateOf(mainButtonActive)
+        private set
+    var subButtonDefault: TextStyle by mutableStateOf(subButtonDefault)
+        private set
+    var subButtonActive: TextStyle by mutableStateOf(subButtonActive)
+        private set
+    var buttonSmall: TextStyle by mutableStateOf(buttonSmall)
+        private set
+    var buttonLink: TextStyle by mutableStateOf(buttonLink)
+        private set
+
     fun copy(
         head24B: TextStyle = this.head24B,
         head24Sb: TextStyle = this.head24Sb,
@@ -92,7 +135,22 @@ class PawKeyTypography internal constructor(
         caption12Sb1: TextStyle = this.caption12Sb1,
         caption12Sb2: TextStyle = this.caption12Sb2,
         caption12M: TextStyle = this.caption12M,
-        caption12R: TextStyle = this.caption12R
+        caption12R: TextStyle = this.caption12R,
+        /*----------------------------------*/
+        header1: TextStyle = this.header1,
+        header2: TextStyle = this.header2,
+        header3: TextStyle = this.header3,
+        subTitle: TextStyle = this.subTitle,
+        bodyDefault: TextStyle = this.bodyDefault,
+        bodyActive: TextStyle = this.bodyActive,
+        bodySmall: TextStyle = this.bodySmall,
+        mainButtonDefault: TextStyle = this.mainButtonDefault,
+        mainButtonActive: TextStyle = this.mainButtonActive,
+        subButtonDefault: TextStyle = this.subButtonDefault,
+        subButtonActive: TextStyle = this.subButtonActive,
+        buttonSmall: TextStyle = this.buttonSmall,
+        buttonLink: TextStyle = this.buttonLink,
+
     ): PawKeyTypography = PawKeyTypography(
         head24B,
         head24Sb,
@@ -110,7 +168,21 @@ class PawKeyTypography internal constructor(
         caption12Sb1,
         caption12Sb2,
         caption12M,
-        caption12R
+        caption12R,
+        /*----------------------------------*/
+        header1,
+        header2,
+        header3,
+        subTitle,
+        bodyDefault,
+        bodyActive,
+        bodySmall,
+        mainButtonDefault,
+        mainButtonActive,
+        subButtonDefault,
+        subButtonActive,
+        buttonSmall,
+        buttonLink,
     )
 
     fun update(other: PawKeyTypography) {
@@ -131,6 +203,20 @@ class PawKeyTypography internal constructor(
         caption12Sb2 = other.caption12Sb2
         caption12M = other.caption12M
         caption12R = other.caption12R
+        /*----------------------------------*/
+        header1 = other.header1
+        header2 = other.header2
+        header3 = other.header3
+        subTitle = other.subTitle
+        bodyDefault = other.bodyDefault
+        bodyActive = other.bodyActive
+        bodySmall = other.bodySmall
+        mainButtonDefault = other.mainButtonDefault
+        mainButtonActive = other.mainButtonActive
+        subButtonDefault = other.subButtonDefault
+        subButtonActive = other.subButtonActive
+        buttonSmall = other.buttonSmall
+        buttonLink = other.buttonLink
     }
 }
 
@@ -274,6 +360,98 @@ fun pawKeyTypography(): PawKeyTypography {
             fontSize = 12.sp,
             lineHeight = (12 * 1.2).sp,
             letterSpacing = TextUnit.Unspecified
+        ),
+        /*---------------------------------------*/
+        header1 = pawKeyTextStyle(
+            fontFamily = PretendardBold,
+            fontWeight = FontWeight.Bold,
+            fontSize = 28.sp,
+            lineHeight = 36.sp,
+            letterSpacing = (-0.02).em
+        ),
+        header2 = pawKeyTextStyle(
+            fontFamily = PretendardBold,
+            fontWeight = FontWeight.Bold,
+            fontSize = 24.sp,
+            lineHeight = 26.sp,
+            letterSpacing = (-0.02).em
+        ),
+        header3 = pawKeyTextStyle(
+            fontFamily = PretendardBold,
+            fontWeight = FontWeight.Bold,
+            fontSize = 20.sp,
+            lineHeight = 24.sp,
+            letterSpacing = (-0.02).em
+        ),
+        subTitle = pawKeyTextStyle(
+            fontFamily = PretendardSemiBold,
+            fontWeight = FontWeight.SemiBold,
+            fontSize = 16.sp,
+            lineHeight = 20.sp,
+            letterSpacing = 0.em
+        ),
+        bodyDefault = pawKeyTextStyle(
+            fontFamily = PretendardRegular,
+            fontWeight = FontWeight.Normal,
+            fontSize = 14.sp,
+            lineHeight = 20.sp,
+            letterSpacing = 0.em
+        ),
+        bodyActive = pawKeyTextStyle(
+            fontFamily = PretendardRegular,
+            fontWeight = FontWeight.Normal,
+            fontSize = 14.sp,
+            lineHeight = 20.sp,
+            letterSpacing = 0.em
+        ),
+        bodySmall = pawKeyTextStyle(
+            fontFamily = PretendardMedium,
+            fontWeight = FontWeight.Medium,
+            fontSize = 12.sp,
+            lineHeight = 16.sp,
+            letterSpacing = 0.em
+        ),
+        mainButtonDefault = pawKeyTextStyle(
+            fontFamily = PretendardRegular,
+            fontWeight = FontWeight.Normal,
+            fontSize = 18.sp,
+            lineHeight = 16.sp,
+            letterSpacing = 0.em
+        ),
+        mainButtonActive = pawKeyTextStyle(
+            fontFamily = PretendardRegular,
+            fontWeight = FontWeight.Normal,
+            fontSize = 18.sp,
+            lineHeight = 16.sp,
+            letterSpacing = 0.em
+        ),
+        subButtonDefault = pawKeyTextStyle(
+            fontFamily = PretendardRegular,
+            fontWeight = FontWeight.Normal,
+            fontSize = 12.sp,
+            lineHeight = 16.sp,
+            letterSpacing = 0.em
+        ),
+        subButtonActive = pawKeyTextStyle(
+            fontFamily = PretendardSemiBold,
+            fontWeight = FontWeight.SemiBold,
+            fontSize = 12.sp,
+            lineHeight = 16.sp,
+            letterSpacing = 0.em
+        ),
+        buttonSmall = pawKeyTextStyle(
+            fontFamily = PretendardSemiBold,
+            fontWeight = FontWeight.SemiBold,
+            fontSize = 10.sp,
+            lineHeight = 14.sp,
+            letterSpacing = 0.em
+        ),
+        buttonLink = pawKeyTextStyle(
+            fontFamily = PretendardRegular,
+            fontWeight = FontWeight.Normal,
+            fontSize = 12.sp,
+            lineHeight = 16.sp,
+            letterSpacing = 0.em
         ),
     )
 }
