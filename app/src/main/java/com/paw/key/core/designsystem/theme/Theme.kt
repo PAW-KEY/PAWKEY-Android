@@ -45,19 +45,6 @@ fun ProvidePawKeyColorsAndTypography(
         content = content
     )
 }
-/*
-@Composable
-fun DoggyWalkerAndroidTheme(
-    darkTheme: Boolean = isSystemInDarkTheme(),
-    content: @Composable () -> Unit
-) {
-    val colors = DoggyWalkerColors()
-    val typography = DoggyWalkerTypography()
-
-    ProvideDoggyWalkerColorsAndTypography(colors, typography) {
-        MaterialTheme(content = content)
-    }
-}*/
 
 @Composable
 fun PawKeyTheme(
