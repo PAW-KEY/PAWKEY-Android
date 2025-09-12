@@ -2,7 +2,7 @@ package com.paw.key.presentation.ui.course.walkcomplete.state
 
 import android.graphics.Bitmap
 import androidx.compose.runtime.Immutable
-import com.kakao.vectormap.LatLng
+import com.naver.maps.geometry.LatLng
 
 class WalkCompleteContract {
     @Immutable

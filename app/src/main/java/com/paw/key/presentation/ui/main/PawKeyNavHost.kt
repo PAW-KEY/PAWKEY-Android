@@ -129,7 +129,6 @@ fun PawKeyNavHost(
             paddingValues = paddingValues,
             navigateUp = navigator::navigateUp,
             navigateNext = {
-                Log.e("navigateNext", "navigateNext : $it")
                 navigator.navigateWalkCompletion(
                     routeId = it,
                 )
@@ -206,9 +205,12 @@ fun PawKeyNavHost(
         )
 
         archivedDetailNavGraph(
-            navigateUp = navigator::navigateHome,
+            // Todo 그냥 리스트에서 상세보기 후 뒤로가기
+            navigateUp = navigator::navigateUp,
+            /*navigateDetail = {
+                navigator.navController.navigateCourse(index = 1, navOptions = null)
+            },*/
             navigateToSharedWalk = { routeId, pageId ->
-                Log.e("navigateNext", "navigateNext : $routeId")
                 navigator.navigateSharedWalkCourse(
                     routeId = routeId,
                     pageId = pageId
@@ -265,9 +267,14 @@ fun PawKeyNavHost(
         loginNavGraph(
             paddingValues = paddingValues,
             navigateUp = {
+                navigator.navigateUp()
+            },
+            navigateNext = {
                 navigator.navigateSignUpFlow()
             },
-            navigateNext = navigator::navigateHome,
+            navigateHome = {
+                navigator.navigateHome()
+            },
             snackBarHostState = snackbarHostState
         )
 

@@ -1,7 +1,7 @@
 package com.paw.key.domain.model.entity.sharedresult
 
 import android.graphics.Bitmap
-import com.kakao.vectormap.LatLng
+import com.naver.maps.geometry.LatLng
 
 data class WalkResult(
     val bitmap: Bitmap?,
