@@ -44,6 +44,22 @@ val System_red = Color(0xFFEB210F)
 val System_green = Color(0xFF40C927)
 
 
+/*------------------------------------------------*/
+// Brand
+val OpacityPrimary = Color(0xFF114531)
+val Primary = Color(0xFF4CD137)
+
+// contents
+val Contents = Color(0xFF171717)
+
+// background
+val Background1 = Color(0xFFEEEEEE)
+val Background2 = Color(0xFFFFFFFF)
+
+// default
+val Default = Color(0xFF9C9C9C)
+
+
 @Stable
 class PawKeyColors(
     green50: Color,
@@ -78,6 +94,14 @@ class PawKeyColors(
 
     system_red: Color,
     system_green: Color,
+
+    /*--------------------*/
+    opacityPrimary: Color,
+    primary: Color,
+    contents: Color,
+    background1: Color,
+    background2: Color,
+    default: Color,
 ) {
     var green50: Color by mutableStateOf(green50)
         private set
@@ -140,20 +164,21 @@ class PawKeyColors(
     var system_green: Color by mutableStateOf(system_green)
         private set
 
+    /*----------------------------*/
+    var opacityPrimary: Color by mutableStateOf(opacityPrimary)
+        private set
+    var primary: Color by mutableStateOf(primary)
+        private set
+    var contents: Color by mutableStateOf(contents)
+        private set
+    var background1: Color by mutableStateOf(background1)
+        private set
+    var background2: Color by mutableStateOf(background2)
+        private set
+    var default: Color by mutableStateOf(default)
+        private set
 
     fun copy(
-        beige50: Color = this.green50,
-        beige100: Color = this.green100,
-        beige200: Color = this.green200,
-        beige300: Color = this.green300,
-        beige400: Color = this.green400,
-        beige500: Color = this.green500,
-        beige600: Color = this.green600,
-        beige700: Color = this.green700,
-        beige800: Color = this.green800,
-        beige900: Color = this.green900,
-        beige950: Color = this.green950,
-
         gray5: Color = this.gray5,
         gray25: Color = this.gray25,
         gray50: Color = this.gray50,
@@ -175,8 +200,16 @@ class PawKeyColors(
         system_red: Color = this.system_red,
         system_green: Color = this.system_green,
 
+        /*----------------------------------*/
+        opacityPrimary: Color = this.opacityPrimary,
+        primary: Color = this.primary,
+        contents: Color = this.contents,
+        background1: Color = this.background1,
+        background2: Color = this.background2,
+        default: Color = this.default,
 
         ): PawKeyColors = PawKeyColors(
+
         green50 = green50,
         green100 = green100,
         green200 = green200,
@@ -208,7 +241,15 @@ class PawKeyColors(
         black = black,
 
         system_red = system_red,
-        system_green = system_green
+        system_green = system_green,
+
+        /*-------------------------------*/
+        opacityPrimary = opacityPrimary,
+        primary = primary,
+        contents = contents,
+        background1 = background1,
+        background2 = background2,
+        default = default,
     )
 
     fun update(other: PawKeyColors) {
@@ -243,6 +284,14 @@ class PawKeyColors(
 
         system_red = other.system_red
         system_green = other.system_green
+
+        /*-------------------------------*/
+        opacityPrimary = other.opacityPrimary
+        primary = other.primary
+        contents = other.contents
+        background1 = other.background1
+        background2 = other.background2
+        default = other.default
     }
 }
 
@@ -280,8 +329,14 @@ fun pawKeyColors(
     system_red: Color = System_red,
     system_green: Color = System_green,
 
-
-    ) = PawKeyColors(
+    /*---------------------------------*/
+    opacityPrimary: Color = OpacityPrimary,
+    primary: Color = Primary,
+    contents: Color = Contents,
+    background1: Color = Background1,
+    background2: Color = Background2,
+    default: Color = Default,
+) = PawKeyColors(
     green50 = green50,
     green100 = green100,
     green200 = green200,
@@ -313,7 +368,13 @@ fun pawKeyColors(
     black = black,
 
     system_red = system_red,
-    system_green = system_green
+    system_green = system_green,
 
-
+    /*----------------------------*/
+    opacityPrimary = opacityPrimary,
+    primary = primary,
+    contents = contents,
+    background1 = background1,
+    background2 = background2,
+    default = default,
 )
