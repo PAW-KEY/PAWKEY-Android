@@ -1,7 +1,7 @@
 package com.paw.key.presentation.ui.course.entire.tab.map.state
 
 import androidx.compose.runtime.Immutable
-import com.kakao.vectormap.LatLng
+import com.naver.maps.geometry.LatLng
 import com.paw.key.core.util.UiState
 
 @Immutable

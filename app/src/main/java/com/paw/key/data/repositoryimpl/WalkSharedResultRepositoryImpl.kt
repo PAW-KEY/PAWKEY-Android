@@ -2,13 +2,11 @@ package com.paw.key.data.repositoryimpl
 
 import android.graphics.Bitmap
 import android.util.Log
-import com.kakao.vectormap.LatLng
+import com.naver.maps.geometry.LatLng
 import com.paw.key.domain.model.entity.sharedresult.WalkResult
 import com.paw.key.domain.repository.WalkSharedResultRepository
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import javax.inject.Inject
 import javax.inject.Singleton

@@ -2,7 +2,6 @@ package com.paw.key.presentation.ui.login
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
@@ -26,7 +25,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
@@ -44,7 +42,7 @@ import com.paw.key.core.designsystem.component.PawkeyButton
 import com.paw.key.core.designsystem.component.TopBar
 import com.paw.key.core.designsystem.theme.PawKeyTheme
 import com.paw.key.core.util.PreferenceDataStore
-import com.paw.key.core.util.noRippleClickable
+import com.paw.key.core.extension.noRippleClickable
 import com.paw.key.presentation.ui.login.component.LoginTextField
 import com.paw.key.presentation.ui.login.viewmodel.LoginViewModel
 import kotlinx.coroutines.launch
@@ -54,6 +52,7 @@ fun LoginRoute(
     paddingValues: PaddingValues,
     navigateUp: () -> Unit,
     navigateNext: () -> Unit,
+    navigateHome: () -> Unit,
     snackBarHostState: SnackbarHostState,
     modifier: Modifier = Modifier,
     viewModel: LoginViewModel = hiltViewModel()
@@ -83,7 +82,8 @@ fun LoginRoute(
         modifier = modifier,
         onEmailChanged = viewModel::onEmailChanged,
         onPasswordChanged = viewModel::onPasswordChanged,
-        onClickIcon = viewModel::onPasswordVisibilityChanged
+        onClickIcon = viewModel::onPasswordVisibilityChanged,
+        navigateHome = navigateHome
     )
 }
 
@@ -93,6 +93,7 @@ fun LoginScreen(
     paddingValues: PaddingValues,
     navigateUp: () -> Unit,
     navigateNext: () -> Unit,
+    navigateHome : () -> Unit,
     onEmailChanged: (String) -> Unit,
     onPasswordChanged: (String) -> Unit,
     onClickIcon: () -> Unit,
@@ -119,6 +120,7 @@ fun LoginScreen(
         TopBar(
             title = "기존 계정으로 로그인",
             onBackClick = navigateUp,
+            onClickTitle = navigateHome,
             modifier = Modifier.padding(
                 top = paddingValues.calculateTopPadding()
             )
@@ -201,14 +203,14 @@ fun LoginScreen(
                 .navigationBarsPadding()
                 .padding(bottom = 60.dp)
         ) {
-            PawkeyButton(
+           /* PawkeyButton(
                 text = "신규 계정으로 회원가입",
                 onClick = navigateUp,
                 enabled = true,
                 isBackGround = true,
                 isBorder = false,
                 modifier = Modifier.fillMaxWidth()
-            )
+            )*/
 
             Spacer(modifier = Modifier.height(12.dp))
 
@@ -233,6 +235,7 @@ private fun PreviewLoginScreen(){
             onEmailChanged = {},
             onPasswordChanged = {},
             onClickIcon = {},
+            navigateHome = {},
             snackBarHostState = SnackbarHostState(),
             email = "",
             password = "",

@@ -3,7 +3,7 @@ package com.paw.key.presentation.ui.course.entire.tab.map.viewmodel
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.kakao.vectormap.LatLng
+import com.naver.maps.geometry.LatLng
 import com.paw.key.core.util.PreferenceDataStore
 import com.paw.key.core.util.UiState
 import com.paw.key.presentation.ui.course.entire.tab.map.state.TapMapSideEffect
@@ -37,7 +37,10 @@ class TapMapViewModel @Inject constructor(
             Log.e("TapMapViewModel", "savedRegion: $savedRegion")
             _state.update {
                 it.copy(
-                    currentRegion = savedRegion.first()
+                    currentRegion = savedRegion.first(),
+                    initialLocationState = UiState.Success(
+                        LatLng(37.4979000000, 127.0276000000)
+                    )
                 )
             }
         }

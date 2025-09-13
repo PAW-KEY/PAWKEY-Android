@@ -1,69 +1,157 @@
 package com.paw.key.presentation.ui.course.walk.viewmodel
 
-import android.content.Context
-import android.graphics.Bitmap
 import android.location.Location
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.kakao.vectormap.LatLng
 import com.paw.key.core.util.PhotoUtils
-import com.paw.key.core.util.PreferenceDataStore
+import com.paw.key.core.util.UiState
+import com.paw.key.core.extension.toLatLng
 import com.paw.key.domain.model.entity.walkcourse.CoordinateEntity
 import com.paw.key.domain.model.entity.walkcourse.WalkCourseEntity
 import com.paw.key.domain.repository.WalkSharedResultRepository
 import com.paw.key.domain.repository.walkcourse.WalkCourseRepository
+import com.paw.key.presentation.ui.course.util.RealTimeLocationListener
 import com.paw.key.presentation.ui.course.walk.state.WalkCourseContract.WalkCourseSideEffect
 import com.paw.key.presentation.ui.course.walk.state.WalkCourseContract.WalkCourseState
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.qualifiers.ApplicationContext
-import kotlinx.collections.immutable.PersistentList
-import kotlinx.collections.immutable.toPersistentList
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.sample
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.time.LocalDateTime
 import javax.inject.Inject
 
 @HiltViewModel
 class WalkCourseViewModel @Inject constructor(
-    @ApplicationContext private val context: Context,
-    private val walkSharedResultRepository : WalkSharedResultRepository,
+    private val walkSharedResultRepository: WalkSharedResultRepository,
     private val walkCourseRepository: WalkCourseRepository
-) : ViewModel() {
+) : ViewModel(), RealTimeLocationListener {
     private val _state = MutableStateFlow(WalkCourseState())
-    val state : StateFlow<WalkCourseState>
+    val state: StateFlow<WalkCourseState>
         get() = _state.asStateFlow()
 
     private val _sideEffect = MutableSharedFlow<WalkCourseSideEffect>()
     val sideEffect: SharedFlow<WalkCourseSideEffect>
         get() = _sideEffect.asSharedFlow()
 
-    private val _totalTime = MutableStateFlow(0L)
-    val totalTime: StateFlow<Long> = _totalTime.asStateFlow()
+    private var timerJob: Job? = null
 
-    fun incrementTotalTime() {
-        _totalTime.update {
-            it + 1000L
+    private var initialSensorSteps: Long = -1L
+    private var lastLocation: Location? = null
+
+    fun onPermissionsGranted() {
+        if (_state.value.mapState.initialState is UiState.Loading) {
+            _state.update {
+                it.copy(
+                    mapState = it.mapState.copy(
+                        initialState = UiState.Success(true)
+                    )
+                )
+            }
+            startTracking()
         }
     }
 
-    fun addInitLocation(location: LatLng) {
-        val currentList = state.value.poiPoints.toMutableList()
-        currentList.add(location)
-        _state.value = _state.value.copy(
-            poiPoints = currentList.toPersistentList()
-        )
+    fun startTracking() {
+        _state.update { currentState ->
+            val newRecordingState = currentState.recordingState.copy(
+                isRecording = true,
+                startedAt = LocalDateTime.now().toString()
+            )
+
+            currentState.copy(
+                recordingState = newRecordingState
+            )
+        }
+        startTimer()
+    }
+
+    fun pauseTracking() {
+        _state.update { currentState ->
+            val newRecordingState = currentState.recordingState.copy(
+                isRecording = false,
+                endedAt = LocalDateTime.now().toString()
+            )
+
+            currentState.copy(
+                recordingState = newRecordingState
+            )
+        }
+        stopTimer()
+    }
+
+    private fun startTimer() {
+        if (timerJob?.isActive == true) return
+        timerJob = viewModelScope.launch {
+            while (true) {
+                delay(1000L)
+                _state.update { currentState ->
+                    val newTimeMills = currentState.totalTimeMillis + 1000L
+                    currentState.copy(
+                        totalTimeMillis = newTimeMills
+                    )
+                }
+            }
+        }
+    }
+
+    private fun stopTimer() {
+        timerJob?.cancel()
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        stopTimer()
+    }
+
+    fun fetchTrackingEnable() {
+        _state.update { currentState ->
+            currentState.copy(
+                mapState = currentState.mapState.copy(
+                    isTrackingEnabled = !currentState.mapState.isTrackingEnabled
+                )
+            )
+        }
+    }
+
+    fun disableTracking() {
+        _state.update { currentState ->
+            if (currentState.mapState.isTrackingEnabled) {
+                currentState.copy(
+                    mapState = currentState.mapState.copy(isTrackingEnabled = false)
+                )
+            } else {
+                currentState
+            }
+        }
+    }
+
+    fun onRawStepData(totalStepsFromSensor: Long) {
+        if (initialSensorSteps == -1L) {
+            initialSensorSteps = totalStepsFromSensor
+        }
+
+        val sessionSteps = totalStepsFromSensor - initialSensorSteps
+
+        _state.update { currentState ->
+            currentState.copy(
+                stepCounterState = currentState.stepCounterState.copy(
+                    sessionSteps = sessionSteps
+                )
+            )
+        }
     }
 
     // 서버 통신
     fun postWalkCourseData(userId: Int) = viewModelScope.launch {
-        val bitmap = state.value.bitmap
+        val bitmap = _state.value.mapState.capturedMapBitmap
         if (bitmap == null) {
             _sideEffect.emit(WalkCourseSideEffect.ShowSnackBar("산책 이미지가 없습니다."))
             return@launch
@@ -82,14 +170,14 @@ class WalkCourseViewModel @Inject constructor(
             }
 
             val routeEntity = WalkCourseEntity(
-                coordinates = state.value.poiPoints.map { // la, lo
+                coordinates = _state.value.mapState.poiPoints.map {
                     CoordinateEntity(it.latitude, it.longitude)
                 },
-                distance = state.value.totalDistance.toInt(),
-                duration = (_totalTime.value / 1000).toInt(),
-                startedAt = state.value.startedAt,
-                endedAt = state.value.endedAt,
-                stepCount = state.value.steps.toInt()
+                distance = _state.value.mapState.totalDistance.toInt(),
+                duration = (_state.value.totalTimeMillis / 1000).toInt(),
+                startedAt = _state.value.recordingState.startedAt,
+                endedAt = _state.value.recordingState.endedAt,
+                stepCount = _state.value.stepCounterState.sessionSteps.toInt()
             )
 
             val result = walkCourseRepository.postWalkCourse(
@@ -112,165 +200,80 @@ class WalkCourseViewModel @Inject constructor(
         }
     }
 
-
-    // Todo : = updateState 로 일관되게 정리하기
-    fun updateLocationAndCalculateDistance(newLocation: LatLng, accuracy: Float) {
-        val MIN_ACCURACY_THRESHOLD = 25f // 미터 단위 (이보다 높은 정확도일 때만 사용)
-        if (accuracy > MIN_ACCURACY_THRESHOLD) {
-            return
-        }
-
-        _state.update { currentUiState ->
-            val oldLocation = currentUiState.lastLocation
-            var distanceIncrement = 0f
-
-            if (oldLocation != null) {
-                val oldAndroidLocation = Location("prev_location").apply {
-                    latitude = oldLocation.latitude
-                    longitude = oldLocation.longitude
-                }
-
-                val newAndroidLocation = Location("current_location").apply {
-                    latitude = newLocation.latitude
-                    longitude = newLocation.longitude
-                }
-
-                /*val calculatedDistance = oldAndroidLocation.distanceTo(newAndroidLocation)
-
-                val MIN_DISTANCE_THRESHOLD = 1f // 미터 단위
-                if (calculatedDistance >= MIN_DISTANCE_THRESHOLD) {
-                    distanceIncrement = calculatedDistance
-                }*/
-                distanceIncrement = oldAndroidLocation.distanceTo(newAndroidLocation)
-            }
-
-            val updatedPoiPoints: PersistentList<LatLng> =
-                if (currentUiState.poiPoints.isEmpty() && currentUiState.lastLocation == null) {
-                    // 첫 위치일 경우 무조건 추가
-                    currentUiState.poiPoints.add(newLocation)
-                } else if (distanceIncrement > 0) { // (이동이 있었으면) 추가
-                    currentUiState.poiPoints.add(newLocation)
-                } else {
-                    // 이동 거리가 0이거나 이전 위치가 없는 경우 (첫 위치가 이미 추가된 후)
-                    currentUiState.poiPoints
-                }
-
-            val newTotalDistance = currentUiState.totalDistance + distanceIncrement
-
-            currentUiState.copy(
-                lastLocation = newLocation,
-                currentLocation = newLocation,
-                totalDistance = newTotalDistance,
-                poiPoints = updatedPoiPoints
-            )
-        }
-    }
-
-    fun onSensorDataChanged(totalStepsFromSensor: Long) {
-        updateState {
-            val initial = initialSensorSteps
-            val currentCalculatedSteps: Long
-            val currentIsWalking: Boolean
-
-            if (initial == null) {
-                currentCalculatedSteps = 0L
-                currentIsWalking = false
-
-                copy(
-                    initialSensorSteps = totalStepsFromSensor,
-                    steps = currentCalculatedSteps,
-                    prevSteps = currentCalculatedSteps,
-                    isWalking = currentIsWalking
-                )
-            } else {
-                currentCalculatedSteps = totalStepsFromSensor - initial
-
-                currentIsWalking = if (currentCalculatedSteps > prevSteps) {
-                    true
-                } else if (currentCalculatedSteps == prevSteps && prevSteps > 0) {
-                    isWalking
-                } else {
-                    false
-                }
-
-                copy(
-                    steps = currentCalculatedSteps,
-                    prevSteps = currentCalculatedSteps, // 현재 걸음 수를 이전 걸음 수로 저장
-                    isWalking = currentIsWalking
-                )
-            }
-        }
-    }
-
-    fun updateState(reducer: WalkCourseState.() -> WalkCourseState) {
-        Log.e("updateState", "updateState called")
-        _state.update {
-            it.reducer()
-        }
-    }
-
-    fun mapCaptureCompleted() {
-        updateState {
-            copy(shouldCaptureMap = false)
-        }
-    }
-
-    fun onMapCaptured(bitmap: Bitmap?) {
-        if (bitmap == null) {
-            return
-        }
-        updateState {
-            copy(bitmap = bitmap)
-        }
-
-        viewModelScope.launch {
-            try {
-                walkSharedResultRepository.saveResult(
-                    bitmap = state.value.bitmap,
-                    totalTime = _totalTime.value,
-                    distance = state.value.totalDistance,
-                    steps = state.value.steps.toInt(),
-                    points = state.value.poiPoints.toList()
-                )
-                Log.d("WalkCourseViewModel", "state : ${state.value}")
-
-                _sideEffect.emit(WalkCourseSideEffect.ShowSnackBar("산책 지도 이미지가 저장되었습니다."))
-                Log.d("WalkCourseViewModel", "Map captured bitmap saved to DataStore.")
-            } catch (e: Exception) {
-                _sideEffect.emit(WalkCourseSideEffect.ShowSnackBar("산책 지도 이미지 저장 실패: ${e.localizedMessage}"))
-                Log.e("WalkCourseViewModel", "Error saving captured bitmap: ${e.localizedMessage}")
-            }  finally {
-                mapCaptureCompleted() // 캡처 시도 후, 성공/실패 여부와 관계없이 플래그 리셋
-            }
-        }
-    }
-
     fun onStopTrackingEvent() {
         viewModelScope.launch {
             val currentWalkState = _state.value
 
             try {
                 walkSharedResultRepository.saveResult(
-                    bitmap = currentWalkState.bitmap,
-                    totalTime = _totalTime.value,
-                    distance = currentWalkState.totalDistance,
-                    steps = currentWalkState.steps.toInt(),
-                    points = currentWalkState.poiPoints.toList()
+                    bitmap = currentWalkState.mapState.capturedMapBitmap,
+                    totalTime = currentWalkState.totalTimeMillis,
+                    distance = currentWalkState.mapState.totalDistance,
+                    steps = currentWalkState.stepCounterState.sessionSteps.toInt(),
+                    points = currentWalkState.mapState.poiPoints.toList()
                 )
-                //Log.e("WalkCourseViewModel", PreferenceDataStore.getTotalTime(context).toString())
                 _sideEffect.emit(WalkCourseSideEffect.ShowSnackBar("산책 기록이 성공적으로 저장되었습니다."))
             } catch (e: Exception) {
-                Log.e("WalkCourseViewModel", "Error saving all walk summary data: ${e.message}", e)
+                Log.e("WalkCourseViewModel", "Error saving walk summary data: ${e.message}", e)
                 _sideEffect.emit(WalkCourseSideEffect.ShowSnackBar("산책 기록 저장 실패: ${e.localizedMessage}"))
-            } finally {
-                walkSharedResultRepository.saveResult(
-                    bitmap = currentWalkState.bitmap,
-                    totalTime = _totalTime.value,
-                    distance = currentWalkState.totalDistance,
-                    steps = currentWalkState.steps.toInt(),
-                    points = currentWalkState.poiPoints.toList()
+            }
+        }
+    }
+
+    override fun onLocationChanged(location: Location) {
+        if (location.accuracy > LOCATION_ACCURACY_THRESHOLD) {
+            Log.e("onLocationChanged", "onLocationChanged: $location")
+            return
+        }
+
+        Log.e("onLocationChanged", "onLocationChanged: $location")
+
+        val newLatLng = location.toLatLng()
+        val lastPoint = lastLocation
+
+        // 최초 위치 수신 시
+        if (lastPoint == null) {
+            _state.update {
+                it.copy(
+                    mapState = it.mapState.copy(
+                        currentLocation = newLatLng,
+                        poiPoints = it.mapState.poiPoints.add(newLatLng)
+                    )
+                )
+            }
+            lastLocation = location // 마지막 기록 위치로 설정
+            return
+        }
+
+        // 이후 위치 수신 시
+        val distance = lastPoint.distanceTo(location)
+
+        // Todo : 3m 이상 이동 시 경로 추가로 되어있는데 추후 어떻게 할 건지 확인
+        if (distance >= 3.0f) {
+            _state.update { currentState ->
+                val newTotalDistance = currentState.mapState.totalDistance + distance
+                currentState.copy(
+                    mapState = currentState.mapState.copy(
+                        currentLocation = newLatLng,
+                        totalDistance = newTotalDistance,
+                        poiPoints = currentState.mapState.poiPoints.add(newLatLng)
+                    )
+                )
+            }
+            lastLocation = location
+        } else {
+            _state.update {
+                it.copy(
+                    mapState = it.mapState.copy(
+                        currentLocation = newLatLng
+                    )
                 )
             }
         }
+    }
+
+    companion object {
+        private const val TIMER_INTERVAL_MS = 1000L
+        private const val LOCATION_ACCURACY_THRESHOLD = 25f
     }
 }

@@ -6,7 +6,7 @@ import android.location.Location
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.kakao.vectormap.LatLng
+import com.naver.maps.geometry.LatLng
 import com.paw.key.core.util.PreferenceDataStore
 import com.paw.key.domain.repository.WalkSharedResultRepository
 import com.paw.key.domain.repository.sharedwalk.SharedWalkRepository
@@ -51,13 +51,7 @@ class SharedWalkCourseViewModel @Inject constructor(
                 userId = userId.first(),
                 routeId = routeId
             ).onSuccess {
-                _state.update { state ->
-                    state.copy(
-                        poiPoints = it.geometry.coordinates.map { coord ->
-                            LatLng.from(coord[1], coord[0])
-                        }.toPersistentList()
-                    )
-                }
+                // Todo : 공유용 수정 예정
                 Log.d("SharedWalkCourseViewModel", "success getWalkSharedTrack: ${state.value.poiPoints}")
             }.onFailure {
                 Log.e("SharedWalkCourseViewModel", "failure getWalkSharedTrack: $it")

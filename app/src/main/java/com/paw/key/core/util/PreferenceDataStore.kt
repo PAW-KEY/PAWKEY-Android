@@ -7,7 +7,7 @@ import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.longPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
-import com.kakao.vectormap.LatLng
+import com.naver.maps.geometry.LatLng
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
@@ -35,15 +35,6 @@ private val ACTIVE_REGION_KEY = stringPreferencesKey("active_region")
 private fun List<LatLng>.toPreferenceString(): String =
     joinToString(";") { "${it.latitude},${it.longitude}" }
 
-private fun String.toLatLngList(): List<LatLng> =
-    split(";").mapNotNull {
-        val parts = it.split(",")
-        if (parts.size == 2) {
-            LatLng.from(parts[0].toDoubleOrNull() ?: return@mapNotNull null, parts[1].toDoubleOrNull() ?: return@mapNotNull null)
-        }
-        else null
-    }
-
 object PreferenceDataStore {
 
     private lateinit var appContext: Context
@@ -68,10 +59,6 @@ object PreferenceDataStore {
             preferences[TOTAL_TIME_KEY] = totalTime
             preferences[TOTAL_STEPS_KEY] = totalSteps
         }
-    }
-
-    fun getPoints(): Flow<List<LatLng>> = summaryStore.data.map {
-        it[POINTS_KEY]?.toLatLngList() ?: emptyList()
     }
 
     fun getTotalDistance(): Flow<Float> = summaryStore.data.map {
@@ -141,7 +128,7 @@ object PreferenceDataStore {
     }
 
     fun getUserId(): Flow<Int> = summaryStore.data.map {
-        it[USER_ID_KEY] ?: 41
+        it[USER_ID_KEY] ?: 43
     }
 
     fun getUserName(): Flow<String> = summaryStore.data.map {

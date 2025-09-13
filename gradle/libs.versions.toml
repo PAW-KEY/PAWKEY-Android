@@ -60,6 +60,11 @@ playServicesLocation = "21.3.0"
 # DataStore
 datastorePreferences = "1.1.7"
 
+# Naver Maps Versions
+naverMapCompose = "1.8.2"
+naverMapLocation = "21.0.2"
+naverMapSdk = "3.22.0"
+
 [libraries]
 # Test
 accompanist-systemuicontroller = { module = "com.google.accompanist:accompanist-systemuicontroller", version.ref = "accompanistSystemuicontroller" }
@@ -118,6 +123,11 @@ timber = { group = "com.jakewharton.timber", name = "timber", version.ref = "tim
 kakaoMaps = { group = "com.kakao.maps.open", name = "android", version.ref = "kakaoMaps" }
 v2-all = { module = "com.kakao.sdk:v2-all", version.ref = "v2All" }
 
+# Naver Libraries
+naver-map-compose = { group = "io.github.fornewid", name = "naver-map-compose", version.ref = "naverMapCompose" }
+naver-map-location = { group = "io.github.fornewid", name = "naver-map-location", version.ref = "naverMapLocation" }
+naver-map-sdk = { group = "com.naver.maps", name = "map-sdk", version.ref = "naverMapSdk" }
+
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
@@ -170,3 +180,8 @@ hilt = [
     "hilt-navigation-compose"
 ]
 
+naverMaps = [
+    "naver-map-compose",
+    "naver-map-location",
+    "naver-map-sdk"
+]

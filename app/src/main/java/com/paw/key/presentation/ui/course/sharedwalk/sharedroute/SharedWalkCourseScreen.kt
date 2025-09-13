@@ -31,7 +31,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -54,7 +53,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.LocalLifecycleOwner
@@ -66,16 +64,14 @@ import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
-import com.kakao.vectormap.LatLng
-import com.kakao.vectormap.MapView
 import com.kakao.vectormap.graphics.gl.GLSurfaceView
+import com.naver.maps.geometry.LatLng
 import com.paw.key.R
 import com.paw.key.core.designsystem.component.LoadingScreen
 import com.paw.key.core.designsystem.component.PawkeyButton
 import com.paw.key.core.designsystem.theme.PawKeyTheme
 import com.paw.key.core.util.UiState
-import com.paw.key.core.util.noRippleClickable
-import com.paw.key.presentation.ui.course.sharedwalk.sharedroute.component.sharedWalkCourseMapView
+import com.paw.key.core.extension.noRippleClickable
 import com.paw.key.presentation.ui.course.sharedwalk.sharedroute.state.SharedWalkCourseSideEffect
 import com.paw.key.presentation.ui.course.sharedwalk.sharedroute.viewmodel.SharedWalkCourseViewModel
 import com.paw.key.presentation.ui.course.walk.component.WalkRecordItem
@@ -85,21 +81,13 @@ import com.paw.key.presentation.ui.course.walk.formatTime
 import com.paw.key.presentation.ui.course.walk.state.WalkCourseContract.WalkCourseRecord.DistanceRecord
 import com.paw.key.presentation.ui.course.walk.state.WalkCourseContract.WalkCourseRecord.StepsRecord
 import com.paw.key.presentation.ui.course.walk.state.WalkCourseContract.WalkCourseRecord.TimeRecord
-import com.paw.key.presentation.ui.course.walk.state.WalkCourseContract.WalkCourseSideEffect
-import com.paw.key.presentation.ui.course.walk.viewmodel.WalkCourseViewModel
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
-import kotlinx.coroutines.withContext
 import java.nio.IntBuffer
-import java.util.Locale
-import java.util.concurrent.TimeUnit
 import javax.microedition.khronos.egl.EGL10
 import javax.microedition.khronos.egl.EGLContext
 import javax.microedition.khronos.opengles.GL10
-import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 
 
@@ -180,26 +168,6 @@ fun SharedWalkCourseRoute(
         }
     }
 
-    val locationRequest = remember {
-        LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, 1000) // 1초마다, 높은 정확도
-            .setWaitForAccurateLocation(true) // false = 가장 빠른 위치 / true = 가장 정확한 위치
-            .build()
-    }
-
-    val locationCallback = remember(viewModel) {
-        object : LocationCallback() {
-            override fun onLocationResult(locationResult: LocationResult) {
-                locationResult.lastLocation?.let { location ->
-                    if (state.isRecording) {
-                        val newLatLng = LatLng.from(location.latitude, location.longitude)
-                        viewModel.updateLocationAndCalculateDistance(newLatLng, location.accuracy)
-                        Log.d("WalkCourseRoute", "Updated location: $newLatLng, accuracy: ${location.accuracy}")
-                    }
-                }
-            }
-        }
-    }
-
     LaunchedEffect(Unit) {
         val currentLocation = sharedGetCurrentLocation(
             context,
@@ -231,27 +199,6 @@ fun SharedWalkCourseRoute(
             }
     }
 
-    LaunchedEffect(state.isRecording) {
-        if (state.isRecording) {
-            try {
-                fusedLocationClient.requestLocationUpdates(
-                    locationRequest,
-                    locationCallback,
-                    Looper.getMainLooper()
-                )
-                Log.d("WalkCourseRoute", "Location updates requested.")
-            } catch (e: SecurityException) {
-                Log.e("WalkCourseRoute", "위치 권한 없음: ${e.message}")
-                snackBarHostState.showSnackbar("위치 권한이 필요합니다.")
-                viewModel.updateState {
-                    copy(isLocationTracking = false)
-                }
-            }
-        } else {
-            fusedLocationClient.removeLocationUpdates(locationCallback)
-            Log.d("WalkCourseRoute", "Location updates removed.")
-        }
-    }
 
     /*LaunchedEffect(distanceInTens) {
         // 거리가 10m씩 변경되었을 경우
@@ -292,7 +239,6 @@ fun SharedWalkCourseRoute(
         onDispose {
             if (stepCounterSensor != null) {
                 sensorManager.unregisterListener(stepSensorEventListener)
-                fusedLocationClient.removeLocationUpdates(locationCallback)
             }
         }
     }
@@ -306,45 +252,6 @@ fun SharedWalkCourseRoute(
         }
 
         is UiState.Success -> {
-            val mapView = sharedWalkCourseMapView (
-                lifeCycle = lifecycleOwner.lifecycle,
-                context = context,
-                onLabelClick = { _, _ -> },
-                currentUserLocation = state.currentLocation,
-                poiPoints = state.poiPoints, // 공유용 뷰
-                isTrackingEnabled = state.isTrackingEnabled,
-                isPauseTracking = state.isRecording, // true = 잠시 중단, false = 시작
-                isStopTracking = state.isLocationTracking, // true = 진짜 중단
-                onDisposeCallback = {
-                    fusedLocationClient.removeLocationUpdates(locationCallback)
-                    viewModel.mapCaptureCompleted()
-                }
-            )
-
-            // 캡처 부분
-            LaunchedEffect(state.shouldCaptureMap, state.poiPoints) {
-                delay(500)
-
-                if (state.shouldCaptureMap) {
-                    val glSurfaceView = mapView.surfaceView as? GLSurfaceView
-                    if (glSurfaceView != null) {
-                        withContext(Dispatchers.IO) {
-                            sharedCaptureMapToBitmap(glSurfaceView) { capturedBitmap ->
-                                capturedBitmap?.let {
-                                    viewModel.onMapCaptured(it)
-                                    Log.d("WalkCourseRoute", "맵 캡처 성공! (triggered by shouldCaptureMap)")
-                                } ?: run {
-                                    Log.e("WalkCourseRoute", "맵 캡처 실패: 비트맵이 null입니다.")
-                                    viewModel.mapCaptureCompleted()
-                                }
-                            }
-                        }
-                    } else {
-                        viewModel.mapCaptureCompleted()
-                    }
-                }
-            }
-
             SharedWalkCourseScreen(
                 paddingValues = paddingValues,
                 navigateUp = navigateUp,
@@ -353,7 +260,6 @@ fun SharedWalkCourseRoute(
                 },
                 scope = scope,
                 snackBarHostState = snackBarHostState,
-                mapView = mapView,
                 totalDistance = formatDistance,
                 isSharedWalk = isSharedWalk,
                 currentSteps = state.steps,
@@ -393,6 +299,7 @@ fun SharedWalkCourseRoute(
                     viewModel.onMapCaptured(bitmap)
                 },
                 modifier = modifier,
+
             )
         }
     }
@@ -415,7 +322,6 @@ fun SharedWalkCourseScreen(
     onPauseTracking: () -> Unit, // 잠시 중단
     onStopTracking: () -> Unit, // 종료하기
     onCaptured: (Bitmap?) -> Unit,
-    mapView: MapView,
     modifier: Modifier = Modifier,
 ) {
     Scaffold(
@@ -429,11 +335,6 @@ fun SharedWalkCourseScreen(
             modifier = Modifier
                 .padding(pv)
         ) {
-            AndroidView(
-                factory = { mapView },
-                modifier = Modifier
-                    .align(Alignment.Center)
-            )
 
             Column (
                 modifier = modifier
@@ -533,23 +434,7 @@ fun SharedWalkCourseScreen(
                             text = "중지하기",
                             enabled = true,
                             onClick = {
-                                onPauseTracking()
 
-                                scope.launch {
-                                    val glSurfaceView = mapView.surfaceView as? GLSurfaceView
-                                    if (glSurfaceView != null) {
-                                        withContext(Dispatchers.IO) {
-                                            sharedCaptureMapToBitmap(glSurfaceView) { capturedBitmap ->
-                                                capturedBitmap?.let {
-                                                    onCaptured(it)
-                                                    Log.d("WalkCourseScreen", "맵 캡처 성공!")
-                                                } ?: run {
-                                                    Log.e("WalkCourseScreen", "맵 캡처 실패: 비트맵이 null입니다.")
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
                             },
                             modifier = Modifier
                                 .padding(top = 16.dp)
@@ -695,7 +580,7 @@ suspend fun sharedGetCurrentLocation(
         override fun onLocationResult(locationResult: LocationResult) {
             val location = locationResult.lastLocation
             if (location != null) {
-                continuation.resume(LatLng.from(location.latitude, location.longitude))
+                //continuation.resume(LatLng.from(location.latitude, location.longitude))
                 fusedLocationClient.removeLocationUpdates(this)
             } else {
                 continuation.resumeWithException(IllegalStateException("위치 정보를 가져올 수 없습니다"))

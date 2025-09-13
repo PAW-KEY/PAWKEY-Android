@@ -1,4 +1,4 @@
-package com.paw.key.core.util
+package com.paw.key.core.extension
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
