@@ -46,8 +46,16 @@ val System_green = Color(0xFF40C927)
 
 /*------------------------------------------------*/
 // Brand
-val OpacityPrimary = Color(0xFF114531)
-val Primary = Color(0xFF4CD137)
+val OpacityPrimary = Color(0x4000D281)
+
+val PrimaryGra1 = Color(0xFFE6FBF2)
+val PrimaryGra2 = Color(0xFFCFF8E5)
+val PrimaryGra3 = Color(0xFFB6F2D0)
+val PrimaryGra4 = Color(0xFF97ECB8)
+val PrimaryGra5 = Color(0xFF7BEFB4)
+val Primary = Color(0xFF00D281)
+val PrimaryGra6 = Color(0xFF00A86B)
+val PrimaryGra7 = Color(0xFF007A50)
 
 // contents
 val Contents = Color(0xFF171717)
@@ -97,6 +105,13 @@ class PawKeyColors(
 
     /*--------------------*/
     opacityPrimary: Color,
+    primaryGra1: Color,
+    primaryGra2: Color,
+    primaryGra3: Color,
+    primaryGra4: Color,
+    primaryGra5: Color,
+    primaryGra6: Color,
+    primaryGra7: Color,
     primary: Color,
     contents: Color,
     background1: Color,
@@ -167,6 +182,20 @@ class PawKeyColors(
     /*----------------------------*/
     var opacityPrimary: Color by mutableStateOf(opacityPrimary)
         private set
+    var primaryGra1: Color by mutableStateOf(primaryGra1)
+        private set
+    var primaryGra2: Color by mutableStateOf(primaryGra2)
+        private set
+    var primaryGra3: Color by mutableStateOf(primaryGra3)
+        private set
+    var primaryGra4: Color by mutableStateOf(primaryGra4)
+        private set
+    var primaryGra5: Color by mutableStateOf(primaryGra5)
+        private set
+    var primaryGra6: Color by mutableStateOf(primaryGra6)
+        private set
+    var primaryGra7: Color by mutableStateOf(primaryGra7)
+        private set
     var primary: Color by mutableStateOf(primary)
         private set
     var contents: Color by mutableStateOf(contents)
@@ -202,6 +231,13 @@ class PawKeyColors(
 
         /*----------------------------------*/
         opacityPrimary: Color = this.opacityPrimary,
+        primaryGra1: Color = this.primaryGra1,
+        primaryGra2: Color = this.primaryGra2,
+        primaryGra3: Color = this.primaryGra3,
+        primaryGra4: Color = this.primaryGra4,
+        primaryGra5: Color = this.primaryGra5,
+        primaryGra6: Color = this.primaryGra6,
+        primaryGra7: Color = this.primaryGra7,
         primary: Color = this.primary,
         contents: Color = this.contents,
         background1: Color = this.background1,
@@ -245,6 +281,13 @@ class PawKeyColors(
 
         /*-------------------------------*/
         opacityPrimary = opacityPrimary,
+        primaryGra1 = primaryGra1,
+        primaryGra2 = primaryGra2,
+        primaryGra3 = primaryGra3,
+        primaryGra4 = primaryGra4,
+        primaryGra5 = primaryGra5,
+        primaryGra6 = primaryGra6,
+        primaryGra7 = primaryGra7,
         primary = primary,
         contents = contents,
         background1 = background1,
@@ -287,6 +330,13 @@ class PawKeyColors(
 
         /*-------------------------------*/
         opacityPrimary = other.opacityPrimary
+        primaryGra1 = other.primaryGra1
+        primaryGra2 = other.primaryGra2
+        primaryGra3 = other.primaryGra3
+        primaryGra4 = other.primaryGra4
+        primaryGra5 = other.primaryGra5
+        primaryGra6 = other.primaryGra6
+        primaryGra7 = other.primaryGra7
         primary = other.primary
         contents = other.contents
         background1 = other.background1
@@ -331,6 +381,13 @@ fun pawKeyColors(
 
     /*---------------------------------*/
     opacityPrimary: Color = OpacityPrimary,
+    primaryGra1: Color = PrimaryGra1,
+    primaryGra2: Color = PrimaryGra2,
+    primaryGra3: Color = PrimaryGra3,
+    primaryGra4: Color = PrimaryGra4,
+    primaryGra5: Color = PrimaryGra5,
+    primaryGra6: Color = PrimaryGra6,
+    primaryGra7: Color = PrimaryGra7,
     primary: Color = Primary,
     contents: Color = Contents,
     background1: Color = Background1,
@@ -372,6 +429,13 @@ fun pawKeyColors(
 
     /*----------------------------*/
     opacityPrimary = opacityPrimary,
+    primaryGra1 = primaryGra1,
+    primaryGra2 = primaryGra2,
+    primaryGra3 = primaryGra3,
+    primaryGra4 = primaryGra4,
+    primaryGra5 = primaryGra5,
+    primaryGra6 = primaryGra6,
+    primaryGra7 = primaryGra7,
     primary = primary,
     contents = contents,
     background1 = background1,
