@@ -17,6 +17,7 @@ import com.paw.key.data.repositoryimpl.sharedwalk.SharedWalkRepositoryImpl
 import com.paw.key.data.repositoryimpl.home.HomeRegionRepositoryImpl
 import com.paw.key.data.repositoryimpl.home.RegionCurrentRepositoryImpl
 import com.paw.key.data.repositoryimpl.list.PostsListRepositoryImpl
+import com.paw.key.data.repositoryimpl.login.AuthRepositoryImpl
 import com.paw.key.data.repositoryimpl.walklist.WalkListDetailRepositoryImpl
 import com.paw.key.data.repositoryimpl.walkreview.WalkReviewRepositoryImpl
 import com.paw.key.domain.repository.ArchivedListRepository
@@ -33,6 +34,7 @@ import com.paw.key.domain.repository.sharedwalk.SharedWalkRepository
 import com.paw.key.domain.repository.home.HomeRegionRepository
 import com.paw.key.domain.repository.home.RegionCurrentRepository
 import com.paw.key.domain.repository.list.PostsListRepository
+import com.paw.key.domain.repository.login.AuthRepository
 import com.paw.key.domain.repository.petprofile.PetProfileRepository
 import com.paw.key.domain.repository.userprofile.UserProfileRepository
 import com.paw.key.domain.repository.walkcourse.WalkCourseRepository
@@ -165,4 +167,10 @@ interface RepositoryModule {
     fun bindRegionCurrentRepository(
         impl: RegionCurrentRepositoryImpl
     ) : RegionCurrentRepository
+
+    @Binds
+    @Singleton
+    fun bindLoginRepository(
+        impl: AuthRepositoryImpl
+    ) : AuthRepository
 }

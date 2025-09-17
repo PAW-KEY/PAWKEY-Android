@@ -9,9 +9,9 @@ class RegionCurrentRepositoryImpl @Inject constructor(
     private val dataSource: RegionCurrentDataSource,
 ) : RegionCurrentRepository {
 
-    override suspend fun RegionCurrent(userId: Int): Result<RegionCurrentDataEntity> {
+    override suspend fun regionCurrent(userId: Int): Result<RegionCurrentDataEntity> {
         return runCatching {
-            val response = dataSource.RegionCurrent(userId)
+            val response = dataSource.regionCurrent(userId)
             if (response.code == "S000") {
                 // 올바른 타입 반환 (RegionCurrentDataEntity)
                 response.data.toEntity() // DTO에서 Entity로 변환
