@@ -15,12 +15,13 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val regionRepository: OnboardingRegionRepository,
-    private val regionCurrentRepository: RegionCurrentRepository
+    private val regionCurrentRepository: RegionCurrentRepository,
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(HomeContract.HomeState())
@@ -33,51 +34,7 @@ class HomeViewModel @Inject constructor(
 
     init {
         fetchRegion()
-//        loadSavedLocationInfo()
-        regionCurrent() // 현재 지역 정보 가져오기 추가
-    }
-
-    /**
-     * 저장된 위치 정보를 불러와서 상태에 반영
-     */
-    private fun loadSavedLocationInfo() {
-        viewModelScope.launch {
-            try {
-                // LocationInfo와 ActiveRegion을 모두 가져오기
-                val locationInfo = PreferenceDataStore.getLocationInfo().first()
-                val activeRegion = PreferenceDataStore.getActiveRegion().first()
-
-                Log.d("HomeViewModel", "저장된 위치 정보 불러오기:")
-                Log.d("HomeViewModel", "  - 구: ${locationInfo.guName} (ID: ${locationInfo.guId})")
-                Log.d("HomeViewModel", "  - 동: ${locationInfo.dongName} (ID: ${locationInfo.dongId})")
-                Log.d("HomeViewModel", "  - 활동지역: $activeRegion")
-
-                _state.update { currentState ->
-                    currentState.copy(
-                        selectedLocation = HomeContract.LocationInfo(
-                            selectedGuId = locationInfo.guId,
-                            selectedDongId = locationInfo.dongId,
-                            selectedGu = locationInfo.guName,
-                            selectedDong = locationInfo.dongName
-                        )
-                    )
-                }
-
-                // 위치 정보가 있으면 표시용 로그
-                val displayLocation = if (locationInfo.guName.isNotEmpty() && locationInfo.dongName.isNotEmpty()) {
-                    "${locationInfo.guName} ${locationInfo.dongName}"
-                } else if (activeRegion.isNotEmpty()) {
-                    activeRegion
-                } else {
-                    "위치를 선택해주세요"
-                }
-
-                Log.d("HomeViewModel", "TopBar 표시 위치: $displayLocation")
-
-            } catch (e: Exception) {
-                Log.e("HomeViewModel", "저장된 위치 정보 불러오기 실패: ${e.message}")
-            }
-        }
+        regionCurrent()
     }
 
     fun toggleLocationMenu() {
@@ -108,7 +65,6 @@ class HomeViewModel @Inject constructor(
                         isLocationMenuVisible = false
                     )
                 }
-
                 Log.d("HomeViewModel", "구 선택 완료: $guName (ID: $guId)")
             } catch (e: Exception) {
                 Log.e("HomeViewModel", "구 선택 저장 실패: ${e.message}")
@@ -137,12 +93,11 @@ class HomeViewModel @Inject constructor(
                         )
                     )
                 }
-
-                Log.d("HomeViewModel", "동 선택 완료: $dongName (ID: $dongId)")
-                Log.d("HomeViewModel", "전체 위치: ${currentLocation.selectedGu} $dongName")
+                Timber.d("HomeViewmodel", "동 선택 완료: $dongName (ID: $dongId)")
             } catch (e: Exception) {
-                Log.e("HomeViewModel", "동 선택 저장 실패: ${e.message}")
+                Timber.e("HomeViewmodel", "동 선택 저장 실패: ${e.message}")
             }
+
         }
     }
 
@@ -151,7 +106,7 @@ class HomeViewModel @Inject constructor(
 
         viewModelScope.launch {
             try {
-                val result = regionCurrentRepository.RegionCurrent(userId.first())
+                val result = regionCurrentRepository.regionCurrent(userId.first())
                 result.onSuccess { response ->
                     Log.d("HomeViewModel", "RegionCurrent 성공: ${response.fullRegionName}")
                     PreferenceDataStore.saveActiveRegion(response.fullRegionName)
@@ -253,44 +208,6 @@ class HomeViewModel @Inject constructor(
                 currentState.copy(
                     postsResult = updatedPostsResult
                 )
-            }
-        }
-    }
-
-    fun clearError() {
-        _state.update {
-            it.copy(
-                uiState = it.uiState.copy(error = null)
-            )
-        }
-    }
-
-    fun refreshPosts() {
-        _state.update { it.copy(uiState = it.uiState.copy(isLoading = true)) }
-
-        viewModelScope.launch {
-            try {
-                // 여기에 실제 포스트 데이터를 가져오는 로직 추가
-                // val result = postsRepository.getPosts(...)
-
-                _state.update {
-                    it.copy(
-                        uiState = it.uiState.copy(
-                            isLoading = false,
-                            error = null
-                        )
-                    )
-                }
-            } catch (e: Exception) {
-                Log.e("HomeViewModel", "refreshPosts Exception: ${e.message}")
-                _state.update {
-                    it.copy(
-                        uiState = it.uiState.copy(
-                            isLoading = false,
-                            error = e.message
-                        )
-                    )
-                }
             }
         }
     }

@@ -95,7 +95,6 @@ fun HomeScreen(
     val view = LocalView.current
     val window = (view.context as? Activity)?.window
     val postsResult = state.postsResult
-    val posts = postsResult?.posts
 
     SideEffect {
         window?.let {
