@@ -32,6 +32,10 @@ private val SELECTED_GU_NAME_KEY = stringPreferencesKey("selected_gu_name")
 private val SELECTED_DONG_NAME_KEY = stringPreferencesKey("selected_dong_name")
 private val ACTIVE_REGION_KEY = stringPreferencesKey("active_region")
 
+// 토큰 관리를 위한 키들
+private val ACCESS_TOKEN_KEY = stringPreferencesKey("access_token")
+private val REFRESH_TOKEN_KEY = stringPreferencesKey("refresh_token")
+
 private fun List<LatLng>.toPreferenceString(): String =
     joinToString(";") { "${it.latitude},${it.longitude}" }
 
@@ -46,7 +50,6 @@ object PreferenceDataStore {
     private val summaryStore
         get() = appContext.summaryStore
 
-    // 기존 함수들...
     suspend fun saveWalkSummary(
         points: List<LatLng>,
         totalDistance: Float,
@@ -284,6 +287,63 @@ object PreferenceDataStore {
             preferences.remove(SELECTED_GU_NAME_KEY)
             preferences.remove(SELECTED_DONG_NAME_KEY)
             preferences.remove(ACTIVE_REGION_KEY)
+        }
+    }
+
+    // ===== 토큰 관리 관련 함수들 =====
+
+    /**
+     * 액세스 토큰과 리프레시 토큰을 저장합니다
+     */
+    suspend fun saveTokens(accessToken: String, refreshToken: String) {
+        summaryStore.edit { preferences ->
+            preferences[ACCESS_TOKEN_KEY] = accessToken
+            preferences[REFRESH_TOKEN_KEY] = refreshToken
+        }
+    }
+
+    /**
+     * 액세스 토큰을 조회합니다
+     */
+    fun getAccessToken(): Flow<String> = summaryStore.data.map {
+        it[ACCESS_TOKEN_KEY] ?: ""
+    }
+
+    /**
+     * 리프레시 토큰을 조회합니다
+     */
+    fun getRefreshToken(): Flow<String> = summaryStore.data.map {
+        it[REFRESH_TOKEN_KEY] ?: ""
+    }
+
+    /**
+     * 토큰 정보 데이터 클래스
+     */
+    data class TokenInfo(
+        val accessToken: String,
+        val refreshToken: String,
+    ) {
+        val isTokensAvailable: Boolean
+            get() = accessToken.isNotEmpty() && refreshToken.isNotEmpty()
+    }
+
+    /**
+     * 모든 토큰 정보를 한번에 조회합니다
+     */
+    fun getTokenInfo(): Flow<TokenInfo> = summaryStore.data.map { preferences ->
+        TokenInfo(
+            accessToken = preferences[ACCESS_TOKEN_KEY] ?: "",
+            refreshToken = preferences[REFRESH_TOKEN_KEY] ?: ""
+        )
+    }
+
+    /**
+     * 토큰 정보를 초기화합니다
+     */
+    suspend fun clearTokens() {
+        summaryStore.edit { preferences ->
+            preferences.remove(ACCESS_TOKEN_KEY)
+            preferences.remove(REFRESH_TOKEN_KEY)
         }
     }
 
