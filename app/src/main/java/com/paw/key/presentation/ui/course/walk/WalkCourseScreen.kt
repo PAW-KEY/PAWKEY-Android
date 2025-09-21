@@ -78,7 +78,7 @@ import com.paw.key.core.util.PreferenceDataStore
 import com.paw.key.core.util.UiState
 import com.paw.key.core.extension.noRippleClickable
 import com.paw.key.presentation.ui.course.util.FusedLocationSource
-import com.paw.key.presentation.ui.course.util.PermissionRequestEffect
+import com.paw.key.core.util.PermissionRequestEffect
 import com.paw.key.presentation.ui.course.util.StepCountListener
 import com.paw.key.presentation.ui.course.util.rememberCustomFusedLocationSource
 import com.paw.key.presentation.ui.course.util.rememberStepCounter
