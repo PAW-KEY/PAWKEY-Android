@@ -116,4 +116,7 @@ dependencies {
     implementation(libs.googleid)
     implementation(libs.androidx.credentials.play.services.auth)
     coreLibraryDesugaring(libs.desugar.jdk.libs)
+
+    // 암호화
+    implementation(libs.androidx.security)
 }
