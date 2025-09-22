@@ -23,7 +23,7 @@ fun NavGraphBuilder.loginNavGraph(
     paddingValues: PaddingValues,
     navigateUp: () -> Unit,
     navigateNext: () -> Unit,
-    navigateHome : () -> Unit,
+    navigateHome: () -> Unit,
     snackBarHostState: SnackbarHostState
 ) {
     composable<Login> {

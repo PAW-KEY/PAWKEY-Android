@@ -4,17 +4,17 @@ import com.paw.key.data.service.ArchivedListService
 import com.paw.key.data.service.DummyService
 import com.paw.key.data.service.LikeService
 import com.paw.key.data.service.PetProfileService
-import com.paw.key.data.service.onboarding.OnboardingInfoService
-import com.paw.key.data.service.onboarding.OnboardingPetsService
-import com.paw.key.data.service.onboarding.OnboardingRegionService
 import com.paw.key.data.service.RegionService
 import com.paw.key.data.service.SavedListService
 import com.paw.key.data.service.UserProfileService
 import com.paw.key.data.service.filter.FilterOptionService
-import com.paw.key.data.service.sharedwalk.SharedWalkService
 import com.paw.key.data.service.home.HomeRegionService
-import com.paw.key.data.service.home.RegionCurrentService
 import com.paw.key.data.service.list.PostsListService
+import com.paw.key.data.service.login.LoginService
+import com.paw.key.data.service.onboarding.OnboardingInfoService
+import com.paw.key.data.service.onboarding.OnboardingPetsService
+import com.paw.key.data.service.onboarding.OnboardingRegionService
+import com.paw.key.data.service.sharedwalk.SharedWalkService
 import com.paw.key.data.service.walkcourse.WalkCourseService
 import com.paw.key.data.service.walklist.WalkListDetailService
 import com.paw.key.data.service.walkreview.WalkReviewService
@@ -68,7 +68,7 @@ object ServiceModule {
     @Provides
     @Singleton
     fun provideHomeRegionService(retrofit: Retrofit): HomeRegionService =
-        retrofit.create(HomeRegionService::class.java)
+        retrofit.create()
 
     //마이페이지
     @Provides
@@ -119,6 +119,6 @@ object ServiceModule {
 
     @Provides
     @Singleton
-    fun provideRegionCurrentService(retrofit: Retrofit): RegionCurrentService =
+    fun provideLoginService(retrofit: Retrofit): LoginService =
         retrofit.create()
 }
