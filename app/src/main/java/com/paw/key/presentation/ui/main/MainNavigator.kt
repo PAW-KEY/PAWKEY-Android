@@ -30,7 +30,7 @@ import com.paw.key.presentation.ui.mypage.navigation.navigateSavedDetail
 import com.paw.key.presentation.ui.mypage.navigation.navigateUserProfile
 import com.paw.key.presentation.ui.onboard.navigation.navigateOnboarding
 import com.paw.key.presentation.ui.region.navigation.navigateRegional
-import com.paw.key.presentation.ui.signup.navigation.navigateSignUpFlow
+import com.paw.key.presentation.ui.signup.navigation.navigateSignUp
 import com.paw.key.presentation.ui.splash.navigation.Splash
 
 class MainNavigator(
@@ -83,11 +83,6 @@ class MainNavigator(
         navController.navigateLogin(navOptions = navOptions)
     }
 
-
-    fun navigateSignUp(navOptions: NavOptions? = null) {
-        navController.navigateSignUpFlow(navOptions)
-    }
-
     fun navigateMyPage(navOptions: NavOptions? = null) {
         navController.navigateMyPage(navOptions = navOptions)
     }
@@ -117,8 +112,9 @@ class MainNavigator(
         )
     }
 
-    fun navigateSignUpFlow(navOptions: NavOptions? = null) {
-        navController.navigateSignUpFlow(navOptions)
+    // Todo : 나중에 로직 플로우 확인하고 수정예정
+    fun navigateSignUp(navOptions: NavOptions? = null) {
+        navController.navigateSignUp(navOptions)
     }
     
     fun navigateArchivedCourse(navOptions: NavOptions? = null) {

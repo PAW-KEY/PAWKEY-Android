@@ -5,9 +5,9 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
-import com.naver.maps.geometry.LatLng
 import com.paw.key.core.util.PreferenceDataStore
 import com.paw.key.core.util.UiState
+import com.paw.key.core.util.flattenCoordinatesToLatLng
 import com.paw.key.core.util.handleError
 import com.paw.key.domain.repository.RegionRepository
 import com.paw.key.domain.repository.home.HomeRegionRepository
@@ -16,7 +16,6 @@ import com.paw.key.presentation.ui.region.state.DrawType
 import com.paw.key.presentation.ui.region.state.RegionSideEffect
 import com.paw.key.presentation.ui.region.state.RegionState
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -28,6 +27,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -53,18 +53,28 @@ class RegionViewModel @Inject constructor(
         )
 
     init {
-        viewModelScope.launch {
-            Log.e("RegionViewModel", "regionId: ${regionIdState.regionId}")
-            val validUserId = userId.filter { it != -1 }.first()
-            getRegionGeometry(
-                userId = validUserId,
-                regionId = regionIdState.regionId,
-            )
+        if (regionIdState.regionId != -1) {
+            viewModelScope.launch {
+                val validUserId = userId.filter { it != -1 }.first()
+                getRegionGeometry(
+                    userId = validUserId,
+                    regionId = regionIdState.regionId,
+                )
+            }
+        } else {
+            viewModelScope.launch {
+                Timber.e("RegionViewModel test용 regionId: ${regionIdState.regionId}")
+                val validUserId = userId.filter { it != -1 }.first()
+                getRegionGeometry(
+                    userId = validUserId,
+                    regionId = 39,
+                )
+            }
         }
     }
 
-    fun getRegionGeometry(userId: Int, regionId: Int) = viewModelScope.launch {
-        regionRepository.getRegionGeometry(userId, regionId)
+    fun getRegionGeometry(userId: Int, regionId: Int?) = viewModelScope.launch {
+        regionRepository.getRegionGeometry(userId, regionId!!)
             .onSuccess { data ->
                 val coordinates = data.geometry.coordinates
                 val flattenedLatLng = flattenCoordinatesToLatLng(coordinates)
@@ -103,7 +113,6 @@ class RegionViewModel @Inject constructor(
                 }
             }
             .onFailure { throwable ->
-                Log.e("RegionViewModel", "API 호출 실패", throwable)
                 val errorMessage = handleError(throwable)
                 _state.update {
                     it.copy(
@@ -114,21 +123,23 @@ class RegionViewModel @Inject constructor(
     }
 
     fun patchRegion() {
-        viewModelScope.launch {
-            homeRepository.patchRegion(userId.value, regionIdState.regionId)
-                .onSuccess { data ->
-                    Log.d("RegionViewModel", "API 응답 성공: $data")
-                    _sideEffect.emit(
-                        RegionSideEffect.ShowSnackBar("지역을 ${state.value.regionName ?: "역삼동"}으로 변경했어요.")
-                    )
-                }
-                .onFailure { throwable ->
-                    Log.e("RegionViewModel", "API 호출 실패", throwable)
-                    val errorMessage = handleError(throwable)
-                    _sideEffect.emit(
-                        RegionSideEffect.ShowSnackBar(errorMessage)
-                    )
-                }
+        if (regionIdState.regionId != -1) {
+            viewModelScope.launch {
+                homeRepository.patchRegion(userId.value, regionIdState.regionId!!)
+                    .onSuccess { data ->
+                        Log.d("RegionViewModel", "API 응답 성공: $data")
+                        _sideEffect.emit(
+                            RegionSideEffect.ShowSnackBar("지역을 ${state.value.regionName ?: "역삼동"}으로 변경했어요.")
+                        )
+                    }
+                    .onFailure { throwable ->
+                        Log.e("RegionViewModel", "API 호출 실패", throwable)
+                        val errorMessage = handleError(throwable)
+                        _sideEffect.emit(
+                            RegionSideEffect.ShowSnackBar(errorMessage)
+                        )
+                    }
+            }
         }
     }
 
@@ -154,12 +165,3 @@ private fun flattenCoordinatesToLatLng(
 }
 */
 
-private fun flattenCoordinatesToLatLng(
-    coordinates: List<List<List<Pair<Double, Double>>>>
-): ImmutableList<ImmutableList<LatLng>> {
-    return coordinates.map { polygon ->  // 각 Polygon
-        polygon.firstOrNull()?.map { point ->
-            LatLng(point.first, point.second)
-        }.orEmpty().toPersistentList()
-    }.toPersistentList()
-}

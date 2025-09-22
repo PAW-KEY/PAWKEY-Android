@@ -17,7 +17,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
-import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
@@ -28,6 +27,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
@@ -39,11 +42,11 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.flowWithLifecycle
 import coil.compose.AsyncImage
 import com.paw.key.R
+import com.paw.key.core.designsystem.component.DataLoadingScreen
 import com.paw.key.core.designsystem.component.PawkeyButton
 import com.paw.key.core.designsystem.component.SubChip
 import com.paw.key.core.designsystem.component.TopBar
 import com.paw.key.core.designsystem.theme.PawKeyTheme
-import com.paw.key.presentation.ui.course.walkreview.component.WalkReviewDialog
 import com.paw.key.presentation.ui.course.walkreview.component.WalkReviewFeedbackForm
 import com.paw.key.presentation.ui.course.walkreview.component.WalkReviewFeedbackHeader
 import com.paw.key.presentation.ui.course.walkreview.component.WalkReviewImageRow
@@ -51,6 +54,8 @@ import com.paw.key.presentation.ui.course.walkreview.component.WalkReviewInfoHol
 import com.paw.key.presentation.ui.course.walkreview.component.WalkReviewTextField
 import com.paw.key.presentation.ui.course.walkreview.state.WalkReviewContract
 import com.paw.key.presentation.ui.course.walkreview.viewmodel.WalkReviewViewModel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
 @Composable
@@ -67,6 +72,8 @@ fun WalkReviewRoute(
     val state by viewModel.state.collectAsStateWithLifecycle()
     val isValid = state.isValidForm
     val context = LocalContext.current
+    var isLoading by remember { mutableStateOf(false) }
+    val coroutineScope = rememberCoroutineScope()
 
     val lifecycleOwner = LocalLifecycleOwner.current
 
@@ -161,16 +168,25 @@ fun WalkReviewRoute(
             viewModel.onImageDelete(it)
         },
         onClickPublic = { isShare ->
-            viewModel.postWalkReview(
-                routeId = routeId,
-                isShare = isShare
-            )
+            coroutineScope.launch {
+                isLoading = false
+                delay(3000L)
+                isLoading = true
+                viewModel.postWalkReview(
+                    routeId = routeId,
+                    isShare = isShare
+                )
+            }
         },
         /*navigateShared = {
             navigateShared(routeId)
         },*/
         modifier = modifier,
     )
+
+    if (isLoading) {
+        DataLoadingScreen()
+    }
 }
 
 @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
