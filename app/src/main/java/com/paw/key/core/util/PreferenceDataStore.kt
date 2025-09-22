@@ -1,12 +1,15 @@
 package com.paw.key.core.util
 
 import android.content.Context
+import android.content.SharedPreferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.floatPreferencesKey
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.longPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
+import androidx.security.crypto.EncryptedSharedPreferences
+import androidx.security.crypto.MasterKey
 import com.naver.maps.geometry.LatLng
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -31,10 +34,6 @@ private val SELECTED_DONG_ID_KEY = intPreferencesKey("selected_dong_id")
 private val SELECTED_GU_NAME_KEY = stringPreferencesKey("selected_gu_name")
 private val SELECTED_DONG_NAME_KEY = stringPreferencesKey("selected_dong_name")
 private val ACTIVE_REGION_KEY = stringPreferencesKey("active_region")
-
-// 토큰 관리를 위한 키들
-private val ACCESS_TOKEN_KEY = stringPreferencesKey("access_token")
-private val REFRESH_TOKEN_KEY = stringPreferencesKey("refresh_token")
 
 private fun List<LatLng>.toPreferenceString(): String =
     joinToString(";") { "${it.latitude},${it.longitude}" }
@@ -120,7 +119,7 @@ object PreferenceDataStore {
         userId: Int,
         userName: String,
         petId: Int,
-        petName: String
+        petName: String,
     ) {
         summaryStore.edit {
             it[USER_ID_KEY] = userId
@@ -150,7 +149,7 @@ object PreferenceDataStore {
         val userId: Int,
         val userName: String,
         val petId: Int,
-        val petName: String
+        val petName: String,
     )
 
     fun getUserInfo(): Flow<UserInfo> = summaryStore.data.map {
@@ -180,7 +179,7 @@ object PreferenceDataStore {
         guId: Int,
         dongId: Int,
         guName: String,
-        dongName: String
+        dongName: String,
     ) {
         summaryStore.edit { preferences ->
             preferences[SELECTED_GU_ID_KEY] = guId
@@ -249,7 +248,7 @@ object PreferenceDataStore {
         val dongId: Int,
         val guName: String,
         val dongName: String,
-        val activeRegion: String
+        val activeRegion: String,
     ) {
         val displayLocation: String
             get() = if (guName.isNotEmpty() && dongName.isNotEmpty()) {
@@ -289,65 +288,61 @@ object PreferenceDataStore {
             preferences.remove(ACTIVE_REGION_KEY)
         }
     }
+}
 
-    // ===== 토큰 관리 관련 함수들 =====
+object UserDataStore {
+    private val ACCESS_TOKEN = "ACCESS_TOKEN"
+    private val REFRESH_TOKEN = "REFRESH_TOKEN"
+    private val PREFERENCES_NAME = "user_preferences"
 
-    /**
-     * 액세스 토큰과 리프레시 토큰을 저장합니다
-     */
-    suspend fun saveTokens(accessToken: String, refreshToken: String) {
-        summaryStore.edit { preferences ->
-            preferences[ACCESS_TOKEN_KEY] = accessToken
-            preferences[REFRESH_TOKEN_KEY] = refreshToken
-        }
-    }
+    private fun getSharedPreferences(context: Context): SharedPreferences {
+        val masterKey = MasterKey.Builder(context)
+            .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
+            .build()
 
-    /**
-     * 액세스 토큰을 조회합니다
-     */
-    fun getAccessToken(): Flow<String> = summaryStore.data.map {
-        it[ACCESS_TOKEN_KEY] ?: ""
-    }
-
-    /**
-     * 리프레시 토큰을 조회합니다
-     */
-    fun getRefreshToken(): Flow<String> = summaryStore.data.map {
-        it[REFRESH_TOKEN_KEY] ?: ""
-    }
-
-    /**
-     * 토큰 정보 데이터 클래스
-     */
-    data class TokenInfo(
-        val accessToken: String,
-        val refreshToken: String,
-    ) {
-        val isTokensAvailable: Boolean
-            get() = accessToken.isNotEmpty() && refreshToken.isNotEmpty()
-    }
-
-    /**
-     * 모든 토큰 정보를 한번에 조회합니다
-     */
-    fun getTokenInfo(): Flow<TokenInfo> = summaryStore.data.map { preferences ->
-        TokenInfo(
-            accessToken = preferences[ACCESS_TOKEN_KEY] ?: "",
-            refreshToken = preferences[REFRESH_TOKEN_KEY] ?: ""
+        return EncryptedSharedPreferences.create(
+            context,
+            PREFERENCES_NAME,
+            masterKey,
+            EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
+            EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
         )
     }
 
-    /**
-     * 토큰 정보를 초기화합니다
-     */
-    suspend fun clearTokens() {
-        summaryStore.edit { preferences ->
-            preferences.remove(ACCESS_TOKEN_KEY)
-            preferences.remove(REFRESH_TOKEN_KEY)
+    fun saveAcessToken(context: Context, token: String) {
+        val sharedPreferences = getSharedPreferences(context)
+        with(sharedPreferences.edit()) {
+            putString(ACCESS_TOKEN, token)
+            commit()
         }
     }
 
-    suspend fun clearAllData() {
-        summaryStore.edit { it.clear() }
+    fun saveRefreshToken(context: Context, token: String) {
+        val sharedPreferences = getSharedPreferences(context)
+        with(sharedPreferences.edit()) {
+            putString(REFRESH_TOKEN, token)
+            commit()
+        }
+    }
+
+    fun getAccessToken(context: Context): String {
+        val sharedPreferences = getSharedPreferences(context)
+        return sharedPreferences.getString(ACCESS_TOKEN, "") ?: ""
+    }
+
+    fun getRefreshToken(context: Context): String {
+        val sharedPreferences = getSharedPreferences(context)
+        return sharedPreferences.getString(REFRESH_TOKEN, "") ?: ""
+    }
+
+    fun removeToken(context: Context) {
+        val sharedPreferences = getSharedPreferences(context)
+        with(sharedPreferences.edit()) {
+            remove(ACCESS_TOKEN)
+            remove(REFRESH_TOKEN)
+            commit()
+        }
     }
 }
+
+
