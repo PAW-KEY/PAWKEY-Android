@@ -57,7 +57,7 @@ import coil.compose.AsyncImage
 import com.paw.key.R
 import com.paw.key.core.designsystem.component.PawkeyButton
 import com.paw.key.core.designsystem.theme.PawKeyTheme
-import com.paw.key.core.util.noRippleClickable
+import com.paw.key.core.extension.noRippleClickable
 import com.paw.key.presentation.ui.signup.component.FormField
 import com.paw.key.presentation.ui.signup.component.SignUpTextField
 import com.paw.key.presentation.ui.signup.component.SignUpUserSelectButton

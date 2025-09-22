@@ -38,6 +38,7 @@ private fun PreviewTrackingCard() {
 @Composable
 fun TrackingCard(
     onClick: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
     Box(
         contentAlignment = Alignment.Center,
