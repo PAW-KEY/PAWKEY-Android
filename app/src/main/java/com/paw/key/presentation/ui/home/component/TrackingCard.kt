@@ -42,8 +42,8 @@ fun TrackingCard(
 ) {
     Box(
         contentAlignment = Alignment.Center,
-        modifier = Modifier
-            .width(235.dp)
+        modifier = modifier
+            .fillMaxWidth()
             .height(110.dp)
             .background(
                 color = PawKeyTheme.colors.black,

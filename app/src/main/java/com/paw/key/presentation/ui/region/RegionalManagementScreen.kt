@@ -24,11 +24,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onSizeChanged
-import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.LocalLifecycleOwner
@@ -58,8 +56,8 @@ fun RegionalManagementRoute(
     snackBarHostState: SnackbarHostState,
     navigateUp: () -> Unit,
     navigateNext: () -> Unit,
-    regionId: Int,
     modifier: Modifier = Modifier,
+    regionId: Int? = -1,
     viewModel: RegionViewModel = hiltViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -108,6 +106,7 @@ fun RegionalManagementRoute(
                 paddingValues = paddingValues,
                 snackBarHostState = snackBarHostState,
                 cameraPositionState = cameraPositionState,
+                regionId = regionId,
                 type = state.drawType,
                 regionCoordinates = uiState.data,
                 selectedRegion = state.selectedRegion,
@@ -139,6 +138,7 @@ fun RegionalManagementScreen(
     cameraPositionState: CameraPositionState,
     type: DrawType,
     regionCoordinates: ImmutableList<ImmutableList<LatLng>>,
+    regionId: Int?,
     selectedRegion: String?,
     preRegionName: String?,
     regionName: String?,
@@ -152,7 +152,7 @@ fun RegionalManagementScreen(
             SnackbarHost(
                 hostState = snackBarHostState,
                 modifier = Modifier.padding(
-                    bottom = LocalConfiguration.current.screenHeightDp.dp * 0.4f
+                    bottom = LocalWindowInfo.current.containerSize.height.dp * 0.4f
                 )
             ) { data ->
                 CustomSnackBar(
@@ -177,7 +177,7 @@ fun RegionalManagementScreen(
                         if (singlePolygonCoords.isNotEmpty()) {
                             PolygonOverlay(
                                 coords = singlePolygonCoords,
-                                color = PawKeyTheme.colors.green500.copy(alpha = 0.3f),
+                                color = PawKeyTheme.colors.opacityPrimary.copy(alpha = 0.3f),
                                 outlineWidth = 1.dp,
                                 outlineColor = PawKeyTheme.colors.green500
                             )
@@ -188,7 +188,7 @@ fun RegionalManagementScreen(
                         regionCoordinates.forEach {
                             PolygonOverlay(
                                 coords = it,
-                                color = PawKeyTheme.colors.green500.copy(alpha = 0.3f),
+                                color = PawKeyTheme.colors.opacityPrimary.copy(alpha = 0.3f),
                                 outlineWidth = 1.dp,
                                 outlineColor = PawKeyTheme.colors.green500
                             )
@@ -222,122 +222,66 @@ fun RegionalManagementScreen(
                 ) {
                     Text(
                         text = "선택한 위치",
-                        style = PawKeyTheme.typography.head20B2,
-                        color = PawKeyTheme.colors.black
+                        style = PawKeyTheme.typography.header3,
+                        color = PawKeyTheme.colors.contents
                     )
 
                     Text(
                         text = regionName ?: "강남구 역삼동",
-                        style = PawKeyTheme.typography.head20B2,
-                        color = PawKeyTheme.colors.green500
+                        style = PawKeyTheme.typography.header3,
+                        color = PawKeyTheme.colors.primary
                     )
                 }
 
                 Spacer(modifier = Modifier.height(12.dp))
 
-                if (regionName == preRegionName) {
-                    Text(
-                        text = "기존에 산책하던 지역은\n" +
-                                "기존 지역과 같은 동네에요.",
-                        style = PawKeyTheme.typography.body14M,
-                        color = PawKeyTheme.colors.gray500,
-                        modifier = Modifier
-                            .padding(bottom = 12.dp)
-                    )
-
-                    Spacer(modifier = Modifier.height(12.dp))
-
-                    PawkeyButton(
-                        text = "지역 변경하기",
-                        onClick = {
-                            onClickButton()
-                        },
-                        modifier = Modifier
-                            .fillMaxWidth(),
-                        enabled = false,
-                    )
-                } else {
-                    Text(
-                        text = "기존에 산책하던 지역은 ${preRegionName}이에요.\n선택한 위치로 산책 지역을 변경하시겠어요?",
-                        style = PawKeyTheme.typography.body14M,
-                        color = PawKeyTheme.colors.gray500,
-                        modifier = Modifier
-                            .padding(bottom = 12.dp)
-                    )
-
-                    Spacer(modifier = Modifier.height(12.dp))
-
-                    PawkeyButton(
-                        text = "지역 변경하기",
-                        onClick = {
-                            onClickButton()
-                        },
-                        modifier = Modifier
-                            .fillMaxWidth(),
-                        enabled = true,
-                    )
-                }
-            }
-        }
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-private fun RadiusTestPreview() {
-    PawKeyTheme {
-        Scaffold(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(Color.Blue)
-        ) { paddingValues ->
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(Color.Blue)
-                    .padding(paddingValues)
-            ) {
-                Box(
-                    modifier = Modifier
-                        .weight(1f),
-                )
-
-                Column(
-                    modifier = Modifier
-                        .clip(RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp))
-                        .background(
-                            color = PawKeyTheme.colors.black,
-                            shape = RoundedCornerShape(
-                                topStart = 16.dp, topEnd = 16.dp
-                            )
-                        )
-                        .padding(horizontal = 16.dp, vertical = 24.dp)
-                ) {
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(top = 8.dp, bottom = 16.dp),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
+                if (regionId == -1) {
+                    if (regionName == preRegionName) {
                         Text(
-                            text = "선택한 위치",
-                            style = PawKeyTheme.typography.head20B2,
-                            color = PawKeyTheme.colors.black
+                            text = "기존에 산책하던 지역은\n" +
+                                    "기존 지역과 같은 동네에요.",
+                            style = PawKeyTheme.typography.bodyDefault,
+                            color = PawKeyTheme.colors.gray500,
+                            modifier = Modifier
+                                .padding(bottom = 12.dp)
                         )
 
+                        Spacer(modifier = Modifier.height(12.dp))
+
+                        PawkeyButton(
+                            text = "지역 변경하기",
+                            onClick = {
+                                onClickButton()
+                            },
+                            modifier = Modifier
+                                .fillMaxWidth(),
+                            enabled = false,
+                        )
+                    } else {
                         Text(
-                            text = "강남구 역삼동",
-                            style = PawKeyTheme.typography.head20B2,
-                            color = PawKeyTheme.colors.green500
+                            text = "기존에 산책하던 지역은 ${preRegionName}이에요.\n선택한 위치로 산책 지역을 변경하시겠어요?",
+                            style = PawKeyTheme.typography.bodyDefault,
+                            color = PawKeyTheme.colors.gray500,
+                            modifier = Modifier
+                                .padding(bottom = 12.dp)
+                        )
+
+                        Spacer(modifier = Modifier.height(12.dp))
+
+                        PawkeyButton(
+                            text = "지역 변경하기",
+                            onClick = {
+                                onClickButton()
+                            },
+                            modifier = Modifier
+                                .fillMaxWidth(),
+                            enabled = true,
                         )
                     }
-
-                    Spacer(modifier = Modifier.height(12.dp))
-
+                } else {
                     Text(
-                        text = "기존에 산책하던 지역은이에요.\n선택한 위치로 산책 지역을 변경하시겠어요?",
-                        style = PawKeyTheme.typography.body14M,
+                        text = "선택한 산책 지역은 ${regionName}이에요.\n이 위치로 산책 지역을 설정하시겠어요?",
+                        style = PawKeyTheme.typography.bodyDefault,
                         color = PawKeyTheme.colors.gray500,
                         modifier = Modifier
                             .padding(bottom = 12.dp)
@@ -346,9 +290,9 @@ private fun RadiusTestPreview() {
                     Spacer(modifier = Modifier.height(12.dp))
 
                     PawkeyButton(
-                        text = "지역 변경하기",
+                        text = "선택",
                         onClick = {
-
+                            onClickButton()
                         },
                         modifier = Modifier
                             .fillMaxWidth(),

@@ -5,10 +5,8 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
@@ -21,6 +19,21 @@ import com.paw.key.core.designsystem.component.PawkeyButton
 import com.paw.key.core.designsystem.theme.PawKeyTheme
 import com.paw.key.presentation.ui.onboard.component.OnboardPager
 import com.paw.key.presentation.ui.onboard.component.OnboardingPosting
+
+@Preview(showBackground = true)
+@Composable
+private fun PreviewOnboardingScreen() {
+    PawKeyTheme {
+        OnboardingScreen(
+            paddingValues = PaddingValues(),
+            navigateUp = {},
+            navigateNext = {},
+            navigateSignUp = {},
+            snackBarHostState = SnackbarHostState(),
+            modifier = Modifier
+        )
+    }
+}
 
 @Composable
 fun OnboardingRoute(
@@ -41,21 +54,6 @@ fun OnboardingRoute(
         snackBarHostState = snackBarHostState,
         modifier = modifier
     )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun PreviewOnboardingScreen() {
-    PawKeyTheme {
-        OnboardingScreen(
-            paddingValues = PaddingValues(),
-            navigateUp = {},
-            navigateNext = {},
-            navigateSignUp = {},
-            snackBarHostState = SnackbarHostState(),
-            modifier = Modifier
-        )
-    }
 }
 
 @Composable
@@ -110,7 +108,7 @@ fun OnboardingScreen(
             PawkeyButton(
                 text = "신규 계정으로 회원가입",
                 enabled = true,
-                onClick = { },
+                onClick = navigateNext, // Todo : 나중에 로그인, 회원가입 네이밍 수정
                 isBackGround = true,
                 isBorder = false
             )

@@ -1,4 +1,4 @@
-package com.paw.key.presentation.ui.course.util
+package com.paw.key.core.util
 
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts

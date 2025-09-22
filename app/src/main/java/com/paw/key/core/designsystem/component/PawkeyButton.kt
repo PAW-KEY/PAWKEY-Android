@@ -85,6 +85,7 @@ private fun PreviewPawkeyButton() {
     }
 }
 
+// Todo : 이 더러운 분기의 버튼 제거예정
 @Composable
 fun PawkeyButton(
     text: String,
@@ -102,7 +103,7 @@ fun PawkeyButton(
     }
 
     val backgroundColor = when {
-        actualEnabled && !isBackGround -> PawKeyTheme.colors.green500
+        actualEnabled && !isBackGround -> PawKeyTheme.colors.primary
         actualEnabled && isBackGround -> PawKeyTheme.colors.white1
         !actualEnabled && isBackGround -> PawKeyTheme.colors.white1
         else -> PawKeyTheme.colors.gray200
@@ -139,7 +140,7 @@ fun PawkeyButton(
     ) {
         Text(
             text = text,
-            style = PawKeyTheme.typography.body16Sb,
+            style = PawKeyTheme.typography.mainButtonActive,
             color = contentColor
         )
     }
