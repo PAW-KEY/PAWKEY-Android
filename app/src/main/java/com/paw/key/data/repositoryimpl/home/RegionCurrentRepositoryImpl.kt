@@ -13,8 +13,7 @@ class RegionCurrentRepositoryImpl @Inject constructor(
         return runCatching {
             val response = dataSource.regionCurrent(userId)
             if (response.code == "S000") {
-                // 올바른 타입 반환 (RegionCurrentDataEntity)
-                response.data.toEntity() // DTO에서 Entity로 변환
+                response.data.toEntity()
             } else {
                 throw Exception(response.message)
             }

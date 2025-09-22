@@ -1,4 +1,4 @@
-package com.paw.key.data
+package com.paw.key.data.remote.datasource.datasourceimpl
 
 import android.content.Context
 import androidx.credentials.CredentialManager
@@ -33,15 +33,4 @@ class GoogleAuthDataSourceImpl @Inject constructor(
             val response = credentialManager.getCredential(context, request)
             GoogleIdTokenCredential.createFrom(response.credential.data)
         }
-}
-
-
-class AuthRemoteDataSourceImpl @Inject constructor(
-    private val loginService: LoginService,
-) : AuthRemoteDataSource {
-    override suspend fun login(
-        providerToken: String,
-        provider: String,
-    ): BaseResponse<LoginResponseDto> =
-        loginService.login(providerToken, LoginRequestDto(provider))
 }

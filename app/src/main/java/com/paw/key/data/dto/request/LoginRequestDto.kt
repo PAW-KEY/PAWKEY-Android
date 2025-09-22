@@ -9,3 +9,9 @@ data class LoginRequestDto (
     val email: String,
 )
 // 테스트용입니다
+
+
+fun LoginRequestDto.toEntity(): LoginRequestDto {
+    val email = this.email
+    return LoginRequestDto(email)
+}

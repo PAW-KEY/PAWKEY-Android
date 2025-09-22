@@ -8,7 +8,3 @@ import com.paw.key.data.dto.response.LoginResponseDto
 interface GoogleAuthDataSource {
     suspend fun signIn(context: Context): Result<GoogleIdTokenCredential>
 }
-
-interface AuthRemoteDataSource {
-    suspend fun login(providerToken: String, provider: String): BaseResponse<LoginResponseDto>
-}
