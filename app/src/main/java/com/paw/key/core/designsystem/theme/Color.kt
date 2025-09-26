@@ -1,5 +1,6 @@
 package com.paw.key.core.designsystem.theme
 
+import android.annotation.SuppressLint
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -46,7 +47,9 @@ val System_green = Color(0xFF40C927)
 
 /*------------------------------------------------*/
 // Brand
-val OpacityPrimary = Color(0x4000D281)
+@SuppressLint("InvalidColorHexValue")
+val Opacity5Primary = Color(0x0D00D281)
+val Opacity25Primary = Color(0x4000D281)
 
 val PrimaryGra1 = Color(0xFFE6FBF2)
 val PrimaryGra2 = Color(0xFFCFF8E5)
@@ -61,11 +64,13 @@ val PrimaryGra7 = Color(0xFF007A50)
 val Contents = Color(0xFF171717)
 
 // background
-val Background1 = Color(0xFFEEEEEE)
-val Background2 = Color(0xFFFFFFFF)
+val Background = Color(0xFFFFFFFF)
 
 // default
-val Default = Color(0xFF9C9C9C)
+val DefaultButton = Color(0xFFEEEEEE)
+val DefaultMiddle = Color(0xFF9C9C9C)
+val DefaultDark = Color(0xFF555555)
+
 
 
 @Stable
@@ -104,7 +109,8 @@ class PawKeyColors(
     system_green: Color,
 
     /*--------------------*/
-    opacityPrimary: Color,
+    opacity5Primary: Color,
+    opacity25Primary: Color,
     primaryGra1: Color,
     primaryGra2: Color,
     primaryGra3: Color,
@@ -114,9 +120,10 @@ class PawKeyColors(
     primaryGra7: Color,
     primary: Color,
     contents: Color,
-    background1: Color,
-    background2: Color,
-    default: Color,
+    background: Color,
+    defaultButton: Color,
+    defaultMiddle: Color,
+    defaultDark: Color,
 ) {
     var green50: Color by mutableStateOf(green50)
         private set
@@ -180,7 +187,9 @@ class PawKeyColors(
         private set
 
     /*----------------------------*/
-    var opacityPrimary: Color by mutableStateOf(opacityPrimary)
+    var opacity5Primary: Color by mutableStateOf(opacity5Primary)
+        private set
+    var opacity25Primary: Color by mutableStateOf(opacity25Primary)
         private set
     var primaryGra1: Color by mutableStateOf(primaryGra1)
         private set
@@ -200,11 +209,13 @@ class PawKeyColors(
         private set
     var contents: Color by mutableStateOf(contents)
         private set
-    var background1: Color by mutableStateOf(background1)
+    var background: Color by mutableStateOf(background)
         private set
-    var background2: Color by mutableStateOf(background2)
+    var defaultButton: Color by mutableStateOf(defaultButton)
         private set
-    var default: Color by mutableStateOf(default)
+    var defaultMiddle: Color by mutableStateOf(defaultMiddle)
+        private set
+    var defaultDark: Color by mutableStateOf(defaultDark)
         private set
 
     fun copy(
@@ -230,7 +241,8 @@ class PawKeyColors(
         system_green: Color = this.system_green,
 
         /*----------------------------------*/
-        opacityPrimary: Color = this.opacityPrimary,
+        opacity5Primary: Color = this.opacity5Primary,
+        opacity25Primary: Color = this.opacity25Primary,
         primaryGra1: Color = this.primaryGra1,
         primaryGra2: Color = this.primaryGra2,
         primaryGra3: Color = this.primaryGra3,
@@ -240,9 +252,10 @@ class PawKeyColors(
         primaryGra7: Color = this.primaryGra7,
         primary: Color = this.primary,
         contents: Color = this.contents,
-        background1: Color = this.background1,
-        background2: Color = this.background2,
-        default: Color = this.default,
+        background: Color = this.background,
+        defaultButton: Color = this.defaultButton,
+        defaultMiddle: Color = this.defaultMiddle,
+        defaultDark: Color = this.defaultDark,
 
         ): PawKeyColors = PawKeyColors(
 
@@ -280,7 +293,8 @@ class PawKeyColors(
         system_green = system_green,
 
         /*-------------------------------*/
-        opacityPrimary = opacityPrimary,
+        opacity5Primary = opacity5Primary,
+        opacity25Primary = opacity25Primary,
         primaryGra1 = primaryGra1,
         primaryGra2 = primaryGra2,
         primaryGra3 = primaryGra3,
@@ -290,9 +304,10 @@ class PawKeyColors(
         primaryGra7 = primaryGra7,
         primary = primary,
         contents = contents,
-        background1 = background1,
-        background2 = background2,
-        default = default,
+        background = background,
+        defaultButton = defaultButton,
+        defaultMiddle = defaultMiddle,
+        defaultDark = defaultDark,
     )
 
     fun update(other: PawKeyColors) {
@@ -329,7 +344,8 @@ class PawKeyColors(
         system_green = other.system_green
 
         /*-------------------------------*/
-        opacityPrimary = other.opacityPrimary
+        opacity5Primary = other.opacity5Primary
+        opacity25Primary = other.opacity25Primary
         primaryGra1 = other.primaryGra1
         primaryGra2 = other.primaryGra2
         primaryGra3 = other.primaryGra3
@@ -339,9 +355,10 @@ class PawKeyColors(
         primaryGra7 = other.primaryGra7
         primary = other.primary
         contents = other.contents
-        background1 = other.background1
-        background2 = other.background2
-        default = other.default
+        background = other.background
+        defaultButton = other.defaultButton
+        defaultMiddle = other.defaultMiddle
+        defaultDark = other.defaultDark
     }
 }
 
@@ -380,7 +397,8 @@ fun pawKeyColors(
     system_green: Color = System_green,
 
     /*---------------------------------*/
-    opacityPrimary: Color = OpacityPrimary,
+    opacity5Primary: Color = Opacity5Primary,
+    opacity25Primary: Color = Opacity25Primary,
     primaryGra1: Color = PrimaryGra1,
     primaryGra2: Color = PrimaryGra2,
     primaryGra3: Color = PrimaryGra3,
@@ -390,9 +408,10 @@ fun pawKeyColors(
     primaryGra7: Color = PrimaryGra7,
     primary: Color = Primary,
     contents: Color = Contents,
-    background1: Color = Background1,
-    background2: Color = Background2,
-    default: Color = Default,
+    background: Color = Background,
+    defaultButton: Color = DefaultButton,
+    defaultMiddle: Color = DefaultMiddle,
+    defaultDark: Color = DefaultDark,
 ) = PawKeyColors(
     green50 = green50,
     green100 = green100,
@@ -428,7 +447,8 @@ fun pawKeyColors(
     system_green = system_green,
 
     /*----------------------------*/
-    opacityPrimary = opacityPrimary,
+    opacity5Primary = opacity5Primary,
+    opacity25Primary = opacity25Primary,
     primaryGra1 = primaryGra1,
     primaryGra2 = primaryGra2,
     primaryGra3 = primaryGra3,
@@ -438,7 +458,8 @@ fun pawKeyColors(
     primaryGra7 = primaryGra7,
     primary = primary,
     contents = contents,
-    background1 = background1,
-    background2 = background2,
-    default = default,
+    background = background,
+    defaultButton = defaultButton,
+    defaultMiddle = defaultMiddle,
+    defaultDark = defaultDark,
 )
