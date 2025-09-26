@@ -3,14 +3,12 @@ package com.paw.key.presentation.ui.signup.component
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Icon
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -18,9 +16,14 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.paw.key.R
 import com.paw.key.core.designsystem.theme.PawKeyTheme
+import com.paw.key.core.extension.noRippleClickable
 
 @Preview(showBackground = true)
 @Composable
@@ -29,7 +32,7 @@ private fun PreviewSignUpHeader() {
         SignUpHeader(
             progress = 0.5F,
             title = "회원가입",
-            subtitle = "견주님에 대해 알려주세요."
+            onBackClick = {}
         )
     }
 }
@@ -37,13 +40,14 @@ private fun PreviewSignUpHeader() {
 @Composable
 fun SignUpHeader(
     title: String,
-    subtitle: String,
+    onBackClick: () -> Unit,
     modifier: Modifier = Modifier,
-    progress: Float = 1F,
+    progress: Float = 1f,
 ) {
+    val stepProgress = (progress / 3f).coerceIn(0f, 1f)
 
     val animatedProgress by animateFloatAsState(
-        targetValue = progress,
+        targetValue = stepProgress,
         animationSpec = tween(
             durationMillis = 1000,
             easing = FastOutSlowInEasing
@@ -51,54 +55,43 @@ fun SignUpHeader(
         label = "progress_animation"
     )
 
-    Column(
+    Column (
         modifier = modifier
             .fillMaxWidth()
-            .height(131.dp)
-    ) {
-        Row(
-            verticalAlignment = Alignment.Bottom,
-            modifier = modifier
-                .fillMaxWidth()
-                .height(60.dp)
-        ) {
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center,
-                modifier = Modifier
-                    .weight(1F)
-                    .fillMaxSize()
-            ) {
-                Text(
-                    text = title,
-                    color = PawKeyTheme.colors.black,
-                    style = PawKeyTheme.typography.body16Sb,
-                    modifier = Modifier
-                        .padding(top = 16.dp),
-                )
-
-                Spacer(modifier = Modifier.weight(1F))
-
-                LinearProgressIndicator(
-                    progress = { animatedProgress },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(2.dp),
-                    color = PawKeyTheme.colors.green500,
-                    trackColor = PawKeyTheme.colors.gray100,
-                    strokeCap = StrokeCap.Square,
-                    gapSize = 0.dp,
-                    drawStopIndicator = {}
-                )
-            }
-        }
-        Text(
-            text = subtitle,
-            color = PawKeyTheme.colors.black,
-            style = PawKeyTheme.typography.head22Sb,
+    ){
+        Box (
             modifier = Modifier
-                .padding(top = 36.dp)
-                .padding(horizontal = 16.dp)
+                .fillMaxWidth()
+                .padding(vertical = 16.dp),
+            contentAlignment = Alignment.Center
+        ) {
+            Icon(
+                imageVector = ImageVector.vectorResource(R.drawable.ic_arrow_left_black),
+                contentDescription = "back",
+                tint = PawKeyTheme.colors.contents,
+                modifier = Modifier
+                    .align(Alignment.CenterStart)
+                    .padding(start = 16.dp)
+                    .noRippleClickable(onBackClick)
+            )
+
+            Text(
+                text = title,
+                color = PawKeyTheme.colors.contents,
+                style = PawKeyTheme.typography.subTitle,
+                textAlign = TextAlign.Center
+            )
+        }
+
+        LinearProgressIndicator(
+            progress = { animatedProgress },
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(2.dp),
+            color = PawKeyTheme.colors.primary,
+            trackColor = PawKeyTheme.colors.default,
+            strokeCap = StrokeCap.Square,
+            gapSize = 0.dp
         )
     }
 }

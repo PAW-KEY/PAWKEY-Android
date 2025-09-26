@@ -43,7 +43,7 @@ fun DaytimeCard(
     Box(
         contentAlignment = Alignment.BottomCenter,
         modifier = modifier
-            .width(81.dp)
+            .fillMaxWidth()
             .height(110.dp)
             .background(
                 color = PawKeyTheme.colors.white1,
@@ -57,7 +57,7 @@ fun DaytimeCard(
                 .fillMaxWidth()
                 .padding(horizontal = 11.dp)
                 .padding(bottom = 14.dp)
-                .zIndex(1F),
+                .zIndex(2F),
         ) {
             Text(
                 text = daytime,

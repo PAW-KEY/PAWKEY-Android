@@ -1,7 +1,5 @@
 package com.paw.key.presentation.ui.course.entire.tab.map
 
-import android.os.Looper
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
@@ -33,25 +31,18 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.viewinterop.AndroidView
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.google.android.gms.location.LocationCallback
-import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
-import com.google.android.gms.location.Priority
-import com.kakao.vectormap.LatLng
-import com.kakao.vectormap.MapView
 import com.paw.key.R
 import com.paw.key.core.designsystem.component.LoadingScreen
 import com.paw.key.core.designsystem.theme.PawKeyTheme
 import com.paw.key.core.util.UiState
-import com.paw.key.core.util.noRippleClickable
-import com.paw.key.presentation.ui.course.entire.tab.map.component.tapMapView
+import com.paw.key.core.extension.noRippleClickable
 import com.paw.key.presentation.ui.course.entire.tab.map.viewmodel.TapMapViewModel
-import com.paw.key.presentation.ui.course.walk.getCurrentLocation
 
 @Composable
 fun TapMapRoute(
@@ -75,54 +66,9 @@ fun TapMapRoute(
         object : LocationCallback() {
             override fun onLocationResult(locationResult: LocationResult) {
                 locationResult.lastLocation?.let { location ->
-                    val newLocation = LatLng.from(location.latitude, location.longitude)
-                    viewModel.updateState {
-                        copy(
-                            currentLocation = newLocation
-                        )
-                    }
+
                 }
             }
-        }
-    }
-
-    LaunchedEffect(isGranted) {
-        if (isGranted) {
-            val currentLocation = getCurrentLocation(
-                context,
-                fusedLocationClient,
-            )
-
-            Log.e("TapMapRoute", "currentLocation: $currentLocation")
-
-            viewModel.updateState {
-                copy(
-                    initialLocationState = UiState.Success(currentLocation),
-                    currentLocation = currentLocation
-                )
-            }
-
-            val locationRequest = LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, 1000) // 1초마다, 높은 정확도
-                .setWaitForAccurateLocation(true)
-                .build()
-
-            try {
-                fusedLocationClient.requestLocationUpdates(
-                    locationRequest,
-                    locationCallback,
-                    Looper.getMainLooper()
-                )
-            } catch (e: SecurityException) {
-                snackBarHostState.showSnackbar("위치 권한이 필요합니다.")
-
-                viewModel.updateState {
-                    copy(
-                        isTrackingEnabled = false
-                    )
-                }
-            }
-        } else {
-            fusedLocationClient.removeLocationUpdates(locationCallback)
         }
     }
 
@@ -136,23 +82,12 @@ fun TapMapRoute(
         }
 
         is UiState.Success -> {
-            val mapView = tapMapView(
-                lifeCycle = lifecycleOwner.lifecycle,
-                context = context,
-                currentUserLocation = state.currentLocation,
-                isTrackingEnabled = state.isTrackingEnabled,
-                onDisposeCallback = {
-                    fusedLocationClient.removeLocationUpdates(locationCallback)
-                }
-            )
-
             TapMapScreen(
                 paddingValues = paddingValues,
                 navigateUp = navigateUp,
                 navigateNext = navigateNext,
                 snackBarHostState = snackBarHostState,
                 regionName = state.currentRegion ?: "영등포구 여의도동",
-                mapView = mapView,
                 onClickTracking = {
                     viewModel.updateState {
                         copy(
@@ -177,7 +112,6 @@ fun TapMapScreen(
     snackBarHostState: SnackbarHostState,
     regionName: String,
     onClickTracking: () -> Unit,
-    mapView: MapView,
     modifier: Modifier = Modifier,
 ) {
     Scaffold(
@@ -193,12 +127,6 @@ fun TapMapScreen(
             modifier = Modifier
                 .padding(pv)
         ) {
-            AndroidView(
-                factory = { mapView },
-                modifier = Modifier
-                    .align(Alignment.Center)
-            )
-
             Text(
                 text = regionName,
                 modifier = Modifier

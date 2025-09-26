@@ -56,9 +56,6 @@ class HomeContract {
                     }
                 }
             }
-
-        val isLocationSelected: Boolean
-            get() = selectedGuId != 0 && selectedDongId != 0
     }
 
     @Immutable

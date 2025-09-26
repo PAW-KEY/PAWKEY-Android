@@ -1,5 +1,7 @@
 package com.paw.key.domain.model.entity.onboarding
 
+import com.paw.key.domain.model.entity.signup.DistrictEntity
+
 data class OnboardingInfo(
     val userId: Int,
     val userName: String,
@@ -24,22 +26,7 @@ data class PetTraitCategoryOption(
 )
 
 data class OnboardingRegion(
-    val districtList: List<District>
-)
-
-data class District(
-    val gu: Gu,
-    val dongs: List<Dong>
-)
-
-data class Gu(
-    val id: Int,
-    val name: String
-)
-
-data class Dong(
-    val id: Int,
-    val name: String
+    val districtList: List<DistrictEntity>
 )
 
 data class PetTraitDto(

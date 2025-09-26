@@ -1,7 +1,7 @@
 package com.paw.key.domain.repository
 
 import android.graphics.Bitmap
-import com.kakao.vectormap.LatLng
+import com.naver.maps.geometry.LatLng
 import com.paw.key.domain.model.entity.sharedresult.WalkResult
 import kotlinx.coroutines.flow.Flow
 

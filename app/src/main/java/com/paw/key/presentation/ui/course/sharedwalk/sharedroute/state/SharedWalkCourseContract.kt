@@ -3,7 +3,7 @@ package com.paw.key.presentation.ui.course.sharedwalk.sharedroute.state
 import android.graphics.Bitmap
 import androidx.annotation.StringRes
 import androidx.compose.runtime.Immutable
-import com.kakao.vectormap.LatLng
+import com.naver.maps.geometry.LatLng
 import com.paw.key.R
 import com.paw.key.core.util.UiState
 import kotlinx.collections.immutable.PersistentList

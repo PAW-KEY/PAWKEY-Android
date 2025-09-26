@@ -27,10 +27,9 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.paw.key.R
-import com.paw.key.core.designsystem.component.SubChip
 import com.paw.key.core.designsystem.theme.PawKeyTheme
 import com.paw.key.core.util.PreferenceDataStore
-import com.paw.key.core.util.noRippleClickable
+import com.paw.key.core.extension.noRippleClickable
 import com.paw.key.presentation.ui.mypage.component.GrayChip
 import com.paw.key.presentation.ui.mypage.state.MyPageState
 import com.paw.key.presentation.ui.mypage.viewmodel.MyPageViewModel

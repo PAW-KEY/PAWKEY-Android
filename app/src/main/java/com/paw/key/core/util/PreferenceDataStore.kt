@@ -1,13 +1,16 @@
 package com.paw.key.core.util
 
 import android.content.Context
+import android.content.SharedPreferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.floatPreferencesKey
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.longPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
-import com.kakao.vectormap.LatLng
+import androidx.security.crypto.EncryptedSharedPreferences
+import androidx.security.crypto.MasterKey
+import com.naver.maps.geometry.LatLng
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
@@ -35,15 +38,6 @@ private val ACTIVE_REGION_KEY = stringPreferencesKey("active_region")
 private fun List<LatLng>.toPreferenceString(): String =
     joinToString(";") { "${it.latitude},${it.longitude}" }
 
-private fun String.toLatLngList(): List<LatLng> =
-    split(";").mapNotNull {
-        val parts = it.split(",")
-        if (parts.size == 2) {
-            LatLng.from(parts[0].toDoubleOrNull() ?: return@mapNotNull null, parts[1].toDoubleOrNull() ?: return@mapNotNull null)
-        }
-        else null
-    }
-
 object PreferenceDataStore {
 
     private lateinit var appContext: Context
@@ -55,7 +49,6 @@ object PreferenceDataStore {
     private val summaryStore
         get() = appContext.summaryStore
 
-    // 기존 함수들...
     suspend fun saveWalkSummary(
         points: List<LatLng>,
         totalDistance: Float,
@@ -68,10 +61,6 @@ object PreferenceDataStore {
             preferences[TOTAL_TIME_KEY] = totalTime
             preferences[TOTAL_STEPS_KEY] = totalSteps
         }
-    }
-
-    fun getPoints(): Flow<List<LatLng>> = summaryStore.data.map {
-        it[POINTS_KEY]?.toLatLngList() ?: emptyList()
     }
 
     fun getTotalDistance(): Flow<Float> = summaryStore.data.map {
@@ -130,7 +119,7 @@ object PreferenceDataStore {
         userId: Int,
         userName: String,
         petId: Int,
-        petName: String
+        petName: String,
     ) {
         summaryStore.edit {
             it[USER_ID_KEY] = userId
@@ -141,7 +130,7 @@ object PreferenceDataStore {
     }
 
     fun getUserId(): Flow<Int> = summaryStore.data.map {
-        it[USER_ID_KEY] ?: 41
+        it[USER_ID_KEY] ?: 43
     }
 
     fun getUserName(): Flow<String> = summaryStore.data.map {
@@ -160,7 +149,7 @@ object PreferenceDataStore {
         val userId: Int,
         val userName: String,
         val petId: Int,
-        val petName: String
+        val petName: String,
     )
 
     fun getUserInfo(): Flow<UserInfo> = summaryStore.data.map {
@@ -190,7 +179,7 @@ object PreferenceDataStore {
         guId: Int,
         dongId: Int,
         guName: String,
-        dongName: String
+        dongName: String,
     ) {
         summaryStore.edit { preferences ->
             preferences[SELECTED_GU_ID_KEY] = guId
@@ -259,7 +248,7 @@ object PreferenceDataStore {
         val dongId: Int,
         val guName: String,
         val dongName: String,
-        val activeRegion: String
+        val activeRegion: String,
     ) {
         val displayLocation: String
             get() = if (guName.isNotEmpty() && dongName.isNotEmpty()) {
@@ -299,8 +288,61 @@ object PreferenceDataStore {
             preferences.remove(ACTIVE_REGION_KEY)
         }
     }
+}
 
-    suspend fun clearAllData() {
-        summaryStore.edit { it.clear() }
+object UserDataStore {
+    private val ACCESS_TOKEN = "ACCESS_TOKEN"
+    private val REFRESH_TOKEN = "REFRESH_TOKEN"
+    private val PREFERENCES_NAME = "user_preferences"
+
+    private fun getSharedPreferences(context: Context): SharedPreferences {
+        val masterKey = MasterKey.Builder(context)
+            .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
+            .build()
+
+        return EncryptedSharedPreferences.create(
+            context,
+            PREFERENCES_NAME,
+            masterKey,
+            EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
+            EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
+        )
+    }
+
+    fun saveAcessToken(context: Context, token: String) {
+        val sharedPreferences = getSharedPreferences(context)
+        with(sharedPreferences.edit()) {
+            putString(ACCESS_TOKEN, token)
+            commit()
+        }
+    }
+
+    fun saveRefreshToken(context: Context, token: String) {
+        val sharedPreferences = getSharedPreferences(context)
+        with(sharedPreferences.edit()) {
+            putString(REFRESH_TOKEN, token)
+            commit()
+        }
+    }
+
+    fun getAccessToken(context: Context): String {
+        val sharedPreferences = getSharedPreferences(context)
+        return sharedPreferences.getString(ACCESS_TOKEN, "") ?: ""
+    }
+
+    fun getRefreshToken(context: Context): String {
+        val sharedPreferences = getSharedPreferences(context)
+        return sharedPreferences.getString(REFRESH_TOKEN, "") ?: ""
+    }
+
+    fun removeToken(context: Context) {
+        val sharedPreferences = getSharedPreferences(context)
+        with(sharedPreferences.edit()) {
+            remove(ACCESS_TOKEN)
+            remove(REFRESH_TOKEN)
+            commit()
+        }
     }
 }
+
+

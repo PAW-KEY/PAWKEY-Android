@@ -1,14 +1,12 @@
 package com.paw.key.data.remote.datasource.home
 
-import com.paw.key.data.dto.request.home.HomeRegionRequest
 import com.paw.key.data.service.home.HomeRegionService
-import com.paw.key.data.service.home.RegionCurrentService
 import javax.inject.Inject
 
 class RegionCurrentDataSource @Inject constructor(
-    private val service: RegionCurrentService
+    private val service: HomeRegionService
 ) {
-    suspend fun RegionCurrent(userId: Int) =
-        service.RegionCurrent(userId)
+    suspend fun regionCurrent(userId: Int) =
+        service.regionCurrent(userId)
 }
 

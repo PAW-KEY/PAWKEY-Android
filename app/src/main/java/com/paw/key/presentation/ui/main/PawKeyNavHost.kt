@@ -1,10 +1,10 @@
 package com.paw.key.presentation.ui.main
 
 import android.os.Build
-import android.util.Log
 import androidx.annotation.RequiresApi
-import androidx.compose.animation.EnterTransition
-import androidx.compose.animation.ExitTransition
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
@@ -19,7 +19,6 @@ import com.paw.key.presentation.ui.course.sharedwalk.review.navigation.sharedWal
 import com.paw.key.presentation.ui.course.sharedwalk.sharedroute.navigation.sharedWalkCourseNavGraph
 import com.paw.key.presentation.ui.course.walk.navigation.walkCourseNavGraph
 import com.paw.key.presentation.ui.course.walkcomplete.navigation.walkCompletionNavGraph
-import com.paw.key.presentation.ui.course.walkreview.navigation.navigateWalkReview
 import com.paw.key.presentation.ui.course.walkreview.navigation.walkReviewNavGraph
 import com.paw.key.presentation.ui.dummy.navigation.dummyNavGraph
 import com.paw.key.presentation.ui.dummy.next.dummyNextNavGraph
@@ -49,10 +48,30 @@ fun PawKeyNavHost(
     NavHost(
         navController = navigator.navController,
         startDestination = navigator.startDestination,
-        enterTransition = { EnterTransition.None },
-        exitTransition = { ExitTransition.None },
-        popEnterTransition = { EnterTransition.None },
-        popExitTransition = { ExitTransition.None },
+        enterTransition = {
+            slideInHorizontally(
+                initialOffsetX = { fullWidth -> fullWidth },
+                animationSpec = tween(durationMillis = 300)
+            )
+        },
+        exitTransition = {
+            slideOutHorizontally(
+                targetOffsetX = { fullWidth -> -fullWidth },
+                animationSpec = tween(durationMillis = 300)
+            )
+        },
+        popEnterTransition = {
+            slideInHorizontally(
+                initialOffsetX = { fullWidth -> -fullWidth },
+                animationSpec = tween(durationMillis = 300)
+            )
+        },
+        popExitTransition = {
+            slideOutHorizontally(
+                targetOffsetX = { fullWidth -> fullWidth },
+                animationSpec = tween(durationMillis = 300)
+            )
+        },
     ) {
         homeNavGraph(
             paddingValues = paddingValues,
@@ -129,7 +148,6 @@ fun PawKeyNavHost(
             paddingValues = paddingValues,
             navigateUp = navigator::navigateUp,
             navigateNext = {
-                Log.e("navigateNext", "navigateNext : $it")
                 navigator.navigateWalkCompletion(
                     routeId = it,
                 )
@@ -206,9 +224,12 @@ fun PawKeyNavHost(
         )
 
         archivedDetailNavGraph(
-            navigateUp = navigator::navigateHome,
+            // Todo 그냥 리스트에서 상세보기 후 뒤로가기
+            navigateUp = navigator::navigateUp,
+            /*navigateDetail = {
+                navigator.navController.navigateCourse(index = 1, navOptions = null)
+            },*/
             navigateToSharedWalk = { routeId, pageId ->
-                Log.e("navigateNext", "navigateNext : $routeId")
                 navigator.navigateSharedWalkCourse(
                     routeId = routeId,
                     pageId = pageId
@@ -256,7 +277,7 @@ fun PawKeyNavHost(
         onboardingNavGraph(
             paddingValues = paddingValues,
             navigateUp = navigator::navigateUp,
-            navigateNext = navigator::navigateDummyNext,
+            navigateNext = navigator::navigateSignUp,
             navigateSignUp = navigator::navigateLogin,
             snackBarHostState = snackbarHostState
         )
@@ -265,9 +286,14 @@ fun PawKeyNavHost(
         loginNavGraph(
             paddingValues = paddingValues,
             navigateUp = {
-                navigator.navigateSignUpFlow()
+                navigator.navigateUp()
             },
-            navigateNext = navigator::navigateHome,
+            navigateNext = {
+                //navigator.navigateSignUpFlow()
+            },
+            navigateHome = {
+                navigator.navigateHome()
+            },
             snackBarHostState = snackbarHostState
         )
 
@@ -279,7 +305,7 @@ fun PawKeyNavHost(
         )
 
         signUpNavGraph(
-            navController = navigator.navController,
+            navigateUp = navigator::navigateUp,
             navigateToHome = {
                 val options = navOptions {
                     popUpTo(0) { inclusive = true }
@@ -288,7 +314,5 @@ fun PawKeyNavHost(
                 navigator.navigateHome(options)
             }
         )
-
-
     }
 }
