@@ -4,11 +4,13 @@ import androidx.lifecycle.ViewModel
 import com.paw.key.domain.repository.login.AuthRepository
 import com.paw.key.presentation.ui.login.state.LoginSideEffect
 import com.paw.key.presentation.ui.login.state.LoginState
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import javax.inject.Inject
 
+@HiltViewModel
 class LoginViewModel @Inject constructor(
     private val authRepository: AuthRepository,
 ) : ViewModel() {
