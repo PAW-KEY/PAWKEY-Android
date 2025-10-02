@@ -1,9 +1,9 @@
 package com.paw.key.data.repositoryimpl.login
 
 import android.content.Context
-import com.paw.key.core.util.UserDataStore
 import com.paw.key.core.util.suspendRunCatching
 import com.paw.key.data.dto.response.LoginResponseDto
+import com.paw.key.data.local.datasource.UserLocalDataSource
 import com.paw.key.data.remote.datasource.login.AuthRemoteDataSource
 import com.paw.key.data.remote.datasource.login.GoogleAuthDataSource
 import com.paw.key.domain.repository.login.AuthRepository
@@ -12,7 +12,7 @@ import javax.inject.Inject
 class AuthRepositoryImpl @Inject constructor(
     private val authRemoteDataSource: AuthRemoteDataSource,
     private val googleAuthDataSource: GoogleAuthDataSource,
-    private val context: Context
+    private val userLocalDataSource: UserLocalDataSource
 ) : AuthRepository {
 
     override suspend fun signInWithGoogle(context: Context): Result<String> =
@@ -22,14 +22,11 @@ class AuthRepositoryImpl @Inject constructor(
         suspendRunCatching {
             val loginResponse = authRemoteDataSource.login(providerToken, provider).data
 
-            UserDataStore.saveAcessToken(
-                context = context,
-                token = loginResponse.AccessToken
+            userLocalDataSource.saveTokens(
+                accessToken = loginResponse.AccessToken,
+                refreshToken = loginResponse.RefreshToken
             )
-            UserDataStore.saveRefreshToken(
-                context = context,
-                token = loginResponse.RefreshToken
-            )
+
             loginResponse
         }
 }
