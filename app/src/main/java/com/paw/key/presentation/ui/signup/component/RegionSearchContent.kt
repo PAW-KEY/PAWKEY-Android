@@ -202,11 +202,11 @@ private fun RegionSearchList(
 
         VerticalDivider(
             thickness = 1.dp,
-            color = PawKeyTheme.colors.defaultButton,
+            color = PawKeyTheme.colors.defaultMiddle,
             modifier = Modifier
                 .fillMaxHeight()
                 .background(
-                    color = PawKeyTheme.colors.defaultButton,
+                    color = PawKeyTheme.colors.defaultMiddle,
                     shape = RoundedCornerShape(8.dp)
                 )
         )
