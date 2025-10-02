@@ -43,7 +43,7 @@ fun SignUpUserSelectButton(
                 color = if (isSelect) {
                     PawKeyTheme.colors.primary
                 } else {
-                    PawKeyTheme.colors.background2
+                    PawKeyTheme.colors.background
                 }
             )
             .border(
@@ -51,7 +51,7 @@ fun SignUpUserSelectButton(
                 color = if (isSelect) {
                     Color.Transparent
                 } else {
-                    PawKeyTheme.colors.default
+                    PawKeyTheme.colors.defaultButton
                 },
                 shape = RoundedCornerShape(8.dp)
             )
@@ -60,9 +60,9 @@ fun SignUpUserSelectButton(
         Text(
             text = user,
             color = if (isSelect) {
-                PawKeyTheme.colors.background2
+                PawKeyTheme.colors.background
             } else {
-                PawKeyTheme.colors.default
+                PawKeyTheme.colors.defaultButton
             },
             style = if (isSelect) {
                 PawKeyTheme.typography.bodyActive

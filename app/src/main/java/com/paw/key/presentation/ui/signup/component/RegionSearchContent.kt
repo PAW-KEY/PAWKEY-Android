@@ -117,7 +117,7 @@ fun RegionSearchContent(
             .fillMaxWidth()
             .fillMaxHeight(0.7f)
             .background(
-                color = PawKeyTheme.colors.background2,
+                color = PawKeyTheme.colors.background,
                 shape = RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp)
             )
             .padding(horizontal = 16.dp)
@@ -202,11 +202,11 @@ private fun RegionSearchList(
 
         VerticalDivider(
             thickness = 1.dp,
-            color = PawKeyTheme.colors.default,
+            color = PawKeyTheme.colors.defaultButton,
             modifier = Modifier
                 .fillMaxHeight()
                 .background(
-                    color = PawKeyTheme.colors.default,
+                    color = PawKeyTheme.colors.defaultButton,
                     shape = RoundedCornerShape(8.dp)
                 )
         )
@@ -237,10 +237,10 @@ private fun RegionItem(
     modifier: Modifier = Modifier,
     textAlign: TextAlign = TextAlign.Center
 ) {
-    val textColor = if (isSelected) PawKeyTheme.colors.background2 else PawKeyTheme.colors.contents
+    val textColor = if (isSelected) PawKeyTheme.colors.background else PawKeyTheme.colors.contents
 
     val backgroundColor =
-        if (isSelected) PawKeyTheme.colors.primary else PawKeyTheme.colors.background2
+        if (isSelected) PawKeyTheme.colors.primary else PawKeyTheme.colors.background
 
     Text(
         text = name,

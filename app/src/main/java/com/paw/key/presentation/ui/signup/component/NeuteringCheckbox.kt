@@ -38,7 +38,7 @@ fun SignUpNeuteringCheckRadio(
         )
         Text(
             text = "중성화 했어요",
-            color = PawKeyTheme.colors.default,
+            color = PawKeyTheme.colors.defaultMiddle,
             style = PawKeyTheme.typography.bodySmall
         )
     }

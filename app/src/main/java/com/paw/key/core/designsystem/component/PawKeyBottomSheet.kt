@@ -24,7 +24,7 @@ fun PawKeyBottomSheet(
         onDismissRequest = onDismissRequest,
         sheetState = sheetState,
         shape = RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp),
-        containerColor = PawKeyTheme.colors.background2,
+        containerColor = PawKeyTheme.colors.background,
         modifier = modifier
             .fillMaxWidth(),
         dragHandle = null,
