@@ -89,7 +89,7 @@ fun SignUpHeader(
                 .fillMaxWidth()
                 .height(2.dp),
             color = PawKeyTheme.colors.primary,
-            trackColor = PawKeyTheme.colors.default,
+            trackColor = PawKeyTheme.colors.defaultMiddle,
             strokeCap = StrokeCap.Square,
             gapSize = 0.dp
         )

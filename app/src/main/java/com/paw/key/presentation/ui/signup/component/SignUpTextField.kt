@@ -45,9 +45,9 @@ fun SignUpTextField(
     val isFocused = remember { mutableStateOf(false) }
 
     val borderColor = when {
-        !enabled -> PawKeyTheme.colors.default
+        !enabled -> PawKeyTheme.colors.defaultMiddle
         isFocused.value -> PawKeyTheme.colors.primary
-        else -> PawKeyTheme.colors.default
+        else -> PawKeyTheme.colors.defaultMiddle
     }
 
     // Todo : Gra로 변경
@@ -67,7 +67,7 @@ fun SignUpTextField(
                 .onFocusChanged { focusState ->
                     isFocused.value = focusState.isFocused
                 }
-                .background(color = PawKeyTheme.colors.background2)
+                .background(color = PawKeyTheme.colors.background)
                 .border(
                     width = 1.dp,
                     color = borderColor,
@@ -96,7 +96,7 @@ fun SignUpTextField(
                             Text(
                                 text = placeholder,
                                 style = PawKeyTheme.typography.bodyDefault,
-                                color = PawKeyTheme.colors.default
+                                color = PawKeyTheme.colors.defaultMiddle
                             )
                         }
                         innerTextField()
