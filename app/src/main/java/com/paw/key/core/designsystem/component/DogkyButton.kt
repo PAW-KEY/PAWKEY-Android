@@ -23,12 +23,12 @@ fun DogkyButton(
 ) {
     val backgroundColor = when {
         enabled -> PawKeyTheme.colors.primary
-        else -> PawKeyTheme.colors.background1
+        else -> PawKeyTheme.colors.defaultButton
     }
 
     val textColor = when {
-        enabled -> PawKeyTheme.colors.background1
-        else -> PawKeyTheme.colors.default
+        enabled -> PawKeyTheme.colors.background
+        else -> PawKeyTheme.colors.defaultMiddle
     }
 
     Box(

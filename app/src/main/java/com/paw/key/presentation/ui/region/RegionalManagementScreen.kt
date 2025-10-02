@@ -177,7 +177,7 @@ fun RegionalManagementScreen(
                         if (singlePolygonCoords.isNotEmpty()) {
                             PolygonOverlay(
                                 coords = singlePolygonCoords,
-                                color = PawKeyTheme.colors.opacityPrimary.copy(alpha = 0.3f),
+                                color = PawKeyTheme.colors.opacity25Primary.copy(alpha = 0.3f),
                                 outlineWidth = 1.dp,
                                 outlineColor = PawKeyTheme.colors.green500
                             )
@@ -188,7 +188,7 @@ fun RegionalManagementScreen(
                         regionCoordinates.forEach {
                             PolygonOverlay(
                                 coords = it,
-                                color = PawKeyTheme.colors.opacityPrimary.copy(alpha = 0.3f),
+                                color = PawKeyTheme.colors.opacity25Primary.copy(alpha = 0.3f),
                                 outlineWidth = 1.dp,
                                 outlineColor = PawKeyTheme.colors.green500
                             )
