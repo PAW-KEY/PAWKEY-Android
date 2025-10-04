@@ -61,7 +61,7 @@ fun PetBreedSearchContent(
             .fillMaxWidth()
             .fillMaxHeight(0.7f)
             .background(
-                color = PawKeyTheme.colors.background2,
+                color = PawKeyTheme.colors.background,
                 shape = RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp)
             )
             .padding(horizontal = 16.dp)
@@ -150,7 +150,7 @@ fun PetBreedSearchItem(
     modifier: Modifier = Modifier
 ) {
     val textColor = if (isPetBreedSelected) {
-        PawKeyTheme.colors.background2
+        PawKeyTheme.colors.background
     } else {
         PawKeyTheme.colors.contents
     }
@@ -158,7 +158,7 @@ fun PetBreedSearchItem(
     val backgroundColor = if (isPetBreedSelected) {
         PawKeyTheme.colors.primary
     } else {
-        PawKeyTheme.colors.background2
+        PawKeyTheme.colors.background
     }
 
     Text(

@@ -28,7 +28,7 @@ fun SignUpSubHeader() {
 
     Text(
         text = "서비스 시작을 위해 간단한 정보를 입력해주세요!",
-        color = PawKeyTheme.colors.default,
+        color = PawKeyTheme.colors.defaultMiddle,
         style = PawKeyTheme.typography.bodyDefault,
         modifier = Modifier
             .padding(horizontal = 16.dp)
