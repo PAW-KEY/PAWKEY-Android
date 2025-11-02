@@ -1,19 +1,16 @@
 package com.paw.key.presentation.ui.onboard.component
 
 import androidx.compose.animation.Crossfade
-import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.pager.HorizontalPager
-import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
@@ -21,22 +18,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.geometry.CornerRadius
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.geometry.Size
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.buildAnnotatedString
-import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.zIndex
 import com.paw.key.R
 import com.paw.key.core.designsystem.component.PageIndicator
 import com.paw.key.core.designsystem.theme.PawKeyTheme
@@ -48,12 +34,11 @@ private fun PreviewOnboardPager() {
         OnboardPager(
             jobList = listOf(
                 OnboardingPosting(
-                    title = "우리의 강아지를 위한 산책,\nPAWKEY와 함께해요!",  // 원본 텍스트로 변경
-                    subtitle = "",
-                    backImg = R.drawable.onboard1
+                    title = "우리 강아지를 위한 산책",
+                    subtitle = "DOGKY와 즐거운 산책을 시작해봐요!",
+                    backImg = R.drawable.img_onboarding_1
                 ),
             )
-
         )
     }
 }
@@ -73,11 +58,7 @@ fun OnboardPager(
         modifier = modifier
             .fillMaxWidth()
             .height(LocalConfiguration.current.screenHeightDp.dp * 0.7f)
-            .background(
-                color = PawKeyTheme.colors.white1,
-                shape = RoundedCornerShape(bottomStart = 16.dp, bottomEnd = 16.dp)
-            )
-            .clip(RoundedCornerShape(bottomStart = 16.dp, bottomEnd = 16.dp))
+            .background(color = PawKeyTheme.colors.white1)
     ) {
         HorizontalPager(
             state = pagerState,
@@ -88,44 +69,13 @@ fun OnboardPager(
 
         Column(
             modifier = Modifier
-                .align(Alignment.TopStart)
-                .padding(top = 80.dp, start = 24.dp, end = 24.dp)
-                .zIndex(2f)
+                .fillMaxWidth(),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Crossfade(targetState = currentItem?.title) { title ->
                 title?.let {
-                    val annotated = buildAnnotatedString {
-                        when (currentPage) {
-                            0 -> {
-                                val start = it.indexOf("PAWKEY")
-                                val end = start + "PAWKEY".length
-                                if (start != -1) {
-                                    append(it.substring(0, start))
-                                    withStyle(SpanStyle(color = PawKeyTheme.colors.green500)) {
-                                        append("PAWKEY")
-                                    }
-                                    append(it.substring(end))
-                                } else {
-                                    append(it)
-                                }
-                            }
-
-                            1 -> {
-                                withStyle(SpanStyle(color = PawKeyTheme.colors.green500)) {
-                                    append(it)
-                                }
-                            }
-
-                            else -> {
-                                withStyle(SpanStyle(color = PawKeyTheme.colors.green500)) {
-                                    append(it)
-                                }
-                            }
-                        }
-                    }
-
                     Text(
-                        text = annotated,
+                        text = it,
                         style = PawKeyTheme.typography.head24B.copy(lineHeight = 36.sp),
                         color = PawKeyTheme.colors.black,
                     )
@@ -146,8 +96,8 @@ fun OnboardPager(
         PageIndicator(
             numberOfPages = pageCount,
             selectedPage = currentPage,
-            selectedColor = PawKeyTheme.colors.green500,
-            defaultColor = PawKeyTheme.colors.green200,
+            selectedColor = PawKeyTheme.colors.primary,
+            defaultColor = PawKeyTheme.colors.gray100,
             modifier = Modifier
                 .align(Alignment.BottomCenter)
                 .padding(bottom = 20.dp)
@@ -166,8 +116,9 @@ fun OnboardingListItem(backImg: Int) {
         Image(
             painter = painterResource(id = backImg),
             contentDescription = null,
-            modifier = Modifier.fillMaxSize(),
-            contentScale = ContentScale.FillBounds
+            modifier = Modifier
+                .align(alignment = Alignment.Center)
+                .size(360.dp),
         )
     }
 }
