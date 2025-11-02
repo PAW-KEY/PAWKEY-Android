@@ -1,49 +1,44 @@
 package com.paw.key.presentation.ui.login
 
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.imePadding
-import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
-import androidx.compose.foundation.relocation.BringIntoViewRequester
-import androidx.compose.foundation.relocation.bringIntoViewRequester
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.text.KeyboardActions
-import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Icon
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
-import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.paw.key.R
-import com.paw.key.core.designsystem.component.PawkeyButton
-import com.paw.key.core.designsystem.component.TopBar
 import com.paw.key.core.designsystem.theme.PawKeyTheme
 import com.paw.key.core.util.PreferenceDataStore
-import com.paw.key.core.extension.noRippleClickable
-import com.paw.key.presentation.ui.login.component.LoginTextField
+import com.paw.key.presentation.ui.login.component.LoginSocialButton
 import com.paw.key.presentation.ui.login.viewmodel.LoginViewModel
 import kotlinx.coroutines.launch
 
@@ -55,7 +50,7 @@ fun LoginRoute(
     navigateHome: () -> Unit,
     snackBarHostState: SnackbarHostState,
     modifier: Modifier = Modifier,
-    viewModel: LoginViewModel = hiltViewModel()
+    viewModel: LoginViewModel = hiltViewModel(),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     val isLoginFormValid = viewModel.state.collectAsStateWithLifecycle().value.isLoginValid
@@ -83,6 +78,7 @@ fun LoginRoute(
         onEmailChanged = viewModel::onEmailChanged,
         onPasswordChanged = viewModel::onPasswordChanged,
         onClickIcon = viewModel::onPasswordVisibilityChanged,
+        onClick = {},
         navigateHome = navigateHome
     )
 }
@@ -93,141 +89,111 @@ fun LoginScreen(
     paddingValues: PaddingValues,
     navigateUp: () -> Unit,
     navigateNext: () -> Unit,
-    navigateHome : () -> Unit,
+    navigateHome: () -> Unit,
     onEmailChanged: (String) -> Unit,
     onPasswordChanged: (String) -> Unit,
     onClickIcon: () -> Unit,
+    onClick: () -> Unit,
     snackBarHostState: SnackbarHostState,
     email: String,
     password: String,
     isPasswordVisible: Boolean,
     isLoginFormValid: Boolean,
     modifier: Modifier = Modifier,
+    viewModel: LoginViewModel = hiltViewModel(),
 ) {
-    val bringIntoViewRequester = remember { BringIntoViewRequester() }
-    val focusRequester = remember { FocusRequester() }
-    val coroutineScope = rememberCoroutineScope()
+    val context = LocalContext.current
     val scrollState = rememberScrollState()
-    val passwordFocusRequester = remember { FocusRequester() }
 
-    Column(
+    Box(
         modifier = modifier
             .fillMaxSize()
-            .statusBarsPadding()
             .background(PawKeyTheme.colors.white1)
-            .verticalScroll(scrollState)
     ) {
-        TopBar(
-            title = "기존 계정으로 로그인",
-            onBackClick = navigateUp,
-            onClickTitle = navigateHome,
-            modifier = Modifier.padding(
-                top = paddingValues.calculateTopPadding()
-            )
-        )
-
         Column(
-            modifier = Modifier
-                .padding(top = 80.dp)
-                .padding(horizontal = 16.dp)
-                .imePadding()
+            modifier = modifier
+                .matchParentSize()
+                .statusBarsPadding()
+                .background(PawKeyTheme.colors.white1)
+                .verticalScroll(scrollState)
+                .padding(horizontal = 16.dp),
+            verticalArrangement = Arrangement.SpaceBetween
         ) {
-            Spacer(modifier = Modifier.height(60.dp))
+
+            Spacer(modifier = Modifier.height(130.dp))
+
+            Icon(
+                imageVector = ImageVector.vectorResource(R.drawable.ic_login_title_logo),
+                contentDescription = stringResource(id = R.string.ic_login_main_logo),
+                tint = PawKeyTheme.colors.primary,
+                modifier = Modifier.padding(start = 19.dp)
+            )
 
             Text(
-                text = "아이디",
-                modifier = Modifier.padding(bottom = 8.dp),
-                color = PawKeyTheme.colors.black,
-                style = PawKeyTheme.typography.body14Sb
+                text = stringResource(R.string.ic_login_main_text),
+                color = PawKeyTheme.colors.contents,
+                style = PawKeyTheme.typography.header3,
+                modifier = Modifier.padding(start = 19.dp)
             )
 
-            LoginTextField(
-                textValue = email,
-                placeHolder = "사용하실 아이디를 입력해주세요",
-                isPassword = true,
-                onTextChanged = onEmailChanged,
-                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
-                keyboardActions = KeyboardActions(
-                    onNext = {
-                        passwordFocusRequester.requestFocus()
-                    }
+            Spacer(modifier = Modifier.height(310.dp))
+
+            Column(
+                verticalArrangement = Arrangement.spacedBy(8.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
+                Image(
+                    painter = painterResource(R.drawable.img_login_sub),
+                    contentDescription = stringResource(R.string.ic_login_sub_image),
                 )
-            )
 
-            Spacer(modifier = Modifier.height(40.dp))
+                LoginSocialButton(
+                    logo = R.drawable.ic_login_kakao,
+                    loginText = stringResource(R.string.ic_login_kakao),
+                    onClick = onClick,
+                    modifier = modifier
+                        .background(
+                            shape = RoundedCornerShape(12.dp),
+                            color = Color(0xFFFEE500)
+                        )
+                )
 
-            Text(
-                text = "비밀번호",
-                modifier = Modifier.padding(bottom = 8.dp),
-                color = PawKeyTheme.colors.black,
-                style = PawKeyTheme.typography.body14Sb
-            )
-
-            LoginTextField(
-                textValue = password,
-                placeHolder = "사용하실 비밀번호를 입력해주세요",
-                isPassword = isPasswordVisible,
-                onTextChanged = onPasswordChanged,
-                focusRequester = passwordFocusRequester,
-                keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Done),
-                suffix = {
-                    Icon(
-                        imageVector = ImageVector.vectorResource(
-                            if (isPasswordVisible) R.drawable.ic_eye_linear_gray_valid
-                            else R.drawable.ic_eye_linear_invalid
-                        ),
-                        contentDescription = null,
-                        modifier = Modifier.noRippleClickable(onClickIcon),
-                        tint = PawKeyTheme.colors.gray200
-                    )
-                },
-                modifier = Modifier
-                    .bringIntoViewRequester(bringIntoViewRequester)
-                    .focusRequester(focusRequester)
-                    .onFocusChanged { focusState ->
-                        if (focusState.isFocused) {
-                            coroutineScope.launch {
-                                bringIntoViewRequester.bringIntoView()
-                            }
-                        }
+                LoginSocialButton(
+                    logo = R.drawable.ic_login_google,
+                    loginText = stringResource(R.string.ic_login_google),
+                    onClick = {
+                        viewModel.onGoogleSignIn(
+                            context = context,
+                            onSuccess = navigateHome
+                        )
                     },
-            )
+                    modifier = modifier
+                        .background(
+                            shape = RoundedCornerShape(12.dp),
+                            color = Color(0xFFF2F2F2)
+                        )
+                )
+            }
+
+            Spacer(modifier = Modifier.height(34.dp))
         }
 
-        Spacer(modifier = Modifier.weight(1f))
-
-        Column(
+        Image(
+            painter = painterResource(R.drawable.img_login_main),
+            contentDescription = stringResource(R.string.ic_login_main_image),
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp, vertical = 24.dp)
-                .navigationBarsPadding()
-                .padding(bottom = 60.dp)
-        ) {
-           /* PawkeyButton(
-                text = "신규 계정으로 회원가입",
-                onClick = navigateUp,
-                enabled = true,
-                isBackGround = true,
-                isBorder = false,
-                modifier = Modifier.fillMaxWidth()
-            )*/
-
-            Spacer(modifier = Modifier.height(12.dp))
-
-            PawkeyButton(
-                text = "로그인",
-                onClick = navigateNext,
-                enabled = isLoginFormValid,
-                modifier = Modifier.fillMaxWidth()
-            )
-        }
+                .size(370.dp)
+                .align(Alignment.CenterEnd)
+                .offset(x = 70.dp),
+        )
     }
 }
 
+
 @Preview(showBackground = true)
 @Composable
-private fun PreviewLoginScreen(){
-    PawKeyTheme{
+private fun PreviewLoginScreen() {
+    PawKeyTheme {
         LoginScreen(
             paddingValues = PaddingValues(),
             navigateUp = {},
@@ -235,6 +201,7 @@ private fun PreviewLoginScreen(){
             onEmailChanged = {},
             onPasswordChanged = {},
             onClickIcon = {},
+            onClick = {},
             navigateHome = {},
             snackBarHostState = SnackbarHostState(),
             email = "",
