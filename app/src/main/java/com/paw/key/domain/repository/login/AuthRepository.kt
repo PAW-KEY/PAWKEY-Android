@@ -5,5 +5,5 @@ import com.paw.key.data.dto.response.LoginResponseDto
 
 interface AuthRepository {
     suspend fun signInWithGoogle(context: Context): Result<String>
-    suspend fun login(providerToken: String, provider: String): Result<LoginResponseDto>
+    suspend fun login(idToken: String, deviceId: String): Result<LoginResponseDto>
 }
