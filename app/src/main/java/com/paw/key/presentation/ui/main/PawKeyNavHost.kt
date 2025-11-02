@@ -277,7 +277,7 @@ fun PawKeyNavHost(
         onboardingNavGraph(
             paddingValues = paddingValues,
             navigateUp = navigator::navigateUp,
-            navigateNext = navigator::navigateSignUp,
+            navigateNext = navigator::navigateLogin,
             navigateSignUp = navigator::navigateLogin,
             snackBarHostState = snackbarHostState
         )
