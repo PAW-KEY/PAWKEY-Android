@@ -5,13 +5,13 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class LoginRequestDto (
-    @SerialName("email")
-    val email: String,
+    @SerialName("idToken")
+    val idToken: String,
+    @SerialName("deviceId")
+    val deviceId: String
 )
-// 테스트용입니다
-
-
 fun LoginRequestDto.toEntity(): LoginRequestDto {
-    val email = this.email
-    return LoginRequestDto(email)
+    val idToken = this.idToken
+    val deviceId = this.deviceId
+    return LoginRequestDto(idToken, deviceId)
 }

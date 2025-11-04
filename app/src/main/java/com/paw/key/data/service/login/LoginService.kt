@@ -9,9 +9,8 @@ import retrofit2.http.POST
 
 
 interface LoginService {
-    @POST("api/v1/auth/login")
+    @POST("auth/google/login")
     suspend fun login(
-        @Header("Authorization") providerToken: String,
         @Body loginRequestDto: LoginRequestDto
-    ): BaseResponse<LoginResponseDto>
+    ): LoginResponseDto
 }

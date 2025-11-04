@@ -8,11 +8,14 @@ import com.paw.key.data.service.login.LoginService
 import javax.inject.Inject
 
 class AuthRemoteDataSourceImpl @Inject constructor(
-    private val loginService: LoginService,
+    private val loginService: LoginService
 ) : AuthRemoteDataSource {
-    override suspend fun login(
-        providerToken: String,
-        provider: String,
-    ): BaseResponse<LoginResponseDto> =
-        loginService.login(providerToken, LoginRequestDto(provider))
+    override suspend fun login(idToken: String, deviceId: String): LoginResponseDto {
+        return loginService.login(
+            LoginRequestDto(
+                idToken = idToken,
+                deviceId = deviceId
+            )
+        )
+    }
 }
