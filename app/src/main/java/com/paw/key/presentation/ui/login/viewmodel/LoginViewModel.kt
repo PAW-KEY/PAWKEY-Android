@@ -10,6 +10,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
@@ -57,16 +58,14 @@ class LoginViewModel @Inject constructor(
     }
 
     fun onEmailChanged(email: String) {
-        _state.value = _state.value.copy(email = email)
+        _state.update { it.copy(email = email) }
     }
 
     fun onPasswordChanged(password: String) {
-        _state.value = _state.value.copy(password = password)
+        _state.update { it.copy(password = password) }
     }
 
     fun onPasswordVisibilityChanged() {
-        _state.value = _state.value.copy(
-            isPasswordVisible = !_state.value.isPasswordVisible
-        )
+        _state.update { it.copy(isPasswordVisible = !it.isPasswordVisible) }
     }
 }

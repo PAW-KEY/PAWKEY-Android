@@ -78,7 +78,6 @@ fun LoginRoute(
         onEmailChanged = viewModel::onEmailChanged,
         onPasswordChanged = viewModel::onPasswordChanged,
         onClickIcon = viewModel::onPasswordVisibilityChanged,
-        onClick = {},
         navigateHome = navigateHome
     )
 }
@@ -93,7 +92,6 @@ fun LoginScreen(
     onEmailChanged: (String) -> Unit,
     onPasswordChanged: (String) -> Unit,
     onClickIcon: () -> Unit,
-    onClick: () -> Unit,
     snackBarHostState: SnackbarHostState,
     email: String,
     password: String,
@@ -111,7 +109,7 @@ fun LoginScreen(
             .background(PawKeyTheme.colors.white1)
     ) {
         Column(
-            modifier = modifier
+            modifier = Modifier
                 .matchParentSize()
                 .statusBarsPadding()
                 .background(PawKeyTheme.colors.white1)
@@ -150,8 +148,8 @@ fun LoginScreen(
                 LoginSocialButton(
                     logo = R.drawable.ic_login_kakao,
                     loginText = stringResource(R.string.ic_login_kakao),
-                    onClick = onClick,
-                    modifier = modifier
+                    onClick = {},
+                    modifier = Modifier
                         .background(
                             shape = RoundedCornerShape(12.dp),
                             color = Color(0xFFFEE500)
@@ -167,7 +165,7 @@ fun LoginScreen(
                             onSuccess = navigateHome
                         )
                     },
-                    modifier = modifier
+                    modifier = Modifier
                         .background(
                             shape = RoundedCornerShape(12.dp),
                             color = Color(0xFFF2F2F2)
@@ -201,7 +199,6 @@ private fun PreviewLoginScreen() {
             onEmailChanged = {},
             onPasswordChanged = {},
             onClickIcon = {},
-            onClick = {},
             navigateHome = {},
             snackBarHostState = SnackbarHostState(),
             email = "",
