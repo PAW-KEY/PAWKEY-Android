@@ -11,7 +11,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.paw.key.R
-import com.paw.key.core.designsystem.component.RegionBadge
+import com.paw.key.core.designsystem.component.DogkyFilterBadge
 import com.paw.key.core.designsystem.theme.PawKeyTheme
 
 @Preview(showBackground = true)
@@ -43,7 +43,7 @@ fun HomeTopBar(
             contentDescription = "logo",
         )
 
-        RegionBadge(
+        DogkyFilterBadge(
             location = location,
             onLocationClick = onLocationClick,
         )

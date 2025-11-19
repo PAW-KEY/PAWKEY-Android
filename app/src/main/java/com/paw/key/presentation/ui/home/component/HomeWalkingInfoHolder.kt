@@ -31,16 +31,16 @@ fun HomeWalkingInfoHolder(
         modifier = modifier
             .fillMaxWidth()
             .height(IntrinsicSize.Min)
+            .border(
+                width = 1.dp,
+                color = PawKeyTheme.colors.primary,
+                shape = RoundedCornerShape(8.dp)
+            )
             .clip(
                 RoundedCornerShape(8.dp)
             )
             .background(
                 color = PawKeyTheme.colors.opacity5Primary,
-                shape = RoundedCornerShape(8.dp)
-            )
-            .border(
-                width = 1.dp,
-                color = PawKeyTheme.colors.primary,
                 shape = RoundedCornerShape(8.dp)
             )
             .padding(vertical = 16.dp),

@@ -55,6 +55,7 @@ private fun HomeScreen(
     Column (
         modifier = Modifier
             .fillMaxSize()
+            .padding(paddingValues)
             .padding(16.dp)
             .verticalScroll(rememberScrollState()),
         horizontalAlignment = Alignment.CenterHorizontally,
