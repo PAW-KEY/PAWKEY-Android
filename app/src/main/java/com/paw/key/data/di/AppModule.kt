@@ -2,6 +2,7 @@ package com.paw.key.data.di
 
 import android.content.ContentResolver
 import android.content.Context
+import androidx.credentials.CredentialManager
 import com.paw.key.BuildConfig
 import dagger.Module
 import dagger.Provides
@@ -25,5 +26,17 @@ object AppModule {
     @Singleton
     fun provideContentResolver(@ApplicationContext context: Context): ContentResolver {
         return context.contentResolver
+    }
+
+    @Provides
+    @Singleton
+    fun provideContext(@ApplicationContext context: Context): Context {
+        return context
+    }
+
+    @Provides
+    @Singleton
+    fun provideCredentialManager(@ApplicationContext context: Context): CredentialManager {
+        return CredentialManager.create(context)
     }
 }

@@ -7,12 +7,8 @@ import com.google.android.libraries.identity.googleid.GetGoogleIdOption
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
 import com.paw.key.BuildConfig
 import com.paw.key.core.util.suspendRunCatching
-import com.paw.key.data.dto.request.LoginRequestDto
-import com.paw.key.data.dto.response.BaseResponse
-import com.paw.key.data.dto.response.LoginResponseDto
-import com.paw.key.data.remote.datasource.login.AuthRemoteDataSource
 import com.paw.key.data.remote.datasource.login.GoogleAuthDataSource
-import com.paw.key.data.service.login.LoginService
+import timber.log.Timber
 import javax.inject.Inject
 
 class GoogleAuthDataSourceImpl @Inject constructor(
@@ -32,5 +28,6 @@ class GoogleAuthDataSourceImpl @Inject constructor(
 
             val response = credentialManager.getCredential(context, request)
             GoogleIdTokenCredential.createFrom(response.credential.data)
+
         }
 }
