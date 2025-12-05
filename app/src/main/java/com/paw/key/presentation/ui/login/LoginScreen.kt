@@ -27,6 +27,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -143,12 +144,18 @@ fun LoginScreen(
                 Image(
                     painter = painterResource(R.drawable.img_login_sub),
                     contentDescription = stringResource(R.string.ic_login_sub_image),
+                    contentScale = ContentScale.Crop,
                 )
 
                 LoginSocialButton(
                     logo = R.drawable.ic_login_kakao,
                     loginText = stringResource(R.string.ic_login_kakao),
-                    onClick = {},
+                    onClick = {
+                        viewModel.onKakaoSignIn(
+                            context = context,
+                            onSuccess = navigateHome
+                        )
+                    },
                     modifier = Modifier
                         .background(
                             shape = RoundedCornerShape(12.dp),
