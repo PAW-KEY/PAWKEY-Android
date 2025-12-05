@@ -22,8 +22,10 @@ import com.paw.key.data.repositoryimpl.walklist.WalkListDetailRepositoryImpl
 import com.paw.key.data.repositoryimpl.walkreview.WalkReviewRepositoryImpl
 import com.paw.key.data.remote.datasource.datasourceimpl.AuthRemoteDataSourceImpl
 import com.paw.key.data.remote.datasource.datasourceimpl.GoogleAuthDataSourceImpl
+import com.paw.key.data.remote.datasource.datasourceimpl.KakaoAuthDataSourceImpl
 import com.paw.key.data.remote.datasource.login.AuthRemoteDataSource
 import com.paw.key.data.remote.datasource.login.GoogleAuthDataSource
+import com.paw.key.data.remote.datasource.login.KakaoAuthDataSource
 import com.paw.key.domain.repository.ArchivedListRepository
 import com.paw.key.domain.repository.DummyRepository
 import com.paw.key.domain.repository.LikeRepository
@@ -65,6 +67,11 @@ interface RepositoryModule {
     fun bindGoogleAuthDataSource(
         impl: GoogleAuthDataSourceImpl,
     ): GoogleAuthDataSource
+
+    @Binds
+    abstract fun bindKakaoAuthDataSource(
+        impl: KakaoAuthDataSourceImpl
+    ): KakaoAuthDataSource
 
     @Binds
     fun bindsDummyRepository(
