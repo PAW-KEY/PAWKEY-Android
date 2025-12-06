@@ -3,6 +3,7 @@ package com.paw.key.presentation.ui.login
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -42,6 +43,7 @@ import com.paw.key.core.util.PreferenceDataStore
 import com.paw.key.presentation.ui.login.component.LoginSocialButton
 import com.paw.key.presentation.ui.login.viewmodel.LoginViewModel
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 @Composable
 fun LoginRoute(
@@ -125,7 +127,9 @@ fun LoginScreen(
                 imageVector = ImageVector.vectorResource(R.drawable.ic_login_title_logo),
                 contentDescription = stringResource(id = R.string.ic_login_main_logo),
                 tint = PawKeyTheme.colors.primary,
-                modifier = Modifier.padding(start = 19.dp)
+                modifier = Modifier
+                    .clickable(onClick = navigateHome)
+                    .padding(start = 19.dp)
             )
 
             Text(
@@ -167,6 +171,7 @@ fun LoginScreen(
                     logo = R.drawable.ic_login_google,
                     loginText = stringResource(R.string.ic_login_google),
                     onClick = {
+                        Timber.e("onClick LoginSocialButton")
                         viewModel.onGoogleSignIn(
                             context = context,
                             onSuccess = navigateHome

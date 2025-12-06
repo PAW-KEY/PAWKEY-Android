@@ -151,7 +151,7 @@ class PawKeyTypography internal constructor(
         buttonSmall: TextStyle = this.buttonSmall,
         buttonLink: TextStyle = this.buttonLink,
 
-    ): PawKeyTypography = PawKeyTypography(
+        ): PawKeyTypography = PawKeyTypography(
         head24B,
         head24Sb,
         head22B,

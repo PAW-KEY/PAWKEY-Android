@@ -26,10 +26,7 @@ fun NavGraphBuilder.homeNavGraph(
     composable<Home> {
         HomeRoute(
             paddingValues = paddingValues,
-            navigateUp = navigateUp,
-            navigateNext = navigateNext,
-            navigateHomeLocationSetting = navigateHomeLocationSetting,
-            modifier = modifier
+
         )
     }
 }
