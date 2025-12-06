@@ -7,6 +7,7 @@ import coil.ImageLoaderFactory
 import coil.disk.DiskCache
 import coil.memory.MemoryCache
 import coil.util.DebugLogger
+import com.kakao.sdk.common.KakaoSdk
 import com.kakao.vectormap.KakaoMapSdk
 import com.naver.maps.map.NaverMapSdk
 import dagger.hilt.android.HiltAndroidApp
@@ -22,10 +23,10 @@ class PawKeyApplication : Application(), ImageLoaderFactory {
 
     override fun onCreate() {
         super.onCreate()
-
         setTimber()
         setDarkMode()
 
+        KakaoSdk.init(this, kakaoNativeKey)
         KakaoMapSdk.init(this, kakaoNativeKey)
         NaverMapSdk.getInstance(this).client =
             NaverMapSdk.NcpKeyClient(BuildConfig.NAVERMAP_CLIENT_ID)

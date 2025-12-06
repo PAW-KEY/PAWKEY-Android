@@ -50,6 +50,28 @@ class LoginViewModel @Inject constructor(
         }
     }
 
+    fun onKakaoSignIn(
+        context: Context,
+        onSuccess: () -> Unit,
+    ) {
+        viewModelScope.launch {
+            authRepository.signInWithKakao(context)
+                .onSuccess { accessToken ->
+                    val deviceId = getDeviceId(context)
+                    authRepository.loginKakao(accessToken, deviceId)
+                        .onSuccess { response ->
+                            onSuccess()
+                        }
+                        .onFailure { e ->
+                            Timber.e(e, "Full stack trace:")
+                        }
+                }
+                .onFailure { e ->
+                    Timber.e("[KAKAO_VM] Step 2: SDK login FAILED")
+                }
+        }
+    }
+
     private fun getDeviceId(context: Context): String {
         return android.provider.Settings.Secure.getString(
             context.contentResolver,
