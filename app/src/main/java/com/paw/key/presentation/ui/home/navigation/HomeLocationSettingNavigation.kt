@@ -7,7 +7,6 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
 import com.paw.key.core.navigation.MainTabRoute
-import com.paw.key.presentation.ui.home.HomeLocationSettingRoute
 import kotlinx.serialization.Serializable
 
 
@@ -25,13 +24,13 @@ fun NavGraphBuilder.homeLocationSettingNavGraph(
     modifier: Modifier = Modifier
 ) {
     composable<HomeLocationSetting> {
-        HomeLocationSettingRoute(
+        /*HomeLocationSettingRoute(
             paddingValues = paddingValues,
             navigateUp = navigateUp,
             navigateNext = navigateNext,
             navigateHomeLocationSetting = navigateHomeLocationSetting,
             modifier = modifier
-        )
+        )*/
     }
 }
 

@@ -1,3 +1,4 @@
+/*
 package com.paw.key.presentation.ui.home
 
 import androidx.compose.foundation.layout.Box
@@ -169,4 +170,4 @@ fun HomeLocationSettingScreen(
 
         Spacer(modifier = Modifier.height(46.dp))
     }
-}
+}*/
