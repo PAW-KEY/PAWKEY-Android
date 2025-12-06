@@ -13,4 +13,9 @@ interface LoginService {
     suspend fun login(
         @Body loginRequestDto: LoginRequestDto
     ): LoginResponseDto
+
+    @POST("auth/kakao/login")
+    suspend fun loginKakao(
+        @Body loginRequestDto: LoginRequestDto
+    ): LoginResponseDto
 }
