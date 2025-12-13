@@ -1,5 +1,7 @@
 package com.paw.key.domain.model.entity.petprofile
 
+import android.net.Uri
+
 data class PetProfileEntity(
     val petId: Long,
     val name: String,
@@ -8,7 +10,7 @@ data class PetProfileEntity(
     val age: Int,
     val isAgeKnown: Boolean,
     val breed: String,
-    val imageUrl: String,
+    val imageUrl: Uri,
     val traits: List<TraitEntity>,
     val walkCount: Int
 )
