@@ -21,13 +21,12 @@ import com.paw.key.presentation.ui.dummy.next.navigateDummyNext
 import com.paw.key.presentation.ui.home.navigation.navigateHome
 import com.paw.key.presentation.ui.home.navigation.navigateHomeLocationSetting
 import com.paw.key.presentation.ui.login.navigation.navigateLogin
-import com.paw.key.presentation.ui.mypage.navigation.navigateArchivedCourse
-import com.paw.key.presentation.ui.mypage.navigation.navigateArchivedDetail
-import com.paw.key.presentation.ui.mypage.navigation.navigateMyPage
-import com.paw.key.presentation.ui.mypage.navigation.navigatePetProfile
-import com.paw.key.presentation.ui.mypage.navigation.navigateSavedCourse
-import com.paw.key.presentation.ui.mypage.navigation.navigateSavedDetail
-import com.paw.key.presentation.ui.mypage.navigation.navigateUserProfile
+import com.paw.key.presentation.ui.mypage.courseinfo.model.CourseType
+import com.paw.key.presentation.ui.mypage.courseinfo.navigation.navigateCourseInfo
+import com.paw.key.presentation.ui.mypage.main.navigation.navigateMyPage
+import com.paw.key.presentation.ui.mypage.petinfo.navigation.navigatePetProfile
+import com.paw.key.presentation.ui.mypage.petinfo.navigation.navigatePetProfileList
+import com.paw.key.presentation.ui.mypage.userinfo.navigation.navigateUserProfile
 import com.paw.key.presentation.ui.onboard.navigation.navigateOnboarding
 import com.paw.key.presentation.ui.region.navigation.navigateRegional
 import com.paw.key.presentation.ui.signup.navigation.navigateSignUp
@@ -96,32 +95,24 @@ class MainNavigator(
         navController.navigatePetProfile(navOptions = navOptions)
     }
 
-    fun navigateSavedCourse(navOptions: NavOptions? = null) {
-        navController.navigateSavedCourse(navOptions = navOptions)
+    fun navigatePetProfileList(navOptions: NavOptions? = null) {
+        navController.navigatePetProfileList(navOptions = navOptions)
     }
-    
-    fun navigateSavedDetail(
-        pageId: Int,
-        routeId: Int,
-        navOptions: NavOptions? = null)
-    {
-        navController.navigateSavedDetail(
-            pageId = pageId,
-            routeId = routeId,
-            navOptions = navOptions
-        )
+
+    fun navigateCourseInfo(
+        courseType: CourseType,
+        navOptions: NavOptions? = null,
+    ) {
+        navController.navigateCourseInfo(courseType = courseType, navOptions = navOptions)
     }
 
     // Todo : 나중에 로직 플로우 확인하고 수정예정
     fun navigateSignUp(navOptions: NavOptions? = null) {
         navController.navigateSignUp(navOptions)
     }
-    
-    fun navigateArchivedCourse(navOptions: NavOptions? = null) {
-        navController.navigateArchivedCourse(navOptions = navOptions)
-    }
 
-    fun navigateCourse(index : Int = 0, navOptions: NavOptions? = null) {
+
+    fun navigateCourse(index: Int = 0, navOptions: NavOptions? = null) {
         navController.navigateCourse(
             index = index,
             navOptions = navOptions
@@ -142,9 +133,9 @@ class MainNavigator(
 //    }
     fun navigateSharedWalkCourse(
         routeId: Int,
-        pageId : Int,
-        navOptions: NavOptions? = null)
-    {
+        pageId: Int,
+        navOptions: NavOptions? = null,
+    ) {
         navController.navigateSharedWalkCourse(
             routeId = routeId,
             pageId = pageId,
@@ -155,7 +146,7 @@ class MainNavigator(
     fun navigateSharedWalkReview(
         pageId: Int,
         routeId: Int,
-        navOptions: NavOptions? = null
+        navOptions: NavOptions? = null,
     ) {
         navController.navigateSharedWalkReview(
             pageId = pageId,
@@ -167,21 +158,9 @@ class MainNavigator(
     fun navigateSharedWalkCompletion(
         pageId: Int,
         routeId: Int,
-        navOptions: NavOptions? = null
+        navOptions: NavOptions? = null,
     ) {
         navController.navigateSharedWalkCompletion(
-            pageId = pageId,
-            routeId = routeId,
-            navOptions = navOptions
-        )
-    }
-
-    fun navigateArchivedDetail(
-        routeId: Int,
-        pageId : Int,
-        navOptions: NavOptions? = null
-    ) {
-        navController.navigateArchivedDetail(
             pageId = pageId,
             routeId = routeId,
             navOptions = navOptions
@@ -192,7 +171,7 @@ class MainNavigator(
         navController.navigateWalkCourse(navOptions = navOptions)
     }
 
-    fun navigateWalkCompletion(routeId : Int, navOptions: NavOptions? = null) {
+    fun navigateWalkCompletion(routeId: Int, navOptions: NavOptions? = null) {
         navController.navigateWalkCompletion(
             routeId = routeId,
             navOptions = navOptions
@@ -217,7 +196,6 @@ class MainNavigator(
     fun navigateRegional(regionId: Int, navOptions: NavOptions? = null) {
         navController.navigateRegional(regionId, navOptions)
     }
-
 
 
     @Composable
