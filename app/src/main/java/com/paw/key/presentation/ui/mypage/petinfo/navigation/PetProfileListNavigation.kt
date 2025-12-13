@@ -1,4 +1,4 @@
-package com.paw.key.presentation.ui.mypage.navigation
+package com.paw.key.presentation.ui.mypage.petinfo.navigation
 
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
@@ -6,26 +6,28 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
 import com.paw.key.core.navigation.Route
-import com.paw.key.presentation.ui.mypage.PetProfileRoute
+import com.paw.key.presentation.ui.mypage.petinfo.PetProfileListRoute
 import kotlinx.serialization.Serializable
 
-fun NavController.navigatePetProfile(
+fun NavController.navigatePetProfileList(
     navOptions: NavOptions?
 ) {
-    navigate(PetProfile, navOptions)
+    navigate(PetProfileList, navOptions)
 }
 
-fun NavGraphBuilder.petProfileNavGraph(
+fun NavGraphBuilder.petProfileListNavGraph(
     navigateUp: () -> Unit,
+    navigatePetProfile : () -> Unit,
     modifier: Modifier = Modifier,
-    ) {
-    composable<PetProfile> {
-        PetProfileRoute(
+) {
+    composable<PetProfileList> {
+        PetProfileListRoute(
             navigateUp = navigateUp,
+            navigatePetProfile = navigatePetProfile,
             modifier = modifier
         )
     }
 }
 
 @Serializable
-data object PetProfile : Route
+data object PetProfileList : Route
