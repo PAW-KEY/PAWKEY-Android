@@ -1,4 +1,4 @@
-package com.paw.key.presentation.ui.mypage.state
+package com.paw.key.presentation.ui.mypage.userinfo.model
 
 import androidx.compose.runtime.Immutable
 

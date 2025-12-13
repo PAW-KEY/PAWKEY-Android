@@ -1,4 +1,4 @@
-package com.paw.key.presentation.ui.mypage.navigation
+package com.paw.key.presentation.ui.mypage.userinfo.navigation
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.material3.SnackbarHostState
@@ -7,11 +7,11 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
 import com.paw.key.core.navigation.Route
-import com.paw.key.presentation.ui.mypage.UserProfileRoute
+import com.paw.key.presentation.ui.mypage.userinfo.UserProfileRoute
 import kotlinx.serialization.Serializable
 
 fun NavController.navigateUserProfile(
-    navOptions: NavOptions?
+    navOptions: NavOptions?,
 ) {
     navigate(UserProfile, navOptions)
 }
@@ -20,7 +20,7 @@ fun NavGraphBuilder.userProfileNavGraph(
     paddingValues: PaddingValues,
     navigateUp: () -> Unit,
     navigateNext: () -> Unit,
-    snackBarHostState: SnackbarHostState
+    snackBarHostState: SnackbarHostState,
 ) {
     composable<UserProfile> {
         UserProfileRoute(
