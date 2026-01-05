@@ -1,5 +1,6 @@
 package com.paw.key.presentation.ui.course.walkreview.component
 
+import androidx.annotation.DrawableRes
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -19,29 +20,28 @@ import com.paw.key.core.designsystem.theme.PawKeyTheme
 
 @Composable
 fun WalkReviewInfoHolder(
-    icon : Int,
+    @DrawableRes icon : Int,
     content : String,
     modifier: Modifier = Modifier
 ) {
     Row (
         modifier = modifier
-            .fillMaxWidth()
-            .padding(top = 12.dp),
+            .fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Start
     ) {
         Icon(
             imageVector = ImageVector.vectorResource(id = icon),
             contentDescription = stringResource(R.string.course_review_location_icon_description),
-            tint = PawKeyTheme.colors.green500,
+            tint = PawKeyTheme.colors.primary,
             modifier = Modifier
                 .padding(end = 8.dp)
         )
 
         Text(
             text = content,
-            color = PawKeyTheme.colors.gray400,
-            style = PawKeyTheme.typography.body14M,
+            color = PawKeyTheme.colors.defaultDark,
+            style = PawKeyTheme.typography.bodyActive,
             modifier = Modifier
                 .weight(1f)
         )

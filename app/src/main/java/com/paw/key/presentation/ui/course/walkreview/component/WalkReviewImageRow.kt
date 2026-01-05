@@ -4,7 +4,6 @@ import android.net.Uri
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -16,16 +15,15 @@ import com.paw.key.core.designsystem.theme.PawKeyTheme
 fun WalkReviewImageRow (
     imageList : List<Uri?>,
     onClickCard: (Int, Uri?) -> Unit,
-    onImageDelete : (Uri?) -> Unit,
+    onImageDelete : (Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val maxImages = 5
+    val maxImages = 3
     val totalCardCount = (imageList.size).coerceAtMost(maxImages)
 
     LazyRow (
         modifier = modifier
-            .fillMaxWidth()
-            .padding(top = 24.dp, bottom = 24.dp),
+            .fillMaxWidth(),
         horizontalArrangement = Arrangement.spacedBy(10.dp),
         contentPadding = PaddingValues(horizontal = 16.dp)
     ) {
@@ -38,9 +36,8 @@ fun WalkReviewImageRow (
                     onClickCard(index, currentImageUri)
                 },
                 onImageDelete = {
-                    onImageDelete(currentImageUri)
+                    onImageDelete(index)
                 },
-                modifier = Modifier
             )
         }
 
@@ -54,7 +51,6 @@ fun WalkReviewImageRow (
                     onImageDelete = {
 
                     },
-                    modifier = Modifier
                 )
             }
         }
