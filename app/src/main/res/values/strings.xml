@@ -59,12 +59,12 @@
 
     <!-- Navigation -->
     <!--Home-->
-    <string name="ic_home_description">home</string>
+    <string name="ic_home_description">홈</string>
     <string name="ic_home_topbar_text">연속산책</string>
     <string name="ic_home_location_title">내 동네 설정</string>
 
     <!--Course-->
-    <string name="ic_course_description">course</string>
+    <string name="ic_course_description">산책하기</string>
     <string name="course_complete_button_text">산책 기록하기</string>
     <string name="course_shared_complete_button_text">후기 작성하기</string>
 
@@ -100,7 +100,8 @@
     <string name="ic_community_description">둑닥둑닥ing...</string>
 
     <!--MyPage-->
-    <string name="ic_mypage_description">mypage</string>
+    <string name="ic_mypage_description">마이페이지</string>
     <string name="profile">profile</string>
+    <string name="ic_route_recommand_description">루트 추천</string>
 
 </resources>
