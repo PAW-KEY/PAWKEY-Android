@@ -1,19 +1,19 @@
-package com.paw.key.presentation.ui.course.walk.viewmodel
+package com.paw.key.presentation.ui.course.walkcourse.viewmodel
 
 import android.location.Location
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.paw.key.core.extension.toLatLng
 import com.paw.key.core.util.PhotoUtils
 import com.paw.key.core.util.UiState
-import com.paw.key.core.extension.toLatLng
 import com.paw.key.domain.model.entity.walkcourse.CoordinateEntity
 import com.paw.key.domain.model.entity.walkcourse.WalkCourseEntity
 import com.paw.key.domain.repository.WalkSharedResultRepository
 import com.paw.key.domain.repository.walkcourse.WalkCourseRepository
 import com.paw.key.presentation.ui.course.util.RealTimeLocationListener
-import com.paw.key.presentation.ui.course.walk.state.WalkCourseContract.WalkCourseSideEffect
-import com.paw.key.presentation.ui.course.walk.state.WalkCourseContract.WalkCourseState
+import com.paw.key.presentation.ui.course.walkcourse.state.WalkCourseSideEffect
+import com.paw.key.presentation.ui.course.walkcourse.state.WalkCourseState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -34,12 +34,10 @@ class WalkCourseViewModel @Inject constructor(
     private val walkCourseRepository: WalkCourseRepository
 ) : ViewModel(), RealTimeLocationListener {
     private val _state = MutableStateFlow(WalkCourseState())
-    val state: StateFlow<WalkCourseState>
-        get() = _state.asStateFlow()
+    val state: StateFlow<WalkCourseState> = _state.asStateFlow()
 
     private val _sideEffect = MutableSharedFlow<WalkCourseSideEffect>()
-    val sideEffect: SharedFlow<WalkCourseSideEffect>
-        get() = _sideEffect.asSharedFlow()
+    val sideEffect: SharedFlow<WalkCourseSideEffect> = _sideEffect.asSharedFlow()
 
     private var timerJob: Job? = null
 
@@ -56,6 +54,14 @@ class WalkCourseViewModel @Inject constructor(
                 )
             }
             startTracking()
+        }
+    }
+
+    fun showToastMessage(
+        message: String
+    ) {
+        viewModelScope.launch {
+            _sideEffect.emit(WalkCourseSideEffect.ShowSnackBar(message))
         }
     }
 
@@ -188,15 +194,12 @@ class WalkCourseViewModel @Inject constructor(
 
             result.onSuccess { response ->
                 _sideEffect.emit(WalkCourseSideEffect.NavigateNext(response.regionId))
-                Log.d("WalkCourseViewModel", "routeId = ${response}")
             }.onFailure { throwable ->
                 _sideEffect.emit(WalkCourseSideEffect.ShowSnackBar("업로드 실패: ${throwable.message}"))
-                Log.e("WalkCourseViewModel", "업로드 실패", throwable)
             }
 
         } catch (e: Exception) {
             _sideEffect.emit(WalkCourseSideEffect.ShowSnackBar("오류 발생: ${e.localizedMessage}"))
-            Log.e("WalkCourseViewModel", "예외 발생", e)
         }
     }
 
@@ -214,7 +217,6 @@ class WalkCourseViewModel @Inject constructor(
                 )
                 _sideEffect.emit(WalkCourseSideEffect.ShowSnackBar("산책 기록이 성공적으로 저장되었습니다."))
             } catch (e: Exception) {
-                Log.e("WalkCourseViewModel", "Error saving walk summary data: ${e.message}", e)
                 _sideEffect.emit(WalkCourseSideEffect.ShowSnackBar("산책 기록 저장 실패: ${e.localizedMessage}"))
             }
         }
@@ -222,11 +224,9 @@ class WalkCourseViewModel @Inject constructor(
 
     override fun onLocationChanged(location: Location) {
         if (location.accuracy > LOCATION_ACCURACY_THRESHOLD) {
-            Log.e("onLocationChanged", "onLocationChanged: $location")
             return
         }
 
-        Log.e("onLocationChanged", "onLocationChanged: $location")
 
         val newLatLng = location.toLatLng()
         val lastPoint = lastLocation
@@ -273,7 +273,6 @@ class WalkCourseViewModel @Inject constructor(
     }
 
     companion object {
-        private const val TIMER_INTERVAL_MS = 1000L
         private const val LOCATION_ACCURACY_THRESHOLD = 25f
     }
 }
