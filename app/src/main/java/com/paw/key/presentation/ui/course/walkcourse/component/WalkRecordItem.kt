@@ -1,10 +1,10 @@
-package com.paw.key.presentation.ui.course.walk.component
+package com.paw.key.presentation.ui.course.walkcourse.component
 
+import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -17,28 +17,27 @@ import com.paw.key.core.designsystem.theme.PawKeyTheme
 
 @Composable
 fun WalkRecordItem(
-    recordTitle : Int,
+    @StringRes recordTitle : Int,
     recordContent : String,
     modifier: Modifier = Modifier,
 ) {
     Column (
-        modifier = modifier
-            .padding(vertical = 16.dp),
+        modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
         Text(
             text = stringResource(recordTitle),
-            color = PawKeyTheme.colors.gray500,
-            style = PawKeyTheme.typography.caption12Sb2
+            color = PawKeyTheme.colors.defaultDark,
+            style = PawKeyTheme.typography.subButtonActive
         )
 
         Spacer(modifier = Modifier.height(4.dp))
 
         Text(
             text = recordContent,
-            color = PawKeyTheme.colors.green500,
-            style = PawKeyTheme.typography.head20B2
+            color = PawKeyTheme.colors.primary,
+            style = PawKeyTheme.typography.header3
         )
     }
 }
