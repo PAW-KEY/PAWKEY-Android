@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -132,10 +133,11 @@ private fun WalkReviewScreen(
     Column (
         modifier = Modifier
             .fillMaxSize()
-            .verticalScroll(rememberScrollState())
             .background(
                 color = PawKeyTheme.colors.background
             )
+            .imePadding()
+            .verticalScroll(rememberScrollState())
             .padding(paddingValues)
     ) {
         TopBar(
@@ -143,6 +145,8 @@ private fun WalkReviewScreen(
             isBackVisible = true,
             onBackClick = navigateUp
         )
+
+        Spacer(modifier = Modifier.height(14.dp))
 
         WalkReviewImageRow(
             imageList = state.walkReviewImageList,
@@ -152,9 +156,9 @@ private fun WalkReviewScreen(
                 }
             },
             onImageDelete = onImageDelete,
-            modifier = Modifier
-                .padding(vertical = 12.dp)
         )
+
+        Spacer(modifier = Modifier.height(20.dp))
 
         // Todo : 서버 내용으로 변경
         Column (
@@ -172,29 +176,10 @@ private fun WalkReviewScreen(
                 content = "2025.10.11 | 오후 11:30"
             )
 
-            Spacer(modifier = Modifier.height(8.dp))
-
-            Row (
-                modifier = Modifier
-                    .fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-            ) {
-                InfoChip(
-                    text = "2.2 km",
-                    isActionChip = true
-                )
-
-                InfoChip(
-                    text = "2.2 km",
-                    isActionChip = true
-                )
-
-                InfoChip(
-                    text = "2.2 km",
-                    isActionChip = true
-                )
-            }
+            WalkReviewInfoHolder(
+                icon = R.drawable.ic_walk_review_course_info,
+                content = "2025.10.11 | 오후 11:30 | 걸음수"
+            )
 
             Spacer(modifier = Modifier.height(40.dp))
 
@@ -367,12 +352,8 @@ private fun WalkReviewScreen(
 
     if (state.isComplete) {
         WalkReviewDialog(
-            navigateHome = {
-
-            },
-            navigateWalkDetail = {
-
-            }
+            navigateHome = navigateHome,
+            navigateWalkDetail = navigateWalkDetail
         )
     }
 }

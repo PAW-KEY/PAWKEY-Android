@@ -2,6 +2,7 @@ package com.paw.key.presentation.ui.course.walkreview.state
 
 import android.net.Uri
 import androidx.compose.runtime.Immutable
+import com.paw.key.presentation.ui.course.walkcourse.model.WalkInfoState
 import com.paw.key.presentation.ui.course.walkreview.model.WalkReviewFilterModel
 import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.persistentListOf
@@ -13,10 +14,11 @@ data class WalkReviewState(
     val walkReviewSelectedFilterData: PersistentList<String> = persistentListOf(),
     val walkReviewTitle : String = "",
     val walkReviewContent: String = "",
-    val isComplete : Boolean = false
+    val walkReviewCourseInfo: WalkInfoState = WalkInfoState(),
+    val isComplete : Boolean = false,
 ) {
     fun getSingleFilterSelection(categoryList: List<String>): String {
-        return walkReviewSelectedFilterData.firstOrNull { categoryList.contains(it) } ?: ""
+        return walkReviewSelectedFilterData.firstOrNull { categoryList.contains(it) }.orEmpty()
     }
 
     fun getUpdatedFilterList(
