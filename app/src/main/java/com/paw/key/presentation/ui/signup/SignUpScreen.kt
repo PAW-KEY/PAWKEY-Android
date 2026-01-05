@@ -18,7 +18,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.flowWithLifecycle
-import com.paw.key.core.designsystem.component.DogkyButton
+import com.paw.key.core.designsystem.component.DokiButton
 import com.paw.key.core.designsystem.component.LoadingScreen
 import com.paw.key.core.util.UiState
 import com.paw.key.presentation.ui.signup.component.SignUpHeader
@@ -238,7 +238,7 @@ fun SignUpScreen(
 
                     Spacer(modifier = Modifier.weight(1f))
 
-                    DogkyButton(
+                    DokiButton(
                         text = buttonText,
                         onClick = onNextClick,
                         enabled = isNextEnabled,

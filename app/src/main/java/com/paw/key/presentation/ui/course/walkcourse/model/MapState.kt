@@ -1,4 +1,4 @@
-package com.paw.key.presentation.ui.course.walk.model
+package com.paw.key.presentation.ui.course.walkcourse.model
 
 import android.graphics.Bitmap
 import androidx.compose.runtime.Immutable

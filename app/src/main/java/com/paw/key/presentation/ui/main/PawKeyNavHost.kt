@@ -12,13 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.navOptions
 import com.paw.key.presentation.ui.community.navigation.communityNavGraph
-import com.paw.key.presentation.ui.course.entire.navigation.courseNavGraph
-import com.paw.key.presentation.ui.course.entire.navigation.navigateCourse
-import com.paw.key.presentation.ui.course.sharedwalk.complete.navigation.sharedWalkCompletionNavGraph
-import com.paw.key.presentation.ui.course.sharedwalk.review.navigation.sharedWalkReviewNavGraph
-import com.paw.key.presentation.ui.course.sharedwalk.sharedroute.navigation.sharedWalkCourseNavGraph
-import com.paw.key.presentation.ui.course.walk.navigation.walkCourseNavGraph
-import com.paw.key.presentation.ui.course.walkcomplete.navigation.walkCompletionNavGraph
+import com.paw.key.presentation.ui.course.navigation.walkCourseGraph
 import com.paw.key.presentation.ui.course.walkreview.navigation.walkReviewNavGraph
 import com.paw.key.presentation.ui.dummy.navigation.dummyNavGraph
 import com.paw.key.presentation.ui.dummy.next.dummyNextNavGraph
@@ -76,7 +70,7 @@ fun PawKeyNavHost(
         homeNavGraph(
             paddingValues = paddingValues,
             navigateUp = navigator::navigateUp,
-            navigateNext = navigator::navigateCourse,
+            navigateNext = navigator::navigateWalkCourse,
             navigateHomeLocationSetting = navigator::navigateHomeLocationSetting,
             modifier = modifier,
         )
@@ -94,87 +88,16 @@ fun PawKeyNavHost(
             modifier = modifier,
         )
 
-        courseNavGraph(
+        walkCourseGraph(
             paddingValues = paddingValues,
-            navigateUp = navigator::navigateUp,
-            navigateNext = navigator::navigateWalkCourse,
-            navigateToDetail = { postId, routeId ->
-                // Todo : 마찬가지로 이것도 그냥 넣어놓음 나중에 리스트 연결 후 예쩡 / 리스트 아이템이동
-                navigator.navigateArchivedDetail(
-                    pageId = postId,
-                    routeId = routeId
-                )
-            },
-            setOnVisibleRecord = navigator::setOnVisibleRecord,
-            snackBarHostState = snackbarHostState
-        )
-
-        sharedWalkCourseNavGraph(
-            paddingValues = paddingValues,
-            navigateUp = navigator::navigateUp,
-            navigateNext = { routeId, pageId ->
-                navigator.navigateSharedWalkCompletion(
-                    routeId = routeId,
-                    pageId = pageId
-                )
-            },
-            snackBarHostState = snackbarHostState
-        )
-
-        sharedWalkCompletionNavGraph(
-            paddingValues = paddingValues,
-            navigateUp = navigator::navigateUp,
-            navigateNext = { routeId, pageId ->
-                // Todo : 마찬가지로 이것도 그냥 넣어놓음 나중에 리스트 연결 후 예쩡
-                navigator.navigateSharedWalkReview(
-                    routeId = routeId,
-                    pageId = pageId
-                )
-            },
-            snackBarHostState = snackbarHostState
-        )
-
-        //  Todo : 리스트로 돌아갈 수 있게 - 다이얼로그
-        sharedWalkReviewNavGraph(
-            paddingValues = paddingValues,
-            navigateUp = navigator::navigateUp,
-            navigateNext = {
-                navigator.navController.navigateCourse(index = 1, navOptions = null)
-            },
-            snackBarHostState = snackbarHostState
-        )
-
-        walkCourseNavGraph(
-            paddingValues = paddingValues,
-            navigateUp = navigator::navigateUp,
-            navigateNext = {
-                navigator.navigateWalkCompletion(
-                    routeId = it,
-                )
-            },
-            snackBarHostState = snackbarHostState
-        )
-
-        walkCompletionNavGraph(
-            paddingValues = paddingValues,
-            navigateUp = navigator::navigateUp,
-            navigateNext = { routeId ->
-                navigator.navigateWalkReview(
-                    routeId = routeId,
-                )
-            },
+            navController = navigator.navController,
+            navigateWalkReview = navigator::navigateWalkReview
         )
 
         walkReviewNavGraph(
-            navigateUp = navigator::navigateUp,
-            navigateNext = navigator::navigateCourse,
-            navigateShared = { routeId, pageId ->
-                navigator.navigateArchivedDetail(
-                    pageId = pageId,
-                    routeId = routeId
-                )
-            },
-            snackBarHostState = snackbarHostState
+            paddingValues = paddingValues,
+            navigateHome = navigator::navigateHome,
+            navigateWalkDetail = navigator::navigateWalkCourse, // Todo 상세 정보 뷰로
         )
 
         communityNavGraph(
@@ -230,10 +153,7 @@ fun PawKeyNavHost(
                 navigator.navController.navigateCourse(index = 1, navOptions = null)
             },*/
             navigateToSharedWalk = { routeId, pageId ->
-                navigator.navigateSharedWalkCourse(
-                    routeId = routeId,
-                    pageId = pageId
-                )
+
             },
             modifier = modifier
         )
