@@ -28,7 +28,6 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -75,8 +74,7 @@ import com.paw.key.presentation.ui.course.util.rememberCustomFusedLocationSource
 import com.paw.key.presentation.ui.course.util.rememberStepCounter
 import com.paw.key.presentation.ui.course.walkcourse.component.WalkRecordItem
 import com.paw.key.presentation.ui.course.walkcourse.state.WalkCourseSideEffect
-import com.paw.key.presentation.ui.course.walkcourse.util.formatDistance
-import com.paw.key.presentation.ui.course.walkcourse.util.formatTime
+import com.paw.key.presentation.ui.course.walkcourse.state.WalkCourseState
 import com.paw.key.presentation.ui.course.walkcourse.viewmodel.WalkCourseViewModel
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.coroutines.flow.drop
@@ -116,13 +114,6 @@ fun WalkCourseRoute(
 
     val stepCounter = rememberStepCounter()
 
-    val formattedTotalTime by remember(state.totalTimeMillis) {
-        derivedStateOf { formatTime(state.totalTimeMillis) }
-    }
-
-    val formattedDistance by remember(state.mapState.totalDistance) {
-        derivedStateOf { formatDistance(state.mapState.totalDistance) }
-    }
 
     var mapProperties by remember {
         mutableStateOf(MapProperties())
@@ -158,20 +149,6 @@ fun WalkCourseRoute(
             }
         }
     )
-
-    /*// 0~9 = 0, 10~19 = 1 을 감지
-    val distanceInTens by remember(state.totalDistance) { // ViewModel의 totalDistance를 참조
-        derivedStateOf {
-            (state.totalDistance / 10).toInt() // Float을 Int로 변환
-        }
-    }
-
-    // 이전 10m 단위 값을 저장하여 중복 호출 방지
-    var lastRecordedDistanceInTens by remember {
-        mutableIntStateOf(-1)
-    }*/
-
-
 
     LaunchedEffect(state.recordingState.isRecording, stepCounter) {
         if (state.recordingState.isRecording) {
@@ -229,14 +206,12 @@ fun WalkCourseRoute(
         is UiState.Success -> {
             WalkCourseScreen(
                 paddingValues = paddingValues,
+                state = state,
                 cameraPositionState = cameraPositionState,
                 currentLocation = state.mapState.currentLocation,
                 routeLineCoords = state.mapState.poiPoints,
                 locationSource = fusedLocationClient,
-                totalDistance = formattedDistance,
                 mapProperties = mapProperties,
-                currentSteps = state.stepCounterState.sessionSteps,
-                totalTime = formattedTotalTime,
                 isRecording = state.recordingState.isRecording, // 산책 중단, 계속 여부
                 isTracking = state.mapState.isTrackingEnabled, // 산책 포커싱
                 onClickTracking = {
@@ -268,13 +243,11 @@ fun WalkCourseRoute(
 @Composable
 fun WalkCourseScreen(
     paddingValues: PaddingValues,
+    state: WalkCourseState,
     cameraPositionState: CameraPositionState,
     locationSource: FusedLocationSource,
     currentLocation : LatLng?,
     routeLineCoords : ImmutableList<LatLng>,
-    totalDistance: String,
-    currentSteps: Long,
-    totalTime: String,
     mapProperties: MapProperties,
     isTracking: Boolean, // 포커싱 여부
     isRecording: Boolean, // 산책 중단, 계속 여부
@@ -284,15 +257,6 @@ fun WalkCourseScreen(
     onStopTracking: () -> Unit, // 종료하기
     onCaptured: (Bitmap?) -> Unit,
 ) {
-    var mapUiSettings by remember {
-        mutableStateOf(
-            MapUiSettings(
-                logoGravity = Gravity.BOTTOM or Gravity.START,
-                isZoomControlEnabled = false
-            )
-        )
-    }
-
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -304,13 +268,19 @@ fun WalkCourseScreen(
             cameraPositionState = cameraPositionState,
             locationSource = locationSource,
             locale = Locale.KOREA,
-            uiSettings = mapUiSettings,
+            uiSettings = MapUiSettings(
+                logoGravity = Gravity.TOP or Gravity.END,
+                isZoomControlEnabled = false,
+                isLogoClickEnabled = true
+            ),
             properties = mapProperties,
         ) {
             if (currentLocation != null) {
                 LocationOverlay(
                     position = currentLocation,
                     icon = OverlayImage.fromResource(R.drawable.user_poi),
+                    iconWidth = 24,
+                    iconHeight = 24,
                 )
             }
 
@@ -381,15 +351,15 @@ fun WalkCourseScreen(
                         ) {
                             WalkRecordItem(
                                 recordTitle = R.string.course_record_distance,
-                                recordContent = totalDistance
+                                recordContent = state.formattedDistance
                             )
                             WalkRecordItem(
                                 recordTitle = R.string.course_record_time,
-                                recordContent = totalTime
+                                recordContent = state.formattedTime
                             )
                             WalkRecordItem(
                                 recordTitle = R.string.course_record_step,
-                                recordContent = currentSteps.toString()
+                                recordContent = state.stepCounterState.sessionSteps.toString()
                             )
                         }
 

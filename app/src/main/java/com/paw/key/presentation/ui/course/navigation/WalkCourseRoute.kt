@@ -6,9 +6,6 @@ import kotlinx.serialization.Serializable
 sealed interface WalkRoute : MainTabRoute
 
 @Serializable
-data object WalkCourseGraph : WalkRoute
-
-@Serializable
 data object WalkPrepare: WalkRoute
 
 @Serializable

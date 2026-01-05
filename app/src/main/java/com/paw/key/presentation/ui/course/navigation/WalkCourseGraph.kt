@@ -8,7 +8,10 @@ import androidx.navigation.navigation
 import com.paw.key.presentation.ui.course.walkcourse.WalkCourseRoute
 import com.paw.key.presentation.ui.course.walkcourse.walkcomplete.WalkCompleteRoute
 import com.paw.key.presentation.ui.course.walkcourse.walkprepare.WalkPrepareRoute
+import kotlinx.serialization.Serializable
 
+@Serializable
+data object WalkCourseGraph : WalkRoute
 
 fun NavGraphBuilder.walkCourseGraph(
     paddingValues: PaddingValues,

@@ -6,6 +6,8 @@ import com.paw.key.R
 import com.paw.key.presentation.ui.course.walkcourse.model.MapState
 import com.paw.key.presentation.ui.course.walkcourse.model.RecordingState
 import com.paw.key.presentation.ui.course.walkcourse.model.StepCounterState
+import com.paw.key.presentation.ui.course.walkcourse.util.formatDistance
+import com.paw.key.presentation.ui.course.walkcourse.util.formatTime
 
 @Immutable
 data class WalkCourseState(
@@ -13,7 +15,13 @@ data class WalkCourseState(
     val mapState: MapState = MapState(),
     val stepCounterState: StepCounterState = StepCounterState(),
     val totalTimeMillis: Long = 0L,
-)
+) {
+    val formattedTime: String
+        get() = formatTime(this.totalTimeMillis)
+
+    val formattedDistance: String
+        get() = formatDistance(this.mapState.totalDistance)
+}
 
 sealed class WalkCourseSideEffect {
     data class ShowSnackBar(val message: String) : WalkCourseSideEffect()
