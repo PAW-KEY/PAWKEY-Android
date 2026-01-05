@@ -2,8 +2,10 @@ package com.paw.key.core.designsystem.component
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -20,33 +22,46 @@ import com.paw.key.core.extension.noRippleClickable
 @Composable
 fun TopBar(
     title: String,
-    onBackClick: () -> Unit,
     modifier: Modifier = Modifier,
+    onBackClick: () -> Unit = {},
     onClickTitle : () -> Unit = {},
     isBackVisible: Boolean = true,
 ) {
-    Box(
+    Column (
         modifier = modifier
-            .fillMaxWidth()
-            .background(color = PawKeyTheme.colors.white1)
-            .padding(vertical = 12.dp, horizontal = 16.dp)
     ) {
-        if (isBackVisible) {
-            Icon(
-                imageVector = ImageVector.vectorResource(R.drawable.ic_arrow_left_black),
-                contentDescription = "뒤로가기",
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(color = PawKeyTheme.colors.background)
+                .padding(vertical = 12.dp, horizontal = 16.dp)
+        ) {
+            if (isBackVisible) {
+                Icon(
+                    imageVector = ImageVector.vectorResource(R.drawable.ic_arrow_left_black),
+                    contentDescription = "뒤로가기",
+                    modifier = Modifier
+                        .align(Alignment.CenterStart)
+                        .noRippleClickable(onClick = onBackClick)
+                )
+            }
+
+            Text(
+                text = title,
+                style = PawKeyTheme.typography.subTitle,
                 modifier = Modifier
-                    .align(Alignment.CenterStart)
-                    .noRippleClickable { onBackClick() }
+                    .align(Alignment.Center)
+                    .noRippleClickable(onClickTitle)
             )
         }
 
-        Text(
-            text = title,
-            style = PawKeyTheme.typography.head18Sb,
+        HorizontalDivider(
+            thickness = 1.dp,
             modifier = Modifier
-                .align(Alignment.Center)
-                .noRippleClickable(onClickTitle)
+                .fillMaxWidth()
+                .background(
+                    color = PawKeyTheme.colors.defaultButton
+                )
         )
     }
 }

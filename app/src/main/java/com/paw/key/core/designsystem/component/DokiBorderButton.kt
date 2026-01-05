@@ -1,6 +1,7 @@
 package com.paw.key.core.designsystem.component
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -9,52 +10,58 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.paw.key.core.designsystem.theme.PawKeyTheme
 import com.paw.key.core.extension.noRippleClickable
 
 @Composable
-fun DogkyButton(
+fun DokiBorderButton(
     text: String,
     enabled: Boolean,
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val backgroundColor = when {
-        enabled -> PawKeyTheme.colors.primary
-        else -> PawKeyTheme.colors.defaultButton
-    }
-
     val textColor = when {
-        enabled -> PawKeyTheme.colors.background
+        enabled -> PawKeyTheme.colors.primary
         else -> PawKeyTheme.colors.defaultMiddle
     }
 
     Box(
         modifier = modifier
             .fillMaxWidth()
-            .background(backgroundColor, shape = RoundedCornerShape(8.dp))
+            .border(
+                width = 1.dp,
+                color = textColor,
+                shape = RoundedCornerShape(8.dp)
+            )
+            .background(
+                color = PawKeyTheme.colors.background,
+                shape = RoundedCornerShape(8.dp)
+            )
             .noRippleClickable {
                 if (enabled) onClick()
             }
-            .padding(vertical = 14.dp),
+            .padding(vertical = 18.dp),
         contentAlignment = Alignment.Center
     ) {
         Text(
             text = text,
-            style = PawKeyTheme.typography.mainButtonDefault,
-            color = textColor
+            style = PawKeyTheme.typography.mainButtonActive,
+            color = textColor,
+            modifier = Modifier.fillMaxWidth(),
+            textAlign = TextAlign.Center
         )
     }
 }
 
 @Preview
 @Composable
-private fun DogkyButtonPreview() {
+private fun DokiBorderButtonPreview() {
     PawKeyTheme {
-        DogkyButton(
-            text = "",
+        DokiBorderButton(
+            text = "산책 기록하기",
             enabled = true,
             onClick = {}
         )
