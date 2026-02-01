@@ -62,7 +62,6 @@ import kotlinx.coroutines.launch
 @Composable
 fun PetProfileRoute(
     navigateUp: () -> Unit,
-    modifier: Modifier = Modifier,
     viewModel: PetProfileViewModel = hiltViewModel(),
 ) {
     val state = viewModel.state.collectAsStateWithLifecycle()
@@ -331,7 +330,7 @@ fun PetProfileScreen(
 
 @Preview(showBackground = true)
 @Composable
-fun PetProfileScreenPreview() {
+private fun PetProfileScreenPreview() {
     PawKeyTheme {
         PetProfileScreen(
             petName = "꾸꾸",

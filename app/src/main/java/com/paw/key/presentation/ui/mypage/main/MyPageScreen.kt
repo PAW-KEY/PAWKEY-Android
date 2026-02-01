@@ -82,7 +82,7 @@ fun MyPageScreen(
         )
 
         LazyColumn(
-            modifier = modifier
+            modifier = Modifier
                 .fillMaxSize()
                 .background(PawKeyTheme.colors.defaultButton)
                 .padding(horizontal = 16.dp, vertical = 18.dp),

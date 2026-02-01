@@ -113,7 +113,6 @@ fun CourseRouteItemInfo(
         Text(
             text = routeTitle,
             style = PawKeyTheme.typography.bodyActive,
-            fontFamily = PretendardBold,
             color = PawKeyTheme.colors.contents
         )
 

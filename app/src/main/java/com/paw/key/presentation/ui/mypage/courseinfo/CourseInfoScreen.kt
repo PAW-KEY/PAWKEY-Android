@@ -24,13 +24,11 @@ import com.paw.key.presentation.ui.mypage.courseinfo.model.CourseType
 fun CourseInfoRoute(
     courseType: CourseType,
     navigateUp: () -> Unit,
-    modifier: Modifier = Modifier,
 ) {
     CourseInfoScreen(
         title = courseType.courseType,
         courses = emptyList(),
         navigateUp = navigateUp,
-        modifier = modifier
     )
 }
 

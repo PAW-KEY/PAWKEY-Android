@@ -16,13 +16,11 @@ fun NavController.navigatePetProfile(
 }
 
 fun NavGraphBuilder.petProfileNavGraph(
-    navigateUp: () -> Unit,
-    modifier: Modifier = Modifier,
+    navigateUp: () -> Unit
     ) {
     composable<PetProfile> {
         PetProfileRoute(
             navigateUp = navigateUp,
-            modifier = modifier
         )
     }
 }

@@ -78,7 +78,7 @@ fun PetCard(
                     .crossfade(true)
                     .build(),
                 contentDescription = null,
-                modifier = modifier
+                modifier = Modifier
                     .size(64.dp)
                     .clip(CircleShape),
                 contentScale = ContentScale.Crop

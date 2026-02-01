@@ -23,7 +23,6 @@ fun NavController.navigateCourseInfo(
 
 fun NavGraphBuilder.courseInfoNavGraph(
     navigateUp: () -> Unit,
-    modifier: Modifier = Modifier,
 ) {
     composable<CourseInfo> { backStackEntry ->
         val args = backStackEntry.toRoute<CourseInfo>()
@@ -32,7 +31,6 @@ fun NavGraphBuilder.courseInfoNavGraph(
         CourseInfoRoute(
             courseType = courseType,
             navigateUp = navigateUp,
-            modifier = modifier
         )
     }
 }

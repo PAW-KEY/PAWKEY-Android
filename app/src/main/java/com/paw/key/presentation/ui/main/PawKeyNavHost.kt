@@ -189,7 +189,6 @@ fun PawKeyNavHost(
 
         courseInfoNavGraph(
             navigateUp = navigator::navigateUp,
-            modifier = modifier
         )
 
         userProfileNavGraph(
@@ -201,7 +200,6 @@ fun PawKeyNavHost(
 
         petProfileNavGraph(
             navigateUp = navigator::navigateUp,
-            modifier = modifier
         )
 
         petProfileListNavGraph(

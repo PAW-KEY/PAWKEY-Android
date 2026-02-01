@@ -15,8 +15,8 @@ import com.paw.key.core.designsystem.theme.PawKeyTheme
 @Composable
 fun UserProfileItem(
     label: String,
-    profileItem: @Composable () -> Unit,
     modifier: Modifier = Modifier,
+    profileItem: @Composable () -> Unit,
 ) {
     Column(
         modifier = modifier

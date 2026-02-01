@@ -56,6 +56,7 @@ fun PetProfileListScreen(
                 .padding(horizontal = 16.dp),
         ) {
             item {
+                // TODO : API 연동시 변경 예정
                 PetInfoCard(
                     petName = "Buddy",
                     petType = "Dog",
