@@ -11,17 +11,11 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Check
-import androidx.compose.material3.Checkbox
-import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
-import androidx.compose.material3.TriStateCheckbox
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -119,14 +113,6 @@ private fun WalkPrepareItem(
 ) {
     Row (
         modifier = modifier
-            .background(
-                color = if (isSelected) {
-                    PawKeyTheme.colors.primary
-                } else {
-                    PawKeyTheme.colors.defaultButton
-                },
-                shape = RoundedCornerShape(8.dp)
-            )
             .noRippleClickable {
                 onCheckBoxClick(!isSelected)
             }
@@ -150,6 +136,12 @@ private fun WalkPrepareItem(
             },
             textAlign = TextAlign.Start
         )
+
+        Spacer(modifier = Modifier.weight(1f))
+
+        /*Icon(
+            imageVector =
+        )*/
     }
 }
 
@@ -162,14 +154,20 @@ private fun CustomCheckBox(
     val checkMarkTint = if (isSelected) {
         PawKeyTheme.colors.primary
     } else {
-        PawKeyTheme.colors.defaultButton
+        PawKeyTheme.colors.defaultMiddle
+    }
+
+    val checkBackground = if (isSelected) {
+        PawKeyTheme.colors.primary
+    } else {
+        PawKeyTheme.colors.defaultBright
     }
 
     Box(
         modifier = modifier
             .size(15.dp)
             .background(
-                color = PawKeyTheme.colors.background,
+                color = checkBackground,
                 shape = RoundedCornerShape(1.dp)
             )
             .noRippleClickable {

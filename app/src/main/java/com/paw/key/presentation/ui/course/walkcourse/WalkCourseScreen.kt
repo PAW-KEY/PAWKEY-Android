@@ -130,9 +130,10 @@ fun WalkCourseRoute(
                     is WalkCourseSideEffect.ShowToastMessage -> {
                         Toast.makeText(context, sideEffect.message, Toast.LENGTH_SHORT).show()
                     }
-                    else -> {
 
-                    }
+                    WalkCourseSideEffect.NavigateReview -> navigateReview()
+
+                    else -> {}
                 }
             }
     }
@@ -224,12 +225,7 @@ fun WalkCourseRoute(
                     viewModel.startTracking()
                 },
                 onStopTracking = { // 종료 후 넘어가기 -> 서버 전송 후 완료 뷰로 넘어가기
-                    /*scope.launch {
-                        viewModel.postWalkCourseData(userId = userId.first())
-                    }*/
-                    //viewModel.onStopTrackingEvent()
-                    //navigateToWalkComplete()
-                    navigateReview()
+                    viewModel.stopTracking()
                 },
                 onCaptured = { bitmap ->
                     // Todo : bitmap 안쓸거임
@@ -394,7 +390,7 @@ fun WalkCourseScreen(
             }
         }
 
-        if (!isRecording) {
+        if (!isRecording || state.isStopTracking) {
             Box(
                 modifier = Modifier
                     .fillMaxSize()
@@ -410,7 +406,7 @@ fun WalkCourseScreen(
                 verticalArrangement = Arrangement.Center
             ) {
                 Text(
-                    text = "산책이 중단되었어요!",
+                    text = if (state.isStopTracking) "산책을 종료하시겠어요?" else "산책이 중단되었어요",
                     textAlign = TextAlign.Center,
                     style = PawKeyTheme.typography.header2,
                     color = PawKeyTheme.colors.background
@@ -419,7 +415,7 @@ fun WalkCourseScreen(
                 Spacer(modifier = Modifier.height(4.dp))
 
                 Text(
-                    text = "산책을 정말 종료하시겠어요?",
+                    text = if (state.isStopTracking) "종료 후에는 산책 기록을 이어갈 수 없어요!" else "정비 후에 다시 산책을 시작해보세요!", // stop 버튼 클릭시 , pause 버튼 클릭 시
                     textAlign = TextAlign.Center,
                     style = PawKeyTheme.typography.subTitle,
                     color = PawKeyTheme.colors.background
@@ -437,7 +433,7 @@ fun WalkCourseScreen(
                         .navigationBarsPadding()
                 ) {
                     DokiBorderButton(
-                        text = "산책 재개하기",
+                        text = if (state.isStopTracking) "아니오" else "이어서 하기",
                         enabled = true,
                         onClick = onStartTracking,
                         modifier = Modifier
@@ -448,7 +444,7 @@ fun WalkCourseScreen(
                     Spacer(modifier = Modifier.width(16.dp))
 
                     DokiButton(
-                        text = "산책 종료하기",
+                        text = if (state.isStopTracking) "예" else "산책 종료하기",
                         enabled = true,
                         onClick = onStopTracking,
                         modifier = Modifier.weight(1f)

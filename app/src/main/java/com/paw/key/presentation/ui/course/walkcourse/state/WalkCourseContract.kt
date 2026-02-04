@@ -15,6 +15,7 @@ data class WalkCourseState(
     val mapState: MapState = MapState(),
     val stepCounterState: StepCounterState = StepCounterState(),
     val totalTimeMillis: Long = 0L,
+    val isStopTracking: Boolean = false // true는 stop됨, false는 다시 시작
 ) {
     val formattedTime: String
         get() = formatTime(this.totalTimeMillis)
@@ -23,11 +24,13 @@ data class WalkCourseState(
         get() = formatDistance(this.mapState.totalDistance)
 }
 
-sealed class WalkCourseSideEffect {
-    data class ShowSnackBar(val message: String) : WalkCourseSideEffect()
-    data class ShowToastMessage(val message: String) : WalkCourseSideEffect()
-    data object NavigateUp: WalkCourseSideEffect()
-    data class NavigateNext(val regionId: Int): WalkCourseSideEffect()
+sealed interface WalkCourseSideEffect {
+    data class ShowSnackBar(val message: String) : WalkCourseSideEffect
+    data class ShowToastMessage(val message: String) : WalkCourseSideEffect
+    data object NavigateUp: WalkCourseSideEffect
+    data class NavigateNext(val regionId: Int): WalkCourseSideEffect
+
+    data object NavigateReview: WalkCourseSideEffect
 }
 
 sealed class WalkCourseRecord (

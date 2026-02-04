@@ -203,9 +203,10 @@ class WalkCourseViewModel @Inject constructor(
         }
     }
 
-    fun onStopTrackingEvent() {
+    // Todo: 서버 내용 확인하고 넘기기
+    fun stopTracking() {
         viewModelScope.launch {
-            val currentWalkState = _state.value
+            /*val currentWalkState = _state.value
 
             try {
                 walkSharedResultRepository.saveResult(
@@ -216,8 +217,15 @@ class WalkCourseViewModel @Inject constructor(
                     points = currentWalkState.mapState.poiPoints.toList()
                 )
                 _sideEffect.emit(WalkCourseSideEffect.ShowSnackBar("산책 기록이 성공적으로 저장되었습니다."))
+                _sideEffect.emit(WalkCourseSideEffect.NavigateReview)
             } catch (e: Exception) {
                 _sideEffect.emit(WalkCourseSideEffect.ShowSnackBar("산책 기록 저장 실패: ${e.localizedMessage}"))
+            }*/
+
+            _state.update {
+                it.copy(
+                    isStopTracking = true
+                )
             }
         }
     }
