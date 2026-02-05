@@ -33,7 +33,9 @@ fun WalkPrepareRoute(
     WalkPrepareScreen(
         paddingValues = paddingValues,
         state = state,
-        navigateWalkCourse = navigateWalkCourse
+        navigateWalkCourse = navigateWalkCourse,
+        addWalkItem = viewModel::addWalkItem,
+        deleteWalkItem = viewModel::deleteWalkItem
     )
 }
 
@@ -41,7 +43,9 @@ fun WalkPrepareRoute(
 private fun WalkPrepareScreen(
     paddingValues: PaddingValues,
     state: WalkPrepareState,
-    navigateWalkCourse: () -> Unit = {}
+    navigateWalkCourse: () -> Unit = {},
+    addWalkItem : () -> Unit = {},
+    deleteWalkItem : (Int) -> Unit = {}
 ) {
     Column (
         modifier = Modifier
@@ -68,9 +72,11 @@ private fun WalkPrepareScreen(
         Spacer(modifier = Modifier.height(16.dp))
 
         WalkPrepareBody(
-            itemList = state.dummyWalkPrepare,
+            itemList = state.walkPrepareItemList,
             modifier = Modifier
-                .padding(horizontal = 16.dp)
+                .padding(horizontal = 16.dp),
+            addWalkItem = addWalkItem,
+            deleteWalkItem = deleteWalkItem
         )
 
         Spacer(modifier = Modifier.height(16.dp))
