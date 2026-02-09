@@ -143,6 +143,7 @@ private fun WalkReviewScreen(
         TopBar(
             title = "산책 기록하기",
             isBackVisible = true,
+            thickness = 2,
             onBackClick = navigateUp
         )
 

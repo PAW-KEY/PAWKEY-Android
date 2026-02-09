@@ -77,7 +77,8 @@ private fun WalkCompleteScreen(
                     shape = RoundedCornerShape(16.dp),
                     shadow = Shadow(
                         radius = 4f.dp,
-                        color = Color(0xff000000).copy(alpha = 0.25f),
+                        alpha = 0.25f,
+                        color = Color(0xff000000),
                     )
                 )
                 .background(Color.White, RoundedCornerShape(16.dp))

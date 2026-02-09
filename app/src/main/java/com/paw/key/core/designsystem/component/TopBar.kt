@@ -26,6 +26,7 @@ fun TopBar(
     onBackClick: () -> Unit = {},
     onClickTitle : () -> Unit = {},
     isBackVisible: Boolean = true,
+    thickness : Int = 1
 ) {
     Column (
         modifier = modifier
@@ -56,7 +57,7 @@ fun TopBar(
         }
 
         HorizontalDivider(
-            thickness = 1.dp,
+            thickness = thickness.dp,
             modifier = Modifier
                 .fillMaxWidth()
                 .background(
