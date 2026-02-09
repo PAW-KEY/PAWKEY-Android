@@ -57,7 +57,6 @@ fun LoginRoute(
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     val isLoginFormValid = viewModel.state.collectAsStateWithLifecycle().value.isLoginValid
-    val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
 
     LoginScreen(
