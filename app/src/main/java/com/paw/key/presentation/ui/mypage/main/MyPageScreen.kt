@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -19,8 +20,8 @@ import com.paw.key.core.designsystem.theme.PawKeyTheme
 import com.paw.key.core.util.PreferenceDataStore
 import com.paw.key.presentation.ui.mypage.courseinfo.model.CourseType
 import com.paw.key.presentation.ui.mypage.main.component.MyList
+import com.paw.key.presentation.ui.mypage.main.component.MyPageCard
 import com.paw.key.presentation.ui.mypage.main.component.OwnerCard
-import com.paw.key.presentation.ui.mypage.main.component.PetCard
 import com.paw.key.presentation.ui.mypage.main.component.SettingList
 import com.paw.key.presentation.ui.mypage.main.model.MyListState
 import com.paw.key.presentation.ui.mypage.main.model.MyPageState
@@ -38,7 +39,7 @@ fun MyPageRoute(
     modifier: Modifier = Modifier,
     viewModel: MyPageViewModel = hiltViewModel(),
 ) {
-    val state = viewModel.state.collectAsStateWithLifecycle()
+    val state by viewModel.state.collectAsStateWithLifecycle()
     val userId = PreferenceDataStore.getUserId()
 
     LaunchedEffect(Unit) {
@@ -47,7 +48,7 @@ fun MyPageRoute(
     }
 
     MyPageScreen(
-        state = state.value,
+        state = state,
         paddingValues = paddingValues,
         navigateUp = navigateUp,
         navigatePetProfile = navigatePetProfile,
@@ -98,16 +99,12 @@ fun MyPageScreen(
             }
 
             item {
-                PetCard(
-                    name = state.petName,
-                    age = state.petAge,
-                    gender = if (state.petGender == "M") {
-                        "남아"
-                    } else {
-                        "여아"
-                    },
-                    image = state.petImageUrl,
-                    onPetClick = navigatePetProfileList
+                MyPageCard(
+                    userName = "단지",
+                    userAge = "6개월",
+                    userGender = "여아",
+                    dogBreed = "우지",
+                    buttonTitle = "DBTI검사하러 가기",
                 )
             }
 
