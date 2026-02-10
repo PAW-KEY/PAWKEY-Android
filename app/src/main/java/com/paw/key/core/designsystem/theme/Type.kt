@@ -420,7 +420,7 @@ fun pawKeyTypography(): PawKeyTypography {
         ),
         mainButtonActive = pawKeyTextStyle(
             fontFamily = PretendardRegular,
-            fontWeight = FontWeight.Normal,
+            fontWeight = FontWeight.SemiBold,
             fontSize = 18.sp,
             lineHeight = 16.sp,
             letterSpacing = 0.em

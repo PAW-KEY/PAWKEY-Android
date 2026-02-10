@@ -4,16 +4,16 @@ import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.runtime.Composable
 import com.paw.key.R
-import com.paw.key.core.navigation.MainTabRoute
-import com.paw.key.presentation.ui.home.navigation.Home
-import com.paw.key.presentation.ui.course.entire.navigation.Course
-import com.paw.key.presentation.ui.community.navigation.Community
-import com.paw.key.presentation.ui.mypage.navigation.MyPage
-import com.paw.key.R.string.ic_home_description
-import com.paw.key.R.string.ic_course_description
 import com.paw.key.R.string.ic_community_description
+import com.paw.key.R.string.ic_course_description
+import com.paw.key.R.string.ic_home_description
 import com.paw.key.R.string.ic_mypage_description
+import com.paw.key.core.navigation.MainTabRoute
 import com.paw.key.core.navigation.Route
+import com.paw.key.presentation.ui.community.navigation.Community
+import com.paw.key.presentation.ui.course.entire.navigation.Course
+import com.paw.key.presentation.ui.home.navigation.Home
+import com.paw.key.presentation.ui.mypage.main.navigation.MyPage
 
 
 enum class MainTab(
