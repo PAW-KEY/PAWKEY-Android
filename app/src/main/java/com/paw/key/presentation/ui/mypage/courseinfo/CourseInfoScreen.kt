@@ -13,18 +13,21 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.paw.key.core.designsystem.component.TopBar
 import com.paw.key.core.designsystem.theme.PawKeyTheme
 import com.paw.key.presentation.ui.mypage.courseinfo.component.CourseRouteItem
 import com.paw.key.presentation.ui.mypage.courseinfo.model.CourseData
-import com.paw.key.presentation.ui.mypage.courseinfo.model.CourseType
+import com.paw.key.presentation.ui.mypage.courseinfo.viewmodel.CourseInfoViewModel
 
 
 @Composable
 fun CourseInfoRoute(
-    courseType: CourseType,
     navigateUp: () -> Unit,
+    viewModel: CourseInfoViewModel = hiltViewModel(),
 ) {
+    val courseType = viewModel.courseType
+
     CourseInfoScreen(
         title = courseType.courseType,
         courses = emptyList(),
