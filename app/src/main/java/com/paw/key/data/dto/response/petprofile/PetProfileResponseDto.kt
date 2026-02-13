@@ -1,5 +1,6 @@
 package com.paw.key.data.dto.response.petprofile
 
+import androidx.core.net.toUri
 import com.paw.key.domain.model.entity.petprofile.PetProfileEntity
 import com.paw.key.domain.model.entity.petprofile.TraitEntity
 import kotlinx.serialization.SerialName
@@ -35,7 +36,7 @@ data class PetProfileResponseDto(
     val traits: List<TraitDto>,
 
     @SerialName("walkCount")
-    val walkCount: Int
+    val walkCount: Int,
 ) {
     fun toEntity() = PetProfileEntity(
         petId = petId,
@@ -45,7 +46,7 @@ data class PetProfileResponseDto(
         age = age,
         isAgeKnown = isAgeKnown,
         breed = breed,
-        imageUrl = imageUrl,
+        imageUrl = imageUrl.toUri(),
         walkCount = walkCount,
         traits = traits.map { it.toEntity() }
     )
@@ -57,9 +58,8 @@ data class TraitDto(
     val category: String,
 
     @SerialName("option")
-    val option: String
-)
-{
+    val option: String,
+) {
     fun toEntity() = TraitEntity(
         category = category,
         option = option

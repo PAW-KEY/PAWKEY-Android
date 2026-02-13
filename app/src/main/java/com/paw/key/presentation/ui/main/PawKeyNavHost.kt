@@ -19,13 +19,11 @@ import com.paw.key.presentation.ui.dummy.next.dummyNextNavGraph
 import com.paw.key.presentation.ui.home.navigation.homeLocationSettingNavGraph
 import com.paw.key.presentation.ui.home.navigation.homeNavGraph
 import com.paw.key.presentation.ui.login.navigation.loginNavGraph
-import com.paw.key.presentation.ui.mypage.navigation.archivedCourseNavGraph
-import com.paw.key.presentation.ui.mypage.navigation.archivedDetailNavGraph
-import com.paw.key.presentation.ui.mypage.navigation.myPageNavGraph
-import com.paw.key.presentation.ui.mypage.navigation.petProfileNavGraph
-import com.paw.key.presentation.ui.mypage.navigation.savedCourseNavGraph
-import com.paw.key.presentation.ui.mypage.navigation.savedDetailNavGraph
-import com.paw.key.presentation.ui.mypage.navigation.userProfileNavGraph
+import com.paw.key.presentation.ui.mypage.courseinfo.navigation.courseInfoNavGraph
+import com.paw.key.presentation.ui.mypage.main.navigation.myPageNavGraph
+import com.paw.key.presentation.ui.mypage.petinfo.navigation.petProfileListNavGraph
+import com.paw.key.presentation.ui.mypage.petinfo.navigation.petProfileNavGraph
+import com.paw.key.presentation.ui.mypage.userinfo.navigation.userProfileNavGraph
 import com.paw.key.presentation.ui.onboard.navigation.onboardingNavGraph
 import com.paw.key.presentation.ui.region.navigation.regionalNavGraph
 import com.paw.key.presentation.ui.signup.navigation.signUpNavGraph
@@ -110,50 +108,24 @@ fun PawKeyNavHost(
         myPageNavGraph(
             paddingValues = paddingValues,
             navigateUp = navigator::navigateUp,
-            navigateUserProfile = navigator::navigateUserProfile,
             navigatePetProfile = navigator::navigatePetProfile,
-            navigateArchivedCourse = navigator::navigateArchivedCourse,
-            navigateSavedCourse = navigator::navigateSavedCourse,
-            snackBarHostState = snackbarHostState
-        )
-
-        savedCourseNavGraph(
-            paddingValues = paddingValues,
-            navigateUp = navigator::navigateUp,
-            navigateNext = { routeId, pageId ->
-                navigator.navigateSavedDetail(
-                    pageId = pageId,
-                    routeId = routeId
-                )
+            navigateCourseInfo = { courseType ->
+                navigator.navigateCourseInfo(courseType)
             },
-            snackBarHostState = snackbarHostState
+            navigatePetProfileList = navigator::navigatePetProfileList,
+            navigateUserProfile = navigator::navigateUserProfile,
         )
 
-        archivedCourseNavGraph(
-            navigateUp = navigator::navigateUp,
-            navigateNext = { routeId, pageId ->
-                navigator.navigateArchivedDetail(
-                    pageId = pageId,
-                    routeId = routeId
-                )
-            },
-            modifier = modifier
-        )
-
-        savedDetailNavGraph(
-            navigateUp = navigator::navigateUp,
-            navigateToWalk = navigator::navigateWalkCourse,
-            snackBarHostState = snackbarHostState
-        )
-
-        archivedDetailNavGraph(
-            // Todo 그냥 리스트에서 상세보기 후 뒤로가기
+        courseInfoNavGraph(
             navigateUp = navigator::navigateUp,
             /*navigateDetail = {
                 navigator.navController.navigateCourse(index = 1, navOptions = null)
             },*/
             navigateToSharedWalk = { routeId, pageId ->
-
+                navigator.navigateSharedWalkCourse(
+                    routeId = routeId,
+                    pageId = pageId
+                )
             },
             modifier = modifier
         )
@@ -167,7 +139,11 @@ fun PawKeyNavHost(
 
         petProfileNavGraph(
             navigateUp = navigator::navigateUp,
-            modifier = modifier
+        )
+
+        petProfileListNavGraph(
+            navigateUp = navigator::navigateUp,
+            navigatePetProfile = navigator::navigatePetProfile,
         )
 
         dummyNavGraph(

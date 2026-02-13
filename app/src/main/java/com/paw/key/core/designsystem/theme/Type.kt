@@ -419,10 +419,10 @@ fun pawKeyTypography(): PawKeyTypography {
             letterSpacing = 0.em
         ),
         mainButtonActive = pawKeyTextStyle(
-            fontFamily = PretendardSemiBold,
+            fontFamily = PretendardRegular,
             fontWeight = FontWeight.SemiBold,
             fontSize = 18.sp,
-            lineHeight = 20.sp,
+            lineHeight = 16.sp,
             letterSpacing = 0.em
         ),
         subButtonDefault = pawKeyTextStyle(
@@ -433,8 +433,8 @@ fun pawKeyTypography(): PawKeyTypography {
             letterSpacing = 0.em
         ),
         subButtonActive = pawKeyTextStyle(
-            fontFamily = PretendardMedium,
-            fontWeight = FontWeight.Medium,
+            fontFamily = PretendardSemiBold,
+            fontWeight = FontWeight.SemiBold,
             fontSize = 12.sp,
             lineHeight = 16.sp,
             letterSpacing = 0.em
