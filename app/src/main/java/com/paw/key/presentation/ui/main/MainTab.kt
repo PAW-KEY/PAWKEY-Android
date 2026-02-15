@@ -12,7 +12,7 @@ import com.paw.key.core.navigation.Route
 import com.paw.key.presentation.ui.community.navigation.Community
 import com.paw.key.presentation.ui.course.navigation.WalkPrepare
 import com.paw.key.presentation.ui.home.navigation.Home
-import com.paw.key.presentation.ui.mypage.navigation.MyPage
+import com.paw.key.presentation.ui.mypage.main.navigation.MyPage
 
 
 enum class MainTab(

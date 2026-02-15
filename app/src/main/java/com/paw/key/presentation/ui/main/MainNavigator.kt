@@ -107,14 +107,6 @@ class MainNavigator(
         navController.navigateSignUp(navOptions)
     }
 
-
-    fun navigateCourse(index: Int = 0, navOptions: NavOptions? = null) {
-        navController.navigateCourse(
-            index = index,
-            navOptions = navOptions
-        )
-    }
-
     fun navigateHome(navOptions: NavOptions? = null) {
         navController.navigateHome(navOptions = navOptions)
     }
@@ -123,18 +115,7 @@ class MainNavigator(
         navController.navigateHomeLocationSetting(navOptions = navOptions)
     }
 
-    fun navigateArchivedDetail(
-        routeId: Int,
-        pageId : Int,
-        navOptions: NavOptions? = null
-    ) {
-        navController.navigateArchivedDetail(
-            pageId = pageId,
-            routeId = routeId,
-            navOptions = navOptions
-        )
-    }
-
+    // walk course
     fun navigateWalkCourse(navOptions: NavOptions? = null) {
         navController.navigateWalkCourse(navOptions = navOptions)
     }
@@ -143,6 +124,14 @@ class MainNavigator(
         navOptions: NavOptions? = null
     ) {
         navController.navigateWalkReview(
+            navOptions = navOptions
+        )
+    }
+
+    fun navigateWalkPrepare(
+        navOptions: NavOptions? = null
+    ) {
+        navController.navigateWalkPrepare(
             navOptions = navOptions
         )
     }

@@ -6,6 +6,7 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideIn
 import androidx.compose.animation.slideOut
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -23,7 +24,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.dropShadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.shadow.Shadow
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
@@ -51,26 +54,42 @@ fun MainBottomBar(
         exit = fadeOut() + slideOut { IntOffset(0, it.height) },
         modifier = modifier
     ) {
-        Surface(
-            shape = RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp),
-            color = Color.White,
-            shadowElevation = 10.dp,
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Row(
-                modifier = Modifier
-                    .padding(top = 16.dp, bottom = 10.dp, start = 32.dp, end = 32.dp)
-                    .selectableGroup(),
-                horizontalArrangement = Arrangement.spacedBy(40.dp, Alignment.CenterHorizontally),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                tabs.forEach { tab ->
-                    MainNavigationBarItem(
-                        tab = tab,
-                        selected = tab == currentTab,
-                        onClick = { onTabSelected(tab) },
-                        modifier = Modifier.weight(1f)
+        Box(
+            modifier = Modifier
+                .dropShadow(
+                    shape = RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp),
+                    shadow = Shadow(
+                        radius = 7.dp,
+                        alpha = 0.15f,
+                        color = PawKeyTheme.colors.contents,
                     )
+                )
+        ) {
+            Surface(
+                shape = RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp),
+                color = Color.White,
+                modifier = Modifier
+                    .fillMaxWidth()
+            ) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 16.dp, bottom = 10.dp, start = 32.dp, end = 32.dp)
+                        .selectableGroup(),
+                    horizontalArrangement = Arrangement.spacedBy(
+                        40.dp,
+                        Alignment.CenterHorizontally
+                    ),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    tabs.forEach { tab ->
+                        MainNavigationBarItem(
+                            tab = tab,
+                            selected = tab == currentTab,
+                            onClick = { onTabSelected(tab) },
+                            modifier = Modifier.weight(1f)
+                        )
+                    }
                 }
             }
         }
