@@ -16,7 +16,7 @@ fun NavController.navigateWalkPrepare(
 }
 
 fun NavController.navigateWalkComplete(
-    navOptions: NavOptions?,
+    navOptions: NavOptions? = null,
 ) {
     navigate(WalkComplete, navOptions)
 }

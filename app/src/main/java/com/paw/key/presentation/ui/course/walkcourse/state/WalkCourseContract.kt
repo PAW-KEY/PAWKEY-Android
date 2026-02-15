@@ -31,6 +31,7 @@ sealed interface WalkCourseSideEffect {
     data class NavigateNext(val regionId: Int): WalkCourseSideEffect
 
     data object NavigateReview: WalkCourseSideEffect
+    data object NavigateComplete: WalkCourseSideEffect
 }
 
 sealed class WalkCourseRecord (

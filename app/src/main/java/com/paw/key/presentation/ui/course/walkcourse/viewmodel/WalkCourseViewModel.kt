@@ -1,7 +1,6 @@
 package com.paw.key.presentation.ui.course.walkcourse.viewmodel
 
 import android.location.Location
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.paw.key.core.extension.toLatLng
@@ -33,6 +32,7 @@ class WalkCourseViewModel @Inject constructor(
     private val walkSharedResultRepository: WalkSharedResultRepository,
     private val walkCourseRepository: WalkCourseRepository
 ) : ViewModel(), RealTimeLocationListener {
+    // Todo : saveStateHandle로 isShared 받아서 처리하기
     private val _state = MutableStateFlow(WalkCourseState())
     val state: StateFlow<WalkCourseState> = _state.asStateFlow()
 
@@ -73,7 +73,8 @@ class WalkCourseViewModel @Inject constructor(
             )
 
             currentState.copy(
-                recordingState = newRecordingState
+                recordingState = newRecordingState,
+                isStopTracking = false
             )
         }
         startTimer()
@@ -206,21 +207,9 @@ class WalkCourseViewModel @Inject constructor(
     // Todo: 서버 내용 확인하고 넘기기
     fun stopTracking() {
         viewModelScope.launch {
-            /*val currentWalkState = _state.value
-
-            try {
-                walkSharedResultRepository.saveResult(
-                    bitmap = currentWalkState.mapState.capturedMapBitmap,
-                    totalTime = currentWalkState.totalTimeMillis,
-                    distance = currentWalkState.mapState.totalDistance,
-                    steps = currentWalkState.stepCounterState.sessionSteps.toInt(),
-                    points = currentWalkState.mapState.poiPoints.toList()
-                )
-                _sideEffect.emit(WalkCourseSideEffect.ShowSnackBar("산책 기록이 성공적으로 저장되었습니다."))
-                _sideEffect.emit(WalkCourseSideEffect.NavigateReview)
-            } catch (e: Exception) {
-                _sideEffect.emit(WalkCourseSideEffect.ShowSnackBar("산책 기록 저장 실패: ${e.localizedMessage}"))
-            }*/
+            if (_state.value.isStopTracking) {
+                _sideEffect.emit(WalkCourseSideEffect.NavigateComplete)
+            }
 
             _state.update {
                 it.copy(

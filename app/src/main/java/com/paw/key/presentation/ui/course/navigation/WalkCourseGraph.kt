@@ -32,7 +32,7 @@ fun NavGraphBuilder.walkCourseGraph(
             WalkCourseRoute(
                 paddingValues = paddingValues,
                 navigateUp = navController::navigateUp,
-                //navigateWalkComplete = navController::navigateWalkComplete,
+                navigateWalkComplete = navController::navigateWalkComplete,
                 navigateReview = navigateWalkReview
             )
         }
@@ -40,7 +40,7 @@ fun NavGraphBuilder.walkCourseGraph(
         composable<WalkComplete> {
             WalkCompleteRoute(
                 paddingValues = paddingValues,
-                //navigateReview = navigateWalkReview
+                navigateReview = navigateWalkReview
             )
         }
     }
