@@ -7,11 +7,9 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -35,12 +33,11 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.paw.key.R
 import com.paw.key.core.designsystem.component.DokiBorderButton
 import com.paw.key.core.designsystem.component.DokiButton
-import com.paw.key.core.designsystem.component.InfoChip
 import com.paw.key.core.designsystem.component.TopBar
 import com.paw.key.core.designsystem.theme.PawKeyTheme
 import com.paw.key.presentation.ui.course.walkreview.component.WalkReviewDialog
 import com.paw.key.presentation.ui.course.walkreview.component.WalkReviewImageRow
-import com.paw.key.presentation.ui.course.walkreview.component.WalkReviewInfoHolder
+import com.paw.key.core.designsystem.component.walk.WalkReviewInfoHolder
 import com.paw.key.presentation.ui.course.walkreview.component.WalkReviewMultipleFilter
 import com.paw.key.presentation.ui.course.walkreview.component.WalkReviewSingleFilter
 import com.paw.key.presentation.ui.course.walkreview.state.WalkReviewState
@@ -287,7 +284,7 @@ private fun WalkReviewScreen(
                     ) {
                         if (state.walkReviewTitle.isEmpty()) {
                             Text(
-                                text = "후기 제목을 입력해주세요",
+                                text = "후기 제목을 14글자 이내로 입력해주세요",
                                 style = PawKeyTheme.typography.bodyDefault,
                                 color = PawKeyTheme.colors.defaultMiddle
                             )
@@ -319,7 +316,7 @@ private fun WalkReviewScreen(
                     ) {
                         if (state.walkReviewContent.isEmpty()) {
                             Text(
-                                text = "산책에 대한 내용을 작성해주세요",
+                                text = "산책에 대한 내용을 250자 이내로 작성해주세요",
                                 style = PawKeyTheme.typography.bodyDefault,
                                 color = PawKeyTheme.colors.defaultMiddle
                             )
@@ -343,7 +340,7 @@ private fun WalkReviewScreen(
 
             DokiButton(
                 text = "산책 기록 공유하기",
-                enabled = true,
+                enabled = state.walkReviewTitle.isNotEmpty() && state.walkReviewContent.isNotEmpty(),
                 onClick = {
                     onClickComplete(true)
                 }

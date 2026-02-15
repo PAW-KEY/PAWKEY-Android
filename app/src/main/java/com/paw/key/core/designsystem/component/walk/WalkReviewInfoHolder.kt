@@ -1,4 +1,4 @@
-package com.paw.key.presentation.ui.course.walkreview.component
+package com.paw.key.core.designsystem.component.walk
 
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.layout.Arrangement

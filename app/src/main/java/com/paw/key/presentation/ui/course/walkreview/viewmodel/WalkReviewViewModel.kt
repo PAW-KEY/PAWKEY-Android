@@ -31,18 +31,20 @@ class WalkReviewViewModel @Inject constructor(
         }
     }
 
-    fun updateReviewTitle(title : String) {
+    fun updateReviewTitle(title: String) {
+        val limitedTitle = title.take(14)
+
         _state.update {
-            it.copy(
-                walkReviewTitle = title
-            )
+            it.copy(walkReviewTitle = limitedTitle)
         }
     }
 
     fun updateReviewContent(content : String) {
+        val limitedContent = content.take(250)
+
         _state.update {
             it.copy(
-                walkReviewContent = content
+                walkReviewContent = limitedContent
             )
         }
     }

@@ -4,6 +4,7 @@ import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 
 data class WalkReviewFilterModel(
+    // Todo : 서버 내용으로 변경
     val confusionSingleFilterList: ImmutableList<String> = persistentListOf("적음", "평범", "많음"),
     val frequencySingleFilterList: ImmutableList<String> = persistentListOf("교류 없음", "보통", "교류 활발"),
 
