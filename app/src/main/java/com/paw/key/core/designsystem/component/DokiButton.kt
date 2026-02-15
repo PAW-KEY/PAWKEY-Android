@@ -30,7 +30,13 @@ fun DokiButton(
 
     val textColor = when {
         enabled -> PawKeyTheme.colors.background
-        else -> PawKeyTheme.colors.defaultDark
+        else -> PawKeyTheme.colors.defaultMiddle
+    }
+
+    val typo = when {
+        isDialog -> PawKeyTheme.typography.subTitle
+        enabled -> PawKeyTheme.typography.mainButtonActive
+        else -> PawKeyTheme.typography.mainButtonDefault
     }
 
     Box(
@@ -49,7 +55,7 @@ fun DokiButton(
     ) {
         Text(
             text = text,
-            style = if (isDialog) PawKeyTheme.typography.subTitle else PawKeyTheme.typography.mainButtonDefault,
+            style = typo,
             color = textColor
         )
     }
