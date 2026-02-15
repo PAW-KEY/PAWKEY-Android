@@ -2,7 +2,7 @@ package com.paw.key.presentation.ui.home.viewmodel
 
 import androidx.lifecycle.ViewModel
 import com.paw.key.core.util.UiState
-import com.paw.key.presentation.ui.home.model.WalkingRouteUiModel
+import com.paw.key.core.model.WalkingRouteUiModel
 import com.paw.key.presentation.ui.home.state.HomeSideEffect
 import com.paw.key.presentation.ui.home.state.HomeState
 import dagger.hilt.android.lifecycle.HiltViewModel
