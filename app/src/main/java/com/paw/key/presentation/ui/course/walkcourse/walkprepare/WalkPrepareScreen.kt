@@ -35,7 +35,8 @@ fun WalkPrepareRoute(
         state = state,
         navigateWalkCourse = navigateWalkCourse,
         addWalkItem = viewModel::addWalkItem,
-        deleteWalkItem = viewModel::deleteWalkItem
+        deleteWalkItem = viewModel::deleteWalkItem,
+        clearLastAddedItemId = viewModel::clearLastAddedItemId
     )
 }
 
@@ -45,7 +46,8 @@ private fun WalkPrepareScreen(
     state: WalkPrepareState,
     navigateWalkCourse: () -> Unit = {},
     addWalkItem : () -> Unit = {},
-    deleteWalkItem : (Int) -> Unit = {}
+    deleteWalkItem : (Int) -> Unit = {},
+    clearLastAddedItemId: () -> Unit = {}
 ) {
     Column (
         modifier = Modifier
@@ -73,6 +75,8 @@ private fun WalkPrepareScreen(
 
         WalkPrepareBody(
             itemList = state.walkPrepareItemList,
+            lastAddedItemId = state.lastAddedItemId,
+            onFocusHandled = clearLastAddedItemId,
             modifier = Modifier
                 .padding(horizontal = 16.dp),
             addWalkItem = addWalkItem,

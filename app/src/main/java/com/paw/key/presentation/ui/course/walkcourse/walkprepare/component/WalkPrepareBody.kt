@@ -12,21 +12,27 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -38,6 +44,7 @@ import com.paw.key.presentation.ui.course.walkcourse.walkprepare.model.WalkPrepa
 import com.paw.key.presentation.ui.course.walkcourse.walkprepare.state.WalkPrepareState
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
+import kotlinx.coroutines.launch
 
 @Composable
 fun WalkPrepareBody(
@@ -45,8 +52,20 @@ fun WalkPrepareBody(
     addWalkItem : () -> Unit = {},
     deleteWalkItem : (Int) -> Unit = {},
     itemList : ImmutableList<WalkPrepareItemModel> = persistentListOf(),
+    lastAddedItemId: Int? = null,
+    onFocusHandled: () -> Unit = {}
 ) {
     var selectedIds by remember { mutableStateOf(setOf<Int>()) }
+    val listState = rememberLazyListState()
+    val coroutineScope = rememberCoroutineScope()
+
+    LaunchedEffect(itemList.size) {
+        if (itemList.isNotEmpty()) {
+            coroutineScope.launch {
+                listState.animateScrollToItem(itemList.lastIndex)
+            }
+        }
+    }
 
     Column (
         modifier = modifier
@@ -64,7 +83,9 @@ fun WalkPrepareBody(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        LazyColumn {
+        LazyColumn (
+            state = listState
+        ) {
             itemsIndexed(
                 items = itemList,
                 key = { _, item -> item.id }
@@ -80,7 +101,9 @@ fun WalkPrepareBody(
                                 selectedIds - item.id
                             }
                         },
-                        deleteWalkItem = deleteWalkItem
+                        deleteWalkItem = deleteWalkItem,
+                        shouldFocus = lastAddedItemId == item.id,
+                        onFocusHandled = onFocusHandled
                     )
 
                     if (index < itemList.lastIndex) {
@@ -123,8 +146,28 @@ private fun WalkPrepareItem(
     onCheckBoxClick: (Boolean) -> Unit,
     deleteWalkItem : (Int) -> Unit,
     itemModel: WalkPrepareItemModel,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    shouldFocus: Boolean = false,
+    onFocusHandled: () -> Unit = {}
 ) {
+    val focusRequester = remember { FocusRequester() }
+    val keyboardController = LocalSoftwareKeyboardController.current
+
+    val textStyle = when {
+        isSelected -> PawKeyTheme.typography.subButtonActive
+            .copy(color = PawKeyTheme.colors.defaultDark)
+        else -> PawKeyTheme.typography.subButtonDefault
+            .copy(color = PawKeyTheme.colors.defaultMiddle)
+    }
+
+    LaunchedEffect(shouldFocus) {
+        if (shouldFocus) {
+            focusRequester.requestFocus()
+            keyboardController?.show()
+            onFocusHandled()
+        }
+    }
+
     Row (
         modifier = modifier
             .noRippleClickable {
@@ -142,9 +185,7 @@ private fun WalkPrepareItem(
 
         BasicTextField(
             state = itemModel.walkItem,
-            textStyle = PawKeyTheme.typography.subButtonDefault.copy(
-                color = if (isSelected) PawKeyTheme.colors.background else PawKeyTheme.colors.defaultMiddle
-            ),
+            textStyle = textStyle,
             decorator = { innerTextField ->
                 Box(
                     contentAlignment = Alignment.CenterStart,
@@ -160,7 +201,9 @@ private fun WalkPrepareItem(
                     innerTextField()
                 }
             },
-            modifier = Modifier.weight(1f)
+            modifier = Modifier
+                .weight(1f)
+                .focusRequester(focusRequester)
         )
 
         Spacer(modifier = Modifier.weight(1f))
@@ -184,7 +227,7 @@ private fun CustomCheckBox(
     modifier: Modifier = Modifier
 ) {
     val checkMarkTint = if (isSelected) {
-        PawKeyTheme.colors.primary
+        PawKeyTheme.colors.background
     } else {
         PawKeyTheme.colors.defaultMiddle
     }

@@ -25,15 +25,17 @@ class WalkPrepareViewModel @Inject constructor(
         val newItem = WalkPrepareItemModel(id = newId, walkItem = TextFieldState(""))
 
         _state.update {
-            it.copy(walkPrepareItemList = it.walkPrepareItemList.add(newItem))
+            it.copy(
+                walkPrepareItemList = it.walkPrepareItemList.add(newItem),
+                lastAddedItemId = newId
+            )
         }
     }
 
     fun deleteWalkItem(id : Int) {
-        val currentList = _state.value.walkPrepareItemList
-
-        _state.update {
-            it.copy(walkPrepareItemList = currentList.removeAt(id))
+        _state.update { state ->
+            val newList = state.walkPrepareItemList.filter { it.id != id }.toPersistentList()
+            state.copy(walkPrepareItemList = newList)
         }
     }
 
@@ -44,5 +46,9 @@ class WalkPrepareViewModel @Inject constructor(
             }.toPersistentList()
             state.copy(walkPrepareItemList = newList)
         }
+    }
+
+    fun clearLastAddedItemId() {
+        _state.update { it.copy(lastAddedItemId = null) }
     }
 }
