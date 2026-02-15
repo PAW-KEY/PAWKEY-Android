@@ -41,13 +41,15 @@ import com.paw.key.presentation.ui.course.walkcourse.walkcomplete.state.WalkComp
 @Composable
 fun WalkCompleteRoute(
     paddingValues: PaddingValues,
+    navigateReview: () -> Unit = {},
     viewModel: WalkCompleteViewModel = hiltViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
 
     WalkCompleteScreen(
         paddingValues = paddingValues,
-        state = state
+        state = state,
+        navigateReview = navigateReview
     )
 }
 
@@ -55,6 +57,7 @@ fun WalkCompleteRoute(
 private fun WalkCompleteScreen(
     paddingValues: PaddingValues,
     state: WalkCompleteState,
+    navigateReview: () -> Unit = {}
 ) {
     Column (
         modifier = Modifier
@@ -146,10 +149,12 @@ private fun WalkCompleteScreen(
         DokiButton(
             text = "후기 작성하기",
             enabled = true,
-            onClick = {},
+            onClick = navigateReview,
             modifier = Modifier
                 .padding(horizontal = 16.dp)
         )
+
+        Spacer(modifier = Modifier.height(16.dp))
     }
 }
 
