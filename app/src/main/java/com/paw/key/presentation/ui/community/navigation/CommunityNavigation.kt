@@ -25,9 +25,6 @@ fun NavGraphBuilder.communityNavGraph(
     composable<Community> {
         CommunityRoute(
             paddingValues = paddingValues,
-            navigateUp = navigateUp,
-            navigateNext = navigateNext,
-            snackBarHostState = snackBarHostState,
         )
     }
 }
