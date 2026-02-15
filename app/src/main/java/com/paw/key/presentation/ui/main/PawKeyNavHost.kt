@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.navOptions
 import com.paw.key.presentation.ui.community.navigation.communityNavGraph
+import com.paw.key.presentation.ui.course.navigation.navigateWalkPrepare
 import com.paw.key.presentation.ui.course.navigation.walkCourseGraph
 import com.paw.key.presentation.ui.course.walkreview.navigation.walkReviewNavGraph
 import com.paw.key.presentation.ui.dummy.navigation.dummyNavGraph
@@ -68,9 +69,7 @@ fun PawKeyNavHost(
         homeNavGraph(
             paddingValues = paddingValues,
             navigateUp = navigator::navigateUp,
-            navigateNext = navigator::navigateWalkCourse,
-            navigateHomeLocationSetting = navigator::navigateHomeLocationSetting,
-            modifier = modifier,
+            navigateToCourse = navigator::navigateWalkPrepare
         )
 
         homeLocationSettingNavGraph(
@@ -121,13 +120,13 @@ fun PawKeyNavHost(
             /*navigateDetail = {
                 navigator.navController.navigateCourse(index = 1, navOptions = null)
             },*/
-            navigateToSharedWalk = { routeId, pageId ->
-                navigator.navigateSharedWalkCourse(
+            /*navigateToSharedWalk = { routeId, pageId ->
+                *//*navigator.navigateSharedWalkCourse(
                     routeId = routeId,
                     pageId = pageId
-                )
+                )*//*
             },
-            modifier = modifier
+            modifier = modifier*/
         )
 
         userProfileNavGraph(
