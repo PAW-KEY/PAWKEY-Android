@@ -60,7 +60,7 @@ private fun TraitBlocks(
     score: Int,
     modifier: Modifier = Modifier,
 ) {
-    val activeColor = PawKeyTheme.colors.primary
+    val activeColor = PawKeyTheme.colors.primaryGra5
     val inactiveColor = PawKeyTheme.colors.defaultButton
 
     // dominantSide와 score에 따라 블록 색상 결정

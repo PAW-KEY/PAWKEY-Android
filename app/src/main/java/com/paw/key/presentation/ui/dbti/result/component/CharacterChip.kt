@@ -27,7 +27,7 @@ fun CharacterChip(
             fontSize = 12.sp,
             fontWeight = FontWeight.Medium,
             color = PawKeyTheme.colors.primary,
-            style = PawKeyTheme.typography.caption12M,
+            style = PawKeyTheme.typography.subButtonActive,
             modifier = Modifier.padding(8.dp)
         )
     }

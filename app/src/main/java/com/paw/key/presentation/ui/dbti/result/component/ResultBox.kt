@@ -34,7 +34,7 @@ fun ResultBox(
     imageUrl: String?,
     keywords: List<String>,
     description: String,
-    analysis: List<TraitAnalysis>,  // TraitLevel 대신 TraitAnalysis
+    analysis: List<TraitAnalysis>,
     modifier: Modifier = Modifier,
 ) {
     Surface(
@@ -49,7 +49,6 @@ fun ResultBox(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(20.dp)
         ) {
-            // DBTI Result Title Section
             Column(
                 modifier = Modifier.width(210.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -70,7 +69,7 @@ fun ResultBox(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(
-                        text = type,
+                        text = name,
                         fontSize = 24.sp,
                         fontWeight = FontWeight.Bold,
                         color = PawKeyTheme.colors.contents,
@@ -79,7 +78,7 @@ fun ResultBox(
                         style = PawKeyTheme.typography.header1
                     )
                     Text(
-                        text = name,
+                        text = type,
                         fontSize = 28.sp,
                         fontWeight = FontWeight.Bold,
                         color = PawKeyTheme.colors.primary,
@@ -89,14 +88,11 @@ fun ResultBox(
                     )
                 }
             }
-
-            // DBTI Group Section
             Column(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(24.dp)
             ) {
-                // Image
                 if (imageUrl != null) {
                     AsyncImage(
                         model = ImageRequest.Builder(LocalContext.current)
@@ -115,7 +111,6 @@ fun ResultBox(
                     )
                 }
 
-                // Keywords (Character Chips)
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally),
                     modifier = Modifier.fillMaxWidth()
@@ -125,7 +120,6 @@ fun ResultBox(
                     }
                 }
 
-                // Description
                 Text(
                     text = description,
                     fontSize = 14.sp,
@@ -139,7 +133,6 @@ fun ResultBox(
                 )
             }
 
-            // Analysis (Trait Bars)
             Column(
                 modifier = Modifier.fillMaxWidth(),
                 verticalArrangement = Arrangement.spacedBy(16.dp)

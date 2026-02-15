@@ -1,5 +1,6 @@
 package com.paw.key.presentation.ui.dbti.component
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -8,6 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
@@ -19,7 +21,7 @@ import com.paw.key.core.designsystem.theme.PawKeyTheme
 import com.paw.key.core.extension.noRippleClickable
 
 @Composable
-fun SelectionCard(
+fun SelectCard(
     imageUrl: String?,
     topText: String,
     bottomText: String,
@@ -27,6 +29,12 @@ fun SelectionCard(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val backgroundColor = if (isSelected) {
+        PawKeyTheme.colors.opacity5Primary
+    } else {
+        Color.Transparent
+    }
+
     val borderColor = if (isSelected) {
         PawKeyTheme.colors.primary
     } else {
@@ -47,19 +55,19 @@ fun SelectionCard(
 
     Column(
         modifier = modifier
-            .width(160.dp)
+            .aspectRatio(159.5f / 219.31f) // 비율로 크기 조정
             .clip(RoundedCornerShape(8.dp))
+            .background(backgroundColor)
             .border(
-                width = 2.dp,
+                width = 1.dp,
                 color = borderColor,
                 shape = RoundedCornerShape(8.dp)
             )
             .noRippleClickable(onClick = onClick)
-            .padding(horizontal = 34.75.dp, vertical = 38.dp),
+            .padding(horizontal = 16.dp, vertical = 20.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(12.dp)
+        verticalArrangement = Arrangement.spacedBy(12.dp, Alignment.CenterVertically)
     ) {
-        // 이미지
         AsyncImage(
             model = ImageRequest.Builder(LocalContext.current)
                 .data(imageUrl)
@@ -72,23 +80,28 @@ fun SelectionCard(
             contentScale = ContentScale.Crop
         )
 
-        // 텍스트들
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(2.dp)
+            verticalArrangement = Arrangement.Center
         ) {
             Text(
                 text = topText,
                 color = textColor,
                 style = textStyle,
-                textAlign = TextAlign.Center
+                textAlign = TextAlign.Center,
+                maxLines = 1,
+                modifier = Modifier.fillMaxWidth()
             )
+
+            Spacer(modifier = Modifier.height(2.dp))
 
             Text(
                 text = bottomText,
                 color = textColor,
                 style = textStyle,
-                textAlign = TextAlign.Center
+                textAlign = TextAlign.Center,
+                maxLines = 1,
+                modifier = Modifier.fillMaxWidth()
             )
         }
     }
@@ -99,27 +112,25 @@ fun SelectionCard(
 private fun SelectionCardPreview() {
     PawKeyTheme {
         Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(24.dp),
+            modifier = Modifier.padding(16.dp),
             horizontalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            // Default
-            SelectionCard(
+            SelectCard(
                 imageUrl = null,
-                topText = "text",
-                bottomText = "text",
+                topText = "잠깐 눈치만 보고",
+                bottomText = "거리를 유지해요",
                 isSelected = false,
-                onClick = {}
+                onClick = {},
+                modifier = Modifier.weight(1f)
             )
 
-            // Selected
-            SelectionCard(
+            SelectCard(
                 imageUrl = null,
-                topText = "text",
-                bottomText = "text",
+                topText = "먼저 다가가서",
+                bottomText = "인사하고 놀자고 해요",
                 isSelected = true,
-                onClick = {}
+                onClick = {},
+                modifier = Modifier.weight(1f)
             )
         }
     }
