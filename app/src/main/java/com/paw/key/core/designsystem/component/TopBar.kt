@@ -1,5 +1,6 @@
 package com.paw.key.core.designsystem.component
 
+import androidx.annotation.DrawableRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -11,6 +12,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -26,7 +28,9 @@ fun TopBar(
     onBackClick: () -> Unit = {},
     onClickTitle : () -> Unit = {},
     isBackVisible: Boolean = true,
-    thickness : Int = 1
+    thickness : Int = 1,
+    onClickSuffix : () -> Unit = {},
+    @DrawableRes suffix: Int? = null,
 ) {
     Column (
         modifier = modifier
@@ -54,6 +58,17 @@ fun TopBar(
                     .align(Alignment.Center)
                     .noRippleClickable(onClickTitle)
             )
+
+            if (suffix != null) {
+                Icon(
+                    imageVector = ImageVector.vectorResource(suffix),
+                    contentDescription = null,
+                    tint = Color.Unspecified,
+                    modifier = Modifier
+                        .align(Alignment.CenterEnd)
+                        .noRippleClickable(onClick = onClickSuffix)
+                )
+            }
         }
 
         HorizontalDivider(
@@ -76,7 +91,8 @@ private fun TopBarPreview() {
             onBackClick = {},
             isBackVisible = true,
             modifier = Modifier
-                .fillMaxWidth()
+                .fillMaxWidth(),
+            suffix = R.drawable.ic_course_list_refresh
         )
     }
 }
