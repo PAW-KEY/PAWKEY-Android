@@ -21,7 +21,7 @@ fun DokiBorderButton(
     text: String,
     enabled: Boolean,
     onClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val textColor = when {
         enabled -> PawKeyTheme.colors.primary
