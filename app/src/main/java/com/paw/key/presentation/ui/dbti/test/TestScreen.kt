@@ -54,18 +54,15 @@ fun TestScreen(
                 ) {
                     Text(
                         text = categoryName,
-                        fontSize = 16.sp,
                         fontWeight = FontWeight.SemiBold,
                         color = PawKeyTheme.colors.primary,
-                        style = PawKeyTheme.typography.body16Sb
+                        style = PawKeyTheme.typography.bodyActive
                     )
 
                     Spacer(modifier = Modifier.height(16.dp))
 
                     Text(
                         text = questionText,
-                        fontSize = 20.sp,
-                        fontWeight = FontWeight.Bold,
                         color = PawKeyTheme.colors.contents,
                         textAlign = TextAlign.Center,
                         lineHeight = 28.sp,
@@ -74,11 +71,11 @@ fun TestScreen(
                     )
                 }
 
-                Spacer(modifier = Modifier.weight(30f)) // 텍스트 ↔ 카드 (비율로 조정)
+                Spacer(modifier = Modifier.weight(30f))
 
-                Spacer(modifier = Modifier.weight(219.31f)) // 카드 높이만큼
+                Spacer(modifier = Modifier.weight(219.31f))
 
-                Spacer(modifier = Modifier.weight(1f)) // 나머지 공간
+                Spacer(modifier = Modifier.weight(1f))
 
                 DogkyButton(
                     text = "다음으로",

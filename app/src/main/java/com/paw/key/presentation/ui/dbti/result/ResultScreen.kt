@@ -2,8 +2,6 @@ package com.paw.key.presentation.ui.dbti.result
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -31,7 +29,7 @@ fun ResultScreen(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .background(PawKeyTheme.colors.background)
+            .background(PawKeyTheme.colors.defaultButton)
     ) {
         TopBar(
             title = "DBTI 결과",
@@ -42,11 +40,10 @@ fun ResultScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .verticalScroll(rememberScrollState())
                 .padding(horizontal = 16.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Spacer(modifier = Modifier.height(40.dp))
+            Spacer(modifier = Modifier.weight(20f))
 
             ResultBox(
                 type = type,
@@ -56,7 +53,8 @@ fun ResultScreen(
                 description = description,
                 analysis = analysis
             )
-            Spacer(modifier = Modifier.height(32.dp))
+
+            Spacer(modifier = Modifier.weight(20f))
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -66,8 +64,8 @@ fun ResultScreen(
                     text = "다시 테스트하기",
                     onClick = onRetakeTest,
                     modifier = Modifier.weight(1f),
-                    enabled = true,
-                    // TODO: DogkyBorderButton 올려준댓음
+                    enabled = true
+                    // TODO: 버튼 바꾸기
                 )
 
                 DogkyButton(
@@ -78,7 +76,7 @@ fun ResultScreen(
                 )
             }
 
-            Spacer(modifier = Modifier.height(32.dp))
+            Spacer(modifier = Modifier.height(24.dp))
         }
     }
 }

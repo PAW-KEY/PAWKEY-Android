@@ -38,7 +38,7 @@ fun ResultBox(
     modifier: Modifier = Modifier,
 ) {
     Surface(
-        modifier = modifier.width(328.dp),
+        modifier = modifier.fillMaxWidth(),
         color = PawKeyTheme.colors.background,
         shape = RoundedCornerShape(8.dp)
     ) {

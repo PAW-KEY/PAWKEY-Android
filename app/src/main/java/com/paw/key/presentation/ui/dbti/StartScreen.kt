@@ -53,7 +53,7 @@ fun StartScreen(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(horizontal = 24.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
+                horizontalAlignment = Alignment.Start
             ) {
                 Spacer(modifier = Modifier.height(40.dp))
 
@@ -62,12 +62,12 @@ fun StartScreen(
                     fontSize = 24.sp,
                     fontWeight = FontWeight.Bold,
                     color = PawKeyTheme.colors.contents,
-                    textAlign = TextAlign.Center,
+                    textAlign = TextAlign.Start,
                     lineHeight = 32.sp,
                     style = PawKeyTheme.typography.header1
                 )
 
-                Spacer(modifier = Modifier.height(12.dp))
+                Spacer(modifier = Modifier.height(4.dp))
 
                 Text(
                     text = "본 조사는 사랑하는 반려견 위한 비정식 테스트입니다.",
@@ -97,9 +97,8 @@ fun StartScreen(
                     ) {
                         Text(
                             text = "건너뛰기",
-                            fontSize = 16.sp,
-                            color = PawKeyTheme.colors.defaultDark,
-                            style = PawKeyTheme.typography.body16Sb
+                            color = PawKeyTheme.colors.defaultMiddle,
+                            style = PawKeyTheme.typography.subTitle
                         )
                     }
 
@@ -118,7 +117,6 @@ fun StartScreen(
                 ) {
                     Text(
                         text = "시작하기",
-                        fontSize = 16.sp,
                         fontWeight = FontWeight.SemiBold,
                         color = PawKeyTheme.colors.background,
                         style = PawKeyTheme.typography.mainButtonActive
