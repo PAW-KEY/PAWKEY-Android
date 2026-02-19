@@ -1,20 +1,18 @@
 package com.paw.key.data.di
 
 import com.paw.key.data.service.ArchivedListService
-import com.paw.key.data.service.DummyService
 import com.paw.key.data.service.LikeService
 import com.paw.key.data.service.PetProfileService
-import com.paw.key.data.service.RegionService
+import com.paw.key.data.service.region.RegionService
 import com.paw.key.data.service.SavedListService
 import com.paw.key.data.service.UserProfileService
 import com.paw.key.data.service.filter.FilterOptionService
 import com.paw.key.data.service.home.HomeRegionService
+import com.paw.key.data.service.image.ImageService
 import com.paw.key.data.service.list.PostsListService
 import com.paw.key.data.service.login.LoginService
-import com.paw.key.data.service.onboarding.OnboardingInfoService
-import com.paw.key.data.service.onboarding.OnboardingPetsService
-import com.paw.key.data.service.onboarding.OnboardingRegionService
 import com.paw.key.data.service.sharedwalk.SharedWalkService
+import com.paw.key.data.service.user.UserService
 import com.paw.key.data.service.walkcourse.WalkCourseService
 import com.paw.key.data.service.walklist.WalkListDetailService
 import com.paw.key.data.service.walkreview.WalkReviewService
@@ -32,11 +30,6 @@ object ServiceModule {
 
     @Provides
     @Singleton
-    fun providesDummyService(retrofit: Retrofit ): DummyService =
-        retrofit.create()
-
-    @Provides
-    @Singleton
     fun providesRegionService(retrofit: Retrofit ): RegionService =
         retrofit.create()
 
@@ -47,18 +40,8 @@ object ServiceModule {
 
     @Provides
     @Singleton
-    fun provideOnboardingPetsService(retrofit: Retrofit): OnboardingPetsService =
-        retrofit.create(OnboardingPetsService::class.java)
-
-    @Provides
-    @Singleton
-    fun provideOnboardingRegionService(retrofit: Retrofit): OnboardingRegionService =
-        retrofit.create(OnboardingRegionService::class.java)
-
-    @Provides
-    @Singleton
-    fun provideOnboardingInfoService(retrofit: Retrofit): OnboardingInfoService =
-        retrofit.create(OnboardingInfoService::class.java)
+    fun provideUserInfoService(retrofit: Retrofit): UserService =
+        retrofit.create()
 
     @Provides
     @Singleton
@@ -120,5 +103,10 @@ object ServiceModule {
     @Provides
     @Singleton
     fun provideLoginService(retrofit: Retrofit): LoginService =
+        retrofit.create()
+
+    @Provides
+    @Singleton
+    fun provideImageService(retrofit: Retrofit): ImageService =
         retrofit.create()
 }

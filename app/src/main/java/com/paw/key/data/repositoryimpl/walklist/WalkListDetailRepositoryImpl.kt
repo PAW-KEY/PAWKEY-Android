@@ -1,9 +1,8 @@
 package com.paw.key.data.repositoryimpl.walklist
 
 import com.paw.key.data.remote.datasource.walklist.WalkListDetailDataSource
-import com.paw.key.data.service.walklist.WalkListDetailService
-import com.paw.key.domain.model.entity.walklist.WalkListDetailEntity
-import com.paw.key.domain.model.entity.walklist.WalkReviewSummaryEntity
+import com.paw.key.domain.entity.walklist.WalkListDetailEntity
+import com.paw.key.domain.entity.walklist.WalkReviewSummaryEntity
 import com.paw.key.domain.repository.walklist.WalkListRepository
 import javax.inject.Inject
 

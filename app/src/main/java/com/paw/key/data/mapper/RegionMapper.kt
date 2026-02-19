@@ -2,8 +2,8 @@ package com.paw.key.data.mapper
 
 import com.paw.key.data.dto.response.region.GeometryDto
 import com.paw.key.data.dto.response.region.RegionResponseDto
-import com.paw.key.domain.model.entity.region.GeometryEntity
-import com.paw.key.domain.model.entity.region.RegionDataEntity
+import com.paw.key.domain.entity.region.GeometryEntity
+import com.paw.key.domain.entity.region.RegionDataEntity
 import javax.inject.Inject
 
 class RegionMapper @Inject constructor() {

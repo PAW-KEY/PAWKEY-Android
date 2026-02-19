@@ -28,87 +28,42 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.paw.key.R
 import com.paw.key.core.designsystem.theme.PawKeyTheme
+import com.paw.key.core.extension.disableNestedScroll
 import com.paw.key.core.extension.noRippleClickable
-
-private val dummySeoulRegions = listOf(
-    Pair(
-        "강남구", listOf(
-            "개포동", "논현동", "대치동", "도곡동", "삼성동", "세곡동", "수서동",
-            "신사동", "압구정동", "역삼동", "율현동", "일원동", "자곡동", "청담동"
-        )
-    ),
-    Pair(
-        "구로구", listOf(
-            "가리봉동", "개봉동", "고척동", "구로동", "궁동", "신도림동", "오류동",
-            "온수동", "천왕동", "항동"
-        )
-    ),
-    Pair(
-        "금천구", listOf(
-            "가산동", "독산동", "시흥동"
-        )
-    ),
-    Pair(
-        "노원구", listOf(
-            "공릉동", "상계동", "월계동", "중계동", "하계동"
-        )
-    ),
-    Pair(
-        "도봉구", listOf(
-            "도봉동", "방학동", "쌍문동", "창동"
-        )
-    ),
-    Pair(
-        "동대문구", listOf(
-            "답십리동", "신설동", "용두동", "이문동", "장안동", "전농동", "제기동",
-            "청량리동", "회기동", "휘경동"
-        )
-    ),
-    Pair(
-        "동작구", listOf(
-            "노량진동", "대방동", "동작동", "본동", "사당동", "상도1동", "상도동",
-            "신대방동", "흑석동"
-        )
-    )
-)
+import com.paw.key.presentation.ui.signup.model.DistrictModel
+import com.paw.key.presentation.ui.signup.model.DongModel
+import com.paw.key.presentation.ui.signup.model.GuModel
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.toImmutableList
 
 @Composable
 fun RegionSearchContent(
-    selectedGu: String,
-    selectedDong: String,
-    onRegionSelected: (gu: String, dong: String) -> Unit,
+    regionList: ImmutableList<DistrictModel>,
+    selectedGu: GuModel,
+    selectedDong: DongModel,
+    onRegionSelected: (GuModel, DongModel) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    var searchQuery by remember { mutableStateOf("") }
+    var searchText by remember { mutableStateOf("") }
 
-    var selectedGu by remember {
-        mutableStateOf(selectedGu)
+    var currentGu by remember(selectedGu) {
+        mutableStateOf(if (selectedGu.id != 0) selectedGu else regionList.firstOrNull()?.gu ?: GuModel(0, ""))
     }
 
-    var selectedDong by remember {
-        mutableStateOf(selectedDong)
-    }
-
-    val filteredRegions = remember(searchQuery) {
-        if (searchQuery.isBlank()) {
-            dummySeoulRegions
+    val filteredRegionList = remember(searchText, regionList) {
+        if (searchText.isBlank()) {
+            regionList
         } else {
-            dummySeoulRegions.mapNotNull { (gu, dongList) ->
-                val matchingDongs = dongList.filter { dong ->
-                    "$gu $dong".contains(searchQuery, ignoreCase = true)
-                }
-
-                if (matchingDongs.isNotEmpty()) {
-                    Pair(gu, matchingDongs)
-                } else {
-                    null
-                }
-            }
+            regionList.filter {
+                it.gu.name.contains(searchText, ignoreCase = true)
+            }.toImmutableList()
         }
     }
 
-    val dongListForSelectedGu = remember(selectedGu, filteredRegions) {
-        filteredRegions.find { it.first == selectedGu }?.second ?: emptyList()
+    val currentDongList = remember(currentGu, filteredRegionList) {
+        // 전체 리스트에서 찾아야 동 정보가 유실되지 않음
+        regionList.find { it.gu.id == currentGu.id }?.dongs ?: persistentListOf()
     }
 
     Column(
@@ -136,9 +91,9 @@ fun RegionSearchContent(
         )
 
         SignUpTextField(
-            value = searchQuery,
+            value = searchText,
             onValueChange = {
-                searchQuery = it
+                searchText = it
             },
             placeholder = "지역을 검색해보세요",
             suffix = {
@@ -151,18 +106,10 @@ fun RegionSearchContent(
         )
 
         RegionSearchList(
-            guList = filteredRegions.map { it.first },
-            dongList = dongListForSelectedGu,
+            regionList = filteredRegionList,
             selectedGu = selectedGu,
             selectedDong = selectedDong,
-            onGuSelected = { gu ->
-                selectedGu = gu
-                selectedDong = ""
-            },
-            onDongSelected = { dong ->
-                selectedDong = dong
-                onRegionSelected(selectedGu, selectedDong)
-            },
+            onRegionSelected = onRegionSelected,
             modifier = Modifier
                 .weight(1f)
         )
@@ -171,31 +118,40 @@ fun RegionSearchContent(
 
 @Composable
 private fun RegionSearchList(
-    guList: List<String>,
-    dongList: List<String>,
-    selectedGu: String,
-    selectedDong: String,
-    onGuSelected: (String) -> Unit,
-    onDongSelected: (String) -> Unit,
+    regionList: ImmutableList<DistrictModel>,
+    selectedGu: GuModel,
+    selectedDong: DongModel,
+    onRegionSelected: (GuModel, DongModel) -> Unit,
     modifier: Modifier = Modifier
 ) {
+    var currentGu by remember(selectedGu) {
+        mutableStateOf(if (selectedGu.id != 0) selectedGu else regionList.firstOrNull()?.gu ?: GuModel(0,""))
+    }
+
+    val currentDongList = remember(currentGu, regionList) {
+        regionList.find { it.gu.id == currentGu.id }?.dongs ?: persistentListOf()
+    }
+
     Row(
         modifier = modifier
             .padding(vertical = 8.dp),
     ) {
         LazyColumn(
             modifier = Modifier
+                .disableNestedScroll()
                 .weight(0.45f),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            items(guList) { gu ->
+            items(
+                items = regionList,
+                key = { it.gu.id }
+            ) { item ->
                 RegionItem(
-                    name = gu,
-                    isSelected = gu == selectedGu,
-                    onClick = {
-                        onGuSelected(gu)
-                    }
+                    name = item.gu.name,
+                    isSelected = item.gu.id == currentGu.id,
+                    onClick = { currentGu = item.gu },
+                    textAlign = TextAlign.Center
                 )
             }
         }
@@ -212,17 +168,22 @@ private fun RegionSearchList(
         )
 
         LazyColumn(
-            modifier = Modifier.weight(1f),
+            modifier = Modifier
+                .disableNestedScroll()
+                .weight(1f),
             horizontalAlignment = Alignment.Start
         ) {
-            items(dongList) { dong ->
+            items(
+                items = currentDongList,
+                key = { it.id }
+            ) { dong ->
                 RegionItem(
-                    name = dong,
-                    isSelected = dong == selectedDong,
+                    name = dong.name,
+                    isSelected = (dong.id == selectedDong.id) && (currentGu.id == selectedGu.id),
                     onClick = {
-                        onDongSelected(dong)
+                        onRegionSelected(currentGu, dong)
                     },
-                    textAlign = TextAlign.Start
+                    textAlign = TextAlign.Center
                 )
             }
         }
@@ -269,10 +230,10 @@ private fun RegionItem(
 private fun RegionSearchContentPreview() {
     PawKeyTheme {
         RegionSearchContent(
-            selectedGu = "",
-            selectedDong = "",
+            regionList = persistentListOf(),
+            selectedGu = GuModel(0, ""),
+            selectedDong = DongModel(0, ""),
             onRegionSelected = { _, _ -> }
         )
-
     }
 }

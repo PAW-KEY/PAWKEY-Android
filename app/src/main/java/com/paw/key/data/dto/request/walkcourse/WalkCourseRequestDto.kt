@@ -1,7 +1,7 @@
 package com.paw.key.data.dto.request.walkcourse
 
-import com.paw.key.domain.model.entity.walkcourse.CoordinateEntity
-import com.paw.key.domain.model.entity.walkcourse.WalkCourseEntity
+import com.paw.key.domain.entity.walkcourse.CoordinateEntity
+import com.paw.key.domain.entity.walkcourse.WalkCourseEntity
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 

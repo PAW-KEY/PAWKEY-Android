@@ -46,7 +46,7 @@ import com.paw.key.R
 import com.paw.key.core.designsystem.theme.Gray100
 import com.paw.key.core.designsystem.theme.PawKeyTheme
 import com.paw.key.core.extension.noRippleClickable
-import com.paw.key.domain.model.entity.walklist.CategoryTop3Entity
+import com.paw.key.domain.entity.walklist.CategoryTop3Entity
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable

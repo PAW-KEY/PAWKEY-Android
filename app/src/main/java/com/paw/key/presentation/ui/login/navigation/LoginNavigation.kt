@@ -24,6 +24,7 @@ fun NavGraphBuilder.loginNavGraph(
     navigateUp: () -> Unit,
     navigateNext: () -> Unit,
     navigateHome: () -> Unit,
+    navigateSignUp: () -> Unit,
     snackBarHostState: SnackbarHostState
 ) {
     composable<Login> {
@@ -32,6 +33,7 @@ fun NavGraphBuilder.loginNavGraph(
             navigateUp = navigateUp,
             navigateNext = navigateNext,
             navigateHome = navigateHome,
+            navigateSignUp = navigateSignUp,
             snackBarHostState = snackBarHostState
         )
     }

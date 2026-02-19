@@ -3,7 +3,7 @@ package com.paw.key.presentation.ui.mypage.userinfo.viewmodel
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.paw.key.core.util.PreferenceDataStore
+import com.paw.key.domain.repository.localstorage.LocalStorageRepository
 import com.paw.key.domain.repository.userprofile.UserProfileRepository
 import com.paw.key.presentation.ui.mypage.userinfo.model.UserProfileSideEffect
 import com.paw.key.presentation.ui.mypage.userinfo.model.UserProfileState
@@ -18,7 +18,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class UserProfileViewModel @Inject constructor(
-    private val userProfileRepository: UserProfileRepository
+    private val userProfileRepository: UserProfileRepository,
+    private val localRepository: LocalStorageRepository
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(UserProfileState())
@@ -26,6 +27,13 @@ class UserProfileViewModel @Inject constructor(
 
     private val _sideEffect = MutableSharedFlow<UserProfileSideEffect>()
     val sideEffect: MutableSharedFlow<UserProfileSideEffect> = _sideEffect
+
+    init {
+        viewModelScope.launch {
+            val userId = localRepository.getUserId()
+            getUserProfiles(userId)
+        }
+    }
 
     fun getUserProfiles(userId: Int) {
         viewModelScope.launch {
@@ -44,7 +52,7 @@ class UserProfileViewModel @Inject constructor(
                     }
 
                     try {
-                        PreferenceDataStore.saveActiveRegion(result.activeRegion)
+                        //PreferenceDataStore.saveActiveRegion(result.activeRegion)
                         Log.d("UserProfileViewModel", "activeRegion 저장 완료: ${result.activeRegion}")
                     } catch (e: Exception) {
                         Log.e("UserProfileViewModel", "activeRegion 저장 실패: ${e.message}")

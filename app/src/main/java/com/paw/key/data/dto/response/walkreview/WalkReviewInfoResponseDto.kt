@@ -1,7 +1,7 @@
 package com.paw.key.data.dto.response.walkreview
 
-import com.paw.key.domain.model.entity.walkreview.WalkReviewInfoEntity
-import com.paw.key.domain.model.entity.walkreview.WalkReviewRouteInfoEntity
+import com.paw.key.domain.entity.walkreview.WalkReviewInfoEntity
+import com.paw.key.domain.entity.walkreview.WalkReviewRouteInfoEntity
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 

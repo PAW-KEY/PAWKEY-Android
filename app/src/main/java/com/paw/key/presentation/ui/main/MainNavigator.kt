@@ -13,7 +13,6 @@ import com.paw.key.presentation.ui.community.navigation.navigateCommunity
 import com.paw.key.presentation.ui.course.navigation.navigateWalkCourse
 import com.paw.key.presentation.ui.course.navigation.navigateWalkPrepare
 import com.paw.key.presentation.ui.course.walkreview.navigation.navigateWalkReview
-import com.paw.key.presentation.ui.dummy.next.navigateDummyNext
 import com.paw.key.presentation.ui.home.navigation.navigateHome
 import com.paw.key.presentation.ui.home.navigation.navigateHomeLocationSetting
 import com.paw.key.presentation.ui.login.navigation.navigateLogin
@@ -134,11 +133,6 @@ class MainNavigator(
         navController.navigateWalkPrepare(
             navOptions = navOptions
         )
-    }
-
-
-    fun navigateDummyNext(navOptions: NavOptions? = null) {
-        navController.navigateDummyNext(navOptions = navOptions)
     }
 
     fun navigateUp() {

@@ -1,12 +1,12 @@
 package com.paw.key.core.designsystem.component
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -17,19 +17,22 @@ import com.paw.key.core.designsystem.theme.PawKeyTheme
 @Composable
 fun LoadingScreen() {
     Box(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier
+            .fillMaxSize()
+            .background(
+                color = PawKeyTheme.colors.contents.copy(alpha = 0.5f)
+            ),
         contentAlignment = Alignment.Center
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             CircularProgressIndicator(
-                color = PawKeyTheme.colors.green500
+                color = PawKeyTheme.colors.primary
             )
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            Text("현재 위치를 가져오는 중...")
         }
     }
 }

@@ -1,10 +1,10 @@
 package com.paw.key.data.repositoryimpl.walkreview
 
 import com.paw.key.data.remote.datasource.walkreview.WalkReviewDataSource
-import com.paw.key.domain.model.entity.walkreview.WalkReviewCategoryListEntity
-import com.paw.key.domain.model.entity.walkreview.WalkReviewIdEntity
-import com.paw.key.domain.model.entity.walkreview.WalkReviewInfoEntity
-import com.paw.key.domain.model.entity.walkreview.WalkReviewRecordEntity
+import com.paw.key.domain.entity.walkreview.WalkReviewCategoryListEntity
+import com.paw.key.domain.entity.walkreview.WalkReviewIdEntity
+import com.paw.key.domain.entity.walkreview.WalkReviewInfoEntity
+import com.paw.key.domain.entity.walkreview.WalkReviewRecordEntity
 import com.paw.key.domain.repository.walkreview.WalkReviewRepository
 import okhttp3.MultipartBody
 import javax.inject.Inject

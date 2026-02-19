@@ -8,15 +8,13 @@ import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.navOptions
 import com.paw.key.presentation.ui.community.navigation.communityNavGraph
-import com.paw.key.presentation.ui.course.navigation.navigateWalkPrepare
 import com.paw.key.presentation.ui.course.navigation.walkCourseGraph
 import com.paw.key.presentation.ui.course.walkreview.navigation.walkReviewNavGraph
-import com.paw.key.presentation.ui.dummy.navigation.dummyNavGraph
-import com.paw.key.presentation.ui.dummy.next.dummyNextNavGraph
 import com.paw.key.presentation.ui.home.navigation.homeLocationSettingNavGraph
 import com.paw.key.presentation.ui.home.navigation.homeNavGraph
 import com.paw.key.presentation.ui.login.navigation.loginNavGraph
@@ -38,6 +36,15 @@ fun PawKeyNavHost(
     snackbarHostState: SnackbarHostState,
     modifier: Modifier = Modifier,
 ) {
+    val clearStackNavOptions = remember {
+        navOptions {
+            popUpTo(0) {
+                inclusive = true
+            }
+            launchSingleTop = true
+        }
+    }
+
     NavHost(
         navController = navigator.navController,
         startDestination = navigator.startDestination,
@@ -100,7 +107,7 @@ fun PawKeyNavHost(
         communityNavGraph(
             paddingValues = paddingValues,
             navigateUp = navigator::navigateUp,
-            navigateNext = navigator::navigateDummyNext,
+            navigateNext = {},
             snackBarHostState = snackbarHostState
         )
 
@@ -132,7 +139,7 @@ fun PawKeyNavHost(
         userProfileNavGraph(
             paddingValues = paddingValues,
             navigateUp = navigator::navigateMyPage,
-            navigateNext = navigator::navigateDummyNext,
+            navigateNext = {},
             snackBarHostState = snackbarHostState
         )
 
@@ -143,17 +150,6 @@ fun PawKeyNavHost(
         petProfileListNavGraph(
             navigateUp = navigator::navigateUp,
             navigatePetProfile = navigator::navigatePetProfile,
-        )
-
-        dummyNavGraph(
-            paddingValues = paddingValues,
-            navigateUp = navigator::navigateUp,
-            navigateNext = navigator::navigateDummyNext,
-            snackBarHostState = snackbarHostState
-        )
-
-        dummyNextNavGraph(
-            paddingValues = paddingValues
         )
 
         splashNavGraph(
@@ -186,8 +182,12 @@ fun PawKeyNavHost(
             navigateNext = {
                 //navigator.navigateSignUpFlow()
             },
+            navigateSignUp = {
+                navigator.navigateSignUp(clearStackNavOptions)
+            },
+            // Todo: Home 으로 수정
             navigateHome = {
-                navigator.navigateHome()
+                navigator.navigateSignUp(clearStackNavOptions)
             },
             snackBarHostState = snackbarHostState
         )

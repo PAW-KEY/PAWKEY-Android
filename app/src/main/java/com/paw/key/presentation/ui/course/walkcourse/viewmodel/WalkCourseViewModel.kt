@@ -6,8 +6,8 @@ import androidx.lifecycle.viewModelScope
 import com.paw.key.core.extension.toLatLng
 import com.paw.key.core.util.PhotoUtils
 import com.paw.key.core.util.UiState
-import com.paw.key.domain.model.entity.walkcourse.CoordinateEntity
-import com.paw.key.domain.model.entity.walkcourse.WalkCourseEntity
+import com.paw.key.domain.entity.walkcourse.CoordinateEntity
+import com.paw.key.domain.entity.walkcourse.WalkCourseEntity
 import com.paw.key.domain.repository.WalkSharedResultRepository
 import com.paw.key.domain.repository.walkcourse.WalkCourseRepository
 import com.paw.key.presentation.ui.course.util.RealTimeLocationListener

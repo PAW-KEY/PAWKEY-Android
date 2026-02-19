@@ -1,10 +1,10 @@
 package com.paw.key.data.repositoryimpl
 
+import com.paw.key.data.dto.response.region.toEntity
 import com.paw.key.data.mapper.RegionMapper
 import com.paw.key.data.remote.datasource.RegionDataSource
-import com.paw.key.domain.model.entity.region.RegionDataEntity
-import com.paw.key.domain.model.entity.signup.DistrictEntity
-import com.paw.key.domain.model.entity.signup.toEntity
+import com.paw.key.domain.entity.region.RegionDataEntity
+import com.paw.key.domain.entity.signup.DistrictEntity
 import com.paw.key.domain.repository.RegionRepository
 import javax.inject.Inject
 
