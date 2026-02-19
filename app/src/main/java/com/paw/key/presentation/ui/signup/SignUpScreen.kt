@@ -2,6 +2,8 @@ package com.paw.key.presentation.ui.signup
 
 import android.net.Uri
 import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -20,15 +22,20 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.flowWithLifecycle
 import com.paw.key.core.designsystem.component.DokiButton
 import com.paw.key.core.designsystem.component.LoadingScreen
+import com.paw.key.core.designsystem.theme.PawKeyTheme
 import com.paw.key.core.util.UiState
 import com.paw.key.presentation.ui.signup.component.SignUpHeader
 import com.paw.key.presentation.ui.signup.component.SignUpSubHeader
+import com.paw.key.presentation.ui.signup.model.DongModel
+import com.paw.key.presentation.ui.signup.model.GuModel
+import com.paw.key.presentation.ui.signup.model.PetInfoItemModel
 import com.paw.key.presentation.ui.signup.model.SignUpLocationInfo
 import com.paw.key.presentation.ui.signup.model.SignUpMapInfo
 import com.paw.key.presentation.ui.signup.model.SignUpPetInfo
 import com.paw.key.presentation.ui.signup.model.SignUpUserInfo
 import com.paw.key.presentation.ui.signup.state.Gender
 import com.paw.key.presentation.ui.signup.state.SignUpSideEffect
+import com.paw.key.presentation.ui.signup.state.SignUpState
 import com.paw.key.presentation.ui.signup.state.SignUpStateType
 import com.paw.key.presentation.ui.signup.viewmodel.SignUpViewModel
 
@@ -65,39 +72,53 @@ fun SignUpRoute(
         }
     }
 
-    SignUpScreen(
-        currentStep = state.currentStep,
-        type = state.signUpState,
-        isNextEnabled = state.isNextEnabled,
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(color = PawKeyTheme.colors.background)
+    ) {
+        SignUpScreen(
+            state = state,
+            currentStep = state.currentStep,
+            type = state.signUpState,
+            isNextEnabled = state.isNextEnabled,
 
-        onNextClick = viewModel::onNextClick,
-        onBackClick = viewModel::onBackPressed,
+            onNextClick = viewModel::onNextClick,
+            onBackClick = viewModel::onBackPressed,
 
-        userInfo = state.userInfo,
-        onNickNameChanged = { viewModel.updateNickname(it) },
-        onBirthDateChanged = { viewModel.updateBirthDate(it) },
-        onGenderChanged = viewModel::updateGender,
+            userInfo = state.userInfo,
+            onNickNameChanged = { viewModel.updateNickname(it) },
+            onBirthDateChanged = { viewModel.updateBirthDate(it) },
+            onGenderChanged = viewModel::updateGender,
 
-        petInfo = state.petInfo,
-        onPetNameChanged = { viewModel.updatePetName(it) },
-        onPetBirthDateChanged = { viewModel.updatePetBirthDate(it) },
-        onPetGenderChanged = viewModel::updatePetGender,
-        onPetNeuteredChanged = viewModel::updatePetNeutered,
-        onPetBreedChanged = { viewModel.updatePetBreed(it) },
-        deniedPermission = viewModel::deniedPermission,
-        onSelectedImage = viewModel::updatePetImage,
+            petInfo = state.petInfo,
+            onPetNameChanged = { viewModel.updatePetName(it) },
+            onPetBirthDateChanged = { viewModel.updatePetBirthDate(it) },
+            onPetGenderChanged = viewModel::updatePetGender,
+            onPetNeuteredChanged = viewModel::updatePetNeutered,
+            onPetBreedChanged = { viewModel.updatePetBreed(it) },
+            deniedPermission = viewModel::deniedPermission,
+            onSelectedImage = viewModel::updatePetImage,
+            requestPetInfo = viewModel::getPetInfo,
 
-        locationInfo = state.locationInfo,
-        onSelectedLocation = { gu, dong ->
-            viewModel.onRegionSelected(gu, dong)
-        },
+            locationInfo = state.locationInfo,
+            getRegions = viewModel::getRegions,
+            onRegionSelected = { gu, dong ->
+                viewModel.updateLocation(gu, dong)
+            },
 
-        mapInfo = state.mapInfo,
-    )
+            mapInfo = state.mapInfo,
+        )
+
+        if (state.isLoading) {
+            LoadingScreen()
+        }
+    }
 }
 
 @Composable
 fun SignUpScreen(
+    state: SignUpState,
     userInfo : SignUpUserInfo,
     onNickNameChanged: (String) -> Unit,
     onBirthDateChanged: (String) -> Unit,
@@ -109,11 +130,13 @@ fun SignUpScreen(
     onPetBirthDateChanged : (String) -> Unit,
     onPetGenderChanged : (Gender) -> Unit,
     onPetNeuteredChanged : (Boolean) -> Unit,
-    onPetBreedChanged : (String) -> Unit,
+    onPetBreedChanged : (PetInfoItemModel) -> Unit,
     onSelectedImage: (Uri?) -> Unit,
+    requestPetInfo : () -> Unit,
 
     locationInfo : SignUpLocationInfo,
-    onSelectedLocation : (gu : String, dong : String) -> Unit,
+    getRegions: () -> Unit,
+    onRegionSelected: (GuModel, DongModel) -> Unit,
 
     mapInfo: SignUpMapInfo,
 
@@ -150,6 +173,7 @@ fun SignUpScreen(
     Column (
         modifier = Modifier
             .fillMaxSize()
+            .background(color = PawKeyTheme.colors.background)
     ) {
         SignUpHeader(
             title = title,
@@ -185,6 +209,7 @@ fun SignUpScreen(
                 Column(
                     modifier = Modifier
                         .weight(1f)
+                        .background(color = PawKeyTheme.colors.background)
                         .verticalScroll(rememberScrollState())
                 ) {
                     when (type) {
@@ -203,12 +228,8 @@ fun SignUpScreen(
 
                         SignUpStateType.PET_INFO -> {
                             SignUpPetInfoScreen(
-                                petName = petInfo.petName,
-                                petBirthDate = petInfo.petBirthDate,
-                                petGender = petInfo.petGender,
-                                petNeutered = petInfo.petNeutered,
-                                petBreed = petInfo.petBreed,
-                                selectedImageUri = petInfo.petImage,
+                                petInfo = petInfo,
+                                petBreedList = state.petBreedList,
                                 onPetNameChanged = onPetNameChanged,
                                 onPetBirthDateChanged = onPetBirthDateChanged,
                                 onPetGenderChanged = onPetGenderChanged,
@@ -218,17 +239,16 @@ fun SignUpScreen(
                                 onSelectedImage = {
                                     onSelectedImage(it)
                                 },
+                                requestPetInfo = requestPetInfo,
                                 modifier = Modifier
                             )
                         }
 
                         SignUpStateType.LOCATION_INFO -> {
                             SignUpLocationInfoScreen(
-                                gu = locationInfo.selectedGu,
-                                dong = locationInfo.selectedDong,
-                                onSelectedLocation = { gu, dong ->
-                                    onSelectedLocation(gu, dong)
-                                },
+                                locationInfo = locationInfo,
+                                getRegions = getRegions,
+                                onRegionSelected = onRegionSelected,
                                 modifier = Modifier
                             )
                         }
