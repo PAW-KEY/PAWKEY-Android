@@ -1,6 +1,6 @@
 package com.paw.key.data.remote.datasource
 
-import com.paw.key.data.service.RegionService
+import com.paw.key.data.service.region.RegionService
 import javax.inject.Inject
 
 class RegionDataSource @Inject constructor (

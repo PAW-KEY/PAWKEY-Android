@@ -2,7 +2,7 @@ package com.paw.key.domain.repository
 
 import android.graphics.Bitmap
 import com.naver.maps.geometry.LatLng
-import com.paw.key.domain.model.entity.sharedresult.WalkResult
+import com.paw.key.domain.entity.sharedresult.WalkResult
 import kotlinx.coroutines.flow.Flow
 
 interface WalkSharedResultRepository {

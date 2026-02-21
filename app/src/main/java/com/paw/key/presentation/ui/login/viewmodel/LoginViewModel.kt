@@ -3,7 +3,7 @@ package com.paw.key.presentation.ui.login.viewmodel
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.paw.key.domain.repository.login.AuthRepository
+import com.paw.key.domain.usecase.LoginUseCase
 import com.paw.key.presentation.ui.login.state.LoginSideEffect
 import com.paw.key.presentation.ui.login.state.LoginState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -17,7 +17,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
-    private val authRepository: AuthRepository,
+    private val loginUseCase: LoginUseCase
 ) : ViewModel() {
     private val _state = MutableStateFlow(LoginState())
     val state: StateFlow<LoginState>
@@ -32,17 +32,10 @@ class LoginViewModel @Inject constructor(
         onSuccess: () -> Unit,
     ) {
         viewModelScope.launch {
-            authRepository.signInWithGoogle(context)
-                .onSuccess { idToken ->
-                    val deviceId = getDeviceId(context)
-
-                    authRepository.login(idToken, deviceId)
-                        .onSuccess { response ->
-                            onSuccess()
-                        }
-                        .onFailure { e ->
-                            Timber.e(e, "Backend login failed")
-                        }
+            loginUseCase.invokeGoogleLogin(context)
+                .onSuccess {
+                    // Todo : isNew확인
+                    _sideEffect.emit(LoginSideEffect.NavigateToHome)
                 }
                 .onFailure { e ->
                     Timber.e(e, "Google sign-in failed")
@@ -52,31 +45,18 @@ class LoginViewModel @Inject constructor(
 
     fun onKakaoSignIn(
         context: Context,
-        onSuccess: () -> Unit,
     ) {
         viewModelScope.launch {
-            authRepository.signInWithKakao(context)
-                .onSuccess { accessToken ->
-                    val deviceId = getDeviceId(context)
-                    authRepository.loginKakao(accessToken, deviceId)
-                        .onSuccess { response ->
-                            onSuccess()
-                        }
-                        .onFailure { e ->
-                            Timber.e(e, "Full stack trace:")
-                        }
-                }
-                .onFailure { e ->
-                    Timber.e("[KAKAO_VM] Step 2: SDK login FAILED")
+            loginUseCase.invokeKakaoLogin(context)
+                .onSuccess {
+                    // Todo: isNewUser가 true이면이니 signup false는 home
+                    if (it) {
+                        _sideEffect.emit(LoginSideEffect.NavigateToSignUp)
+                    } else {
+                        _sideEffect.emit(LoginSideEffect.NavigateToSignUp)
+                    }
                 }
         }
-    }
-
-    private fun getDeviceId(context: Context): String {
-        return android.provider.Settings.Secure.getString(
-            context.contentResolver,
-            android.provider.Settings.Secure.ANDROID_ID
-        )
     }
 
     fun onEmailChanged(email: String) {

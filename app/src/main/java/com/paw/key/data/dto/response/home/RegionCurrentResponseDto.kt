@@ -1,6 +1,6 @@
 package com.paw.key.data.dto.response.home
 
-import com.paw.key.domain.model.entity.home.RegionCurrentDataEntity
+import com.paw.key.domain.entity.home.RegionCurrentDataEntity
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 

@@ -1,8 +1,8 @@
 package com.paw.key.data.dto.response.walklist
 
-import com.paw.key.domain.model.entity.walklist.AuthorInfoEntity
-import com.paw.key.domain.model.entity.walklist.CategoryTagsEntity
-import com.paw.key.domain.model.entity.walklist.WalkListDetailEntity
+import com.paw.key.domain.entity.walklist.AuthorInfoEntity
+import com.paw.key.domain.entity.walklist.CategoryTagsEntity
+import com.paw.key.domain.entity.walklist.WalkListDetailEntity
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 

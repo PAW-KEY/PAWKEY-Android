@@ -3,6 +3,7 @@ package com.paw.key.presentation.ui.mypage.petinfo.viewmodel
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.paw.key.domain.repository.localstorage.LocalStorageRepository
 import com.paw.key.domain.repository.petprofile.PetProfileRepository
 import com.paw.key.presentation.ui.mypage.petinfo.model.PetProfileSideEffect
 import com.paw.key.presentation.ui.mypage.petinfo.model.PetProfileState
@@ -17,7 +18,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class PetProfileViewModel @Inject constructor(
-    private val petProfileRepository: PetProfileRepository
+    private val petProfileRepository: PetProfileRepository,
+    private val localRepository: LocalStorageRepository
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(PetProfileState())
@@ -25,6 +27,13 @@ class PetProfileViewModel @Inject constructor(
 
     private val _sideEffect = MutableSharedFlow<PetProfileSideEffect>() // 필요 시 따로 Contract로 분리 가능
     val sideEffect: MutableSharedFlow<PetProfileSideEffect> = _sideEffect
+
+    init {
+        viewModelScope.launch {
+            val userId = localRepository.getUserId()
+            getPetProfiles(userId)
+        }
+    }
 
     fun getPetProfiles(userId: Int) {
         viewModelScope.launch {

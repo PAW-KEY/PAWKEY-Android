@@ -1,7 +1,7 @@
 package com.paw.key.data.dto.response.walklist
 
-import com.paw.key.domain.model.entity.walklist.CategoryTop3Entity
-import com.paw.key.domain.model.entity.walklist.WalkReviewSummaryEntity
+import com.paw.key.domain.entity.walklist.CategoryTop3Entity
+import com.paw.key.domain.entity.walklist.WalkReviewSummaryEntity
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 

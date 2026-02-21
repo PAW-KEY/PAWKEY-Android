@@ -1,11 +1,8 @@
 package com.paw.key.data.dto.response
 
-import com.paw.key.domain.model.entity.archivedlist.ArchivedListEntity
-import com.paw.key.domain.model.entity.archivedlist.ArchivedListPostsEntity
-import com.paw.key.domain.model.entity.archivedlist.WriterEntity
-import com.paw.key.domain.model.entity.savedlist.SavedListEntity
-import com.paw.key.domain.model.entity.savedlist.SavedListPostEntity
-import com.paw.key.domain.model.entity.savedlist.SavedWriterEntity
+import com.paw.key.domain.entity.savedlist.SavedListEntity
+import com.paw.key.domain.entity.savedlist.SavedListPostEntity
+import com.paw.key.domain.entity.savedlist.SavedWriterEntity
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 

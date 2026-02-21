@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -34,7 +33,7 @@ fun HomeStartWalkingRow(
         Column {
             Text(
                 text = "${petName}와 함께",
-                style = PawKeyTheme.typography.bodyActive,
+                style = PawKeyTheme.typography.subTitle,
                 color = PawKeyTheme.colors.contents
             )
 
@@ -57,7 +56,7 @@ fun HomeStartWalkingRow(
         ) {
             Text(
                 text = "산책 시작",
-                style = PawKeyTheme.typography.mainButtonDefault,
+                style = PawKeyTheme.typography.bodyBold,
                 color = PawKeyTheme.colors.background,
                 modifier = Modifier
                     .padding(horizontal = 16.dp, vertical = 10.dp)

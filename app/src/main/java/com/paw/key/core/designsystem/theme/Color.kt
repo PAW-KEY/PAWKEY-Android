@@ -1,6 +1,5 @@
 package com.paw.key.core.designsystem.theme
 
-import android.annotation.SuppressLint
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -47,7 +46,6 @@ val System_green = Color(0xFF40C927)
 
 /*------------------------------------------------*/
 // Brand
-@SuppressLint("InvalidColorHexValue")
 val Opacity5Primary = Color(0x0D00D281)
 val Opacity25Primary = Color(0x4000D281)
 
@@ -60,6 +58,8 @@ val Primary = Color(0xFF00D281)
 val PrimaryGra6 = Color(0xFF00A86B)
 val PrimaryGra7 = Color(0xFF007A50)
 
+val DokiRed = Color(0xFFFF646C)
+
 // contents
 val Contents = Color(0xFF171717)
 
@@ -68,9 +68,11 @@ val Background = Color(0xFFFFFFFF)
 
 // default
 val DefaultButton = Color(0xFFEEEEEE)
+
+val DefaultBright = Color(0xFFF2F2F2)
+
 val DefaultMiddle = Color(0xFF9C9C9C)
 val DefaultDark = Color(0xFF555555)
-
 
 
 @Stable
@@ -119,9 +121,11 @@ class PawKeyColors(
     primaryGra6: Color,
     primaryGra7: Color,
     primary: Color,
+    dokiRed: Color,
     contents: Color,
     background: Color,
     defaultButton: Color,
+    defaultBright: Color,
     defaultMiddle: Color,
     defaultDark: Color,
 ) {
@@ -207,11 +211,16 @@ class PawKeyColors(
         private set
     var primary: Color by mutableStateOf(primary)
         private set
+
+    var dokiRed: Color by mutableStateOf(dokiRed)
+        private set
     var contents: Color by mutableStateOf(contents)
         private set
     var background: Color by mutableStateOf(background)
         private set
     var defaultButton: Color by mutableStateOf(defaultButton)
+        private set
+    var defaultBright: Color by mutableStateOf(defaultBright)
         private set
     var defaultMiddle: Color by mutableStateOf(defaultMiddle)
         private set
@@ -251,9 +260,11 @@ class PawKeyColors(
         primaryGra6: Color = this.primaryGra6,
         primaryGra7: Color = this.primaryGra7,
         primary: Color = this.primary,
+        dokiRed: Color = this.dokiRed,
         contents: Color = this.contents,
         background: Color = this.background,
         defaultButton: Color = this.defaultButton,
+        defaultBright: Color = this.defaultBright,
         defaultMiddle: Color = this.defaultMiddle,
         defaultDark: Color = this.defaultDark,
 
@@ -303,11 +314,13 @@ class PawKeyColors(
         primaryGra6 = primaryGra6,
         primaryGra7 = primaryGra7,
         primary = primary,
+        dokiRed = dokiRed,
         contents = contents,
         background = background,
         defaultButton = defaultButton,
         defaultMiddle = defaultMiddle,
-        defaultDark = defaultDark,
+        defaultBright = defaultBright,
+        defaultDark = defaultDark
     )
 
     fun update(other: PawKeyColors) {
@@ -354,9 +367,11 @@ class PawKeyColors(
         primaryGra6 = other.primaryGra6
         primaryGra7 = other.primaryGra7
         primary = other.primary
+        dokiRed = other.dokiRed
         contents = other.contents
         background = other.background
         defaultButton = other.defaultButton
+        defaultBright = other.defaultBright
         defaultMiddle = other.defaultMiddle
         defaultDark = other.defaultDark
     }
@@ -407,9 +422,11 @@ fun pawKeyColors(
     primaryGra6: Color = PrimaryGra6,
     primaryGra7: Color = PrimaryGra7,
     primary: Color = Primary,
+    dokiRed: Color = DokiRed,
     contents: Color = Contents,
     background: Color = Background,
     defaultButton: Color = DefaultButton,
+    defaultBright: Color = DefaultBright,
     defaultMiddle: Color = DefaultMiddle,
     defaultDark: Color = DefaultDark,
 ) = PawKeyColors(
@@ -457,9 +474,11 @@ fun pawKeyColors(
     primaryGra6 = primaryGra6,
     primaryGra7 = primaryGra7,
     primary = primary,
+    dokiRed = dokiRed,
     contents = contents,
     background = background,
     defaultButton = defaultButton,
+    defaultBright = defaultBright,
     defaultMiddle = defaultMiddle,
     defaultDark = defaultDark,
 )

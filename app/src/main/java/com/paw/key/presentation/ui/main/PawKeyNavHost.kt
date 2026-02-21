@@ -8,20 +8,13 @@ import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.navOptions
 import com.paw.key.presentation.ui.community.navigation.communityNavGraph
-import com.paw.key.presentation.ui.course.entire.navigation.courseNavGraph
-import com.paw.key.presentation.ui.course.entire.navigation.navigateCourse
-import com.paw.key.presentation.ui.course.sharedwalk.complete.navigation.sharedWalkCompletionNavGraph
-import com.paw.key.presentation.ui.course.sharedwalk.review.navigation.sharedWalkReviewNavGraph
-import com.paw.key.presentation.ui.course.sharedwalk.sharedroute.navigation.sharedWalkCourseNavGraph
-import com.paw.key.presentation.ui.course.walk.navigation.walkCourseNavGraph
-import com.paw.key.presentation.ui.course.walkcomplete.navigation.walkCompletionNavGraph
+import com.paw.key.presentation.ui.course.navigation.walkCourseGraph
 import com.paw.key.presentation.ui.course.walkreview.navigation.walkReviewNavGraph
-import com.paw.key.presentation.ui.dummy.navigation.dummyNavGraph
-import com.paw.key.presentation.ui.dummy.next.dummyNextNavGraph
 import com.paw.key.presentation.ui.home.navigation.homeLocationSettingNavGraph
 import com.paw.key.presentation.ui.home.navigation.homeNavGraph
 import com.paw.key.presentation.ui.login.navigation.loginNavGraph
@@ -43,6 +36,15 @@ fun PawKeyNavHost(
     snackbarHostState: SnackbarHostState,
     modifier: Modifier = Modifier,
 ) {
+    val clearStackNavOptions = remember {
+        navOptions {
+            popUpTo(0) {
+                inclusive = true
+            }
+            launchSingleTop = true
+        }
+    }
+
     NavHost(
         navController = navigator.navController,
         startDestination = navigator.startDestination,
@@ -74,9 +76,7 @@ fun PawKeyNavHost(
         homeNavGraph(
             paddingValues = paddingValues,
             navigateUp = navigator::navigateUp,
-            navigateNext = navigator::navigateCourse,
-            navigateHomeLocationSetting = navigator::navigateHomeLocationSetting,
-            modifier = modifier,
+            navigateToCourse = navigator::navigateWalkPrepare
         )
 
         homeLocationSettingNavGraph(
@@ -92,87 +92,22 @@ fun PawKeyNavHost(
             modifier = modifier,
         )
 
-        courseNavGraph(
+        walkCourseGraph(
             paddingValues = paddingValues,
-            navigateUp = navigator::navigateUp,
-            navigateNext = navigator::navigateWalkCourse,
-            navigateToDetail = { postId, routeId ->
-                // Todo : 마찬가지로 이것도 그냥 넣어놓음 나중에 리스트 연결 후 예쩡 / 리스트 아이템이동
-
-            },
-            setOnVisibleRecord = navigator::setOnVisibleRecord,
-            snackBarHostState = snackbarHostState
-        )
-
-        sharedWalkCourseNavGraph(
-            paddingValues = paddingValues,
-            navigateUp = navigator::navigateUp,
-            navigateNext = { routeId, pageId ->
-                navigator.navigateSharedWalkCompletion(
-                    routeId = routeId,
-                    pageId = pageId
-                )
-            },
-            snackBarHostState = snackbarHostState
-        )
-
-        sharedWalkCompletionNavGraph(
-            paddingValues = paddingValues,
-            navigateUp = navigator::navigateUp,
-            navigateNext = { routeId, pageId ->
-                // Todo : 마찬가지로 이것도 그냥 넣어놓음 나중에 리스트 연결 후 예쩡
-                navigator.navigateSharedWalkReview(
-                    routeId = routeId,
-                    pageId = pageId
-                )
-            },
-            snackBarHostState = snackbarHostState
-        )
-
-        //  Todo : 리스트로 돌아갈 수 있게 - 다이얼로그
-        sharedWalkReviewNavGraph(
-            paddingValues = paddingValues,
-            navigateUp = navigator::navigateUp,
-            navigateNext = {
-                navigator.navController.navigateCourse(index = 1, navOptions = null)
-            },
-            snackBarHostState = snackbarHostState
-        )
-
-        walkCourseNavGraph(
-            paddingValues = paddingValues,
-            navigateUp = navigator::navigateUp,
-            navigateNext = {
-                navigator.navigateWalkCompletion(
-                    routeId = it,
-                )
-            },
-            snackBarHostState = snackbarHostState
-        )
-
-        walkCompletionNavGraph(
-            paddingValues = paddingValues,
-            navigateUp = navigator::navigateUp,
-            navigateNext = { routeId ->
-                navigator.navigateWalkReview(
-                    routeId = routeId,
-                )
-            },
+            navController = navigator.navController,
+            navigateWalkReview = navigator::navigateWalkReview
         )
 
         walkReviewNavGraph(
-            navigateUp = navigator::navigateUp,
-            navigateNext = navigator::navigateCourse,
-            navigateShared = { routeId, pageId ->
-
-            },
-            snackBarHostState = snackbarHostState
+            paddingValues = paddingValues,
+            navigateHome = navigator::navigateHome,
+            navigateWalkDetail = navigator::navigateWalkCourse, // Todo 상세 정보 뷰로
         )
 
         communityNavGraph(
             paddingValues = paddingValues,
             navigateUp = navigator::navigateUp,
-            navigateNext = navigator::navigateDummyNext,
+            navigateNext = {},
             snackBarHostState = snackbarHostState
         )
 
@@ -189,12 +124,22 @@ fun PawKeyNavHost(
 
         courseInfoNavGraph(
             navigateUp = navigator::navigateUp,
+            /*navigateDetail = {
+                navigator.navController.navigateCourse(index = 1, navOptions = null)
+            },*/
+            /*navigateToSharedWalk = { routeId, pageId ->
+                *//*navigator.navigateSharedWalkCourse(
+                    routeId = routeId,
+                    pageId = pageId
+                )*//*
+            },
+            modifier = modifier*/
         )
 
         userProfileNavGraph(
             paddingValues = paddingValues,
             navigateUp = navigator::navigateMyPage,
-            navigateNext = navigator::navigateDummyNext,
+            navigateNext = {},
             snackBarHostState = snackbarHostState
         )
 
@@ -205,17 +150,6 @@ fun PawKeyNavHost(
         petProfileListNavGraph(
             navigateUp = navigator::navigateUp,
             navigatePetProfile = navigator::navigatePetProfile,
-        )
-
-        dummyNavGraph(
-            paddingValues = paddingValues,
-            navigateUp = navigator::navigateUp,
-            navigateNext = navigator::navigateDummyNext,
-            snackBarHostState = snackbarHostState
-        )
-
-        dummyNextNavGraph(
-            paddingValues = paddingValues
         )
 
         splashNavGraph(
@@ -248,8 +182,12 @@ fun PawKeyNavHost(
             navigateNext = {
                 //navigator.navigateSignUpFlow()
             },
+            navigateSignUp = {
+                navigator.navigateSignUp(clearStackNavOptions)
+            },
+            // Todo: Home 으로 수정
             navigateHome = {
-                navigator.navigateHome()
+                navigator.navigateSignUp(clearStackNavOptions)
             },
             snackBarHostState = snackbarHostState
         )

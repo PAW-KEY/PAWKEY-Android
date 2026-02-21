@@ -8,6 +8,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import javax.inject.Inject
 
+@Deprecated("발자국 안쓸거임")
 @HiltViewModel
 class MainViewModel @Inject constructor(
 ) : ViewModel() {

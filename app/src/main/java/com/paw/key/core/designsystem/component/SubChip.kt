@@ -16,7 +16,7 @@ import com.paw.key.core.extension.noRippleClickable
 @Composable
 private fun PreviewSubChip() {
     SubChip(
-        text = "4km",
+        text = "+ 9",
         onClick = {}
     )
 }
@@ -26,21 +26,25 @@ fun SubChip(
     text: String,
     modifier: Modifier = Modifier,
     onClick : () -> Unit = {},
+    isDividerChip: Boolean = false, //true -> detail의 16dp
     isActionChip: Boolean = false, //true -> 회색
 ) {
     Box(
         modifier = modifier
             .background(
-                color = if (isActionChip) PawKeyTheme.colors.white2 else PawKeyTheme.colors.green50,
-                shape = RoundedCornerShape(20.dp)
+                color = if (isActionChip) PawKeyTheme.colors.primaryGra1 else PawKeyTheme.colors.defaultButton,
+                shape = if (isActionChip) RoundedCornerShape(8.dp) else RoundedCornerShape(36.dp)
             )
             .noRippleClickable(onClick = onClick)
-            .padding(horizontal = 10.dp, vertical = 4.dp)
+            .then(
+                if (isDividerChip) Modifier.padding(horizontal = 16.dp, vertical = 4.dp)
+                else Modifier.padding(8.dp)
+            )
     ) {
         Text(
             text = text,
-            color = if (isActionChip) PawKeyTheme.colors.gray700 else PawKeyTheme.colors.green600,
-            style = PawKeyTheme.typography.caption12R
+            color = if (isActionChip) PawKeyTheme.colors.primary else PawKeyTheme.colors.defaultMiddle,
+            style = if (isActionChip) PawKeyTheme.typography.subButtonActive else PawKeyTheme.typography.buttonSmall
         )
     }
 }

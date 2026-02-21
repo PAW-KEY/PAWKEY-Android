@@ -48,6 +48,7 @@ class PawKeyTypography internal constructor(
     bodyDefault: TextStyle,
     bodyActive: TextStyle,
     bodySmall: TextStyle,
+    bodyBold: TextStyle,
     mainButtonDefault: TextStyle,
     mainButtonActive: TextStyle,
     subButtonDefault: TextStyle,
@@ -105,6 +106,8 @@ class PawKeyTypography internal constructor(
         private set
     var bodySmall: TextStyle by mutableStateOf(bodySmall)
         private set
+    var bodyBold: TextStyle by mutableStateOf(bodyBold)
+        private set
     var mainButtonDefault: TextStyle by mutableStateOf(mainButtonDefault)
         private set
     var mainButtonActive: TextStyle by mutableStateOf(mainButtonActive)
@@ -144,6 +147,7 @@ class PawKeyTypography internal constructor(
         bodyDefault: TextStyle = this.bodyDefault,
         bodyActive: TextStyle = this.bodyActive,
         bodySmall: TextStyle = this.bodySmall,
+        bodyBold: TextStyle = this.bodyBold,
         mainButtonDefault: TextStyle = this.mainButtonDefault,
         mainButtonActive: TextStyle = this.mainButtonActive,
         subButtonDefault: TextStyle = this.subButtonDefault,
@@ -183,6 +187,7 @@ class PawKeyTypography internal constructor(
         subButtonActive,
         buttonSmall,
         buttonLink,
+            bodyBold
     )
 
     fun update(other: PawKeyTypography) {
@@ -217,6 +222,7 @@ class PawKeyTypography internal constructor(
         subButtonActive = other.subButtonActive
         buttonSmall = other.buttonSmall
         buttonLink = other.buttonLink
+        bodyBold = other.bodyBold
     }
 }
 
@@ -409,6 +415,13 @@ fun pawKeyTypography(): PawKeyTypography {
             fontWeight = FontWeight.Medium,
             fontSize = 12.sp,
             lineHeight = 16.sp,
+            letterSpacing = 0.em
+        ),
+        bodyBold = pawKeyTextStyle(
+            fontFamily = PretendardBold,
+            fontWeight = FontWeight.SemiBold,
+            fontSize = 14.sp,
+            lineHeight = 20.sp,
             letterSpacing = 0.em
         ),
         mainButtonDefault = pawKeyTextStyle(

@@ -1,11 +1,10 @@
 package com.paw.key.data.dto.response.filter
 
-import com.paw.key.domain.model.entity.filter.Category
-import com.paw.key.domain.model.entity.filter.CategoryOption
-import com.paw.key.domain.model.entity.filter.FilterEntity
-import com.paw.key.domain.model.entity.filter.SelectOption
-import com.paw.key.domain.model.entity.filter.SelectOptionItem
-import com.paw.key.domain.model.entity.walklist.CategoryTagsEntity
+import com.paw.key.domain.entity.filter.Category
+import com.paw.key.domain.entity.filter.CategoryOption
+import com.paw.key.domain.entity.filter.FilterEntity
+import com.paw.key.domain.entity.filter.SelectOption
+import com.paw.key.domain.entity.filter.SelectOptionItem
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 

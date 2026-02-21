@@ -10,14 +10,9 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
 import com.paw.key.presentation.ui.community.navigation.navigateCommunity
-import com.paw.key.presentation.ui.course.entire.navigation.navigateCourse
-import com.paw.key.presentation.ui.course.sharedwalk.complete.navigation.navigateSharedWalkCompletion
-import com.paw.key.presentation.ui.course.sharedwalk.review.navigation.navigateSharedWalkReview
-import com.paw.key.presentation.ui.course.sharedwalk.sharedroute.navigation.navigateSharedWalkCourse
-import com.paw.key.presentation.ui.course.walk.navigation.navigateWalkCourse
-import com.paw.key.presentation.ui.course.walkcomplete.navigation.navigateWalkCompletion
+import com.paw.key.presentation.ui.course.navigation.navigateWalkCourse
+import com.paw.key.presentation.ui.course.navigation.navigateWalkPrepare
 import com.paw.key.presentation.ui.course.walkreview.navigation.navigateWalkReview
-import com.paw.key.presentation.ui.dummy.next.navigateDummyNext
 import com.paw.key.presentation.ui.home.navigation.navigateHome
 import com.paw.key.presentation.ui.home.navigation.navigateHomeLocationSetting
 import com.paw.key.presentation.ui.login.navigation.navigateLogin
@@ -63,8 +58,8 @@ class MainNavigator(
 
         when (tab) {
             MainTab.HOME -> navController.navigateHome(navOptions)
-            MainTab.COURSE -> navController.navigateCourse(navOptions)
-            MainTab.COMMUNITY -> navController.navigateCommunity(navOptions)
+            MainTab.COURSE -> navController.navigateWalkPrepare(navOptions)
+            MainTab.ROUTERECOMMAND -> navController.navigateCommunity(navOptions)
             MainTab.MYPAGE -> navController.navigateMyPage(navOptions)
         }
     }
@@ -111,14 +106,6 @@ class MainNavigator(
         navController.navigateSignUp(navOptions)
     }
 
-
-    fun navigateCourse(index: Int = 0, navOptions: NavOptions? = null) {
-        navController.navigateCourse(
-            index = index,
-            navOptions = navOptions
-        )
-    }
-
     fun navigateHome(navOptions: NavOptions? = null) {
         navController.navigateHome(navOptions = navOptions)
     }
@@ -127,66 +114,25 @@ class MainNavigator(
         navController.navigateHomeLocationSetting(navOptions = navOptions)
     }
 
-    /*메인 탭 산택 기준 - 산책하기, 완료, 리뷰*/
-//    fun navigateRegional(navOptions: NavOptions? = null) {
-//        navController.navigateRegional(navOptions = navOptions)
-//    }
-    fun navigateSharedWalkCourse(
-        routeId: Int,
-        pageId: Int,
-        navOptions: NavOptions? = null,
-    ) {
-        navController.navigateSharedWalkCourse(
-            routeId = routeId,
-            pageId = pageId,
-            navOptions = navOptions
-        )
-    }
-
-    fun navigateSharedWalkReview(
-        pageId: Int,
-        routeId: Int,
-        navOptions: NavOptions? = null,
-    ) {
-        navController.navigateSharedWalkReview(
-            pageId = pageId,
-            routeId = routeId,
-            navOptions = navOptions
-        )
-    }
-
-    fun navigateSharedWalkCompletion(
-        pageId: Int,
-        routeId: Int,
-        navOptions: NavOptions? = null,
-    ) {
-        navController.navigateSharedWalkCompletion(
-            pageId = pageId,
-            routeId = routeId,
-            navOptions = navOptions
-        )
-    }
-
+    // walk course
     fun navigateWalkCourse(navOptions: NavOptions? = null) {
         navController.navigateWalkCourse(navOptions = navOptions)
     }
 
-    fun navigateWalkCompletion(routeId: Int, navOptions: NavOptions? = null) {
-        navController.navigateWalkCompletion(
-            routeId = routeId,
-            navOptions = navOptions
-        )
-    }
-
-    fun navigateWalkReview(routeId: Int, navOptions: NavOptions? = null) {
+    fun navigateWalkReview(
+        navOptions: NavOptions? = null
+    ) {
         navController.navigateWalkReview(
-            routeId = routeId,
             navOptions = navOptions
         )
     }
 
-    fun navigateDummyNext(navOptions: NavOptions? = null) {
-        navController.navigateDummyNext(navOptions = navOptions)
+    fun navigateWalkPrepare(
+        navOptions: NavOptions? = null
+    ) {
+        navController.navigateWalkPrepare(
+            navOptions = navOptions
+        )
     }
 
     fun navigateUp() {

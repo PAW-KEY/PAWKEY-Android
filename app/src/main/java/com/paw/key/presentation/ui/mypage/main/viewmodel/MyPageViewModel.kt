@@ -2,6 +2,7 @@ package com.paw.key.presentation.ui.mypage.main.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.paw.key.domain.repository.localstorage.LocalStorageRepository
 import com.paw.key.domain.repository.petprofile.PetProfileRepository
 import com.paw.key.domain.repository.userprofile.UserProfileRepository
 import com.paw.key.presentation.ui.mypage.main.model.MyPageSideEffect
@@ -19,6 +20,7 @@ import javax.inject.Inject
 class MyPageViewModel @Inject constructor(
     private val petProfileRepository: PetProfileRepository,
     private val userProfileRepository: UserProfileRepository,
+    private val localRepository: LocalStorageRepository
 ) : ViewModel() {
     private val _state = MutableStateFlow(MyPageState())
     val state: StateFlow<MyPageState>
@@ -26,6 +28,14 @@ class MyPageViewModel @Inject constructor(
 
     private val _sideEffect = MutableSharedFlow<MyPageSideEffect>()
     val sideEffect: MutableSharedFlow<MyPageSideEffect> = _sideEffect
+
+    init {
+        viewModelScope.launch {
+            val userId = localRepository.getUserId()
+            getUserProfiles(userId)
+            getPetProfiles(userId)
+        }
+    }
 
     fun getUserProfiles(userId: Int) {
         viewModelScope.launch {

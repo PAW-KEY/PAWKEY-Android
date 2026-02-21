@@ -1,8 +1,8 @@
 package com.paw.key.data.dto.response.list
 
-import com.paw.key.domain.model.entity.list.ListEntity
-import com.paw.key.domain.model.entity.list.PostEntity
-import com.paw.key.domain.model.entity.list.WriterEntity
+import com.paw.key.domain.entity.list.ListEntity
+import com.paw.key.domain.entity.list.PostEntity
+import com.paw.key.domain.entity.list.WriterEntity
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 

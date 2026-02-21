@@ -5,12 +5,12 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
-import com.paw.key.core.util.PreferenceDataStore
 import com.paw.key.core.util.UiState
 import com.paw.key.core.util.flattenCoordinatesToLatLng
 import com.paw.key.core.util.handleError
 import com.paw.key.domain.repository.RegionRepository
 import com.paw.key.domain.repository.home.HomeRegionRepository
+import com.paw.key.domain.repository.localstorage.LocalStorageRepository
 import com.paw.key.presentation.ui.region.navigation.Regional
 import com.paw.key.presentation.ui.region.state.DrawType
 import com.paw.key.presentation.ui.region.state.RegionSideEffect
@@ -19,12 +19,8 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.filter
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -34,7 +30,8 @@ import javax.inject.Inject
 class RegionViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val regionRepository: RegionRepository,
-    private val homeRepository: HomeRegionRepository
+    private val homeRepository: HomeRegionRepository,
+    private val localStorageRepository: LocalStorageRepository
 ) : ViewModel() {
     private val _state = MutableStateFlow(RegionState())
     val state: StateFlow<RegionState> = _state.asStateFlow()
@@ -43,30 +40,23 @@ class RegionViewModel @Inject constructor(
     val sideEffect : MutableSharedFlow<RegionSideEffect>
         get() = _sideEffect
 
-    private val regionIdState = savedStateHandle.toRoute<Regional>()
 
-    private val userId : StateFlow<Int> = PreferenceDataStore.getUserId()
-        .stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5000),
-            initialValue = -1
-        )
+
+    private val regionIdState = savedStateHandle.toRoute<Regional>()
 
     init {
         if (regionIdState.regionId != -1) {
             viewModelScope.launch {
-                val validUserId = userId.filter { it != -1 }.first()
                 getRegionGeometry(
-                    userId = validUserId,
+                    userId = localStorageRepository.getUserId(),
                     regionId = regionIdState.regionId,
                 )
             }
         } else {
             viewModelScope.launch {
                 Timber.e("RegionViewModel test용 regionId: ${regionIdState.regionId}")
-                val validUserId = userId.filter { it != -1 }.first()
                 getRegionGeometry(
-                    userId = validUserId,
+                    userId = localStorageRepository.getUserId(),
                     regionId = 39,
                 )
             }
@@ -125,7 +115,7 @@ class RegionViewModel @Inject constructor(
     fun patchRegion() {
         if (regionIdState.regionId != -1) {
             viewModelScope.launch {
-                homeRepository.patchRegion(userId.value, regionIdState.regionId!!)
+                homeRepository.patchRegion(localStorageRepository.getUserId(), regionIdState.regionId!!)
                     .onSuccess { data ->
                         Log.d("RegionViewModel", "API 응답 성공: $data")
                         _sideEffect.emit(

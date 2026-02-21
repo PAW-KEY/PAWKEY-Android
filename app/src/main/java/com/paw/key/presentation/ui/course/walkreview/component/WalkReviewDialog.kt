@@ -1,9 +1,12 @@
 package com.paw.key.presentation.ui.course.walkreview.component
 
-import androidx.compose.foundation.background
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -11,34 +14,24 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
-import com.airbnb.lottie.compose.LottieAnimation
-import com.airbnb.lottie.compose.LottieCompositionSpec
-import com.airbnb.lottie.compose.animateLottieCompositionAsState
-import com.airbnb.lottie.compose.rememberLottieComposition
+import com.paw.key.R
+import com.paw.key.core.designsystem.component.DokiButton
 import com.paw.key.core.designsystem.theme.PawKeyTheme
-import com.paw.key.core.extension.noRippleClickable
 
 @Composable
 fun WalkReviewDialog(
-    onClickOk: () -> Unit,
+    navigateHome: () -> Unit,
+    navigateWalkDetail: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val composition by rememberLottieComposition(LottieCompositionSpec.Asset("dialog_animation.json"))
-    
-    val progress by animateLottieCompositionAsState(
-        composition,
-        iterations = 1,
-    )
-
     Dialog (
         onDismissRequest = {
         },
@@ -48,60 +41,67 @@ fun WalkReviewDialog(
         ),
     ) {
         Card (
+            modifier = modifier,
             shape = RoundedCornerShape(8.dp),
-            modifier = modifier
-                .padding(8.dp),
             colors = CardDefaults.cardColors(
                 containerColor = PawKeyTheme.colors.white1
             )
         ) {
             Column (
-                modifier = Modifier.padding(8.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
             ) {
-                LottieAnimation(
-                    composition = composition,
-                    progress = {
-                        progress },
+                Spacer(modifier = Modifier.height(35.dp))
+
+                Image(
+                    imageVector = ImageVector.vectorResource(R.drawable.ic_walk_review_dialog_paw),
+                    contentDescription = null,
                     modifier = Modifier
                         .size(90.dp)
-                        .padding(bottom = 8.dp)
                 )
 
-                Text(
-                    text = "후기가 등록되었어요!",
-                    style = PawKeyTheme.typography.head18Sb,
-                    color = PawKeyTheme.colors.black,
-                    modifier = Modifier.padding(bottom = 6.dp)
-                )
+                Spacer(modifier = Modifier.height(35.dp))
 
                 Text(
-                    text = "  덕분에 PAWKEY가 보호자님을 더 잘 알게 됐어요. \n이 정보로 다음엔 더 완벽한 경로를 추천해 드릴게요.",
-                    style = PawKeyTheme.typography.caption12R,
-                    color = PawKeyTheme.colors.gray300,
-                    modifier = Modifier
-                        .padding(bottom = 32.dp)
+                    text = "후기가 등록이 완료되었어요!",
+                    style = PawKeyTheme.typography.mainButtonActive,
+                    color = PawKeyTheme.colors.contents,
                 )
 
+                Spacer(modifier = Modifier.height(8.dp))
+
                 Text(
-                    text = "확인",
-                    style = PawKeyTheme.typography.body14Sb,
-                    color = PawKeyTheme.colors.white1,
+                    text = "    덕분에 DOKI가 보호자님을 더 잘 알게 됐어요.\n" +
+                            "이 정보로 다음엔 더 완벽한 경로를 추천해 드릴게요.",
+                    style = PawKeyTheme.typography.bodySmall,
+                    color = PawKeyTheme.colors.defaultMiddle,
+                )
+
+                Spacer(modifier = Modifier.height(32.dp))
+
+                Row (
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 24.dp, vertical = 8.dp)
-                        .background(
-                            color = PawKeyTheme.colors.green500,
-                            shape = RoundedCornerShape(8.dp)
-                        )
-                        .clip(RoundedCornerShape(8.dp))
-                        .padding(vertical = 8.dp)
-                        .noRippleClickable {
-                            onClickOk()
-                        },
-                    textAlign = TextAlign.Center,
-                )
+                        .padding(bottom = 20.dp, start = 16.dp, end = 16.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    DokiButton(
+                        text = "홈으로 돌아가기",
+                        enabled = false,
+                        onClick = navigateHome,
+                        modifier = Modifier.weight(1f),
+                        isDialog = true
+                    )
+
+                    DokiButton(
+                        text = "자세히 보러가기",
+                        enabled = true,
+                        onClick = navigateWalkDetail,
+                        modifier = Modifier.weight(1f),
+                        isDialog = true
+                    )
+                }
             }
         }
     }
@@ -112,7 +112,8 @@ fun WalkReviewDialog(
 private fun WalkReviewDialogPreview() {
     PawKeyTheme {
         WalkReviewDialog(
-            onClickOk = {}
+            navigateHome = {},
+            navigateWalkDetail = {}
         )
     }
 }

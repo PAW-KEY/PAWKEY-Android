@@ -15,8 +15,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.paw.key.core.designsystem.component.TopBar
+import com.paw.key.core.designsystem.component.routeitem.RouteItem
 import com.paw.key.core.designsystem.theme.PawKeyTheme
-import com.paw.key.presentation.ui.mypage.courseinfo.component.CourseRouteItem
 import com.paw.key.presentation.ui.mypage.courseinfo.model.CourseData
 import com.paw.key.presentation.ui.mypage.courseinfo.viewmodel.CourseInfoViewModel
 
@@ -70,14 +70,14 @@ fun CourseInfoScreen(
         ) {
             items(courses.size) { index ->
                 val course = courses[index]
-                CourseRouteItem(
+                RouteItem(
                     location = course.location,
                     routeTitle = course.title,
                     routeImage = course.imageUrl,
-                    routeDistance = course.distance,
                     routeTime = course.time,
                     routeDate = course.date,
-                    modifier = Modifier
+                    onClick = {},
+                    onClickHeart = {}
                 )
             }
         }

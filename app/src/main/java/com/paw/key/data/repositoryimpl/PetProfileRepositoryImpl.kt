@@ -1,7 +1,7 @@
 package com.paw.key.data.repositoryimpl
 
 import com.paw.key.data.remote.datasource.PetProfileDataSource
-import com.paw.key.domain.model.entity.petprofile.PetProfileEntity
+import com.paw.key.domain.entity.petprofile.PetProfileEntity
 import com.paw.key.domain.repository.petprofile.PetProfileRepository
 import javax.inject.Inject
 

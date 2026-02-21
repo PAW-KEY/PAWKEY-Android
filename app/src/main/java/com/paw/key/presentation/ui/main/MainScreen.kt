@@ -5,56 +5,30 @@ import android.os.Build
 import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.annotation.RequiresApi
-import androidx.compose.foundation.gestures.detectTapGestures
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.only
-import androidx.compose.foundation.layout.systemBars
-import androidx.compose.foundation.layout.systemBarsPadding
-import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableLongStateOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.paw.key.presentation.animation.FootprintAnimationScreen
 import com.paw.key.presentation.ui.main.component.MainBottomBar
-import com.paw.key.presentation.ui.main.state.MainContract
-import com.paw.key.presentation.ui.main.viewmodel.MainViewModel
 import kotlinx.collections.immutable.toImmutableList
-import kotlinx.collections.immutable.toPersistentList
 
 @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
 @Composable
-fun MainRoute(
-    viewModel: MainViewModel = hiltViewModel(),
-) {
-    val state by viewModel.state.collectAsStateWithLifecycle()
-
-    MainScreen(
-        footprints = state.footprint,
-        addFootprint = viewModel::addFootprint,
-        removeFootprint = viewModel::removeFootprint
-    )
+fun MainRoute() {
+    MainScreen()
 }
 
 @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
 @Composable
 fun MainScreen(
-    footprints: List<MainContract.Footprint>,
-    addFootprint: (MainContract.Footprint) -> Unit,
-    removeFootprint: (MainContract.Footprint) -> Unit,
     navigator: MainNavigator = rememberMainNavigator(),
 ) {
     val context = LocalContext.current
@@ -81,13 +55,6 @@ fun MainScreen(
     MainScreenContent(
         navigator = navigator,
         snackBarHostState = snackBarHostState,
-        footprints = footprints,
-        addFootprint = { footprint ->
-            addFootprint(footprint)
-        },
-        removeFootprint = { footprint ->
-            removeFootprint(footprint)
-        }
     )
 }
 
@@ -96,42 +63,34 @@ fun MainScreen(
 private fun MainScreenContent(
     navigator: MainNavigator,
     snackBarHostState: SnackbarHostState,
-    footprints: List<MainContract.Footprint>,
-    addFootprint: (MainContract.Footprint) -> Unit,
-    removeFootprint: (MainContract.Footprint) -> Unit,
 ) {
-    Box(
+    Scaffold (
+       bottomBar = {
+           MainBottomBar(
+               isVisible = navigator.showBottomBar(),
+               tabs = MainTab.entries.toImmutableList(),
+               currentTab = navigator.currentTab,
+               onTabSelected = navigator::navigate,
+           )
+       },
         modifier = Modifier
-            .windowInsetsPadding(WindowInsets.systemBars.only(WindowInsetsSides.Top)) // 시스템 바들 중 현재는 탑만, 유연성을 위해 사용
-            .systemBarsPadding()
             .fillMaxSize()
-            .pointerInput(Unit) {
-                detectTapGestures { offset ->
-                    addFootprint(MainContract.Footprint(position = offset))
-                }
-            }
-    ) {
+            .navigationBarsPadding()
+            .statusBarsPadding()
+    ) { innerPadding ->
         PawKeyNavHost(
             navigator = navigator,
-            paddingValues = PaddingValues(),
+            paddingValues = innerPadding,
             snackbarHostState = snackBarHostState
         )
+    }
+}
 
-        MainBottomBar(
-            isVisible = navigator.showBottomBar(),
-            tabs = MainTab.entries.toImmutableList(),
-            currentTab = navigator.currentTab,
-            onTabSelected = navigator::navigate,
-            modifier = Modifier.align(Alignment.BottomCenter)
-        )
-
-        FootprintAnimationScreen(
+/*FootprintAnimationScreen(
             footprints = footprints.toPersistentList(),
             onAnimationFinished = { finishedFootprint ->
                 removeFootprint(finishedFootprint)
             },
             modifier = Modifier
                 .fillMaxSize()
-        )
-    }
-}
+        )*/

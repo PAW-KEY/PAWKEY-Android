@@ -1,21 +1,26 @@
 package com.paw.key.presentation.ui.signup.state
 
 import androidx.compose.runtime.Immutable
+import com.paw.key.presentation.ui.signup.model.PetInfoItemModel
 import com.paw.key.presentation.ui.signup.model.SignUpLocationInfo
 import com.paw.key.presentation.ui.signup.model.SignUpMapInfo
 import com.paw.key.presentation.ui.signup.model.SignUpPetInfo
 import com.paw.key.presentation.ui.signup.model.SignUpUserInfo
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.persistentListOf
 
 @Immutable
 data class SignUpState(
     val userInfo: SignUpUserInfo = SignUpUserInfo(),
     val petInfo: SignUpPetInfo = SignUpPetInfo(),
+    val petBreedList : ImmutableList<PetInfoItemModel> = persistentListOf(),
     val locationInfo: SignUpLocationInfo = SignUpLocationInfo(),
     val mapInfo: SignUpMapInfo = SignUpMapInfo(),
     val signUpState: SignUpStateType = SignUpStateType.USER_INFO,
     val currentStep: Float = 1f,
     val isNextEnabled: Boolean = false,
     val isRegionComplete: Boolean = false,
+    val isLoading: Boolean = false,
 )
 
 sealed class SignUpSideEffect {
@@ -32,8 +37,10 @@ enum class SignUpStateType {
     REGION_MANAGEMENT,
 }
 
-enum class Gender {
-    MALE,
-    FEMALE,
-    UNKNOWN
+enum class Gender(
+    val value: String
+) {
+    MALE("M"),
+    FEMALE("F"),
+    UNKNOWN("U")
 }

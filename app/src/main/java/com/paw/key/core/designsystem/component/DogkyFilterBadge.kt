@@ -39,14 +39,14 @@ fun DogkyFilterBadge(
             )
             .clickable(
                 onClick = onLocationClick
-            ),
+            )
+            .padding(horizontal = horizontalPadding.dp, vertical = verticalPadding.dp),
         contentAlignment = Alignment.Center
     ) {
         Text(
             text = location,
             style = PawKeyTheme.typography.buttonSmall,
             color = PawKeyTheme.colors.primary,
-            modifier = Modifier.padding(horizontal = horizontalPadding.dp, vertical = verticalPadding.dp)
         )
     }
 }
@@ -56,8 +56,10 @@ fun DogkyFilterBadge(
 private fun RegionBadgePreview() {
     PawKeyTheme {
         DogkyFilterBadge(
-            location = "w적음",
-            onLocationClick = {}
+            location = "강남구 역삼동",
+            onLocationClick = {},
+            horizontalPadding = 6,
+            verticalPadding = 5,
         )
     }
 }

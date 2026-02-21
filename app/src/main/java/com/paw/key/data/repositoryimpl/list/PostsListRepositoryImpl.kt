@@ -3,7 +3,7 @@ package com.paw.key.data.repositoryimpl.list
 import com.paw.key.data.dto.request.list.PostsListRequestDto
 import com.paw.key.data.dto.response.list.toEntity
 import com.paw.key.data.remote.datasource.list.PostsListDataSource
-import com.paw.key.domain.model.entity.list.ListEntity
+import com.paw.key.domain.entity.list.ListEntity
 import com.paw.key.domain.repository.list.PostsListRepository
 import javax.inject.Inject
 

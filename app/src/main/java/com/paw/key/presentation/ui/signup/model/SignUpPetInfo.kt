@@ -2,6 +2,7 @@ package com.paw.key.presentation.ui.signup.model
 
 import android.net.Uri
 import androidx.compose.runtime.Immutable
+import com.paw.key.domain.entity.user.PetBreedsItemEntity
 import com.paw.key.presentation.ui.signup.state.Gender
 
 @Immutable
@@ -11,5 +12,16 @@ data class SignUpPetInfo(
     val petBirthDate : String = "",
     val petGender : Gender = Gender.UNKNOWN,
     val petNeutered : Boolean = false,
-    val petBreed : String = "",
+    val petBreed : PetInfoItemModel = PetInfoItemModel(),
+)
+
+@Immutable
+data class PetInfoItemModel(
+    val id : Int = 0,
+    val name: String = ""
+)
+
+fun PetBreedsItemEntity.toState() = PetInfoItemModel(
+    id = id,
+    name = name
 )

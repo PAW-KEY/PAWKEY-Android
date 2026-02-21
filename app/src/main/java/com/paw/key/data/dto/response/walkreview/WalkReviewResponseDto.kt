@@ -1,6 +1,6 @@
 package com.paw.key.data.dto.response.walkreview
 
-import com.paw.key.domain.model.entity.walkreview.WalkReviewIdEntity
+import com.paw.key.domain.entity.walkreview.WalkReviewIdEntity
 import kotlinx.serialization.Serializable
 
 @Serializable

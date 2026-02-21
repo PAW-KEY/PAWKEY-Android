@@ -6,6 +6,7 @@ import android.os.Build
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
@@ -16,6 +17,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -26,6 +28,7 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.input.ImeAction
@@ -41,24 +44,24 @@ import com.paw.key.presentation.ui.signup.component.PetBreedSearchContent
 import com.paw.key.presentation.ui.signup.component.SignUpNeuteringCheckRadio
 import com.paw.key.presentation.ui.signup.component.SignUpPetImageHolder
 import com.paw.key.presentation.ui.signup.component.SignUpTextField
+import com.paw.key.presentation.ui.signup.model.PetInfoItemModel
+import com.paw.key.presentation.ui.signup.model.SignUpPetInfo
 import com.paw.key.presentation.ui.signup.state.Gender
+import kotlinx.collections.immutable.ImmutableList
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SignUpPetInfoScreen(
-    petName : String,
-    petBirthDate : String,
-    petGender : Gender,
-    petNeutered : Boolean,
-    petBreed : String,
-    selectedImageUri: Uri?,
+    petInfo: SignUpPetInfo,
+    petBreedList: ImmutableList<PetInfoItemModel>,
+    requestPetInfo : () -> Unit,
     deniedPermission: () -> Unit,
     onPetNameChanged : (String) -> Unit,
     onPetBirthDateChanged : (String) -> Unit,
     onPetGenderChanged : (Gender) -> Unit,
     onPetNeuteredChanged : (Boolean) -> Unit,
-    onPetBreedChanged : (String) -> Unit,
+    onPetBreedChanged : (PetInfoItemModel) -> Unit,
     onSelectedImage: (Uri?) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -95,6 +98,12 @@ fun SignUpPetInfoScreen(
         }
     )
 
+    if (petBreedList.isEmpty()) {
+        LaunchedEffect(Unit) {
+            requestPetInfo()
+        }
+    }
+
     Column(
         modifier = modifier
             .padding(
@@ -104,7 +113,7 @@ fun SignUpPetInfoScreen(
             )
     ) {
         SignUpPetImageHolder(
-            uri = selectedImageUri,
+            uri = petInfo.petImage,
             modifier = Modifier
                 .noRippleClickable {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -123,7 +132,7 @@ fun SignUpPetInfoScreen(
             label = "이름",
             content = {
                 SignUpTextField(
-                    value = petName,
+                    value = petInfo.petName,
                     onValueChange = {
                         if (it.length <= 8) {
                             onPetNameChanged(it)
@@ -150,7 +159,7 @@ fun SignUpPetInfoScreen(
                 SignUpTextField(
                     modifier = Modifier
                         .focusRequester(petBirthDateFocusRequester),
-                    value = petBirthDate,
+                    value = petInfo.petBirthDate,
                     onValueChange = {
                         if (it.length <= 8) {
                             onPetBirthDateChanged(it)
@@ -177,7 +186,7 @@ fun SignUpPetInfoScreen(
             label = "성별",
             content = {
                 GenderSelector(
-                    selectedGender = petGender,
+                    selectedGender = petInfo.petGender,
                     onGenderSelected = onPetGenderChanged,
                     type = "반려 동물"
                 )
@@ -185,8 +194,8 @@ fun SignUpPetInfoScreen(
         )
 
         SignUpNeuteringCheckRadio(
-            isNeutered = petNeutered,
-            onToggle = { onPetNeuteredChanged(!petNeutered) },
+            isNeutered = petInfo.petNeutered,
+            onToggle = { onPetNeuteredChanged(!petInfo.petNeutered) },
             modifier = Modifier
                 .padding(top = 8.dp)
         )
@@ -197,8 +206,8 @@ fun SignUpPetInfoScreen(
             label = "견종",
             content = {
                 SignUpTextField(
-                    value = petBreed,
-                    onValueChange = onPetBreedChanged,
+                    value = petInfo.petBreed.name,
+                    onValueChange = {},
                     enabled = false,
                     placeholder = "견종을 검색해보세요",
                     suffix = {
@@ -224,13 +233,18 @@ fun SignUpPetInfoScreen(
             PawKeyBottomSheet(
                 onDismissRequest = { isSheetOpen = false },
                 sheetState = sheetState,
-                //sheetGesturesEnabled = false,
+                modifier = Modifier
+                    .pointerInput(Unit) {
+                        detectTapGestures {
+                        }
+                    }
             ) { sheetState ->
                 PetBreedSearchContent(
+                    petBreedList = petBreedList,
                     sheetState = sheetState,
-                    selectedBreed = petBreed,
-                    onBreedSelected = {
-                        onPetBreedChanged(it)
+                    selectedBreed = petInfo.petBreed.name,
+                    onBreedSelected = { selectedModel: PetInfoItemModel ->
+                        onPetBreedChanged(selectedModel)
                         scope.launch {
 
                             sheetState.hide()

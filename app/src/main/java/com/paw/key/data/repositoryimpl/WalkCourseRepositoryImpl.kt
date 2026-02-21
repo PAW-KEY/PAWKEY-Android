@@ -2,7 +2,7 @@ package com.paw.key.data.repositoryimpl
 
 import com.paw.key.data.dto.request.walkcourse.WalkCourseRequestDto
 import com.paw.key.data.remote.datasource.WalkCourseDataSource
-import com.paw.key.domain.model.entity.walkcourse.WalkCourseRegionIdEntity
+import com.paw.key.domain.entity.walkcourse.WalkCourseRegionIdEntity
 import com.paw.key.domain.repository.walkcourse.WalkCourseRepository
 import okhttp3.MultipartBody
 import javax.inject.Inject
