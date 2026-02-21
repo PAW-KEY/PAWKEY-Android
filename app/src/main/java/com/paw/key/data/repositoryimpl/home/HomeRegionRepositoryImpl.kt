@@ -1,7 +1,7 @@
 package com.paw.key.data.repositoryimpl.home
 
 import com.paw.key.data.remote.datasource.home.HomeRegionDataSource
-import com.paw.key.domain.model.entity.home.HomeRegionDataEntity
+import com.paw.key.domain.entity.home.HomeRegionDataEntity
 import com.paw.key.domain.repository.home.HomeRegionRepository
 import javax.inject.Inject
 

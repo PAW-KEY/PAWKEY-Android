@@ -22,7 +22,6 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -47,7 +46,6 @@ import com.paw.key.core.designsystem.component.PawkeyButton
 import com.paw.key.core.designsystem.component.TopBar
 import com.paw.key.core.designsystem.theme.PawKeyTheme
 import com.paw.key.core.extension.noRippleClickable
-import com.paw.key.core.util.PreferenceDataStore
 import com.paw.key.presentation.ui.mypage.petinfo.viewmodel.PetProfileViewModel
 import com.paw.key.presentation.ui.signup.component.FormField
 import com.paw.key.presentation.ui.signup.component.GenderSelector
@@ -55,8 +53,9 @@ import com.paw.key.presentation.ui.signup.component.PetBreedSearchContent
 import com.paw.key.presentation.ui.signup.component.SignUpNeuteringCheckRadio
 import com.paw.key.presentation.ui.signup.component.SignUpPetImageHolder
 import com.paw.key.presentation.ui.signup.component.SignUpTextField
+import com.paw.key.presentation.ui.signup.model.PetInfoItemModel
 import com.paw.key.presentation.ui.signup.state.Gender
-import kotlinx.coroutines.flow.first
+import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.launch
 
 @Composable
@@ -65,11 +64,7 @@ fun PetProfileRoute(
     viewModel: PetProfileViewModel = hiltViewModel(),
 ) {
     val state = viewModel.state.collectAsStateWithLifecycle()
-    val userId = PreferenceDataStore.getUserId()
 
-    LaunchedEffect(Unit) {
-        viewModel.getPetProfiles(userId.first())
-    }
 
     PetProfileScreen(
         petName = state.value.name,
@@ -104,7 +99,7 @@ fun PetProfileScreen(
     onPetBirthDateChanged: (String) -> Unit,
     onPetGenderChanged: (Gender) -> Unit,
     onPetNeuteredChanged: (Boolean) -> Unit,
-    onPetBreedChanged: (String) -> Unit,
+    onPetBreedChanged: (PetInfoItemModel) -> Unit,
     onSelectedImage: (Uri?) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -268,7 +263,7 @@ fun PetProfileScreen(
                     content = {
                         SignUpTextField(
                             value = petBreed,
-                            onValueChange = onPetBreedChanged,
+                            onValueChange = {},
                             enabled = false,
                             placeholder = "견종을 검색해보세요",
                             suffix = {
@@ -294,6 +289,7 @@ fun PetProfileScreen(
                         //sheetGesturesEnabled = false,
                     ) { sheetState ->
                         PetBreedSearchContent(
+                            petBreedList = persistentListOf(),
                             sheetState = sheetState,
                             selectedBreed = petBreed,
                             onBreedSelected = {

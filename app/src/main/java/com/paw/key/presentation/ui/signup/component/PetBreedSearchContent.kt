@@ -1,6 +1,7 @@
 package com.paw.key.presentation.ui.signup.component
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -24,34 +25,32 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.paw.key.R
 import com.paw.key.core.designsystem.theme.PawKeyTheme
+import com.paw.key.core.extension.disableNestedScroll
 import com.paw.key.core.extension.noRippleClickable
+import com.paw.key.presentation.ui.signup.model.PetInfoItemModel
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.launch
-
-private val dummyPetBreeds = listOf(
-    "닥스훈트", "달마시안", "말라뮤트", "말티즈", "믹스견",
-    "미니핀", "보스턴 테리어", "불독", "비글", "비숑 프리제",
-    "사모예드", "시바견", "시츄", "요크셔 테리어", "진돗개",
-    "치와와", "포메라니안", "푸들"
-)
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PetBreedSearchContent(
+    petBreedList : ImmutableList<PetInfoItemModel>,
     sheetState: SheetState,
     selectedBreed : String,
-    onBreedSelected : (String) -> Unit,
+    onBreedSelected : (PetInfoItemModel) -> Unit,
     modifier: Modifier = Modifier
 ) {
     // 바텀 시트용
-    var bottomPetBreed by remember {
-        mutableStateOf("")
-    }
+    var searchText by remember { mutableStateOf("") }
 
     val scope = rememberCoroutineScope()
 
@@ -65,6 +64,10 @@ fun PetBreedSearchContent(
                 shape = RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp)
             )
             .padding(horizontal = 16.dp)
+            .pointerInput(Unit) {
+                detectTapGestures {
+                }
+            }
     ) {
         Text(
             text = "견종 검색",
@@ -80,10 +83,8 @@ fun PetBreedSearchContent(
         )
 
         SignUpTextField(
-            value = bottomPetBreed,
-            onValueChange = {
-                bottomPetBreed = it
-            },
+            value = searchText,
+            onValueChange = { searchText = it },
             placeholder = "견종을 검색해보세요",
             suffix = {
                 Icon(
@@ -102,8 +103,8 @@ fun PetBreedSearchContent(
         )
 
         PetBreedSearchList(
-            breedList = dummyPetBreeds,
-            petBreed = bottomPetBreed,
+            breedList = petBreedList,
+            searchText = searchText,
             selectedBreed = selectedBreed,
             onBreedSelected = onBreedSelected,
             modifier = Modifier
@@ -114,29 +115,35 @@ fun PetBreedSearchContent(
 
 @Composable
 fun PetBreedSearchList(
-    breedList : List<String>,
-    petBreed : String,
+    breedList : ImmutableList<PetInfoItemModel>,
+    searchText : String,
     selectedBreed : String,
-    onBreedSelected : (String) -> Unit,
+    onBreedSelected : (PetInfoItemModel) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val filteredList = if (petBreed.isBlank()) {
-        breedList
-    } else {
-        breedList.filter { it.contains(petBreed, ignoreCase = true) }
+    val filteredList = remember(searchText, breedList) {
+        if (searchText.isBlank()) {
+            breedList
+        } else {
+            breedList.filter {
+                it.name.contains(searchText, ignoreCase = true)
+            }.toImmutableList()
+        }
     }
 
     LazyColumn(
         modifier = modifier
+            .disableNestedScroll()
             .padding(top = 8.dp)
     ) {
         itemsIndexed(
-            items = filteredList
+            items = filteredList,
+            key = { _, item -> item.id }
         ) { index, item ->
             PetBreedSearchItem(
-                petBreed = item,
-                onBreedSelected = onBreedSelected,
-                isPetBreedSelected = petBreed == item || selectedBreed == item,
+                petBreedItem = item,
+                isSelected = item.name == selectedBreed,
+                onBreedSelected = onBreedSelected
             )
         }
     }
@@ -144,25 +151,25 @@ fun PetBreedSearchList(
 
 @Composable
 fun PetBreedSearchItem(
-    petBreed : String,
-    onBreedSelected : (String) -> Unit,
-    isPetBreedSelected : Boolean,
+    petBreedItem: PetInfoItemModel,
+    isSelected: Boolean,
+    onBreedSelected: (PetInfoItemModel) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val textColor = if (isPetBreedSelected) {
+    val textColor = if (isSelected) {
         PawKeyTheme.colors.background
     } else {
         PawKeyTheme.colors.contents
     }
 
-    val backgroundColor = if (isPetBreedSelected) {
+    val backgroundColor = if (isSelected) {
         PawKeyTheme.colors.primary
     } else {
         PawKeyTheme.colors.background
     }
 
     Text(
-        text = petBreed,
+        text = petBreedItem.name,
         style = PawKeyTheme.typography.bodyActive,
         color = textColor,
         modifier = modifier
@@ -176,7 +183,7 @@ fun PetBreedSearchItem(
                 vertical = 11.dp
             )
             .noRippleClickable {
-                onBreedSelected(petBreed)
+                onBreedSelected(petBreedItem)
             },
         textAlign = TextAlign.Start
     )
@@ -190,7 +197,8 @@ private fun PetPetBreedSearchContentPreview() {
         PetBreedSearchContent(
             selectedBreed = "",
             onBreedSelected = {},
-            sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+            sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
+            petBreedList = persistentListOf()
         )
     }
 }

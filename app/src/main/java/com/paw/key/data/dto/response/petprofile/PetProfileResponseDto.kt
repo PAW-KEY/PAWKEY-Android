@@ -1,8 +1,8 @@
 package com.paw.key.data.dto.response.petprofile
 
 import androidx.core.net.toUri
-import com.paw.key.domain.model.entity.petprofile.PetProfileEntity
-import com.paw.key.domain.model.entity.petprofile.TraitEntity
+import com.paw.key.domain.entity.petprofile.PetProfileEntity
+import com.paw.key.domain.entity.petprofile.TraitEntity
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 

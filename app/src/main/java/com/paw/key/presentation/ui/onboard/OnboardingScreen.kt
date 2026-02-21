@@ -20,7 +20,7 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.paw.key.R
-import com.paw.key.core.designsystem.component.DogkyButton
+import com.paw.key.core.designsystem.component.DokiButton
 import com.paw.key.core.designsystem.theme.PawKeyTheme
 import com.paw.key.presentation.ui.onboard.component.OnboardPager
 import com.paw.key.presentation.ui.onboard.component.OnboardingPosting
@@ -110,7 +110,7 @@ fun OnboardingScreen(
             )
         )
 
-        DogkyButton(
+        DokiButton(
             text = stringResource(id = R.string.ic_onboarding_button),
             enabled = true,
             onClick = navigateNext,

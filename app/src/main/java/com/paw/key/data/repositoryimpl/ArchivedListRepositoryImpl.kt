@@ -1,8 +1,7 @@
 package com.paw.key.data.repositoryimpl
 
 import com.paw.key.data.remote.datasource.ArchivedListDataSource
-import com.paw.key.domain.model.entity.archivedlist.ArchivedListEntity
-import com.paw.key.domain.model.entity.archivedlist.ArchivedListPostsEntity
+import com.paw.key.domain.entity.archivedlist.ArchivedListPostsEntity
 import com.paw.key.domain.repository.ArchivedListRepository
 import javax.inject.Inject
 

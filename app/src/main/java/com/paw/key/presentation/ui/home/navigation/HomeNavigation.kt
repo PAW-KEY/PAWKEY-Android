@@ -1,7 +1,6 @@
 package com.paw.key.presentation.ui.home.navigation
 
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
@@ -19,14 +18,12 @@ fun NavController.navigateHome(
 fun NavGraphBuilder.homeNavGraph(
     paddingValues: PaddingValues,
     navigateUp: () -> Unit,
-    navigateNext: () -> Unit,
-    navigateHomeLocationSetting: () -> Unit,
-    modifier: Modifier = Modifier,
+    navigateToCourse: () -> Unit,
 ) {
     composable<Home> {
         HomeRoute(
             paddingValues = paddingValues,
-
+            navigateToCourse = navigateToCourse,
         )
     }
 }

@@ -22,8 +22,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -36,14 +36,14 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.flowWithLifecycle
 import com.paw.key.R
 import com.paw.key.core.designsystem.theme.PawKeyTheme
-import com.paw.key.core.util.PreferenceDataStore
 import com.paw.key.presentation.ui.login.component.LoginSocialButton
+import com.paw.key.presentation.ui.login.state.LoginSideEffect
 import com.paw.key.presentation.ui.login.viewmodel.LoginViewModel
-import kotlinx.coroutines.launch
-import timber.log.Timber
 
 @Composable
 fun LoginRoute(
@@ -51,6 +51,7 @@ fun LoginRoute(
     navigateUp: () -> Unit,
     navigateNext: () -> Unit,
     navigateHome: () -> Unit,
+    navigateSignUp: () -> Unit,
     snackBarHostState: SnackbarHostState,
     modifier: Modifier = Modifier,
     viewModel: LoginViewModel = hiltViewModel(),
@@ -58,29 +59,28 @@ fun LoginRoute(
     val state by viewModel.state.collectAsStateWithLifecycle()
     val isLoginFormValid = viewModel.state.collectAsStateWithLifecycle().value.isLoginValid
     val context = LocalContext.current
-    val coroutineScope = rememberCoroutineScope()
+    val lifeCycle = LocalLifecycleOwner.current
+
+    LaunchedEffect(Unit) {
+        viewModel.sideEffect.flowWithLifecycle(lifeCycle.lifecycle)
+            .collect { sideEffect ->
+                when (sideEffect) {
+                    is LoginSideEffect.NavigateToHome -> navigateHome()
+                    is LoginSideEffect.NavigateToSignUp -> navigateSignUp()
+                    else -> {}
+                }
+
+            }
+    }
 
     LoginScreen(
         paddingValues = paddingValues,
-        navigateUp = navigateUp,
-        navigateNext = {
-            coroutineScope.launch {
-                PreferenceDataStore.saveLoginInfo(
-                    email = state.email,
-                    password = state.password
-                )
-                navigateNext()
-            }
+        onGoogleSignIn = {
+            viewModel.onGoogleSignIn(context = context, onSuccess = navigateHome)
         },
-        snackBarHostState = snackBarHostState,
-        email = state.email,
-        password = state.password,
-        isPasswordVisible = state.isPasswordVisible,
-        isLoginFormValid = isLoginFormValid,
-        modifier = modifier,
-        onEmailChanged = viewModel::onEmailChanged,
-        onPasswordChanged = viewModel::onPasswordChanged,
-        onClickIcon = viewModel::onPasswordVisibilityChanged,
+        onKakaoSignIn = {
+            viewModel.onKakaoSignIn(context = context)
+        },
         navigateHome = navigateHome
     )
 }
@@ -89,27 +89,18 @@ fun LoginRoute(
 @Composable
 fun LoginScreen(
     paddingValues: PaddingValues,
-    navigateUp: () -> Unit,
-    navigateNext: () -> Unit,
     navigateHome: () -> Unit,
-    onEmailChanged: (String) -> Unit,
-    onPasswordChanged: (String) -> Unit,
-    onClickIcon: () -> Unit,
-    snackBarHostState: SnackbarHostState,
-    email: String,
-    password: String,
-    isPasswordVisible: Boolean,
-    isLoginFormValid: Boolean,
+    onGoogleSignIn: () -> Unit,
+    onKakaoSignIn: () -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: LoginViewModel = hiltViewModel(),
 ) {
-    val context = LocalContext.current
     val scrollState = rememberScrollState()
 
     Box(
         modifier = modifier
             .fillMaxSize()
-            .background(PawKeyTheme.colors.white1)
+            .background(PawKeyTheme.colors.background)
+            .padding(paddingValues)
     ) {
         Column(
             modifier = Modifier
@@ -155,10 +146,7 @@ fun LoginScreen(
                     logo = R.drawable.ic_login_kakao,
                     loginText = stringResource(R.string.ic_login_kakao),
                     onClick = {
-                        viewModel.onKakaoSignIn(
-                            context = context,
-                            onSuccess = navigateHome
-                        )
+                        onKakaoSignIn()
                     },
                     modifier = Modifier
                         .background(
@@ -171,11 +159,7 @@ fun LoginScreen(
                     logo = R.drawable.ic_login_google,
                     loginText = stringResource(R.string.ic_login_google),
                     onClick = {
-                        Timber.e("onClick LoginSocialButton")
-                        viewModel.onGoogleSignIn(
-                            context = context,
-                            onSuccess = navigateHome
-                        )
+                        onGoogleSignIn()
                     },
                     modifier = Modifier
                         .background(
@@ -206,17 +190,9 @@ private fun PreviewLoginScreen() {
     PawKeyTheme {
         LoginScreen(
             paddingValues = PaddingValues(),
-            navigateUp = {},
-            navigateNext = {},
-            onEmailChanged = {},
-            onPasswordChanged = {},
-            onClickIcon = {},
-            navigateHome = {},
-            snackBarHostState = SnackbarHostState(),
-            email = "",
-            password = "",
-            isPasswordVisible = false,
-            isLoginFormValid = true,
+            onGoogleSignIn = {},
+            onKakaoSignIn = {},
+            navigateHome = {}
         )
     }
 }

@@ -1,7 +1,7 @@
 package com.paw.key.domain.repository.sharedwalk
 
-import com.paw.key.domain.model.entity.sharedwalk.SharedWalkEntity
-import com.paw.key.domain.model.entity.sharedwalk.SharedWalkReviewEntity
+import com.paw.key.domain.entity.sharedwalk.SharedWalkEntity
+import com.paw.key.domain.entity.sharedwalk.SharedWalkReviewEntity
 
 interface SharedWalkRepository {
     suspend fun getSharedWalkTrack(userId: Int, routeId: Int): Result<SharedWalkEntity>

@@ -1,7 +1,7 @@
 package com.paw.key.data.dto.response.sharedwalk
 
-import com.paw.key.domain.model.entity.sharedwalk.GeometryEntity
-import com.paw.key.domain.model.entity.sharedwalk.SharedWalkEntity
+import com.paw.key.domain.entity.sharedwalk.GeometryEntity
+import com.paw.key.domain.entity.sharedwalk.SharedWalkEntity
 import kotlinx.serialization.Serializable
 
 @Serializable

@@ -6,6 +6,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -22,19 +23,28 @@ import com.paw.key.core.extension.noRippleClickable
 import com.paw.key.presentation.ui.signup.component.FormField
 import com.paw.key.presentation.ui.signup.component.RegionSearchContent
 import com.paw.key.presentation.ui.signup.component.SignUpTextField
+import com.paw.key.presentation.ui.signup.model.DongModel
+import com.paw.key.presentation.ui.signup.model.GuModel
+import com.paw.key.presentation.ui.signup.model.SignUpLocationInfo
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SignUpLocationInfoScreen(
-    gu : String,
-    dong : String,
-    onSelectedLocation : (gu : String, dong : String) -> Unit,
+    locationInfo: SignUpLocationInfo,
+    getRegions: () -> Unit,
+    onRegionSelected: (GuModel, DongModel) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val scope = rememberCoroutineScope()
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     var isSheetOpen by remember { mutableStateOf(false) }
+
+    if (locationInfo.regionList.isEmpty()) {
+        LaunchedEffect(Unit) {
+            getRegions()
+        }
+    }
 
     Column (
         modifier = modifier
@@ -48,7 +58,7 @@ fun SignUpLocationInfoScreen(
             label = "선택 지역",
             content = {
                 SignUpTextField(
-                    value = if (gu.isNotEmpty() && dong.isNotEmpty()) "$gu $dong" else "",
+                    value = if (locationInfo.selectedGu.name.isNotEmpty() && locationInfo.selectedDong.name.isNotEmpty()) "${locationInfo.selectedGu.name} ${locationInfo.selectedDong.name}" else "",
                     onValueChange = {},
                     enabled = false,
                     placeholder = "주로 산책하는 지역을 검색해보세요",
@@ -76,11 +86,16 @@ fun SignUpLocationInfoScreen(
             onDismissRequest = { isSheetOpen = false },
         ) {
             RegionSearchContent(
-                selectedGu = gu,
-                selectedDong = dong,
+                regionList = locationInfo.regionList,
+                selectedGu = locationInfo.selectedGu,
+                selectedDong = locationInfo.selectedDong,
                 onRegionSelected = { gu, dong ->
-                    isSheetOpen = false
-                    onSelectedLocation(gu, dong)
+                    scope.launch { sheetState.hide() }.invokeOnCompletion {
+                        if (!sheetState.isVisible) {
+                            isSheetOpen = false
+                            onRegionSelected(gu, dong)
+                        }
+                    }
                 }
             )
         }

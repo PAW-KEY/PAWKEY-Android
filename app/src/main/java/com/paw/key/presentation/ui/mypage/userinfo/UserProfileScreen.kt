@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -18,12 +17,10 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.paw.key.core.designsystem.component.PawkeyButton
 import com.paw.key.core.designsystem.component.TopBar
 import com.paw.key.core.designsystem.theme.PawKeyTheme
-import com.paw.key.core.util.PreferenceDataStore
 import com.paw.key.presentation.ui.mypage.userinfo.component.UserEditTextField
 import com.paw.key.presentation.ui.mypage.userinfo.component.UserGenderButton
 import com.paw.key.presentation.ui.mypage.userinfo.component.UserProfileItem
 import com.paw.key.presentation.ui.mypage.userinfo.viewmodel.UserProfileViewModel
-import kotlinx.coroutines.flow.first
 
 @Composable
 fun UserProfileRoute(
@@ -32,11 +29,6 @@ fun UserProfileRoute(
     viewModel: UserProfileViewModel = hiltViewModel(),
 ) {
     val state = viewModel.state.collectAsStateWithLifecycle()
-    val userId = PreferenceDataStore.getUserId()
-
-    LaunchedEffect(Unit) {
-        viewModel.getUserProfiles(userId = userId.first())
-    }
 
     UserProfileScreen(
         name = state.value.name,

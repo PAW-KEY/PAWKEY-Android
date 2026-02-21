@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -17,7 +16,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.paw.key.core.designsystem.component.TopBar
 import com.paw.key.core.designsystem.theme.PawKeyTheme
-import com.paw.key.core.util.PreferenceDataStore
 import com.paw.key.presentation.ui.mypage.courseinfo.model.CourseType
 import com.paw.key.presentation.ui.mypage.main.component.MyList
 import com.paw.key.presentation.ui.mypage.main.component.MyPageCard
@@ -26,7 +24,6 @@ import com.paw.key.presentation.ui.mypage.main.component.SettingList
 import com.paw.key.presentation.ui.mypage.main.model.MyListState
 import com.paw.key.presentation.ui.mypage.main.model.MyPageState
 import com.paw.key.presentation.ui.mypage.main.viewmodel.MyPageViewModel
-import kotlinx.coroutines.flow.first
 
 @Composable
 fun MyPageRoute(
@@ -40,12 +37,6 @@ fun MyPageRoute(
     viewModel: MyPageViewModel = hiltViewModel(),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
-    val userId = PreferenceDataStore.getUserId()
-
-    LaunchedEffect(Unit) {
-        viewModel.getUserProfiles(userId = userId.first())
-        viewModel.getPetProfiles(userId = userId.first())
-    }
 
     MyPageScreen(
         state = state,

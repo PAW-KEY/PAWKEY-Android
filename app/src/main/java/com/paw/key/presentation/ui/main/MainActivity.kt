@@ -10,7 +10,6 @@ import androidx.activity.enableEdgeToEdge
 import androidx.annotation.RequiresApi
 import androidx.core.view.WindowCompat
 import com.paw.key.core.designsystem.theme.PawKeyTheme
-import com.paw.key.core.util.PreferenceDataStore
 import dagger.hilt.android.AndroidEntryPoint
 
 
@@ -22,7 +21,6 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-        PreferenceDataStore.init(this)
 
         WindowCompat.getInsetsController(window, window.decorView).apply {
             isAppearanceLightStatusBars = true

@@ -1,6 +1,6 @@
 package com.paw.key.data.dto.response.walkcourse
 
-import com.paw.key.domain.model.entity.walkcourse.WalkCourseRegionIdEntity
+import com.paw.key.domain.entity.walkcourse.WalkCourseRegionIdEntity
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
