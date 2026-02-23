@@ -3,7 +3,6 @@ package com.paw.key.data.di
 import com.paw.key.data.service.ArchivedListService
 import com.paw.key.data.service.LikeService
 import com.paw.key.data.service.PetProfileService
-import com.paw.key.data.service.region.RegionService
 import com.paw.key.data.service.SavedListService
 import com.paw.key.data.service.UserProfileService
 import com.paw.key.data.service.filter.FilterOptionService
@@ -11,11 +10,10 @@ import com.paw.key.data.service.home.HomeRegionService
 import com.paw.key.data.service.image.ImageService
 import com.paw.key.data.service.list.PostsListService
 import com.paw.key.data.service.login.LoginService
+import com.paw.key.data.service.region.RegionService
 import com.paw.key.data.service.sharedwalk.SharedWalkService
 import com.paw.key.data.service.user.UserService
-import com.paw.key.data.service.walkcourse.WalkCourseService
-import com.paw.key.data.service.walklist.WalkListDetailService
-import com.paw.key.data.service.walkreview.WalkReviewService
+import com.paw.key.data.service.walkpreparation.WalkPreparationService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -31,11 +29,6 @@ object ServiceModule {
     @Provides
     @Singleton
     fun providesRegionService(retrofit: Retrofit ): RegionService =
-        retrofit.create()
-
-    @Provides
-    @Singleton
-    fun providesWalkCourseService(retrofit: Retrofit ): WalkCourseService =
         retrofit.create()
 
     @Provides
@@ -81,17 +74,6 @@ object ServiceModule {
 
     @Provides
     @Singleton
-    fun provideWalkReviewService(retrofit: Retrofit): WalkReviewService =
-        retrofit.create()
-
-    // 리뷰
-    @Provides
-    @Singleton
-    fun provideWalkListDetailService(retrofit: Retrofit): WalkListDetailService =
-        retrofit.create()
-
-    @Provides
-    @Singleton
     fun provideFilterOptionService(retrofit: Retrofit): FilterOptionService =
         retrofit.create()
 
@@ -108,5 +90,10 @@ object ServiceModule {
     @Provides
     @Singleton
     fun provideImageService(retrofit: Retrofit): ImageService =
+        retrofit.create()
+
+    @Provides
+    @Singleton
+    fun provideWalkPreparationService(retrofit: Retrofit): WalkPreparationService =
         retrofit.create()
 }

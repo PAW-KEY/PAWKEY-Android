@@ -1,7 +1,5 @@
 package com.paw.key.data.di
 
-import com.paw.key.domain.repository.localstorage.LocalStorageRepository
-import com.paw.key.data.repositoryimpl.localstorage.LocalStorageRepositoryImpl
 import com.paw.key.data.remote.datasource.datasourceimpl.AuthRemoteDataSourceImpl
 import com.paw.key.data.remote.datasource.datasourceimpl.GoogleAuthDataSourceImpl
 import com.paw.key.data.remote.datasource.datasourceimpl.KakaoAuthDataSourceImpl
@@ -14,18 +12,16 @@ import com.paw.key.data.repositoryimpl.PetProfileRepositoryImpl
 import com.paw.key.data.repositoryimpl.RegionRepositoryImpl
 import com.paw.key.data.repositoryimpl.SavedListRepositoryImpl
 import com.paw.key.data.repositoryimpl.UserProfileRepositoryImpl
-import com.paw.key.data.repositoryimpl.WalkCourseRepositoryImpl
 import com.paw.key.data.repositoryimpl.WalkSharedResultRepositoryImpl
 import com.paw.key.data.repositoryimpl.filter.FilterOptionRepositoryImpl
 import com.paw.key.data.repositoryimpl.home.HomeRegionRepositoryImpl
 import com.paw.key.data.repositoryimpl.home.RegionCurrentRepositoryImpl
 import com.paw.key.data.repositoryimpl.image.ImageRepositoryImpl
 import com.paw.key.data.repositoryimpl.list.PostsListRepositoryImpl
+import com.paw.key.data.repositoryimpl.localstorage.LocalStorageRepositoryImpl
 import com.paw.key.data.repositoryimpl.login.AuthRepositoryImpl
-import com.paw.key.data.repositoryimpl.sharedwalk.SharedWalkRepositoryImpl
 import com.paw.key.data.repositoryimpl.user.UserRepositoryImpl
-import com.paw.key.data.repositoryimpl.walklist.WalkListDetailRepositoryImpl
-import com.paw.key.data.repositoryimpl.walkreview.WalkReviewRepositoryImpl
+import com.paw.key.data.repositoryimpl.walkpreparation.WalkPreparationRepositoryImpl
 import com.paw.key.domain.repository.ArchivedListRepository
 import com.paw.key.domain.repository.LikeRepository
 import com.paw.key.domain.repository.RegionRepository
@@ -36,14 +32,12 @@ import com.paw.key.domain.repository.home.HomeRegionRepository
 import com.paw.key.domain.repository.home.RegionCurrentRepository
 import com.paw.key.domain.repository.image.ImageRepository
 import com.paw.key.domain.repository.list.PostsListRepository
+import com.paw.key.domain.repository.localstorage.LocalStorageRepository
 import com.paw.key.domain.repository.login.AuthRepository
 import com.paw.key.domain.repository.petprofile.PetProfileRepository
-import com.paw.key.domain.repository.sharedwalk.SharedWalkRepository
 import com.paw.key.domain.repository.user.UserRepository
 import com.paw.key.domain.repository.userprofile.UserProfileRepository
-import com.paw.key.domain.repository.walkcourse.WalkCourseRepository
-import com.paw.key.domain.repository.walklist.WalkListRepository
-import com.paw.key.domain.repository.walkreview.WalkReviewRepository
+import com.paw.key.domain.repository.walkpreparation.WalkPreparationRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -86,22 +80,9 @@ interface RepositoryModule {
 
     @Binds
     @Singleton
-    fun bindsWalkCourseRepository(
-        walkCourseRepositoryImpl: WalkCourseRepositoryImpl
-    ): WalkCourseRepository
-
-    @Binds
-    @Singleton
     fun bindsUserRepository(
         impl: UserRepositoryImpl
     ): UserRepository
-
-    /*공유 코스*/
-    @Binds
-    @Singleton
-    fun bindsSharedWalkRepository(
-        impl: SharedWalkRepositoryImpl
-    ) : SharedWalkRepository
 
     @Binds
     @Singleton
@@ -142,19 +123,6 @@ interface RepositoryModule {
 
     @Binds
     @Singleton
-    fun bindWalkReviewRepository(
-        impl: WalkReviewRepositoryImpl
-    ) : WalkReviewRepository
-
-    // 리뷰
-    @Binds
-    @Singleton
-    fun bindWalkListDetailRepository(
-        impl: WalkListDetailRepositoryImpl
-    ) : WalkListRepository
-
-    @Binds
-    @Singleton
     fun bindFilterOptionRepository(
         impl: FilterOptionRepositoryImpl
     ) : FilterOptionRepository
@@ -186,7 +154,13 @@ interface RepositoryModule {
 
     @Binds
     @Singleton
-    abstract fun bindLocalStorageRepository(
+    fun bindLocalStorageRepository(
         impl: LocalStorageRepositoryImpl
     ): LocalStorageRepository
+
+    @Binds
+    @Singleton
+    fun bindWalkListRepository(
+        impl: WalkPreparationRepositoryImpl
+    ) : WalkPreparationRepository
 }
