@@ -1,8 +1,13 @@
 package com.paw.key.presentation.ui.dbti
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -13,11 +18,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.paw.key.R
 import com.paw.key.core.designsystem.component.TopBar
 import com.paw.key.core.designsystem.theme.PawKeyTheme
@@ -40,8 +43,7 @@ fun StartScreen(
         )
 
         Column(
-            modifier = modifier
-                .fillMaxSize()
+            modifier = Modifier.fillMaxSize()
         ) {
             TopBar(
                 title = "DBTI 검사",
@@ -59,11 +61,8 @@ fun StartScreen(
 
                 Text(
                     text = "반려견 성향을 알아보는\nDBTI 성격 유형 검사",
-                    fontSize = 24.sp,
-                    fontWeight = FontWeight.Bold,
                     color = PawKeyTheme.colors.contents,
                     textAlign = TextAlign.Start,
-                    lineHeight = 32.sp,
                     style = PawKeyTheme.typography.header1
                 )
 
@@ -71,21 +70,12 @@ fun StartScreen(
 
                 Text(
                     text = "본 조사는 사랑하는 반려견 위한 비정식 테스트입니다.",
-                    fontSize = 14.sp,
                     color = PawKeyTheme.colors.defaultDark,
-                    textAlign = TextAlign.Center,
+                    textAlign = TextAlign.Start,
                     style = PawKeyTheme.typography.body14R
                 )
 
                 Spacer(modifier = Modifier.weight(1f))
-
-//            Image(
-//                painter = painterResource(id = R.drawable.doki_welcome),
-//                contentDescription = "DOKI 캐릭터",
-//                modifier = Modifier
-//                    .fillMaxSize(), // 전체 화면 차지
-//                contentScale = ContentScale.Crop
-//            )
 
                 Spacer(modifier = Modifier.weight(1f))
 
@@ -117,7 +107,6 @@ fun StartScreen(
                 ) {
                     Text(
                         text = "시작하기",
-                        fontWeight = FontWeight.SemiBold,
                         color = PawKeyTheme.colors.background,
                         style = PawKeyTheme.typography.mainButtonActive
                     )

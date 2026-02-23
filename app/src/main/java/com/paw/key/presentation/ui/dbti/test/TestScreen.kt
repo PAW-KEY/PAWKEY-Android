@@ -4,22 +4,18 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.compose.material3.Text
-import com.paw.key.core.designsystem.component.DogkyButton
+import com.paw.key.core.designsystem.component.DokiButton
 import com.paw.key.core.designsystem.component.TopBar
 import com.paw.key.core.designsystem.theme.PawKeyTheme
 import com.paw.key.presentation.ui.dbti.component.SelectCard
 
-
 data class TestOption(
     val id: Int,
-    val topText: String,
-    val bottomText: String,
+    val text: String,
     val imageUrl: String? = null
 )
 
@@ -47,14 +43,13 @@ fun TestScreen(
                     .fillMaxSize()
                     .padding(horizontal = 24.dp)
             ) {
-                Spacer(modifier = Modifier.weight(67f)) // TopBar ↔ 텍스트
+                Spacer(modifier = Modifier.weight(67f))
 
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(
                         text = categoryName,
-                        fontWeight = FontWeight.SemiBold,
                         color = PawKeyTheme.colors.primary,
                         style = PawKeyTheme.typography.bodyActive
                     )
@@ -65,7 +60,6 @@ fun TestScreen(
                         text = questionText,
                         color = PawKeyTheme.colors.contents,
                         textAlign = TextAlign.Center,
-                        lineHeight = 28.sp,
                         style = PawKeyTheme.typography.header3,
                         modifier = Modifier.fillMaxWidth()
                     )
@@ -77,7 +71,7 @@ fun TestScreen(
 
                 Spacer(modifier = Modifier.weight(1f))
 
-                DogkyButton(
+                DokiButton(
                     text = "다음으로",
                     onClick = onNextClick,
                     enabled = selectedOptionId != null,
@@ -97,12 +91,11 @@ fun TestScreen(
         ) {
             options.forEach { option ->
                 SelectCard(
+                    text = option.text,
                     imageUrl = option.imageUrl,
-                    topText = option.topText,
-                    bottomText = option.bottomText,
-                    isSelected = selectedOptionId == option.id,
                     onClick = { selectedOptionId = option.id },
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier.weight(1f),
+                    isSelected = selectedOptionId == option.id
                 )
             }
         }
@@ -119,14 +112,12 @@ private fun TestScreenPreview() {
             options = listOf(
                 TestOption(
                     id = 1,
-                    topText = "잠깐 눈치만 보고",
-                    bottomText = "거리를 유지해요",
+                    text = "잠깐 눈치만 보고\n거리를 유지해요",
                     imageUrl = null
                 ),
                 TestOption(
                     id = 2,
-                    topText = "먼저 다가가서",
-                    bottomText = "인사하고 놀자고 해요",
+                    text = "먼저 다가가서\n인사하고 놀자고 해요",
                     imageUrl = null
                 )
             ),
