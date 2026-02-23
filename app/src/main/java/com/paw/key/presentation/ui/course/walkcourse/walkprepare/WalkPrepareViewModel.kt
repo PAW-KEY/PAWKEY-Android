@@ -2,21 +2,47 @@ package com.paw.key.presentation.ui.course.walkcourse.walkprepare
 
 import androidx.compose.foundation.text.input.TextFieldState
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import coil.util.CoilUtils.result
+import com.paw.key.domain.repository.walkpreparation.WalkPreparationRepository
+import com.paw.key.presentation.ui.course.walkcourse.walkprepare.model.WalkPreparationMessageModel
 import com.paw.key.presentation.ui.course.walkcourse.walkprepare.model.WalkPrepareItemModel
 import com.paw.key.presentation.ui.course.walkcourse.walkprepare.state.WalkPrepareState
+import com.paw.key.presentation.ui.course.walkcourse.walkprepare.state.toEntity
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class WalkPrepareViewModel @Inject constructor(
-
+    private val preparationRepository: WalkPreparationRepository
 ) : ViewModel() {
     private val _state = MutableStateFlow(WalkPrepareState())
     val state = _state.asStateFlow()
+
+    init {
+        fetchWalkPreparationMessage()
+    }
+
+    fun fetchWalkPreparationMessage() {
+        viewModelScope.launch {
+            preparationRepository.getWalkPreparationMessage()
+                .onSuccess { result ->
+                    _state.update { currentState ->
+                        currentState.copy(
+                            walkPreparationMessage = WalkPreparationMessageModel(
+                                mainMessage = result.mainMessage,
+                                subMessage = result.subMessage
+                            )
+                        )
+                    }
+                }
+        }
+    }
 
     fun addWalkItem() {
         val currentList = _state.value.walkPrepareItemList
@@ -50,5 +76,16 @@ class WalkPrepareViewModel @Inject constructor(
 
     fun clearLastAddedItemId() {
         _state.update { it.copy(lastAddedItemId = null) }
+    }
+    
+    fun updateWalkPreparation() {
+        viewModelScope.launch {
+            val currentState = _state.value
+            val preparationData = currentState.toEntity()
+
+            preparationRepository.patchWalkPreparation(
+                entity = preparationData
+            )
+        }
     }
 }

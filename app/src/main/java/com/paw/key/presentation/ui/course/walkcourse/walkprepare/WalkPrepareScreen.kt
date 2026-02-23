@@ -64,8 +64,8 @@ private fun WalkPrepareScreen(
 
         Spacer(modifier = Modifier.height(20.dp))
 
-        // Todo : 안에 내용은 수정하기
         WalkPrepareWeatherInfo(
+            walkPreparationMessage = state.walkPreparationMessage,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp)

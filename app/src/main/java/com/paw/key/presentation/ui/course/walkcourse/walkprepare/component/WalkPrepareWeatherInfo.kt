@@ -23,12 +23,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.paw.key.R
 import com.paw.key.core.designsystem.theme.PawKeyTheme
+import com.paw.key.presentation.ui.course.walkcourse.walkprepare.model.WalkPreparationMessageModel
 
 @Composable
 fun WalkPrepareWeatherInfo(
+    walkPreparationMessage: WalkPreparationMessageModel,
     modifier: Modifier = Modifier,
-    title: String = "발이 차가워요.. 잠깐 다녀와요!",
-    subTitle: String = "실외 금지! 실내 놀이로 대체",
 ) {
     Row(
         modifier = modifier
@@ -62,14 +62,14 @@ fun WalkPrepareWeatherInfo(
             Spacer(modifier = Modifier.height(2.dp))
 
             Text(
-                text = title,
+                text = walkPreparationMessage.mainMessage,
                 style = PawKeyTheme.typography.subTitle,
                 color = PawKeyTheme.colors.contents,
             )
 
 
             Text(
-                text = subTitle,
+                text = walkPreparationMessage.subMessage,
                 style = PawKeyTheme.typography.bodySmall,
                 color = PawKeyTheme.colors.contents
             )
@@ -92,7 +92,7 @@ fun WalkPrepareWeatherInfo(
 private fun WalkPrepareWeatherInfoPreview() {
     PawKeyTheme {
         WalkPrepareWeatherInfo(
-            subTitle = "10분 내 짧은 산책 / 패딩과 신발 필수"
+            walkPreparationMessage = WalkPreparationMessageModel()
         )
     }
 }
