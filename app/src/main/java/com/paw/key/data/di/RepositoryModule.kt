@@ -9,6 +9,7 @@ import com.paw.key.data.remote.datasource.login.AuthRemoteDataSource
 import com.paw.key.data.remote.datasource.login.GoogleAuthDataSource
 import com.paw.key.data.remote.datasource.login.KakaoAuthDataSource
 import com.paw.key.data.repositoryimpl.ArchivedListRepositoryImpl
+import com.paw.key.data.repositoryimpl.DbtiRepositoryImpl
 import com.paw.key.data.repositoryimpl.LikeRepositoryImpl
 import com.paw.key.data.repositoryimpl.PetProfileRepositoryImpl
 import com.paw.key.data.repositoryimpl.RegionRepositoryImpl
@@ -27,6 +28,7 @@ import com.paw.key.data.repositoryimpl.user.UserRepositoryImpl
 import com.paw.key.data.repositoryimpl.walklist.WalkListDetailRepositoryImpl
 import com.paw.key.data.repositoryimpl.walkreview.WalkReviewRepositoryImpl
 import com.paw.key.domain.repository.ArchivedListRepository
+import com.paw.key.domain.repository.DbtiRepository
 import com.paw.key.domain.repository.LikeRepository
 import com.paw.key.domain.repository.RegionRepository
 import com.paw.key.domain.repository.SavedListRepository
@@ -189,4 +191,11 @@ interface RepositoryModule {
     abstract fun bindLocalStorageRepository(
         impl: LocalStorageRepositoryImpl
     ): LocalStorageRepository
+
+    //DBTI
+    @Binds
+    @Singleton
+    abstract fun bindDbtiRepository(
+        dbtiRepositoryImpl: DbtiRepositoryImpl
+    ): DbtiRepository
 }
