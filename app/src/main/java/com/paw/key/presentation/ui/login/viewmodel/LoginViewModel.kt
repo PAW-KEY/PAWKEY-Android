@@ -27,6 +27,7 @@ class LoginViewModel @Inject constructor(
     val sideEffect: StateFlow<LoginSideEffect?>
         get() = _sideEffect.asStateFlow()
 
+    // TODO: 소셜 로그인 신규회원 or 기존회원 화면 분기처리 예정
     fun onGoogleSignIn(
         context: Context,
         onSuccess: () -> Unit,

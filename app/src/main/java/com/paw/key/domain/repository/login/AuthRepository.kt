@@ -8,4 +8,6 @@ interface AuthRepository {
     suspend fun signInWithKakao(context: Context): Result<String>
     suspend fun login(idToken: String, deviceId: String): Result<LoginResponseDto>
     suspend fun loginKakao(idToken: String, deviceId: String): Result<LoginResponseDto>
+    suspend fun refreshToken(): Result<Boolean>
+    suspend fun logout(): Result<Boolean>
 }

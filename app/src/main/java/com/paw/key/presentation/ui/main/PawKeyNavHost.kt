@@ -120,6 +120,13 @@ fun PawKeyNavHost(
             },
             navigatePetProfileList = navigator::navigatePetProfileList,
             navigateUserProfile = navigator::navigateUserProfile,
+            navigateToLogin = {
+                val options = navOptions {
+                    popUpTo(0) { inclusive = true }
+                    launchSingleTop = true
+                }
+                navigator.navigateLogin(navOptions = options)
+            }
         )
 
         courseInfoNavGraph(

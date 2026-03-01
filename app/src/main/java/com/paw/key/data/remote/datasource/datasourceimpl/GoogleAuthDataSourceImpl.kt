@@ -8,7 +8,6 @@ import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
 import com.paw.key.BuildConfig
 import com.paw.key.core.util.suspendRunCatching
 import com.paw.key.data.remote.datasource.login.GoogleAuthDataSource
-import timber.log.Timber
 import javax.inject.Inject
 
 class GoogleAuthDataSourceImpl @Inject constructor(

@@ -18,6 +18,8 @@ import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
@@ -41,9 +43,12 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.flowWithLifecycle
 import com.paw.key.R
 import com.paw.key.core.designsystem.theme.PawKeyTheme
+import com.paw.key.core.util.PreferenceDataStore
+import com.paw.key.core.util.UserDataStore
 import com.paw.key.presentation.ui.login.component.LoginSocialButton
 import com.paw.key.presentation.ui.login.state.LoginSideEffect
 import com.paw.key.presentation.ui.login.viewmodel.LoginViewModel
+import timber.log.Timber
 
 @Composable
 fun LoginRoute(
@@ -95,6 +100,7 @@ fun LoginScreen(
     modifier: Modifier = Modifier,
 ) {
     val scrollState = rememberScrollState()
+    val context = LocalContext.current
 
     Box(
         modifier = modifier
@@ -167,6 +173,22 @@ fun LoginScreen(
                             color = Color(0xFFF2F2F2)
                         )
                 )
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                Button(
+                    onClick = {
+                        // 가짜 만료된 토큰으로 교체
+                        UserDataStore.saveAcessToken(context, "expired_test_token")
+                        Timber.d("⏰ Access Token을 만료시켰습니다")
+                        Timber.d("💡 이제 아무 API 호출하면 401 -> 자동 refresh 시도!")
+                    },
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color.Red.copy(alpha = 0.7f)
+                    )
+                ) {
+                    Text("⏰ 테스트: 토큰 만료시키기", color = Color.White)
+                }
             }
 
             Spacer(modifier = Modifier.height(34.dp))
