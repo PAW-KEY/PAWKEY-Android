@@ -25,6 +25,7 @@ fun NavGraphBuilder.myPageNavGraph(
     navigateCourseInfo: (CourseType) -> Unit,
     navigatePetProfileList: () -> Unit,
     navigateUserProfile: () -> Unit,
+    navigateToLogin: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     composable<MyPage> {
@@ -35,6 +36,7 @@ fun NavGraphBuilder.myPageNavGraph(
             navigateCourseInfo = navigateCourseInfo,
             navigatePetProfileList = navigatePetProfileList,
             navigateUserProfile = navigateUserProfile,
+            navigateToLogin = navigateToLogin,
             modifier = modifier
         )
     }

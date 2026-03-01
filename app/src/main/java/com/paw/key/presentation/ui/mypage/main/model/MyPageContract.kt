@@ -12,11 +12,14 @@ import androidx.compose.runtime.Immutable
         val petImageUrl: Uri ?= null,
         val petTags: List<String> = listOf("조금 느긋해요", "#오토바이소리", "#대형견"),
         val walkCount: Int = 0,
-        val totalDistance: String = "14km"
+        val totalDistance: String = "14km",
+        val showLogoutDialog: Boolean = false,
+        val showDeleteDialog: Boolean = false,
     )
 
 sealed class MyPageSideEffect {
     data class ShowSnackBar(val message: String) : MyPageSideEffect()
     data object NavigateUp : MyPageSideEffect()
     data object NavigateNext : MyPageSideEffect()
+    data object NavigateToLogin : MyPageSideEffect()
 }

@@ -2,6 +2,7 @@ package com.paw.key.presentation.ui.mypage.main.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.paw.key.domain.repository.login.AuthRepository
 import com.paw.key.domain.repository.localstorage.LocalStorageRepository
 import com.paw.key.domain.repository.petprofile.PetProfileRepository
 import com.paw.key.domain.repository.userprofile.UserProfileRepository
@@ -20,11 +21,11 @@ import javax.inject.Inject
 class MyPageViewModel @Inject constructor(
     private val petProfileRepository: PetProfileRepository,
     private val userProfileRepository: UserProfileRepository,
-    private val localRepository: LocalStorageRepository
+    private val localRepository: LocalStorageRepository,
+    private val authRepository: AuthRepository
 ) : ViewModel() {
     private val _state = MutableStateFlow(MyPageState())
-    val state: StateFlow<MyPageState>
-        get() = _state.asStateFlow() //get할때마다 업데이트
+    val state: StateFlow<MyPageState> = _state.asStateFlow()
 
     private val _sideEffect = MutableSharedFlow<MyPageSideEffect>()
     val sideEffect: MutableSharedFlow<MyPageSideEffect> = _sideEffect
@@ -64,6 +65,36 @@ class MyPageViewModel @Inject constructor(
                     )
                 }.onFailure {
                     _sideEffect.emit(MyPageSideEffect.ShowSnackBar("펫 프로필 불러오기 실패"))
+                }
+        }
+    }
+
+    fun showLogoutDialog() {
+        _state.update { it.copy(showLogoutDialog = true) }
+    }
+
+    fun hideLogoutDialog() {
+        _state.update { it.copy(showLogoutDialog = false) }
+    }
+
+    fun showDeleteDialog() {
+        _state.update { it.copy(showDeleteDialog = true) }
+    }
+
+    // 👇 추가
+    fun hideDeleteDialog() {
+        _state.update { it.copy(showDeleteDialog = false) }
+    }
+
+    fun logout(onSuccess: () -> Unit) {
+        viewModelScope.launch {
+            authRepository.logout()
+                .onSuccess {
+                    _sideEffect.emit(MyPageSideEffect.NavigateToLogin)
+                    onSuccess()
+                }
+                .onFailure {
+                    _sideEffect.emit(MyPageSideEffect.ShowSnackBar("로그아웃 실패"))
                 }
         }
     }

@@ -4,7 +4,9 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
@@ -16,6 +18,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.paw.key.core.designsystem.component.TopBar
 import com.paw.key.core.designsystem.theme.PawKeyTheme
+import com.paw.key.core.util.PreferenceDataStore
+import com.paw.key.presentation.ui.mypage.courseinfo.component.LogoutDialog
 import com.paw.key.presentation.ui.mypage.courseinfo.model.CourseType
 import com.paw.key.presentation.ui.mypage.main.component.MyList
 import com.paw.key.presentation.ui.mypage.main.component.MyPageCard
@@ -33,6 +37,7 @@ fun MyPageRoute(
     navigateCourseInfo: (CourseType) -> Unit,
     navigatePetProfileList: () -> Unit,
     navigateUserProfile: () -> Unit,
+    navigateToLogin: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: MyPageViewModel = hiltViewModel(),
 ) {
@@ -46,6 +51,11 @@ fun MyPageRoute(
         navigateCourseInfo = navigateCourseInfo,
         navigatePetProfileList = navigatePetProfileList,
         navigateUserProfile = navigateUserProfile,
+        onShowLogoutDialog = viewModel::showLogoutDialog,
+        onHideLogoutDialog = viewModel::hideLogoutDialog,
+        onLogout = { viewModel.logout(onSuccess = navigateToLogin) },
+        onShowDeleteDialog = viewModel::showDeleteDialog,       // 👈 추가
+        onHideDeleteDialog = viewModel::hideDeleteDialog,
         modifier = modifier
     )
 }
@@ -56,6 +66,11 @@ fun MyPageScreen(
     paddingValues: PaddingValues,
     navigateUp: () -> Unit,
     navigatePetProfile: () -> Unit,
+    onShowLogoutDialog: () -> Unit,
+    onHideLogoutDialog: () -> Unit,
+    onShowDeleteDialog: () -> Unit,
+    onHideDeleteDialog: () -> Unit,
+    onLogout: () -> Unit,
     navigateCourseInfo: (CourseType) -> Unit,
     navigatePetProfileList: () -> Unit,
     navigateUserProfile: () -> Unit,
@@ -80,7 +95,6 @@ fun MyPageScreen(
                 .padding(horizontal = 16.dp, vertical = 18.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-
             item {
                 OwnerCard(
                     ownerName = state.ownerName,
@@ -119,9 +133,28 @@ fun MyPageScreen(
                 SettingList(
                     listTitle = "설정",
                     listContent = MyListState(),
-                    onListClick = { }
+                    onListClick = { index ->
+                        when (index) {
+                            0 -> { /* TODO: 활동 범위 설정 화면으로 이동 */ }
+                            1 -> { /* TODO: 앱 정보 화면으로 이동 */ }
+                            2 -> onShowLogoutDialog()  // 로그아웃
+                            3 -> onShowDeleteDialog()  // 회원탈퇴
+                        }
+                    }
                 )
             }
+        }
+
+        Spacer(modifier = Modifier.height(36.dp))
+
+        if (state.showLogoutDialog) {
+            LogoutDialog(
+                onDismissRequest = onHideLogoutDialog,
+                onConfirm = {
+                    onHideLogoutDialog()
+                    onLogout()
+                }
+            )
         }
     }
 }
@@ -147,6 +180,11 @@ private fun MyPageScreenPreview() {
             navigateCourseInfo = {},
             navigatePetProfileList = {},
             navigateUserProfile = {},
+            onHideLogoutDialog = {},
+            onShowLogoutDialog = {},
+            onLogout = {},
+            onHideDeleteDialog = {},
+            onShowDeleteDialog = {}
         )
     }
 }
