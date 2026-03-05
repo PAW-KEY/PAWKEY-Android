@@ -9,8 +9,12 @@ sealed interface WalkRoute : MainTabRoute
 data object WalkPrepare: WalkRoute
 
 @Serializable
-data object WalkCourse: WalkRoute
+data class WalkCourse(
+    val routeId: String
+): WalkRoute
 
 @Serializable
-data object WalkComplete: WalkRoute
+data class WalkComplete(
+    val routeId: String
+): WalkRoute
 

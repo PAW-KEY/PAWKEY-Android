@@ -5,8 +5,9 @@ import androidx.navigation.NavOptions
 
 fun NavController.navigateWalkCourse(
     navOptions: NavOptions? = null,
+    routeId: String
 ) {
-    navigate(WalkCourse, navOptions)
+    navigate(WalkCourse(routeId), navOptions)
 }
 
 fun NavController.navigateWalkPrepare(
@@ -17,6 +18,7 @@ fun NavController.navigateWalkPrepare(
 
 fun NavController.navigateWalkComplete(
     navOptions: NavOptions? = null,
+    routeId: String
 ) {
-    navigate(WalkComplete, navOptions)
+    navigate(WalkComplete(routeId), navOptions)
 }
