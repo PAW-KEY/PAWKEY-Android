@@ -37,8 +37,7 @@ class ImageRepositoryImpl @Inject constructor(
                 )
 
                 imageDataSource.registerImage(
-                    dto = registerEntity
-                        .copy().toDto()
+                    dto = registerEntity.toDto()
                 ).data.toEntity()
 
             } finally {
