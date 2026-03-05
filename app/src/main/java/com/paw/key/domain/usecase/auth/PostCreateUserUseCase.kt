@@ -1,4 +1,4 @@
-package com.paw.key.domain.usecase.auth
+package com.paw.key.domain.usecase.user
 
 import com.paw.key.core.util.suspendRunCatching
 import com.paw.key.domain.entity.image.ImageDomainType
@@ -10,7 +10,7 @@ import com.paw.key.domain.repository.user.UserRepository
 import timber.log.Timber
 import javax.inject.Inject
 
-class PostCreateUserUseCase @Inject constructor(
+class ostCreateUserUseCase @Inject constructor(
     private val imageRepository: ImageRepository,
     private val userRepository: UserRepository,
     private val localRepository: LocalStorageRepository
@@ -34,7 +34,7 @@ class PostCreateUserUseCase @Inject constructor(
 
             val registerImageResult = imageRepository.registerImage(
                 uriString = "${presignedResult.imageUrl}#${petImageUri}",
-                domainType = ImageDomainType.PET_PROFILE,
+                domainType = ImageDomainType.PET_PROFILE
             ).onFailure { Timber.e(it) }.getOrThrow()
 
             registerImageResult.imageId

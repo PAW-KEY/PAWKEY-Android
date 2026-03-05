@@ -7,6 +7,7 @@ import android.net.Uri
 import android.os.Build
 import androidx.core.net.toUri
 import dagger.hilt.android.qualifiers.ApplicationContext
+import timber.log.Timber
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
@@ -77,6 +78,15 @@ class ImageLocalDataSource @Inject constructor(
         }
         android.graphics.BitmapFactory.decodeFile(file.absolutePath, options)
         return options.outWidth to options.outHeight
+    }
+
+    // 개별 삭제 함수
+    fun deleteOriginalUri(uriString: String) {
+        try {
+            context.contentResolver.delete(uriString.toUri(), null, null)
+        } catch (e: Exception) {
+            Timber.e(e, "원본 파일 삭제 실패")
+        }
     }
 
     companion object {
