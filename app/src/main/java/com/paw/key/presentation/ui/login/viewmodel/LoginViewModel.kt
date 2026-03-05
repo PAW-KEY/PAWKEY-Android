@@ -3,7 +3,7 @@ package com.paw.key.presentation.ui.login.viewmodel
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.paw.key.domain.usecase.LoginUseCase
+import com.paw.key.domain.usecase.auth.LoginUseCase
 import com.paw.key.presentation.ui.login.state.LoginSideEffect
 import com.paw.key.presentation.ui.login.state.LoginState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -29,13 +29,15 @@ class LoginViewModel @Inject constructor(
 
     fun onGoogleSignIn(
         context: Context,
-        onSuccess: () -> Unit,
     ) {
         viewModelScope.launch {
             loginUseCase.invokeGoogleLogin(context)
                 .onSuccess {
-                    // Todo : isNew확인
-                    _sideEffect.emit(LoginSideEffect.NavigateToHome)
+                    if (it) {
+                        _sideEffect.emit(LoginSideEffect.NavigateToSignUp)
+                    } else {
+                        _sideEffect.emit(LoginSideEffect.NavigateToHome)
+                    }
                 }
                 .onFailure { e ->
                     Timber.e(e, "Google sign-in failed")
@@ -49,11 +51,11 @@ class LoginViewModel @Inject constructor(
         viewModelScope.launch {
             loginUseCase.invokeKakaoLogin(context)
                 .onSuccess {
-                    // Todo: isNewUser가 true이면이니 signup false는 home
+                    // isNewUser가 true이면이니 signup false는 home
                     if (it) {
                         _sideEffect.emit(LoginSideEffect.NavigateToSignUp)
                     } else {
-                        _sideEffect.emit(LoginSideEffect.NavigateToSignUp)
+                        _sideEffect.emit(LoginSideEffect.NavigateToHome)
                     }
                 }
         }

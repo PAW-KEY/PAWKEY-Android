@@ -1,5 +1,6 @@
 package com.paw.key.presentation.ui.login
 
+import android.app.Activity
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -76,7 +77,7 @@ fun LoginRoute(
     LoginScreen(
         paddingValues = paddingValues,
         onGoogleSignIn = {
-            viewModel.onGoogleSignIn(context = context, onSuccess = navigateHome)
+            viewModel.onGoogleSignIn(context = context as Activity)
         },
         onKakaoSignIn = {
             viewModel.onKakaoSignIn(context = context)
