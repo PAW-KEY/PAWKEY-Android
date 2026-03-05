@@ -2,6 +2,7 @@ package com.paw.key.presentation.ui.mypage.main.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.paw.key.core.app.AppRestarter
 import com.paw.key.domain.repository.localstorage.LocalStorageRepository
 import com.paw.key.domain.repository.user.UserRepository
 import com.paw.key.presentation.ui.mypage.main.model.MyPageSideEffect
@@ -21,7 +22,8 @@ import javax.inject.Inject
 @HiltViewModel
 class MyPageViewModel @Inject constructor(
     private val userRepository: UserRepository,
-    private val localRepository: LocalStorageRepository
+    private val localRepository: LocalStorageRepository,
+    private val appRestarter: AppRestarter
 ) : ViewModel() {
     private val _state = MutableStateFlow(MyPageState())
     val state: StateFlow<MyPageState>
@@ -68,10 +70,9 @@ class MyPageViewModel @Inject constructor(
     fun removeUser() {
         viewModelScope.launch {
             //val provider = localRepository.getProvider()
-
             userRepository.deleteUser("KAKAO")
                 .onSuccess {
-                    _sideEffect.emit(MyPageSideEffect.NavigateToLogin)
+                    appRestarter.restartApp()
                 }
                 .onFailure {
                     Timber.e(it)
