@@ -32,6 +32,7 @@ fun MyPageCard(
     userAge: String,
     userGender: String,
     dogBreed: String,
+    dogImage: Uri?,
     buttonTitle: String,
     modifier: Modifier = Modifier,
 ) {
@@ -50,7 +51,7 @@ fun MyPageCard(
             userAge = userAge,
             userGender = userGender,
             dogBreed = dogBreed,
-            image = Uri.parse("https://picsum.photos/200"),
+            image = dogImage,
             modifier = modifier
         )
 
@@ -150,7 +151,8 @@ private fun MyPageCardPreview() {
             userAge = "20",
             userGender = "남",
             dogBreed = "견종 이름",
-            buttonTitle = "DBTI 검사하러 가기"
+            buttonTitle = "DBTI 검사하러 가기",
+            dogImage = null
         )
     }
 }
