@@ -12,7 +12,7 @@ import com.paw.key.domain.entity.user.UserInfoEntity
 import com.paw.key.domain.repository.RegionRepository
 import com.paw.key.domain.repository.localstorage.LocalStorageRepository
 import com.paw.key.domain.repository.user.UserRepository
-import com.paw.key.domain.usecase.PostCreateUserUseCase
+import com.paw.key.domain.usecase.auth.PostCreateUserUseCase
 import com.paw.key.presentation.ui.region.state.DrawType
 import com.paw.key.presentation.ui.signup.model.DongModel
 import com.paw.key.presentation.ui.signup.model.GuModel
