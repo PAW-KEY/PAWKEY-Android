@@ -8,7 +8,6 @@ import com.paw.key.data.remote.datasource.login.GoogleAuthDataSource
 import com.paw.key.data.remote.datasource.login.KakaoAuthDataSource
 import com.paw.key.data.repositoryimpl.ArchivedListRepositoryImpl
 import com.paw.key.data.repositoryimpl.LikeRepositoryImpl
-import com.paw.key.data.repositoryimpl.PetProfileRepositoryImpl
 import com.paw.key.data.repositoryimpl.RegionRepositoryImpl
 import com.paw.key.data.repositoryimpl.SavedListRepositoryImpl
 import com.paw.key.data.repositoryimpl.UserProfileRepositoryImpl
@@ -21,6 +20,7 @@ import com.paw.key.data.repositoryimpl.list.PostsListRepositoryImpl
 import com.paw.key.data.repositoryimpl.localstorage.LocalStorageRepositoryImpl
 import com.paw.key.data.repositoryimpl.login.AuthRepositoryImpl
 import com.paw.key.data.repositoryimpl.user.UserRepositoryImpl
+import com.paw.key.data.repositoryimpl.walk.WalkRepositoryImpl
 import com.paw.key.data.repositoryimpl.walkpreparation.WalkPreparationRepositoryImpl
 import com.paw.key.domain.repository.ArchivedListRepository
 import com.paw.key.domain.repository.LikeRepository
@@ -34,9 +34,9 @@ import com.paw.key.domain.repository.image.ImageRepository
 import com.paw.key.domain.repository.list.PostsListRepository
 import com.paw.key.domain.repository.localstorage.LocalStorageRepository
 import com.paw.key.domain.repository.login.AuthRepository
-import com.paw.key.domain.repository.petprofile.PetProfileRepository
 import com.paw.key.domain.repository.user.UserRepository
 import com.paw.key.domain.repository.userprofile.UserProfileRepository
+import com.paw.key.domain.repository.walk.WalkRepository
 import com.paw.key.domain.repository.walkpreparation.WalkPreparationRepository
 import dagger.Binds
 import dagger.Module
@@ -99,12 +99,6 @@ interface RepositoryModule {
 
     @Binds
     @Singleton
-    fun bindPetProfileRepository(
-        impl: PetProfileRepositoryImpl
-    ): PetProfileRepository
-
-    @Binds
-    @Singleton
     fun bindSavedListRepository(
         impl: SavedListRepositoryImpl
     ): SavedListRepository
@@ -163,4 +157,10 @@ interface RepositoryModule {
     fun bindWalkListRepository(
         impl: WalkPreparationRepositoryImpl
     ) : WalkPreparationRepository
+
+    @Binds
+    @Singleton
+    fun bindWalkRepository(
+        impl: WalkRepositoryImpl
+    ) : WalkRepository
 }

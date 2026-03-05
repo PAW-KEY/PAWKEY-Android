@@ -2,7 +2,6 @@ package com.paw.key.data.di
 
 import com.paw.key.data.service.ArchivedListService
 import com.paw.key.data.service.LikeService
-import com.paw.key.data.service.PetProfileService
 import com.paw.key.data.service.SavedListService
 import com.paw.key.data.service.UserProfileService
 import com.paw.key.data.service.filter.FilterOptionService
@@ -13,6 +12,7 @@ import com.paw.key.data.service.login.LoginService
 import com.paw.key.data.service.region.RegionService
 import com.paw.key.data.service.sharedwalk.SharedWalkService
 import com.paw.key.data.service.user.UserService
+import com.paw.key.data.service.walk.WalkService
 import com.paw.key.data.service.walkpreparation.WalkPreparationService
 import dagger.Module
 import dagger.Provides
@@ -54,11 +54,6 @@ object ServiceModule {
 
     @Provides
     @Singleton
-    fun providePetProfileService(retrofit: Retrofit): PetProfileService =
-        retrofit.create()
-
-    @Provides
-    @Singleton
     fun provideSavedListService(retrofit: Retrofit): SavedListService =
         retrofit.create()
 
@@ -96,4 +91,10 @@ object ServiceModule {
     @Singleton
     fun provideWalkPreparationService(retrofit: Retrofit): WalkPreparationService =
         retrofit.create()
+
+    @Provides
+    @Singleton
+    fun provideWalkService(retrofit: Retrofit): WalkService =
+        retrofit.create()
+
 }
