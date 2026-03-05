@@ -5,6 +5,7 @@ import com.paw.key.data.dto.image.presigned.toDto
 import com.paw.key.data.dto.image.register.toDto
 import com.paw.key.data.remote.datasource.image.ImageDataSource
 import com.paw.key.data.remote.datasource.image.ImageLocalDataSource
+import com.paw.key.data.remote.datasource.image.S3DataSource
 import com.paw.key.domain.entity.image.ImageDomainType
 import com.paw.key.domain.entity.image.ImagePresignedEntity
 import com.paw.key.domain.entity.image.ImagePresignedResultEntity
@@ -17,6 +18,7 @@ import javax.inject.Inject
 
 class ImageRepositoryImpl @Inject constructor(
     private val imageDataSource: ImageDataSource,
+    private val s3DataSource: S3DataSource,
     private val imageLocalDataSource: ImageLocalDataSource
 ) : ImageRepository {
     override suspend fun registerImage(
@@ -68,7 +70,7 @@ class ImageRepositoryImpl @Inject constructor(
 
         val requestBody = file.asRequestBody("image/webp".toMediaTypeOrNull())
 
-        val response = imageDataSource.uploadS3(presignedUrl, requestBody)
+        val response = s3DataSource.uploadS3(presignedUrl, requestBody)
 
         imageLocalDataSource.clearCache()
 

@@ -6,6 +6,7 @@ import com.paw.key.data.service.SavedListService
 import com.paw.key.data.service.filter.FilterOptionService
 import com.paw.key.data.service.home.HomeRegionService
 import com.paw.key.data.service.image.ImageService
+import com.paw.key.data.service.image.S3Service
 import com.paw.key.data.service.list.PostsListService
 import com.paw.key.data.service.login.LoginService
 import com.paw.key.data.service.region.RegionService
@@ -19,6 +20,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import retrofit2.Retrofit
 import retrofit2.create
+import javax.inject.Named
 import javax.inject.Singleton
 
 @Module
@@ -79,6 +81,11 @@ object ServiceModule {
     @Provides
     @Singleton
     fun provideImageService(retrofit: Retrofit): ImageService =
+        retrofit.create()
+
+    @Provides
+    @Singleton
+    fun provideImageS3Service(@Named("s3") retrofit: Retrofit): S3Service =
         retrofit.create()
 
     @Provides

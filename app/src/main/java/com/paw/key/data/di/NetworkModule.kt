@@ -13,6 +13,7 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Converter
 import retrofit2.Retrofit
 import java.util.concurrent.TimeUnit
+import javax.inject.Named
 import javax.inject.Singleton
 
 @Module
@@ -53,6 +54,28 @@ object NetworkModule {
     ): Retrofit = Retrofit.Builder()
         .baseUrl(if (BuildConfig.DEBUG) BuildConfig.DEBUG_BASE_URL else BuildConfig.BASE_URL) //BuildConfig.BASE_URL)
         .addConverterFactory(converterFactory)
+        .client(client)
+        .build()
+
+
+    @Provides
+    @Singleton
+    @Named("s3")
+    fun provideS3OkHttpClient(
+        loggingInterceptor: HttpLoggingInterceptor
+    ): OkHttpClient = OkHttpClient.Builder()
+        .connectTimeout(30, TimeUnit.SECONDS)
+        .readTimeout(30, TimeUnit.SECONDS)
+        .addInterceptor(loggingInterceptor)
+        .build()
+
+    @Provides
+    @Singleton
+    @Named("s3")
+    fun provideS3Retrofit(
+        @Named("s3") client: OkHttpClient
+    ): Retrofit = Retrofit.Builder()
+        .baseUrl("https://s3.amazonaws.com/")
         .client(client)
         .build()
 }
