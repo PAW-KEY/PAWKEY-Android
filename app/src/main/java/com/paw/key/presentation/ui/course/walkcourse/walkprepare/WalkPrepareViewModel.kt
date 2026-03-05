@@ -3,15 +3,18 @@ package com.paw.key.presentation.ui.course.walkcourse.walkprepare
 import androidx.compose.foundation.text.input.TextFieldState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import coil.util.CoilUtils.result
+import com.paw.key.domain.repository.walk.WalkRepository
 import com.paw.key.domain.repository.walkpreparation.WalkPreparationRepository
 import com.paw.key.presentation.ui.course.walkcourse.walkprepare.model.WalkPreparationMessageModel
 import com.paw.key.presentation.ui.course.walkcourse.walkprepare.model.WalkPrepareItemModel
+import com.paw.key.presentation.ui.course.walkcourse.walkprepare.state.WalkPrepareSideEffect
 import com.paw.key.presentation.ui.course.walkcourse.walkprepare.state.WalkPrepareState
 import com.paw.key.presentation.ui.course.walkcourse.walkprepare.state.toEntity
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.toPersistentList
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -19,10 +22,14 @@ import javax.inject.Inject
 
 @HiltViewModel
 class WalkPrepareViewModel @Inject constructor(
-    private val preparationRepository: WalkPreparationRepository
+    private val preparationRepository: WalkPreparationRepository,
+    private val walkRepository: WalkRepository
 ) : ViewModel() {
     private val _state = MutableStateFlow(WalkPrepareState())
     val state = _state.asStateFlow()
+
+    private val _sideEffect = MutableSharedFlow<WalkPrepareSideEffect>()
+    val sideEffect = _sideEffect.asSharedFlow()
 
     init {
         fetchWalkPreparationMessage()
@@ -86,6 +93,18 @@ class WalkPrepareViewModel @Inject constructor(
             preparationRepository.patchWalkPreparation(
                 entity = preparationData
             )
+        }
+    }
+
+    fun startWalk() {
+        viewModelScope.launch {
+            walkRepository.startWalk(null)
+                .onSuccess {
+                    _sideEffect.emit(WalkPrepareSideEffect.NavigateToWalkCourse(it.routeId))
+                }
+                .onFailure {
+                    _sideEffect.emit(WalkPrepareSideEffect.ShowToastMessage("산책 시작에 실패하였습니다."))
+                }
         }
     }
 }
