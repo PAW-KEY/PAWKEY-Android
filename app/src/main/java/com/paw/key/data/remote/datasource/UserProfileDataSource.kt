@@ -4,7 +4,7 @@ import com.paw.key.data.service.UserProfileService
 import javax.inject.Inject
 
 class UserProfileDataSource @Inject constructor(
-    private val userprofileservice: UserProfileService
+    private val service: UserProfileService
 ) {
-    suspend fun getUserProfiles(userId: Int) = userprofileservice.getUserProfiles(userId)
+    suspend fun getUserProfiles(userId: Int) = service.getUserProfiles(userId)
 }
