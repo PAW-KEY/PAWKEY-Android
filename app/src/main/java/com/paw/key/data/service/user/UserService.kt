@@ -6,6 +6,7 @@ import com.paw.key.data.dto.response.BaseResponse
 import com.paw.key.data.dto.response.petprofile.PetProfileResponseDto
 import com.paw.key.data.dto.response.user.PetBreedsResponseDto
 import com.paw.key.data.dto.response.user.UserInfoResponseDto
+import com.paw.key.data.dto.response.userprofile.UserProfileResponseDto
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.HTTP
@@ -30,4 +31,7 @@ interface UserService {
     suspend fun getPetProfiles(
         @Path("petId") petId: Int
     ): BaseResponse<PetProfileResponseDto>
+
+    @GET("users/me/userInfo")
+    suspend fun getUserProfiles(): BaseResponse<UserProfileResponseDto>
 }

@@ -4,7 +4,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.paw.key.domain.repository.localstorage.LocalStorageRepository
 import com.paw.key.domain.repository.user.UserRepository
-import com.paw.key.domain.repository.userprofile.UserProfileRepository
 import com.paw.key.presentation.ui.mypage.main.model.MyPageSideEffect
 import com.paw.key.presentation.ui.mypage.main.model.MyPageState
 import com.paw.key.presentation.ui.mypage.model.toUiModel
@@ -22,7 +21,6 @@ import javax.inject.Inject
 @HiltViewModel
 class MyPageViewModel @Inject constructor(
     private val userRepository: UserRepository,
-    private val userProfileRepository: UserProfileRepository,
     private val localRepository: LocalStorageRepository
 ) : ViewModel() {
     private val _state = MutableStateFlow(MyPageState())
@@ -39,9 +37,7 @@ class MyPageViewModel @Inject constructor(
 
     fun getUserProfiles() {
         viewModelScope.launch {
-            val userId = localRepository.getUserId()
-
-            userProfileRepository.getUserProfiles(userId)
+            userRepository.getUserProfiles()
                 .onSuccess { user ->
                     _state.update { state ->
                         state.copy(ownerName = "${user.name}님")

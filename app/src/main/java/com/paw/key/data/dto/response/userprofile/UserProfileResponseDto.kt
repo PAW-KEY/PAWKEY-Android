@@ -1,28 +1,27 @@
 package com.paw.key.data.dto.response.userprofile
 
-import com.paw.key.domain.model.entity.uerprofile.UserProfileEntity
+import com.paw.key.domain.entity.userprofile.UserProfileEntity
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class UserProfileResponseDto(
-@SerialName("name")
+    @SerialName("name")
     val name: String,
 
+    @SerialName("email")
+    val email: String,
+
+    @SerialName("birth")
+    val birth: String,
+
     @SerialName("gender")
-    val gender: String,
-
-    @SerialName("age")
-    val age: Int,
-
-    @SerialName("activeRegion")
-    val activeRegion: String
-)
-{
+    val gender: String
+) {
     fun toEntity() = UserProfileEntity(
         name = name,
         gender = gender,
-        age = age,
-        activeRegion = activeRegion
+        email = email,
+        birth = birth
     )
 }

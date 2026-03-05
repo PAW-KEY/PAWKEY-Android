@@ -4,7 +4,7 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.paw.key.domain.repository.localstorage.LocalStorageRepository
-import com.paw.key.domain.repository.userprofile.UserProfileRepository
+import com.paw.key.domain.repository.user.UserRepository
 import com.paw.key.presentation.ui.mypage.route.userinfo.model.UserProfileSideEffect
 import com.paw.key.presentation.ui.mypage.route.userinfo.model.UserProfileState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -18,8 +18,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class UserProfileViewModel @Inject constructor(
-    private val userProfileRepository: UserProfileRepository,
-    private val localRepository: LocalStorageRepository
+    private val userRepository: UserRepository,
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(UserProfileState())
@@ -29,33 +28,22 @@ class UserProfileViewModel @Inject constructor(
     val sideEffect: MutableSharedFlow<UserProfileSideEffect> = _sideEffect
 
     init {
-        viewModelScope.launch {
-            val userId = localRepository.getUserId()
-            getUserProfiles(userId)
-        }
+        getUserProfiles()
     }
 
-    fun getUserProfiles(userId: Int) {
+    fun getUserProfiles() {
         viewModelScope.launch {
-            userProfileRepository.getUserProfiles(userId)
+            userRepository.getUserProfiles()
                 .onSuccess { result ->
-                    Log.d("UserProfileViewModel", "유저 프로필 불러오기 성공: $result")
                     _sideEffect.emit(UserProfileSideEffect.ShowSnackBar("유저 프로필 불러오기 성공"))
 
                     _state.update { state ->
                         state.copy(
                             name = result.name,
                             gender = result.gender,
-                            age = result.age,
-                            activeRegion = result.activeRegion
+                            birth = result.birth,
+                            email = result.email
                         )
-                    }
-
-                    try {
-                        //PreferenceDataStore.saveActiveRegion(result.activeRegion)
-                        Log.d("UserProfileViewModel", "activeRegion 저장 완료: ${result.activeRegion}")
-                    } catch (e: Exception) {
-                        Log.e("UserProfileViewModel", "activeRegion 저장 실패: ${e.message}")
                     }
                 }
                 .onFailure { e ->

@@ -10,7 +10,6 @@ import com.paw.key.data.repositoryimpl.ArchivedListRepositoryImpl
 import com.paw.key.data.repositoryimpl.LikeRepositoryImpl
 import com.paw.key.data.repositoryimpl.RegionRepositoryImpl
 import com.paw.key.data.repositoryimpl.SavedListRepositoryImpl
-import com.paw.key.data.repositoryimpl.UserProfileRepositoryImpl
 import com.paw.key.data.repositoryimpl.WalkSharedResultRepositoryImpl
 import com.paw.key.data.repositoryimpl.filter.FilterOptionRepositoryImpl
 import com.paw.key.data.repositoryimpl.home.HomeRegionRepositoryImpl
@@ -35,7 +34,6 @@ import com.paw.key.domain.repository.list.PostsListRepository
 import com.paw.key.domain.repository.localstorage.LocalStorageRepository
 import com.paw.key.domain.repository.login.AuthRepository
 import com.paw.key.domain.repository.user.UserRepository
-import com.paw.key.domain.repository.userprofile.UserProfileRepository
 import com.paw.key.domain.repository.walk.WalkRepository
 import com.paw.key.domain.repository.walkpreparation.WalkPreparationRepository
 import dagger.Binds
@@ -91,12 +89,6 @@ interface RepositoryModule {
     ): HomeRegionRepository
 
     //마이페이지
-    @Binds
-    @Singleton
-    fun bindUserProfileRepository(
-        impl: UserProfileRepositoryImpl
-    ): UserProfileRepository
-
     @Binds
     @Singleton
     fun bindSavedListRepository(

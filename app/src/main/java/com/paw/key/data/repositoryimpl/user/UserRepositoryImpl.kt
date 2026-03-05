@@ -8,6 +8,7 @@ import com.paw.key.domain.entity.petprofile.PetProfileEntity
 import com.paw.key.domain.entity.user.PetBreedsEntity
 import com.paw.key.domain.entity.user.UserInfoEntity
 import com.paw.key.domain.entity.user.UserInfoResultEntity
+import com.paw.key.domain.entity.userprofile.UserProfileEntity
 import com.paw.key.domain.repository.user.UserRepository
 import javax.inject.Inject
 
@@ -40,4 +41,8 @@ class UserRepositoryImpl @Inject constructor(
             userDataSource.getPetProfiles(petId).data.toEntity()
         }
 
+    override suspend fun getUserProfiles(): Result<UserProfileEntity> =
+        suspendRunCatching {
+            userDataSource.getUserProfiles().data.toEntity()
+        }
 }

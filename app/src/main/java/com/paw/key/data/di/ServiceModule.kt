@@ -3,7 +3,6 @@ package com.paw.key.data.di
 import com.paw.key.data.service.ArchivedListService
 import com.paw.key.data.service.LikeService
 import com.paw.key.data.service.SavedListService
-import com.paw.key.data.service.UserProfileService
 import com.paw.key.data.service.filter.FilterOptionService
 import com.paw.key.data.service.home.HomeRegionService
 import com.paw.key.data.service.image.ImageService
@@ -47,11 +46,6 @@ object ServiceModule {
         retrofit.create()
 
     //마이페이지
-    @Provides
-    @Singleton
-    fun provideUserProfileService(retrofit: Retrofit): UserProfileService =
-        retrofit.create()
-
     @Provides
     @Singleton
     fun provideSavedListService(retrofit: Retrofit): SavedListService =

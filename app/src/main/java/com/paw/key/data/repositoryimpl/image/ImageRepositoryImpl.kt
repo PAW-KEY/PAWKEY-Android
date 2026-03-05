@@ -24,13 +24,17 @@ class ImageRepositoryImpl @Inject constructor(
         domainType: ImageDomainType,
     ): Result<ImageRegisterResultEntity> =
         suspendRunCatching{
-            val optimizedFile = imageLocalDataSource.getOptimizedFile(uriString.split("#").last())
+            val parts = uriString.split("#")
+            val remoteImageUrl = parts.first()
+            val localUriString = parts.last()
+
+            val optimizedFile = imageLocalDataSource.getOptimizedFile(localUriString)
             val (width, height) = imageLocalDataSource.getImageSize(optimizedFile)
 
             try {
                 val registerEntity = ImageRegisterEntity(
-                    imageUrl = uriString.split("#").first(),
-                    contentType = optimizedFile.extension,
+                    imageUrl = remoteImageUrl,
+                    contentType = "image/${optimizedFile.extension}",
                     width = width,
                     height = height,
                     domain = domainType
@@ -41,7 +45,11 @@ class ImageRepositoryImpl @Inject constructor(
                 ).data.toEntity()
 
             } finally {
-                imageLocalDataSource.clearCache()
+                imageLocalDataSource.deleteOriginalUri(uriString)
+
+                if (optimizedFile.exists()) {
+                    optimizedFile.delete()
+                }
             }
         }
 

@@ -6,8 +6,8 @@ import androidx.compose.runtime.Immutable
 data class UserProfileState(
     val name: String = "김도기",
     val gender: String = "여성",
-    val age: Int = 24,
-    val activeRegion: String = "강남구 역삼동"
+    val email: String = "",
+    val birth: String = ""
 )
 
 sealed class UserProfileSideEffect{

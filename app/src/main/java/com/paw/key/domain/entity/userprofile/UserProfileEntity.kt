@@ -1,8 +1,8 @@
-package com.paw.key.domain.model.entity.uerprofile
+package com.paw.key.domain.entity.userprofile
 
 data class UserProfileEntity(
     val name: String,
-    val gender: String,
-    val age: Int,
-    val activeRegion: String
+    val email: String,
+    val birth: String,
+    val gender: String
 )

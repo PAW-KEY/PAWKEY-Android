@@ -15,4 +15,6 @@ class UserDataSource @Inject constructor(
     suspend fun getPetProfiles(petId: Int) = userService.getPetProfiles(petId)
 
     suspend fun deleteUser(dto: UserWithDrawRequestDto) = userService.deleteUser(dto)
+
+    suspend fun getUserProfiles() = userService.getUserProfiles()
 }
