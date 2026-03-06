@@ -45,4 +45,8 @@ class UserRepositoryImpl @Inject constructor(
         suspendRunCatching {
             userDataSource.getUserProfiles().data.toEntity()
         }
+
+    override suspend fun checkNickname(nickname: String): Result<Boolean> = suspendRunCatching {
+        userDataSource.getNicknameDifference(nickname)
+    }
 }

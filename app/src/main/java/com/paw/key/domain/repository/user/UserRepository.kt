@@ -20,4 +20,6 @@ interface UserRepository {
     suspend fun getPetProfiles(petId: Int): Result<PetProfileEntity>
 
     suspend fun getUserProfiles(): Result<UserProfileEntity>
+
+    suspend fun checkNickname(nickname: String): Result<Boolean>
 }

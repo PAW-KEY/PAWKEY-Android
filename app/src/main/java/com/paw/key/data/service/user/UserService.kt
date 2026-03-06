@@ -12,6 +12,7 @@ import retrofit2.http.GET
 import retrofit2.http.HTTP
 import retrofit2.http.POST
 import retrofit2.http.Path
+import retrofit2.http.Query
 
 interface UserService {
     @POST("users")
@@ -34,4 +35,9 @@ interface UserService {
 
     @GET("users/me/userInfo")
     suspend fun getUserProfiles(): BaseResponse<UserProfileResponseDto>
+
+    @GET("users")
+    suspend fun getNicknameDifference(
+        @Query("nickname") nickname: String
+    ): BaseResponse<Unit>
 }

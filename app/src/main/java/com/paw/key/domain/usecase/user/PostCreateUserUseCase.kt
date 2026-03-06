@@ -40,6 +40,7 @@ class PostCreateUserUseCase @Inject constructor(
 
             registerImage.imageId
         } else {
+            Timber.e("petImageUri is null")
             -1
         }
 
