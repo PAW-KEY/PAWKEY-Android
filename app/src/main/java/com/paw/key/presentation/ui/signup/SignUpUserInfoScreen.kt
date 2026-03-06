@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -14,7 +15,9 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.paw.key.core.designsystem.theme.PawKeyTheme
 import com.paw.key.core.util.DateVisualTransformation
 import com.paw.key.presentation.ui.signup.component.FormField
 import com.paw.key.presentation.ui.signup.component.GenderSelector
@@ -26,6 +29,7 @@ fun SignUpUserInfoScreen(
     nickName: String,
     birthDate: String,
     gender: Gender,
+    isDuplicate: Boolean,
     onNickNameChanged: (String) -> Unit,
     onBirthDateChanged: (String) -> Unit,
     onGenderChanged: (Gender) -> Unit,
@@ -40,6 +44,7 @@ fun SignUpUserInfoScreen(
     ) {
         FormField(
             label = "닉네임",
+            isDuplicate = isDuplicate,
             content = {
                 SignUpTextField(
                     value = nickName,
@@ -100,6 +105,22 @@ fun SignUpUserInfoScreen(
                     onGenderSelected = onGenderChanged
                 )
             }
+        )
+    }
+}
+
+@Preview
+@Composable
+private fun SignUpUserInfoScreenPreview() {
+    PawKeyTheme {
+        SignUpUserInfoScreen(
+            nickName = "",
+            birthDate = "",
+            gender = Gender.MALE,
+            isDuplicate = true,
+            onNickNameChanged = {},
+            onBirthDateChanged = {},
+            onGenderChanged = {}
         )
     }
 }

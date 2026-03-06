@@ -35,6 +35,7 @@ fun SignUpTextField(
     onValueChange: (String) -> Unit,
     placeholder: String,
     modifier: Modifier = Modifier,
+    isDuplicate: Boolean = false,
     enabled: Boolean = true,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     keyboardActions: KeyboardActions = KeyboardActions.Default,
@@ -47,6 +48,7 @@ fun SignUpTextField(
     val borderColor = when {
         !enabled -> PawKeyTheme.colors.defaultMiddle
         isFocused.value -> PawKeyTheme.colors.primary
+        isDuplicate -> PawKeyTheme.colors.dokiRed
         else -> PawKeyTheme.colors.defaultMiddle
     }
 

@@ -25,10 +25,16 @@ import com.paw.key.presentation.ui.signup.state.SignUpStateType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.collections.immutable.toPersistentList
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -36,6 +42,7 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 
+@OptIn(FlowPreview::class)
 @HiltViewModel
 class SignUpViewModel @Inject constructor(
     private val regionRepository: RegionRepository,
@@ -48,6 +55,19 @@ class SignUpViewModel @Inject constructor(
 
     private val _sideEffect = MutableSharedFlow<SignUpSideEffect>()
     val sideEffect: MutableSharedFlow<SignUpSideEffect> = _sideEffect
+
+    init {
+        viewModelScope.launch {
+            state
+                .map { it.userInfo.nickName }
+                .debounce(500L)
+                .filter { it.isNotBlank() }
+                .distinctUntilChanged()
+                .collectLatest { nickname ->
+                    checkNicknameDuplicate(nickname)
+                }
+        }
+    }
 
     fun deniedPermission() {
         viewModelScope.launch {
@@ -195,64 +215,9 @@ class SignUpViewModel @Inject constructor(
                 ),
                 petImageUri = _state.value.petInfo.petImage?.toString()
             ).onSuccess {
-
                 _state.update { it.copy(isLoading = false) }
                 _sideEffect.emit(SignUpSideEffect.NavigateHome)
             }.onFailure(Timber::e)
-
-            /*suspendRunCatching {
-                val currentState = _state.value
-                val petImageUri = currentState.petInfo.petImage
-
-                val finalImageId: Int = if (petImageUri != null) {
-                    val presignedResult = imageRepository.presignedImage(
-                        presignedEntity = ImagePresignedEntity(
-                            domain = ImageDomainType.PET_PROFILE,
-                            contentType = "image/webp"
-                        )
-                    ).getOrThrow()
-
-                    val registerImage = imageRepository.registerImage(
-                        uriString = "${presignedResult.imageUrl}#${_state.value.petInfo.petImage}",
-                        domainType = ImageDomainType.PET_PROFILE,
-                    ).onFailure(Timber::e)
-
-                    if (!registerImage.isSuccess) {
-                        throw Exception("이미지 업로드에 실패했습니다.")
-                    }
-
-                    registerImage.getOrThrow().imageId
-                } else {
-                    -1
-                }
-
-                userRepository.createUser(
-                    userInfoEntity = UserInfoEntity(
-                        name = _state.value.userInfo.nickName,
-                        birth = _state.value.userInfo.birthDate.toBirthDateFormat(),
-                        gender = _state.value.userInfo.gender.value,
-                        dongId = _state.value.locationInfo.selectedDong.id,
-                        pet = PetInfoEntity(
-                            name = _state.value.petInfo.petName,
-                            birth = _state.value.petInfo.petBirthDate.toBirthDateFormat(),
-                            gender = _state.value.petInfo.petGender.value,
-                            isNeutered = _state.value.petInfo.petNeutered,
-                            breedId = _state.value.petInfo.petBreed.id,
-                            imageId = finalImageId
-                        )
-                    )
-                ).onSuccess {
-                    UserDataStore.saveUserId(context, it.userId)
-                    UserDataStore.savePetId(context, it.petId)
-                }
-            }.onSuccess {
-                Timber.e("postCreateUser success")
-                _sideEffect.emit(SignUpSideEffect.NavigateHome)
-            }.onFailure {
-                Timber.e(it)
-                _sideEffect.emit(SignUpSideEffect.ShowSnackBar(it.message ?: "알 수 없는 오류가 발생했습니다."))
-            }
-        }*/
         }
     }
 
@@ -265,6 +230,22 @@ class SignUpViewModel @Inject constructor(
                 )
             }
         }
+    }
+
+    private suspend fun checkNicknameDuplicate(nickname: String) {
+        updateState { it.copy(userInfo = it.userInfo.copy(isDuplicate = false)) }
+
+        userRepository.checkNickname(nickname)
+            .onSuccess { isDuplicate ->
+                updateState {
+                    it.copy(
+                        userInfo = it.userInfo.copy(isDuplicate = isDuplicate)
+                    )
+                }
+            }
+            .onFailure {
+                updateState { it.copy(userInfo = it.userInfo.copy(isDuplicate = false)) }
+            }
     }
 
     fun updateBirthDate(birthDate: String) {
