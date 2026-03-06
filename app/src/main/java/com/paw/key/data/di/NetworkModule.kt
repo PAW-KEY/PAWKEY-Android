@@ -81,4 +81,29 @@ object NetworkModule {
         .baseUrl("https://s3.amazonaws.com/")
         .client(client)
         .build()
+
+
+
+    @Provides
+    @Singleton
+    @Named("auth")
+    fun provideAuthOkHttpClient(
+        loggingInterceptor: HttpLoggingInterceptor
+    ): OkHttpClient = OkHttpClient.Builder()
+        .connectTimeout(30, TimeUnit.SECONDS)
+        .readTimeout(30, TimeUnit.SECONDS)
+        .addInterceptor(loggingInterceptor)
+        .build()
+
+    @Provides
+    @Singleton
+    @Named("auth")
+    fun provideAuthRetrofit(
+        @Named("auth") client: OkHttpClient,
+        converterFactory: Converter.Factory
+    ): Retrofit = Retrofit.Builder()
+        .baseUrl(if (BuildConfig.DEBUG) BuildConfig.DEBUG_BASE_URL else BuildConfig.BASE_URL)
+        .addConverterFactory(converterFactory)
+        .client(client)
+        .build()
 }

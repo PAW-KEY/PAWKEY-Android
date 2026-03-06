@@ -35,23 +35,31 @@ class TokenAuthenticator @Inject constructor(
             }
 
             val refreshToken = tokenManager.getRefreshToken()
+            val deviceId = tokenManager.getDeviceId()
             if (refreshToken.isEmpty()) {
-                // 앱 재시작 처리
                 appRestarter.restartApp()
                 return@withLock null
             }
 
             try {
-                val tokenDto = reissueService.refresh(refreshToken)
-                tokenManager.saveTokens(tokenDto.accessToken, tokenDto.refreshToken)
+                val tokenDto = refreshService.refresh(refreshToken, deviceId).getOrNull()
+                    ?: run {
+                        tokenManager.clearInfo()
+                        appRestarter.restartApp()
+                        return@withLock null
+                    }
+
+                val (accessToken, refreshToken) = tokenDto
+
+                tokenManager.saveTokens(accessToken.value, refreshToken.value)
 
                 return@withLock response.request.newBuilder()
-                    .header("Authorization", "Bearer ${tokenDto.accessToken}")
+                    .header("Authorization", "Bearer ${accessToken.value}")
                     .build()
             } catch (e: Exception) {
                 Timber.e(e, "토큰 갱신 실패 - 앱 재시작")
                 tokenManager.clearInfo()
-                triggerAppRestart()
+                appRestarter.restartApp()
                 return@withLock null
             }
         }

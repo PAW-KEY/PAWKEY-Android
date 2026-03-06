@@ -3,6 +3,7 @@ package com.paw.key.data.di
 import com.paw.key.data.service.ArchivedListService
 import com.paw.key.data.service.LikeService
 import com.paw.key.data.service.SavedListService
+import com.paw.key.data.service.auth.ReissueService
 import com.paw.key.data.service.filter.FilterOptionService
 import com.paw.key.data.service.home.HomeRegionService
 import com.paw.key.data.service.image.ImageService
@@ -98,4 +99,8 @@ object ServiceModule {
     fun provideWalkService(retrofit: Retrofit): WalkService =
         retrofit.create()
 
+    @Provides
+    @Singleton
+    fun provideReissueService(@Named("auth") retrofit: Retrofit): ReissueService =
+        retrofit.create()
 }
