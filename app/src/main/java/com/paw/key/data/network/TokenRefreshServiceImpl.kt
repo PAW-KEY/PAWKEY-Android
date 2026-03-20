@@ -23,7 +23,7 @@ class TokenRefreshServiceImpl @Inject constructor(
             )
         )
 
-        val data = response.data
+        val data = response
 
         tokenManager.saveTokens(data.accessToken, data.refreshToken)
 
