@@ -9,7 +9,7 @@ data class PetInfoModel(
     val petBirthday: String = "",
     val petGender: String = "",
     val petBreed: String = "",
-    val petAge: Int = -1,
+    val petAge: String = "",
     val petNeutered: Boolean = false,
     val petDbtiName: String = "",
     val petDbtiDescription: String = ""
@@ -24,6 +24,6 @@ fun PetProfileEntity.toUiModel() = PetInfoModel(
     petBreed = breed,
     petAge = age,
     petNeutered = isNeutered,
-    petDbtiName = dbtiName,
-    petDbtiDescription = dbtiDescription
+    petDbtiName = dbtiName.orEmpty(),
+    petDbtiDescription = dbtiDescription.orEmpty()
 )

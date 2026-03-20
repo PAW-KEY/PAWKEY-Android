@@ -5,10 +5,10 @@ data class PetProfileEntity(
     val imageUrl: String,
     val name: String,
     val birth: String,
-    val age: Int,
+    val age: String,
     val gender: String,
     val isNeutered: Boolean,
     val breed: String,
-    val dbtiName: String,
-    val dbtiDescription: String,
+    val dbtiName: String?,
+    val dbtiDescription: String?,
 )

@@ -15,7 +15,7 @@ data class PetProfileResponseDto(
     @SerialName("birth")
     val birth: String,
     @SerialName("age")
-    val age: Int,
+    val age: String,
     @SerialName("gender")
     val gender: String,
     @SerialName("isNeutered")
@@ -23,9 +23,9 @@ data class PetProfileResponseDto(
     @SerialName("breed")
     val breed: String,
     @SerialName("dbtiName")
-    val dbtiName: String,
+    val dbtiName: String?,
     @SerialName("dbtiDescription")
-    val dbtiDescription: String
+    val dbtiDescription: String?
 ) {
     fun toEntity() = PetProfileEntity(
         petId = petId,
