@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.paw.key.core.extension.toBirthDateFormat
 import com.paw.key.core.util.UiState
+import com.paw.key.core.util.file.ImageUriManager
 import com.paw.key.core.util.flattenCoordinatesToLatLng
 import com.paw.key.core.util.handleError
 import com.paw.key.domain.entity.user.PetInfoEntity
@@ -47,7 +48,9 @@ import javax.inject.Inject
 class SignUpViewModel @Inject constructor(
     private val regionRepository: RegionRepository,
     private val userRepository: UserRepository,
+    private val localStorageRepository: LocalStorageRepository,
     private val postCreateUserUseCase: PostCreateUserUseCase,
+    private val imageUriManager: ImageUriManager
 ) : ViewModel() {
     private val _state = MutableStateFlow(SignUpState())
     val state: StateFlow<SignUpState> = _state.asStateFlow()
@@ -212,6 +215,8 @@ class SignUpViewModel @Inject constructor(
                 ),
                 petImageUri = _state.value.petInfo.petImage?.toString()
             ).onSuccess {
+                localStorageRepository.savePetName(_state.value.petInfo.petName)
+
                 _state.update { it.copy(isLoading = false) }
                 _sideEffect.emit(SignUpSideEffect.NavigateHome)
             }.onFailure(Timber::e)
@@ -479,6 +484,17 @@ class SignUpViewModel @Inject constructor(
                         state.locationInfo.selectedGu.name.isNotBlank() &&
                         state.locationInfo.selectedDong.id != 0 &&
                         state.locationInfo.selectedDong.name.isNotBlank()
+            }
+        }
+    }
+
+    fun createCameraUri() {
+        viewModelScope.launch {
+            val uriString = imageUriManager.createTempImageUri()
+            if (uriString != null) {
+                _sideEffect.emit(SignUpSideEffect.LaunchCamera(uriString))
+            } else {
+                _sideEffect.emit(SignUpSideEffect.ShowSnackBar("카메라를 실행할 수 없습니다"))
             }
         }
     }

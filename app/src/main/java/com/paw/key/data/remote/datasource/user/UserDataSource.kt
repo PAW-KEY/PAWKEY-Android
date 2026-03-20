@@ -25,6 +25,6 @@ class UserDataSource @Inject constructor(
     suspend fun getUserProfiles() = userService.getUserProfiles()
 
     suspend fun getNicknameDifference(nickname: String): Boolean = suspendRunCatching {
-        userService.getNicknameDifference(nickname).code == "S000"
+        userService.getNicknameDifference(nickname).code == "U40901"
     }.getOrDefault(false)
 }
