@@ -3,7 +3,6 @@ package com.paw.key.presentation.ui.mypage.route.userinfo.viewmodel
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.paw.key.domain.repository.localstorage.LocalStorageRepository
 import com.paw.key.domain.repository.user.UserRepository
 import com.paw.key.presentation.ui.mypage.route.userinfo.model.UserProfileSideEffect
 import com.paw.key.presentation.ui.mypage.route.userinfo.model.UserProfileState
@@ -41,7 +40,7 @@ class UserProfileViewModel @Inject constructor(
                         state.copy(
                             name = result.name,
                             gender = result.gender,
-                            birth = result.birth,
+                            birth = result.birth.orEmpty(),
                             email = result.email
                         )
                     }

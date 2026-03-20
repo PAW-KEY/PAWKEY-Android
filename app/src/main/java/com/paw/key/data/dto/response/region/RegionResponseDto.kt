@@ -7,18 +7,18 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class RegionResponseDto(
+    @SerialName("regionId")
+    val regionId: Int,
     @SerialName("regionName")
     val regionName: String,
-    @SerialName("preRegionName")
-    val preRegionName: String,
-    @SerialName("geometryDto")
-    val geometryDto: GeometryDto
+    @SerialName("geometry")
+    val geometry: GeometryDto
 ) {
     fun toEntity(): RegionDataEntity {
         return RegionDataEntity(
+            regionId = this.regionId,
             regionName = this.regionName,
-            preRegionName = this.preRegionName,
-            geometry = this.geometryDto.toEntity()
+            geometry = this.geometry.toEntity()
         )
     }
 }
