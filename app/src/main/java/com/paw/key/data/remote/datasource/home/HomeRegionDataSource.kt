@@ -9,5 +9,14 @@ class HomeRegionDataSource @Inject constructor(
 ) {
     suspend fun patchRegion(userId: Int, regionId: Int) =
         service.patchRegion(userId, HomeRegionRequest(regionId))
+
+    suspend fun getHomeInfo() =
+        service.getHomeInfo()
+
+    suspend fun getHomeWeather() =
+        service.getHomeWeather()
+
+    suspend fun getHomeRecommended() =
+        service.getHomeRecommended()
 }
 
