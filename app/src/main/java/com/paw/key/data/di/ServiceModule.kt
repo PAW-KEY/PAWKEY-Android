@@ -8,7 +8,6 @@ import com.paw.key.data.service.filter.FilterOptionService
 import com.paw.key.data.service.home.HomeRegionService
 import com.paw.key.data.service.image.ImageService
 import com.paw.key.data.service.image.S3Service
-import com.paw.key.data.service.list.PostsListService
 import com.paw.key.data.service.login.LoginService
 import com.paw.key.data.service.region.RegionService
 import com.paw.key.data.service.sharedwalk.SharedWalkService
@@ -67,11 +66,6 @@ object ServiceModule {
     @Provides
     @Singleton
     fun provideFilterOptionService(retrofit: Retrofit): FilterOptionService =
-        retrofit.create()
-
-    @Provides
-    @Singleton
-    fun providePostsListService(retrofit: Retrofit): PostsListService =
         retrofit.create()
 
     @Provides

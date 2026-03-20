@@ -12,10 +12,10 @@ import com.paw.key.data.repositoryimpl.RegionRepositoryImpl
 import com.paw.key.data.repositoryimpl.SavedListRepositoryImpl
 import com.paw.key.data.repositoryimpl.WalkSharedResultRepositoryImpl
 import com.paw.key.data.repositoryimpl.filter.FilterOptionRepositoryImpl
-import com.paw.key.data.repositoryimpl.home.HomeRegionRepositoryImpl
+import com.paw.key.data.repositoryimpl.home.HomeRepositoryImpl
 import com.paw.key.data.repositoryimpl.home.RegionCurrentRepositoryImpl
 import com.paw.key.data.repositoryimpl.image.ImageRepositoryImpl
-import com.paw.key.data.repositoryimpl.list.PostsListRepositoryImpl
+import com.paw.key.data.repositoryimpl.posts.PostsRepositoryImpl
 import com.paw.key.data.repositoryimpl.localstorage.LocalStorageRepositoryImpl
 import com.paw.key.data.repositoryimpl.login.AuthRepositoryImpl
 import com.paw.key.data.repositoryimpl.user.UserRepositoryImpl
@@ -27,12 +27,12 @@ import com.paw.key.domain.repository.RegionRepository
 import com.paw.key.domain.repository.SavedListRepository
 import com.paw.key.domain.repository.WalkSharedResultRepository
 import com.paw.key.domain.repository.filter.FilterOptionRepository
-import com.paw.key.domain.repository.home.HomeRegionRepository
+import com.paw.key.domain.repository.home.HomeRepository
 import com.paw.key.domain.repository.home.RegionCurrentRepository
 import com.paw.key.domain.repository.image.ImageRepository
-import com.paw.key.domain.repository.list.PostsListRepository
 import com.paw.key.domain.repository.localstorage.LocalStorageRepository
 import com.paw.key.domain.repository.login.AuthRepository
+import com.paw.key.domain.repository.posts.PostsRepository
 import com.paw.key.domain.repository.user.UserRepository
 import com.paw.key.domain.repository.walk.WalkRepository
 import com.paw.key.domain.repository.walkpreparation.WalkPreparationRepository
@@ -84,9 +84,9 @@ interface RepositoryModule {
 
     @Binds
     @Singleton
-    fun bindHomeRegionRepository(
-        impl: HomeRegionRepositoryImpl
-    ): HomeRegionRepository
+    fun bindHomeRepository(
+        impl: HomeRepositoryImpl
+    ): HomeRepository
 
     //마이페이지
     @Binds
@@ -116,9 +116,9 @@ interface RepositoryModule {
     //게시물 리스트
     @Binds
     @Singleton
-    fun bindPostsListRepository(
-        impl: PostsListRepositoryImpl
-    ) : PostsListRepository
+    fun bindPostsRepository(
+        impl: PostsRepositoryImpl
+    ) : PostsRepository
 
     @Binds
     @Singleton
