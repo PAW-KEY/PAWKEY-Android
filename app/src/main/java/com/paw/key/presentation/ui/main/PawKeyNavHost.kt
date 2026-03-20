@@ -165,7 +165,10 @@ fun PawKeyNavHost(
                     launchSingleTop = true
                 }
                 navigator.navigateOnboarding(navOptions = options)
-            }
+            },
+            navigateToHome = {
+                navigator.navigateHome(clearStackNavOptions)
+            },
         )
 
         onboardingNavGraph(
@@ -203,7 +206,13 @@ fun PawKeyNavHost(
         )
 
         signUpNavGraph(
-            navigateUp = navigator::navigateUp,
+            navigateUp = {
+                val options = navOptions {
+                    popUpTo(0) { inclusive = true }
+                    launchSingleTop = true
+                }
+                navigator.navigateLogin(options)
+            },
             navigateToHome = {
                 val options = navOptions {
                     popUpTo(0) { inclusive = true }

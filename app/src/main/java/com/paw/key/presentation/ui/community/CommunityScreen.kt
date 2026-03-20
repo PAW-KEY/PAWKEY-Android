@@ -262,10 +262,10 @@ fun CommunityScreen(
             items(state.communityRouteList.size) {
                 RouteItem(
                     routeTitle = state.communityRouteList[it].title,
-                    routeTime = state.communityRouteList[it].time,
+                    routeTime = state.communityRouteList[it].duration.toString(),
                     routeDate = state.communityRouteList[it].date,
-                    location = state.communityRouteList[it].location,
-                    routeImage = state.communityRouteList[it].imageUri,
+                    location = state.communityRouteList[it].regionName,
+                    routeImage = state.communityRouteList[it].imageUrl,
                     onClickHeart = {},
                     onClick = {}
                 )

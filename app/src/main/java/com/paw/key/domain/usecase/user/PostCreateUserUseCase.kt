@@ -28,7 +28,7 @@ class PostCreateUserUseCase @Inject constructor(
             ).getOrThrow()
 
             imageRepository.uploadS3(
-                presignedUrl = presignedResult.imageUrl,
+                presignedUrl = presignedResult.uploadUrl,
                 uriString = petImageUri
             ).getOrThrow()
 
@@ -56,6 +56,7 @@ class PostCreateUserUseCase @Inject constructor(
             userInfoEntity = finalUserInfo
         ).getOrThrow()
 
+        Timber.e("createUser: $createUser")
         localRepository.saveUserId(userId = createUser.userId)
         localRepository.savePetId(petId = createUser.petId)
     }
