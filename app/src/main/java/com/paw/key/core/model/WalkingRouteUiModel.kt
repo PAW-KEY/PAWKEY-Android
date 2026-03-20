@@ -1,19 +1,19 @@
 package com.paw.key.core.model
 
+import com.paw.key.domain.entity.posts.PostEntity
+
 data class WalkingRouteUiModel(
-    val routeId: Int,
     val postId: Int,
     val regionName: String,
     val title: String,
     val date: String,
     val duration: Int,
     val isLiked: Boolean,
-    val imageUrl: String
+    val imageUrl: String?
 ) {
     companion object {
         val Fake = listOf(
             WalkingRouteUiModel(
-                routeId = 1,
                 postId = 1,
                 regionName = "강남구 역삼동",
                 title = "강남구 역삼동 산책",
@@ -23,7 +23,6 @@ data class WalkingRouteUiModel(
                 imageUrl = ""
             ),
             WalkingRouteUiModel(
-                routeId = 2,
                 postId = 2,
                 regionName = "강남구 역삼동",
                 title = "강남구 역삼동 산책",
@@ -35,3 +34,13 @@ data class WalkingRouteUiModel(
         )
     }
 }
+
+fun PostEntity.toUiModel() = WalkingRouteUiModel(
+    postId = postId,
+    regionName = regionName,
+    title = title,
+    date = date,
+    duration = durationMinutes,
+    isLiked = isLiked,
+    imageUrl = imageUrl,
+)

@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.paw.key.core.extension.updateSuccess
 import com.paw.key.core.util.UiState
 import com.paw.key.domain.repository.home.HomeRepository
+import com.paw.key.domain.repository.localstorage.LocalStorageRepository
 import com.paw.key.presentation.ui.home.model.toUiModel
 import com.paw.key.presentation.ui.home.state.HomeSideEffect
 import com.paw.key.presentation.ui.home.state.HomeState
@@ -20,7 +21,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val repository: HomeRepository
+    private val repository: HomeRepository,
+    private val localStorageRepository: LocalStorageRepository
 ): ViewModel() {
     private val _state = MutableStateFlow<UiState<HomeState>>(UiState.Loading)
     val state = _state.asStateFlow()
@@ -39,6 +41,17 @@ class HomeViewModel @Inject constructor(
                     }
                 }
                 .onFailure(Timber::e)
+        }
+    }
+
+    fun fetchPetName() {
+        viewModelScope.launch {
+            val petName = localStorageRepository.getPetName()
+            _state.updateSuccess {
+                it.copy(
+                    petName = petName
+                )
+            }
         }
     }
 

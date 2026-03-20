@@ -16,6 +16,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -45,12 +46,14 @@ fun HomeRoute(
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
 
-    /*LaunchedEffect(Unit) {
+    LaunchedEffect(Unit) {
+        viewModel.fetchPetName()
         viewModel.fetchHomeInfo()
         viewModel.fetchHomeWeather()
+
         // Todo: 서버 부담이 있어 추후 변경하고 호출할 예정
         //viewModel.fetchHomeRoute()
-    }*/
+    }
 
     when (val uiState = state) {
         is UiState.Loading -> {
@@ -100,7 +103,7 @@ private fun HomeScreen(
         Spacer(modifier = Modifier.height(24.dp))
 
         HomeStartWalkingRow(
-            petName = "보리",
+            petName = state.petName,
             onClick = navigateToCourse
         )
 
@@ -125,13 +128,13 @@ private fun HomeScreen(
             ) {
                 itemsIndexed(
                     items = state.walkingPopularData,
-                    key = { _, item -> item.routeId }
+                    key = { _, item -> item.postId }
                 ) { _, item ->
                     RouteItem(
                         routeTitle = item.title,
                         routeTime = item.duration.toString(),
                         routeDate = item.date,
-                        routeImage = item.imageUrl,
+                        routeImage = item.imageUrl!!,
                         location = item.regionName,
                         onClick = {},
                         onClickHeart = {},
@@ -162,13 +165,13 @@ private fun HomeScreen(
             ) {
                 itemsIndexed(
                     items = state.walkingRecommendedData,
-                    key = { _, item -> item.routeId }
+                    key = { _, item -> item.postId }
                 ) { _, item ->
                     RouteItem(
                         routeTitle = item.title,
                         routeTime = item.duration.toString(),
                         routeDate = item.date,
-                        routeImage = item.imageUrl,
+                        routeImage = item.imageUrl!!,
                         location = item.regionName,
                         onClick = {},
                         onClickHeart = {},
