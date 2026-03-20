@@ -28,7 +28,7 @@ class UserRepositoryImpl @Inject constructor(
                 dto = UserWithDrawRequestDto(
                     provider = provider
                 )
-            ).data
+            )
         }
 
     override suspend fun getPetBreeds(): Result<PetBreedsEntity> =

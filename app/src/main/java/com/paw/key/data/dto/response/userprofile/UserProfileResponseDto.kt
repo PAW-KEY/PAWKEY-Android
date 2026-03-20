@@ -13,7 +13,7 @@ data class UserProfileResponseDto(
     val email: String,
 
     @SerialName("birth")
-    val birth: String,
+    val birth: String?,
 
     @SerialName("gender")
     val gender: String

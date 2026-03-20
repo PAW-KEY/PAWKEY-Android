@@ -7,6 +7,7 @@ import com.paw.key.data.dto.response.petprofile.PetProfileResponseDto
 import com.paw.key.data.dto.response.user.PetBreedsResponseDto
 import com.paw.key.data.dto.response.user.UserInfoResponseDto
 import com.paw.key.data.dto.response.userprofile.UserProfileResponseDto
+import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.HTTP
@@ -23,7 +24,7 @@ interface UserService {
     @HTTP(method = "DELETE", path = "auth/withdraw", hasBody = true)
     suspend fun deleteUser(
         @Body request: UserWithDrawRequestDto
-    ) : BaseResponse<Unit>
+    ) : Response<Unit>
 
     @GET("pets/breeds")
     suspend fun getPetBreeds(): BaseResponse<PetBreedsResponseDto>
