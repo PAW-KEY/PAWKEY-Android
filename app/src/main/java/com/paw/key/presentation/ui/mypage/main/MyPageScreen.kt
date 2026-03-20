@@ -100,7 +100,6 @@ fun MyPageScreen(
                 .padding(horizontal = 16.dp, vertical = 18.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-
             item {
                 OwnerCard(
                     ownerName = state.ownerName,
@@ -110,14 +109,16 @@ fun MyPageScreen(
             }
 
             item {
-                MyPageCard(
-                    userName = "단지",
-                    userAge = "6개월",
-                    userGender = "여아",
-                    dogBreed = "우지",
-                    buttonTitle = "DBTI검사하러 가기",
-                    dogImage = null
-                )
+                with(state.petInfo) {
+                    MyPageCard(
+                        userName = petName,
+                        userAge = "6개월",
+                        userGender = petGender,
+                        dogBreed = petBreed,
+                        buttonTitle = "DBTI검사하러 가기",
+                        dogImage = petImageUrl
+                    )
+                }
             }
 
             item {

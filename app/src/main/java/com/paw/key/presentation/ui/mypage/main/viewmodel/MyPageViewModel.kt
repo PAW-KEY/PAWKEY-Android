@@ -38,13 +38,18 @@ class MyPageViewModel @Inject constructor(
     }
 
     fun getUserProfiles() {
+        Timber.e("getUserProfiles")
         viewModelScope.launch {
             userRepository.getUserProfiles()
                 .onSuccess { user ->
+                    Timber.e("getUserProfiles: $user")
                     _state.update { state ->
-                        state.copy(ownerName = "${user.name}님")
+                        state.copy(
+                            ownerName = "${user.name}님",
+                        )
                     }
                 }.onFailure { e ->
+                    Timber.e("getUserProfiles: $e")
                     _sideEffect.emit(MyPageSideEffect.ShowSnackBar("유저 프로필 불러오기 실패"))
                 }
         }
@@ -61,7 +66,10 @@ class MyPageViewModel @Inject constructor(
                             petInfo = result.toUiModel()
                         )
                     }
+                    Timber.e("getPetProfiles: $result")
+                    Timber.e("getPetProfiles: ${_state.value.petInfo}")
                 }.onFailure {
+                    Timber.e("getPetProfiles: $it")
                     _sideEffect.emit(MyPageSideEffect.ShowSnackBar("펫 프로필 불러오기 실패"))
                 }
         }
@@ -69,9 +77,14 @@ class MyPageViewModel @Inject constructor(
 
     fun removeUser() {
         viewModelScope.launch {
-            //val provider = localRepository.getProvider()
-            userRepository.deleteUser("KAKAO")
+            val userProvider = localRepository.getUserProvider()
+
+            Timber.e("userProvider: $userProvider")
+
+            userRepository.deleteUser(userProvider)
                 .onSuccess {
+                    Timber.e("유저 삭제 성공")
+                    localRepository.clearInfo()
                     appRestarter.restartApp()
                 }
                 .onFailure {
