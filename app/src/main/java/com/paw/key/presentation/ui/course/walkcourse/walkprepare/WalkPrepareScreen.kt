@@ -2,6 +2,7 @@ package com.paw.key.presentation.ui.course.walkcourse.walkprepare
 
 import android.widget.Toast
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
@@ -59,7 +60,8 @@ fun WalkPrepareRoute(
         startWalkCourse = viewModel::startWalk,
         addWalkItem = viewModel::addWalkItem,
         deleteWalkItem = viewModel::deleteWalkItem,
-        clearLastAddedItemId = viewModel::clearLastAddedItemId
+        clearLastAddedItemId = viewModel::clearLastAddedItemId,
+        //onFinishWalk = viewModel::finishWalk
     )
 }
 
@@ -70,7 +72,8 @@ private fun WalkPrepareScreen(
     startWalkCourse: () -> Unit = {},
     addWalkItem : () -> Unit = {},
     deleteWalkItem : (Int) -> Unit = {},
-    clearLastAddedItemId: () -> Unit = {}
+    clearLastAddedItemId: () -> Unit = {},
+    onFinishWalk : () -> Unit = {}
 ) {
     Column (
         modifier = Modifier
@@ -82,7 +85,8 @@ private fun WalkPrepareScreen(
     ) {
         TopBar(
             title = "산책",
-            isBackVisible = false
+            isBackVisible = false,
+            modifier = Modifier.clickable(onClick = onFinishWalk)
         )
 
         Spacer(modifier = Modifier.height(20.dp))

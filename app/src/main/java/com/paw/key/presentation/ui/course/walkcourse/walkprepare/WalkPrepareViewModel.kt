@@ -18,6 +18,7 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -98,13 +99,29 @@ class WalkPrepareViewModel @Inject constructor(
 
     fun startWalk() {
         viewModelScope.launch {
-            walkRepository.startWalk(null)
+            walkRepository.startWalk(deviceInfo = "ANDROID")
                 .onSuccess {
+                    Timber.e("startWalk success ${it.routeId}")
                     _sideEffect.emit(WalkPrepareSideEffect.NavigateToWalkCourse(it.routeId))
                 }
                 .onFailure {
+                    Timber.e(it)
                     _sideEffect.emit(WalkPrepareSideEffect.ShowToastMessage("산책 시작에 실패하였습니다."))
                 }
         }
     }
+
+    /*fun finishWalk() {
+        viewModelScope.launch {
+            walkRepository.finishWalk(
+                routeId = "routeId",
+                walkFinish = state.value.toEntity()
+            ).onSuccess {
+                _sideEffect.emit(WalkPrepareSideEffect.NavigateToWalkCourse(it.routeId))
+            }.onFailure {
+                Timber.e(it)
+                _sideEffect.emit(WalkPrepareSideEffect.ShowToastMessage("산책 종료에 실패하였습니다."))
+            }
+        }
+    }*/
 }
