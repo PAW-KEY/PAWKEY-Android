@@ -4,6 +4,9 @@ import androidx.compose.runtime.Immutable
 import com.paw.key.domain.entity.posts.FilterItemEntity
 import com.paw.key.domain.entity.posts.FilterSelectedIOptionEntity
 import com.paw.key.domain.entity.posts.PostsFilterEntity
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.toImmutableList
 
 @Immutable
 data class FilterCategoryUiModel(
@@ -23,8 +26,8 @@ enum class SelectionType {
 }
 
 fun PostsFilterEntity.toUiModel() = PostsFilterUiModel(
-    durationList = durationList.map { it.toUiModel() },
-    categoryList = categoryList.map { it.toUiModel() }
+    durationList = durationList.map { it.toUiModel() }.toImmutableList(),
+    categoryList = categoryList.map { it.toUiModel() }.toImmutableList()
 )
 
 fun FilterItemEntity.toUiModel() = FilterCategoryUiModel(
@@ -35,8 +38,8 @@ fun FilterItemEntity.toUiModel() = FilterCategoryUiModel(
 )
 
 data class PostsFilterUiModel(
-    val durationList: List<FilterCategoryUiModel> = emptyList(),
-    val categoryList: List<FilterCategoryUiModel> = emptyList()
+    val durationList: ImmutableList<FilterCategoryUiModel> = persistentListOf(),
+    val categoryList: ImmutableList<FilterCategoryUiModel> = persistentListOf()
 ) {
     val allCategories get() = durationList + categoryList
 }
@@ -44,7 +47,7 @@ data class PostsFilterUiModel(
 data class FilterSelectedUiModel(
     val durationId: Int? = null,
     val categoryId: Int? = null,
-    val optionsIds: List<Int?> = emptyList()
+    val optionsIds: ImmutableList<Int?> = persistentListOf()
 ) {
     fun toEntity() = FilterSelectedIOptionEntity(
         durationId = durationId,

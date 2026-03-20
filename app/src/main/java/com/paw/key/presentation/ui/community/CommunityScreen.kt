@@ -83,7 +83,8 @@ fun CommunityRoute( // 루트 추천
         CommunityScreen(
             paddingValues = paddingValues,
             state = state,
-            onShowFilterSheet = { isFilterSheetVisible = true }
+            onShowFilterSheet = { isFilterSheetVisible = true },
+            onClickSort = viewModel::onSortTypeChanged
         )
     }
 }
@@ -93,6 +94,7 @@ fun CommunityScreen(
     paddingValues: PaddingValues,
     state: CommunityState,
     onShowFilterSheet: () -> Unit = {},
+    onClickSort: (SortedType) -> Unit = {}
 ) {
     val filterList = state.filterUiModel.allCategories.map { it.name }.toImmutableList()
 
@@ -240,7 +242,7 @@ fun CommunityScreen(
                                 )
                             },
                             onClick = {
-                                // Todo: 정렬 타입 변경 로직
+                                onClickSort(option)
                                 isSortMenuExpanded = false
                             }
                         )
