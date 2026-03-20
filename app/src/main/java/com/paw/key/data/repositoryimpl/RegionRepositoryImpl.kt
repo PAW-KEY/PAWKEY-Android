@@ -11,9 +11,9 @@ import javax.inject.Inject
 class RegionRepositoryImpl @Inject constructor(
     private val regionDataSource: RegionDataSource,
 ) : RegionRepository {
-    override suspend fun getRegionGeometry(userId: Int, regionId: Int): Result<RegionDataEntity> =
+    override suspend fun getRegionGeometry(regionId: Int): Result<RegionDataEntity> =
         suspendRunCatching {
-            regionDataSource.getRegionGeometry(userId, regionId).data.toEntity()
+            regionDataSource.getRegionGeometry(regionId).data.toEntity()
         }
 
     override suspend fun getRegionList(): Result<List<DistrictEntity>> = suspendRunCatching {
