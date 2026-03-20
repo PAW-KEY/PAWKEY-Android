@@ -3,6 +3,7 @@ package com.paw.key.presentation.ui.login.viewmodel
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.paw.key.domain.repository.localstorage.LocalStorageRepository
 import com.paw.key.domain.usecase.auth.LoginUseCase
 import com.paw.key.presentation.ui.login.state.LoginSideEffect
 import com.paw.key.presentation.ui.login.state.LoginState
@@ -17,7 +18,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
-    private val loginUseCase: LoginUseCase
+    private val loginUseCase: LoginUseCase,
+    private val localStorageRepository: LocalStorageRepository,
 ) : ViewModel() {
     private val _state = MutableStateFlow(LoginState())
     val state: StateFlow<LoginState>
@@ -33,6 +35,8 @@ class LoginViewModel @Inject constructor(
         viewModelScope.launch {
             loginUseCase.invokeGoogleLogin(context)
                 .onSuccess {
+                    localStorageRepository.saveUserProvider("GOOGLE")
+
                     if (it) {
                         _sideEffect.emit(LoginSideEffect.NavigateToSignUp)
                     } else {
@@ -51,6 +55,7 @@ class LoginViewModel @Inject constructor(
         viewModelScope.launch {
             loginUseCase.invokeKakaoLogin(context)
                 .onSuccess {
+                    localStorageRepository.saveUserProvider("KAKAO")
                     // isNewUser가 true이면이니 signup false는 home
                     if (it) {
                         _sideEffect.emit(LoginSideEffect.NavigateToSignUp)

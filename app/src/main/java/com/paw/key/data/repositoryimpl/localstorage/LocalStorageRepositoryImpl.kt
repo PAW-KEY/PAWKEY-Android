@@ -70,11 +70,11 @@ class LocalStorageRepositoryImpl @Inject constructor(
     }
 
     override suspend fun getAccessToken(): String {
-        return sharedPreferences.getString(ACCESS_TOKEN, "") ?: ""
+        return sharedPreferences.getString(ACCESS_TOKEN, "").orEmpty()
     }
 
     override suspend fun getRefreshToken(): String {
-        return sharedPreferences.getString(REFRESH_TOKEN, "") ?: ""
+        return sharedPreferences.getString(REFRESH_TOKEN, "").orEmpty()
     }
 
     override suspend fun removeTokens() {
@@ -94,6 +94,18 @@ class LocalStorageRepositoryImpl @Inject constructor(
 
     override suspend fun getUserId(): Int {
         return sharedPreferences.getInt(USER_ID, -1)
+    }
+
+    override suspend fun saveUserProvider(provider: String) {
+        sharedPreferences.edit().apply {
+            putString(USER_PROVIDER, provider)
+            apply()
+        }
+    }
+
+    override suspend fun getUserProvider(): String {
+        return sharedPreferences
+            .getString(USER_PROVIDER, "").orEmpty()
     }
 
     override suspend fun savePetId(petId: Int) {
@@ -147,5 +159,6 @@ class LocalStorageRepositoryImpl @Inject constructor(
         private const val DEVICE_ID = "device_id"
         private const val USER_ID = "user_id"
         private const val PET_ID = "pet_id"
+        private const val USER_PROVIDER = "user_provider"
     }
 }

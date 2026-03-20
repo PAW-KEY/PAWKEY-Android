@@ -10,6 +10,8 @@ interface LocalStorageRepository {
     // 사용자 정보 관련
     suspend fun saveUserId(userId: Int)
     suspend fun getUserId(): Int
+    suspend fun saveUserProvider(provider: String)
+    suspend fun getUserProvider(): String
 
     // 펫 정보 관련
     suspend fun savePetId(petId: Int)
