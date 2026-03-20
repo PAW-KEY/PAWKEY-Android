@@ -218,6 +218,7 @@ fun SignUpScreen(
                                 nickName = userInfo.nickName,
                                 birthDate = userInfo.birthDate,
                                 gender = userInfo.gender,
+                                isDuplicate = userInfo.isDuplicate,
                                 onNickNameChanged = onNickNameChanged,
                                 onBirthDateChanged = onBirthDateChanged,
                                 onGenderChanged = onGenderChanged,

@@ -47,7 +47,6 @@ import javax.inject.Inject
 class SignUpViewModel @Inject constructor(
     private val regionRepository: RegionRepository,
     private val userRepository: UserRepository,
-    private val localRepository: LocalStorageRepository,
     private val postCreateUserUseCase: PostCreateUserUseCase,
 ) : ViewModel() {
     private val _state = MutableStateFlow(SignUpState())
@@ -148,14 +147,12 @@ class SignUpViewModel @Inject constructor(
                     if (_state.value.isRegionComplete && _state.value.locationInfo.selectedGu.name.isNotBlank() && _state.value.locationInfo.selectedDong.name.isNotBlank()) {
                         postCreateUser()
                     } else {
-                        // Todo: 좌표값이 없어서 우선 여기서 종료
-                        /*updateState {
+                        updateState {
                             it.copy(
                                 signUpState = SignUpStateType.REGION_MANAGEMENT,
                             )
                         }
-                        _sideEffect.emit(SignUpSideEffect.NavigateNext)*/
-                        postCreateUser()
+                        _sideEffect.emit(SignUpSideEffect.NavigateNext)
                     }
                 }
 
@@ -394,16 +391,16 @@ class SignUpViewModel @Inject constructor(
         viewModelScope.launch {
             val dongId = _state.value.locationInfo.selectedDong.id
             getRegionGeometry(
-                userId = localRepository.getUserId(),
                 regionId = dongId,
             )
             onNextClick()
         }
     }
 
-    fun getRegionGeometry(userId: Int, regionId: Int?) = viewModelScope.launch {
-        regionRepository.getRegionGeometry(userId, regionId!!)
+    fun getRegionGeometry(regionId: Int?) = viewModelScope.launch {
+        regionRepository.getRegionGeometry(regionId!!)
             .onSuccess { data ->
+                Timber.e("getRegionGeometry $data")
                 val coordinates = data.geometry.coordinates
                 val flattenedLatLng = flattenCoordinatesToLatLng(coordinates)
 
@@ -447,6 +444,7 @@ class SignUpViewModel @Inject constructor(
                 }
             }
             .onFailure { throwable ->
+                Timber.e("getRegionGeometry $throwable")
                 val errorMessage = handleError(throwable)
                 _state.update { currentState ->
                     currentState.copy(
@@ -464,7 +462,7 @@ class SignUpViewModel @Inject constructor(
                 // UserInfo 확인
                 state.userInfo.nickName.isNotBlank() && state.userInfo.nickName.length <= 8 &&
                         state.userInfo.birthDate.length == 8 && state.userInfo.birthDate.isValidDate() &&
-                        state.userInfo.gender != Gender.UNKNOWN
+                        state.userInfo.gender != Gender.UNKNOWN && !state.userInfo.isDuplicate
             }
 
             SignUpStateType.PET_INFO -> {
