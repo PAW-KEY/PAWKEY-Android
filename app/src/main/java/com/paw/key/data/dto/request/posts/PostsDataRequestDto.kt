@@ -1,5 +1,7 @@
 package com.paw.key.data.dto.request.posts
 
+import com.paw.key.domain.entity.posts.CategoryOptionEntity
+import com.paw.key.domain.entity.posts.PostsInfoEntity
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -14,24 +16,44 @@ data class PostsDataRequestDto(
     @SerialName("isPublic")
     val isPublic: Boolean,
 
+    @SerialName("routeId")
+    val routeId: Int,
+
+    @SerialName("routeImageId")
+    val routeImageId: Int,
+
+    @SerialName("walkImageIds")
+    val walkImageIds: List<Int>,
+
     @SerialName("selectedOptionsForCategories")
     val selectedOptionsForCategories: List<CategoryOptionDto>,
 
-    @SerialName("routeId")
-    val routeId: Long,
+    @SerialName("imageUrls")
+    val imageUrls: List<Int>
+)
 
-    @SerialName("routeImageId")
-    val routeImageId: Long,
-
-    @SerialName("walkImageIds")
-    val walkImageIds: List<Long>
+fun PostsInfoEntity.toDto() = PostsDataRequestDto(
+    title = title,
+    description = description,
+    isPublic = isPublic,
+    routeId = routeId,
+    routeImageId = routeImageId,
+    walkImageIds = walkImageIds,
+    selectedOptionsForCategories = selectedOptionsForCategories.map { it.toDto() },
+    imageUrls = imageUrls
 )
 
 @Serializable
 data class CategoryOptionDto(
     @SerialName("categoryId")
-    val categoryId: Long,
+    val categoryId: Int,
 
     @SerialName("selectedOptionIds")
-    val selectedOptionIds: List<Long>
+    val selectedOptionIds: List<Int>
 )
+
+fun CategoryOptionEntity.toDto() = CategoryOptionDto(
+    categoryId = categoryId,
+    selectedOptionIds = selectedOptionIds
+)
+
