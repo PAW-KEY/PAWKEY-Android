@@ -82,8 +82,12 @@ class ImageLocalDataSource @Inject constructor(
 
     // 개별 삭제 함수
     fun deleteOriginalUri(uriString: String) {
+        val uri = uriString.split("#").last().toUri()
+
+        if (uri.toString().contains("media/picker")) return
+
         try {
-            context.contentResolver.delete(uriString.toUri(), null, null)
+            context.contentResolver.delete(uri, null, null)
         } catch (e: Exception) {
             Timber.e(e, "원본 파일 삭제 실패")
         }

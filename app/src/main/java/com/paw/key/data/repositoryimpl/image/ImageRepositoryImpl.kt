@@ -14,6 +14,7 @@ import com.paw.key.domain.entity.image.ImageRegisterResultEntity
 import com.paw.key.domain.repository.image.ImageRepository
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody.Companion.asRequestBody
+import timber.log.Timber
 import javax.inject.Inject
 
 class ImageRepositoryImpl @Inject constructor(
@@ -29,6 +30,7 @@ class ImageRepositoryImpl @Inject constructor(
             val parts = uriString.split("#")
             val remoteImageUrl = parts.first()
             val localUriString = parts.last()
+            Timber.e("registerImage: $parts")
 
             val optimizedFile = imageLocalDataSource.getOptimizedFile(localUriString)
             val (width, height) = imageLocalDataSource.getImageSize(optimizedFile)
@@ -72,11 +74,11 @@ class ImageRepositoryImpl @Inject constructor(
 
         val response = s3DataSource.uploadS3(presignedUrl, requestBody)
 
-        imageLocalDataSource.clearCache()
-
         if (!response.isSuccessful) {
             throw Exception("S3 Upload Failed: ${response.code()}")
         }
+
+        imageLocalDataSource.clearCache()
     }
 
 }
