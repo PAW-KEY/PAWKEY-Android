@@ -16,6 +16,9 @@ interface LocalStorageRepository {
     // 펫 정보 관련
     suspend fun savePetId(petId: Int)
     suspend fun getPetId(): Int
+    suspend fun savePetName(petName: String)
+    suspend fun getPetName(): String
+
 
     // 기기 정보 관련
     suspend fun saveDeviceId(deviceId: String)

@@ -119,6 +119,17 @@ class LocalStorageRepositoryImpl @Inject constructor(
         return sharedPreferences.getInt(PET_ID, -1)
     }
 
+    override suspend fun savePetName(petName: String) {
+        sharedPreferences.edit().apply {
+            putString(PET_NAME, petName)
+            apply()
+        }
+    }
+
+    override suspend fun getPetName(): String {
+        return sharedPreferences.getString(PET_NAME, "").orEmpty()
+    }
+
     override suspend fun saveDeviceId(deviceId: String) {
         sharedPreferences.edit().apply {
             putString(DEVICE_ID, deviceId)
@@ -148,6 +159,8 @@ class LocalStorageRepositoryImpl @Inject constructor(
             remove(DEVICE_ID)
             remove(ACCESS_TOKEN)
             remove(REFRESH_TOKEN)
+            remove(USER_PROVIDER)
+            remove(PET_NAME)
             apply()
         }
     }
@@ -160,5 +173,6 @@ class LocalStorageRepositoryImpl @Inject constructor(
         private const val USER_ID = "user_id"
         private const val PET_ID = "pet_id"
         private const val USER_PROVIDER = "user_provider"
+        private const val PET_NAME = "pet_name"
     }
 }
