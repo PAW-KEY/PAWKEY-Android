@@ -26,7 +26,7 @@ class WalkRepositoryImpl @Inject constructor(
     override suspend fun startWalk(deviceInfo: String?): Result<WalkStartEntity> =
         suspendRunCatching {
             dataSource.startWalk(
-                dto = WalkStartRequestDto(deviceInfo)
+                dto = WalkStartRequestDto(deviceInfo = "ANDROID")
             ).data.toEntity()
         }
 

@@ -9,7 +9,7 @@ data class WalkStartResponseDto(
     @SerialName("routeId")
     val routeId: String,
     @SerialName("issuedAt")
-    val issuedAt: Int,
+    val issuedAt: Long,
 ) {
     fun toEntity() = WalkStartEntity(
         routeId = routeId,

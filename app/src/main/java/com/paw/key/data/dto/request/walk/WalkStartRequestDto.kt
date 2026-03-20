@@ -6,5 +6,5 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class WalkStartRequestDto(
     @SerialName("deviceInfo")
-    val deviceInfo: String? = "ANDROID",
+    val deviceInfo: String,
 )

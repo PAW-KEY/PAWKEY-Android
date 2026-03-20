@@ -34,4 +34,6 @@ interface WalkService {
     suspend fun getRouteGeometry(
         @Path("routeId") routeId : String
     ) : BaseResponse<WalkCompleteResponseDto>
+
+
 }
