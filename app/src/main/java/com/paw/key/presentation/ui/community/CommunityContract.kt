@@ -1,39 +1,60 @@
 package com.paw.key.presentation.ui.community
 
 import com.paw.key.core.model.WalkingRouteUiModel
+import com.paw.key.domain.entity.posts.FilterSelectedItemEntity
+import com.paw.key.presentation.ui.community.model.FilterCategoryUiModel
+import com.paw.key.presentation.ui.community.model.FilterSelectedUiModel
+import com.paw.key.presentation.ui.community.model.PostsFilterUiModel
+import com.paw.key.presentation.ui.community.model.SelectionType
 import com.paw.key.presentation.ui.community.model.SortedType
-import com.paw.key.presentation.ui.course.walkreview.model.WalkReviewFilterModel
-import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.PersistentList
+import kotlinx.collections.immutable.PersistentMap
 import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.persistentMapOf
 
 data class CommunityState(
-    val filterList: ImmutableList<String> = persistentListOf(),
-    val communityRouteList: ImmutableList<WalkingRouteUiModel> = persistentListOf(),
+    val communityRouteList: PersistentList<WalkingRouteUiModel> = persistentListOf(),
     val selectedSortedType: SortedType = SortedType.LATEST,
-
-    val communityFilterModel: WalkReviewFilterModel = WalkReviewFilterModel(),
-    val communitySelectedFilterData: PersistentList<String> = persistentListOf(),
+    val filterUiModel: PostsFilterUiModel = PostsFilterUiModel(), // 게시물 조회 시 사용하는 필터-스크린용
+    val selectedOptionIds: PersistentMap<Int, PersistentList<Int>> = persistentMapOf(), // 사용자가 필터 선택 시
+    val nextCursor: String? = null,
+    val hasNext: Boolean = false
 ) {
-    fun getSingleFilterSelection(categoryList: List<String>): String {
-        return communitySelectedFilterData.firstOrNull { categoryList.contains(it) }.orEmpty()
+    fun getSelectedOptionIds(category: FilterCategoryUiModel): PersistentList<Int> {
+        return selectedOptionIds[category.id] ?: persistentListOf()
     }
 
-    fun getUpdatedFilterList(
-        selectedItem: String,
-        categoryList: List<String>,
-        isSingleSelect: Boolean
-    ): PersistentList<String> {
-        return if (isSingleSelect) {
-            communitySelectedFilterData
-                .removeAll(categoryList)
-                .add(selectedItem)
+    fun getUpdatedOptionIds(
+        optionId: Int,
+        category: FilterCategoryUiModel
+    ): PersistentMap<Int, PersistentList<Int>> {
+        return if (category.selectionType == SelectionType.SINGLE) {
+            selectedOptionIds.put(category.id, persistentListOf(optionId))
         } else {
-            if (communitySelectedFilterData.contains(selectedItem)) {
-                communitySelectedFilterData.remove(selectedItem)
+            val current = selectedOptionIds[category.id] ?: persistentListOf()
+            val updated = if (current.contains(optionId)) {
+                current.remove(optionId)
             } else {
-                communitySelectedFilterData.add(selectedItem)
+                current.add(optionId)
+            }
+            if (updated.isEmpty()) {
+                selectedOptionIds.remove(category.id)
+            } else {
+                selectedOptionIds.put(category.id, updated)
             }
         }
+    }
+
+    fun toFilterEntity(): FilterSelectedItemEntity {
+        val options = selectedOptionIds.map { (categoryId, optionIds) ->
+            val isDuration = filterUiModel.durationList.any { it.id == categoryId }
+
+            FilterSelectedUiModel(
+                durationId = if (isDuration) categoryId else null,
+                categoryId = if (!isDuration) categoryId else null,
+                optionsIds = optionIds
+            ).toEntity()
+        }
+        return FilterSelectedItemEntity(selectedOptions = options)
     }
 }

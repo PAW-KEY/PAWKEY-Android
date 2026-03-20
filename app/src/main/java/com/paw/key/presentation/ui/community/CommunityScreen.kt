@@ -41,7 +41,6 @@ import com.paw.key.core.designsystem.component.TopBar
 import com.paw.key.core.designsystem.component.routeitem.RouteItem
 import com.paw.key.core.designsystem.theme.PawKeyTheme
 import com.paw.key.core.extension.noRippleClickable
-import com.paw.key.core.model.WalkingRouteUiModel
 import com.paw.key.presentation.ui.community.component.CommunityTopImageHolder
 import com.paw.key.presentation.ui.community.component.FilterScreen
 import com.paw.key.presentation.ui.community.model.SortedType
@@ -73,7 +72,7 @@ fun CommunityRoute( // 루트 추천
             onFilterClick = viewModel::onFilterClick,
             onCompleted = {
                 isFilterSheetVisible = false
-                viewModel.postFilter()
+                viewModel.fetchPosts()
             },
             onBackClick = { isFilterSheetVisible = false },
             onClickSuffix = {
@@ -95,9 +94,7 @@ fun CommunityScreen(
     state: CommunityState,
     onShowFilterSheet: () -> Unit = {},
 ) {
-    // Todo: 서버 내용으로 수정
-    val filterList = listOf(
-        "산책 소요 시간", "혼잡도", "강아지 교류 빈도", "안전")
+    val filterList = state.filterUiModel.allCategories.map { it.name }.toImmutableList()
 
     var selectedFilters by remember { mutableStateOf(setOf<String>()) }
     var isSortMenuExpanded by remember { mutableStateOf(false) }
@@ -265,7 +262,7 @@ fun CommunityScreen(
                     routeTime = state.communityRouteList[it].duration.toString(),
                     routeDate = state.communityRouteList[it].date,
                     location = state.communityRouteList[it].regionName,
-                    routeImage = state.communityRouteList[it].imageUrl,
+                    routeImage = state.communityRouteList[it].imageUrl!!,
                     onClickHeart = {},
                     onClick = {}
                 )
@@ -282,7 +279,7 @@ private fun CommunityScreenPreview() {
     PawKeyTheme {
         CommunityScreen(
             paddingValues = PaddingValues(),
-            state = CommunityState(communityRouteList = WalkingRouteUiModel.Fake.toImmutableList())
+            state = CommunityState()
         )
     }
 }
