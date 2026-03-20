@@ -4,7 +4,6 @@ import com.paw.key.data.service.ArchivedListService
 import com.paw.key.data.service.LikeService
 import com.paw.key.data.service.SavedListService
 import com.paw.key.data.service.auth.ReissueService
-import com.paw.key.data.service.filter.FilterOptionService
 import com.paw.key.data.service.home.HomeRegionService
 import com.paw.key.data.service.image.ImageService
 import com.paw.key.data.service.image.S3Service
@@ -61,11 +60,6 @@ object ServiceModule {
     @Provides
     @Singleton
     fun provideLikeService(retrofit: Retrofit): LikeService =
-        retrofit.create()
-
-    @Provides
-    @Singleton
-    fun provideFilterOptionService(retrofit: Retrofit): FilterOptionService =
         retrofit.create()
 
     @Provides

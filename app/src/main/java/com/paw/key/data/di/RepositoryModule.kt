@@ -11,13 +11,12 @@ import com.paw.key.data.repositoryimpl.LikeRepositoryImpl
 import com.paw.key.data.repositoryimpl.RegionRepositoryImpl
 import com.paw.key.data.repositoryimpl.SavedListRepositoryImpl
 import com.paw.key.data.repositoryimpl.WalkSharedResultRepositoryImpl
-import com.paw.key.data.repositoryimpl.filter.FilterOptionRepositoryImpl
 import com.paw.key.data.repositoryimpl.home.HomeRepositoryImpl
 import com.paw.key.data.repositoryimpl.home.RegionCurrentRepositoryImpl
 import com.paw.key.data.repositoryimpl.image.ImageRepositoryImpl
-import com.paw.key.data.repositoryimpl.posts.PostsRepositoryImpl
 import com.paw.key.data.repositoryimpl.localstorage.LocalStorageRepositoryImpl
 import com.paw.key.data.repositoryimpl.login.AuthRepositoryImpl
+import com.paw.key.data.repositoryimpl.posts.PostsRepositoryImpl
 import com.paw.key.data.repositoryimpl.user.UserRepositoryImpl
 import com.paw.key.data.repositoryimpl.walk.WalkRepositoryImpl
 import com.paw.key.data.repositoryimpl.walkpreparation.WalkPreparationRepositoryImpl
@@ -26,7 +25,6 @@ import com.paw.key.domain.repository.LikeRepository
 import com.paw.key.domain.repository.RegionRepository
 import com.paw.key.domain.repository.SavedListRepository
 import com.paw.key.domain.repository.WalkSharedResultRepository
-import com.paw.key.domain.repository.filter.FilterOptionRepository
 import com.paw.key.domain.repository.home.HomeRepository
 import com.paw.key.domain.repository.home.RegionCurrentRepository
 import com.paw.key.domain.repository.image.ImageRepository
@@ -107,11 +105,6 @@ interface RepositoryModule {
         impl: LikeRepositoryImpl
     ): LikeRepository
 
-    @Binds
-    @Singleton
-    fun bindFilterOptionRepository(
-        impl: FilterOptionRepositoryImpl
-    ) : FilterOptionRepository
 
     //게시물 리스트
     @Binds
