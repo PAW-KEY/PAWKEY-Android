@@ -1,4 +1,4 @@
-package com.paw.key.data.dto.request.list
+package com.paw.key.data.dto.request.posts
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
