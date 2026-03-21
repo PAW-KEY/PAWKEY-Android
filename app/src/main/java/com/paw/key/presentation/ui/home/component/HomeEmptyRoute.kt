@@ -20,13 +20,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.paw.key.R
 import com.paw.key.core.designsystem.theme.PawKeyTheme
+import com.paw.key.presentation.ui.home.component.HomeEmptyRoute
 
 @Composable
 fun HomeEmptyRoute(
     modifier: Modifier = Modifier
 ) {
-    val configuration = LocalWindowInfo.current.containerSize
-    val screenWidthDp = configuration.width
+    val configuration = LocalConfiguration.current
+    val screenWidthDp = configuration.screenWidthDp
 
     val emptyImageSize = if (screenWidthDp < 600) {
         150.dp
