@@ -8,6 +8,7 @@ import com.paw.key.data.service.home.HomeRegionService
 import com.paw.key.data.service.image.ImageService
 import com.paw.key.data.service.image.S3Service
 import com.paw.key.data.service.login.LoginService
+import com.paw.key.data.service.posts.PostsService
 import com.paw.key.data.service.region.RegionService
 import com.paw.key.data.service.sharedwalk.SharedWalkService
 import com.paw.key.data.service.user.UserService
@@ -90,5 +91,10 @@ object ServiceModule {
     @Provides
     @Singleton
     fun provideReissueService(@Named("auth") retrofit: Retrofit): ReissueService =
+        retrofit.create()
+
+    @Provides
+    @Singleton
+    fun providePostsService(retrofit: Retrofit): PostsService =
         retrofit.create()
 }
