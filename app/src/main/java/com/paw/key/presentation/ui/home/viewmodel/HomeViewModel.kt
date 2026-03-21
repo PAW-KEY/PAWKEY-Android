@@ -15,6 +15,7 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
@@ -34,10 +35,16 @@ class HomeViewModel @Inject constructor(
         viewModelScope.launch {
             repository.getHomeInfo()
                 .onSuccess { result ->
-                    _state.updateSuccess {
-                        it.copy(
-                            walkingInfo = result.toUiModel()
-                        )
+                    _state.update { currentState ->
+                        when (currentState) {
+                            is UiState.Loading -> UiState.Success(
+                                HomeState(walkingInfo = result.toUiModel())
+                            )
+                            is UiState.Success -> currentState.copy(
+                                data = currentState.data.copy(walkingInfo = result.toUiModel())
+                            )
+                            else -> currentState
+                        }
                     }
                 }
                 .onFailure(Timber::e)
