@@ -30,6 +30,7 @@ import com.paw.key.core.designsystem.component.LoadingScreen
 import com.paw.key.core.designsystem.component.routeitem.RouteItem
 import com.paw.key.core.designsystem.theme.PawKeyTheme
 import com.paw.key.core.util.UiState
+import com.paw.key.presentation.ui.home.component.HomeBanner
 import com.paw.key.presentation.ui.home.component.HomeEmptyRoute
 import com.paw.key.presentation.ui.home.component.HomeStartWalkingRow
 import com.paw.key.presentation.ui.home.component.HomeTopBar
@@ -107,7 +108,11 @@ private fun HomeScreen(
             onClick = navigateToCourse
         )
 
-        Spacer(modifier = Modifier.height(32.dp))
+        Spacer(modifier = Modifier.height(24.dp))
+
+        HomeBanner()
+
+        Spacer(modifier = Modifier.height(24.dp))
 
         Text(
             text = "인기있는 산책 루트 추천",
