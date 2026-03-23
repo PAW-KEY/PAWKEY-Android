@@ -84,7 +84,6 @@ private fun HomeScreen(
         modifier = Modifier
             .fillMaxSize()
             .background(color = PawKeyTheme.colors.background)
-            .padding(horizontal = 16.dp)
             .padding(top = 16.dp)
             .padding(paddingValues)
             .verticalScroll(rememberScrollState()),
@@ -92,20 +91,24 @@ private fun HomeScreen(
     ) {
         HomeTopBar(
             homeWeatherModel = state.homeInfo,
-            onLocationClick = {}
+            onLocationClick = {},
+            modifier = Modifier
+                .padding(horizontal = 16.dp)
         )
 
         Spacer(modifier = Modifier.height(24.dp))
 
         HomeWalkingInfoHolder(
-            walkingInfo = state.walkingInfo
+            walkingInfo = state.walkingInfo,
+            modifier = Modifier.padding(horizontal = 16.dp)
         )
 
         Spacer(modifier = Modifier.height(24.dp))
 
         HomeStartWalkingRow(
             petName = state.petName,
-            onClick = navigateToCourse
+            onClick = navigateToCourse,
+            modifier = Modifier.padding(horizontal = 16.dp)
         )
 
         Spacer(modifier = Modifier.height(24.dp))
@@ -118,17 +121,20 @@ private fun HomeScreen(
             text = "인기있는 산책 루트 추천",
             style = PawKeyTheme.typography.header3,
             color = PawKeyTheme.colors.contents,
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
             textAlign = TextAlign.Start
         )
 
         Spacer(modifier = Modifier.height(16.dp))
 
         if (state.walkingPopularData.isEmpty()) {
-            HomeEmptyRoute()
+            HomeEmptyRoute(
+                modifier = Modifier
+                    .padding(horizontal = 16.dp)
+            )
         } else {
             LazyRow(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 itemsIndexed(
@@ -155,17 +161,20 @@ private fun HomeScreen(
             text = "비슷한 이용자 루트 추천",
             style = PawKeyTheme.typography.header3,
             color = PawKeyTheme.colors.contents,
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
             textAlign = TextAlign.Start
         )
 
         Spacer(modifier = Modifier.height(16.dp))
 
         if (state.walkingRecommendedData.isEmpty()) {
-            HomeEmptyRoute()
+            HomeEmptyRoute(
+                modifier = Modifier
+                    .padding(horizontal = 16.dp)
+            )
         } else {
             LazyRow(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 itemsIndexed(
