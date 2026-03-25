@@ -8,6 +8,9 @@ import com.paw.key.data.remote.datasource.datasourceimpl.KakaoAuthDataSourceImpl
 import com.paw.key.data.remote.datasource.login.AuthRemoteDataSource
 import com.paw.key.data.remote.datasource.login.GoogleAuthDataSource
 import com.paw.key.data.remote.datasource.login.KakaoAuthDataSource
+import com.paw.key.data.remote.datasource.mypage.MypageDataSource
+import com.paw.key.data.remote.datasource.mypage.MypageDataSourceImpl
+import com.paw.key.data.repository.mypage.MypageRepositoryImpl
 import com.paw.key.data.repositoryimpl.ArchivedListRepositoryImpl
 import com.paw.key.data.repositoryimpl.LikeRepositoryImpl
 import com.paw.key.data.repositoryimpl.PetProfileRepositoryImpl
@@ -37,6 +40,7 @@ import com.paw.key.domain.repository.home.RegionCurrentRepository
 import com.paw.key.domain.repository.image.ImageRepository
 import com.paw.key.domain.repository.list.PostsListRepository
 import com.paw.key.domain.repository.login.AuthRepository
+import com.paw.key.domain.repository.mypage.MypageRepository
 import com.paw.key.domain.repository.petprofile.PetProfileRepository
 import com.paw.key.domain.repository.sharedwalk.SharedWalkRepository
 import com.paw.key.domain.repository.user.UserRepository
@@ -65,6 +69,12 @@ interface RepositoryModule {
     fun bindGoogleAuthDataSource(
         impl: GoogleAuthDataSourceImpl,
     ): GoogleAuthDataSource
+
+    @Binds
+    @Singleton
+    fun bindMypageDataSource(
+        impl: MypageDataSourceImpl
+    ): MypageDataSource
 
     @Binds
     abstract fun bindKakaoAuthDataSource(
@@ -189,4 +199,10 @@ interface RepositoryModule {
     abstract fun bindLocalStorageRepository(
         impl: LocalStorageRepositoryImpl
     ): LocalStorageRepository
+
+    @Binds
+    @Singleton
+    fun bindMypageRepository(
+        impl: MypageRepositoryImpl
+    ): MypageRepository
 }

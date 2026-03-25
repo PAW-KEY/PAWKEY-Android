@@ -11,6 +11,7 @@ import com.paw.key.data.service.home.HomeRegionService
 import com.paw.key.data.service.image.ImageService
 import com.paw.key.data.service.list.PostsListService
 import com.paw.key.data.service.login.LoginService
+import com.paw.key.data.service.mypage.MypageService
 import com.paw.key.data.service.sharedwalk.SharedWalkService
 import com.paw.key.data.service.user.UserService
 import com.paw.key.data.service.walkcourse.WalkCourseService
@@ -108,5 +109,11 @@ object ServiceModule {
     @Provides
     @Singleton
     fun provideImageService(retrofit: Retrofit): ImageService =
+        retrofit.create()
+
+
+    @Provides
+    @Singleton
+    fun provideMypageService(retrofit: Retrofit): MypageService =
         retrofit.create()
 }
