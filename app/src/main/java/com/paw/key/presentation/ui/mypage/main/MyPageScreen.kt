@@ -16,6 +16,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.paw.key.core.designsystem.component.TopBar
 import com.paw.key.core.designsystem.theme.PawKeyTheme
+import com.paw.key.core.extension.noRippleClickable
 import com.paw.key.presentation.ui.mypage.courseinfo.model.CourseType
 import com.paw.key.presentation.ui.mypage.main.component.MyList
 import com.paw.key.presentation.ui.mypage.main.component.MyPageCard
@@ -91,11 +92,12 @@ fun MyPageScreen(
 
             item {
                 MyPageCard(
-                    userName = "단지",
-                    userAge = "6개월",
-                    userGender = "여아",
+                    userName = state.petName.ifBlank { "단지" },
+                    userAge = state.petAge.ifBlank { "6개월" },
+                    userGender = state.petGender.ifBlank { "여아" },
                     dogBreed = "우지",
                     buttonTitle = "DBTI검사하러 가기",
+                    modifier = Modifier.noRippleClickable { navigatePetProfile() }
                 )
             }
 
