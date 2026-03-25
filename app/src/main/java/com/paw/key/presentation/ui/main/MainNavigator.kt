@@ -17,7 +17,7 @@ import com.paw.key.presentation.ui.home.navigation.navigateHome
 import com.paw.key.presentation.ui.home.navigation.navigateHomeLocationSetting
 import com.paw.key.presentation.ui.login.navigation.navigateLogin
 import com.paw.key.presentation.ui.mypage.courseinfo.model.CourseType
-import com.paw.key.presentation.ui.mypage.courseinfo.navigation.navigateCourseInfo
+import com.paw.key.presentation.ui.mypage.courseinfo.navigation.navigateToCourseInfo
 import com.paw.key.presentation.ui.mypage.main.navigation.navigateMyPage
 import com.paw.key.presentation.ui.mypage.petinfo.navigation.navigatePetProfile
 import com.paw.key.presentation.ui.mypage.petinfo.navigation.navigatePetProfileList
@@ -98,7 +98,7 @@ class MainNavigator(
         courseType: CourseType,
         navOptions: NavOptions? = null,
     ) {
-        navController.navigateCourseInfo(courseType = courseType, navOptions = navOptions)
+        navController.navigateToCourseInfo(courseType = courseType, navOptions = navOptions)
     }
 
     // Todo : 나중에 로직 플로우 확인하고 수정예정
