@@ -10,7 +10,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.material3.Text
-import com.paw.key.core.designsystem.component.DogkyButton
+import com.paw.key.core.designsystem.component.DokiButton
 import com.paw.key.core.designsystem.component.TopBar
 import com.paw.key.core.designsystem.theme.PawKeyTheme
 import com.paw.key.presentation.ui.dbti.component.SelectCard
@@ -77,7 +77,7 @@ fun TestScreen(
 
                 Spacer(modifier = Modifier.weight(1f))
 
-                DogkyButton(
+                DokiButton(
                     text = "다음으로",
                     onClick = onNextClick,
                     enabled = selectedOptionId != null,

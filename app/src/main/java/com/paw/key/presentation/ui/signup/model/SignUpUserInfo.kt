@@ -8,4 +8,5 @@ data class SignUpUserInfo(
     val nickName : String = "",
     val birthDate : String = "",
     val gender : Gender = Gender.UNKNOWN,
+    val isDuplicate : Boolean = false
 )

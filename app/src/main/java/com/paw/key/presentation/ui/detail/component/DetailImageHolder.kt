@@ -24,7 +24,7 @@ fun DetailImageHolder(
     modifier: Modifier = Modifier
 ) {
     BoxWithConstraints(modifier = modifier.fillMaxWidth()) {
-        val imageWidth = maxWidth * 0.35f
+        val imageWidth = maxWidth * 0.317f
 
         LazyRow(
             modifier = Modifier.fillMaxWidth(),
@@ -36,7 +36,7 @@ fun DetailImageHolder(
                     contentScale = ContentScale.Crop,
                     modifier = Modifier
                         .size(imageWidth)
-                        .aspectRatio(3f / 3f)
+                        .aspectRatio(1f)
                         .clip(RoundedCornerShape(4.dp))
                 )
             }

@@ -6,7 +6,7 @@ import javax.inject.Inject
 class RegionDataSource @Inject constructor (
     private val regionService: RegionService
 ) {
-    suspend fun getRegionGeometry(userId: Int, regionId: Int) = regionService.getRegionGeometry(userId, regionId)
+    suspend fun getRegionGeometry(regionId: Int) = regionService.getRegionGeometry(regionId)
 
     suspend fun getRegionsList() = regionService.getRegionsList()
 }

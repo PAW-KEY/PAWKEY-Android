@@ -2,6 +2,8 @@ package com.paw.key.presentation.ui.signup
 
 import android.net.Uri
 import androidx.activity.compose.BackHandler
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -14,8 +16,12 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.core.net.toUri
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -47,6 +53,16 @@ fun SignUpRoute(
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     val lifecycleOwner = LocalLifecycleOwner.current
+    var cameraImageUri by remember { mutableStateOf<Uri?>(null) }
+
+    val cameraLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.TakePicture(),
+        onResult = { success ->
+            if (success) {
+                viewModel.updatePetImage(cameraImageUri)
+            }
+        }
+    )
 
     BackHandler(enabled = true) {
         viewModel.onBackPressed()
@@ -67,6 +83,12 @@ fun SignUpRoute(
                     }
                     is SignUpSideEffect.NavigateHome -> {
                         navigateToHome()
+                    }
+
+                    is SignUpSideEffect.LaunchCamera -> {
+                        val uri = it.uriString.toUri()
+                        cameraImageUri = uri
+                        cameraLauncher.launch(uri)
                     }
             }
         }
@@ -100,6 +122,7 @@ fun SignUpRoute(
             deniedPermission = viewModel::deniedPermission,
             onSelectedImage = viewModel::updatePetImage,
             requestPetInfo = viewModel::getPetInfo,
+            createCameraUri = viewModel::createCameraUri,
 
             locationInfo = state.locationInfo,
             getRegions = viewModel::getRegions,
@@ -133,6 +156,7 @@ fun SignUpScreen(
     onPetBreedChanged : (PetInfoItemModel) -> Unit,
     onSelectedImage: (Uri?) -> Unit,
     requestPetInfo : () -> Unit,
+    createCameraUri: () -> Unit,
 
     locationInfo : SignUpLocationInfo,
     getRegions: () -> Unit,
@@ -218,6 +242,7 @@ fun SignUpScreen(
                                 nickName = userInfo.nickName,
                                 birthDate = userInfo.birthDate,
                                 gender = userInfo.gender,
+                                isDuplicate = userInfo.isDuplicate,
                                 onNickNameChanged = onNickNameChanged,
                                 onBirthDateChanged = onBirthDateChanged,
                                 onGenderChanged = onGenderChanged,
@@ -240,6 +265,7 @@ fun SignUpScreen(
                                     onSelectedImage(it)
                                 },
                                 requestPetInfo = requestPetInfo,
+                                createCameraUri = createCameraUri,
                                 modifier = Modifier
                             )
                         }

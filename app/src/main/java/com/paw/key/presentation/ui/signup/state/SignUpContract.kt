@@ -23,11 +23,12 @@ data class SignUpState(
     val isLoading: Boolean = false,
 )
 
-sealed class SignUpSideEffect {
-    data class ShowSnackBar(val message: String) : SignUpSideEffect()
-    data object NavigateUp : SignUpSideEffect()
-    data object NavigateNext : SignUpSideEffect()
-    data object NavigateHome : SignUpSideEffect()
+sealed interface SignUpSideEffect {
+    data class ShowSnackBar(val message: String) : SignUpSideEffect
+    data object NavigateUp : SignUpSideEffect
+    data object NavigateNext : SignUpSideEffect
+    data object NavigateHome : SignUpSideEffect
+    data class LaunchCamera(val uriString: String) : SignUpSideEffect
 }
 
 enum class SignUpStateType {

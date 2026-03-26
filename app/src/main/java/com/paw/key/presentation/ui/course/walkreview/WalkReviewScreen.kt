@@ -34,10 +34,10 @@ import com.paw.key.R
 import com.paw.key.core.designsystem.component.DokiBorderButton
 import com.paw.key.core.designsystem.component.DokiButton
 import com.paw.key.core.designsystem.component.TopBar
+import com.paw.key.core.designsystem.component.walk.WalkReviewInfoHolder
 import com.paw.key.core.designsystem.theme.PawKeyTheme
 import com.paw.key.presentation.ui.course.walkreview.component.WalkReviewDialog
 import com.paw.key.presentation.ui.course.walkreview.component.WalkReviewImageRow
-import com.paw.key.core.designsystem.component.walk.WalkReviewInfoHolder
 import com.paw.key.presentation.ui.course.walkreview.component.WalkReviewMultipleFilter
 import com.paw.key.presentation.ui.course.walkreview.component.WalkReviewSingleFilter
 import com.paw.key.presentation.ui.course.walkreview.state.WalkReviewState
@@ -268,7 +268,11 @@ private fun WalkReviewScreen(
             // 텍필 넣기
             BasicTextField(
                 value = state.walkReviewTitle,
-                onValueChange = onTitleValueChange,
+                onValueChange = {
+                    if (it.length <= 14) {
+                        onTitleValueChange(it)
+                    }
+                },
                 textStyle = PawKeyTheme.typography.bodyActive.copy(color = PawKeyTheme.colors.contents),
                 modifier = Modifier.fillMaxWidth(),
                 decorationBox = { innerTextField ->
@@ -298,7 +302,11 @@ private fun WalkReviewScreen(
 
             BasicTextField(
                 value = state.walkReviewContent,
-                onValueChange = onContentValueChange,
+                onValueChange = {
+                    if (it.length <= 250) {
+                        onContentValueChange(it)
+                    }
+                },
                 textStyle = PawKeyTheme.typography.bodyActive.copy(color = PawKeyTheme.colors.contents),
                 modifier = Modifier
                     .fillMaxWidth()
