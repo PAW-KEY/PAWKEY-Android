@@ -1,7 +1,6 @@
 package com.paw.key.presentation.ui.splash.navigation
 
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
@@ -20,12 +19,14 @@ fun NavController.navigateSplash(
 fun NavGraphBuilder.splashNavGraph(
     paddingValues: PaddingValues,
     navigateLogin: () -> Unit,
+    navigateToHome: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     composable<Splash> {
         SplashRoute(
             paddingValues = paddingValues,
             navigateLogin = navigateLogin,
+            navigateToHome = navigateToHome,
             modifier = modifier
         )
     }

@@ -9,7 +9,7 @@ import com.paw.key.core.util.UiState
 import com.paw.key.core.util.flattenCoordinatesToLatLng
 import com.paw.key.core.util.handleError
 import com.paw.key.domain.repository.RegionRepository
-import com.paw.key.domain.repository.home.HomeRegionRepository
+import com.paw.key.domain.repository.home.HomeRepository
 import com.paw.key.domain.repository.localstorage.LocalStorageRepository
 import com.paw.key.presentation.ui.region.navigation.Regional
 import com.paw.key.presentation.ui.region.state.DrawType
@@ -30,7 +30,7 @@ import javax.inject.Inject
 class RegionViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val regionRepository: RegionRepository,
-    private val homeRepository: HomeRegionRepository,
+    private val homeRepository: HomeRepository,
     private val localStorageRepository: LocalStorageRepository
 ) : ViewModel() {
     private val _state = MutableStateFlow(RegionState())
@@ -48,7 +48,6 @@ class RegionViewModel @Inject constructor(
         if (regionIdState.regionId != -1) {
             viewModelScope.launch {
                 getRegionGeometry(
-                    userId = localStorageRepository.getUserId(),
                     regionId = regionIdState.regionId,
                 )
             }
@@ -56,15 +55,14 @@ class RegionViewModel @Inject constructor(
             viewModelScope.launch {
                 Timber.e("RegionViewModel test용 regionId: ${regionIdState.regionId}")
                 getRegionGeometry(
-                    userId = localStorageRepository.getUserId(),
-                    regionId = 39,
+                    regionId = 2,
                 )
             }
         }
     }
 
-    fun getRegionGeometry(userId: Int, regionId: Int?) = viewModelScope.launch {
-        regionRepository.getRegionGeometry(userId, regionId!!)
+    fun getRegionGeometry(regionId: Int?) = viewModelScope.launch {
+        regionRepository.getRegionGeometry(regionId!!)
             .onSuccess { data ->
                 val coordinates = data.geometry.coordinates
                 val flattenedLatLng = flattenCoordinatesToLatLng(coordinates)
@@ -85,7 +83,7 @@ class RegionViewModel @Inject constructor(
                             uiState = UiState.Success(flattenedLatLng),
                             entireCoordinates = allPoints,
                             drawType = DrawType.SINGLE,
-                            preRegionName = data.preRegionName,
+                            preRegionName = data.regionName,
                             regionName = data.regionName
                         )
                     }
@@ -96,7 +94,7 @@ class RegionViewModel @Inject constructor(
                             uiState = UiState.Success(flattenedLatLng),
                             entireCoordinates = allPoints,
                             drawType = DrawType.MULTIPLE,
-                            preRegionName = data.preRegionName,
+                            preRegionName = data.regionName,
                             regionName = data.regionName
                         )
                     }

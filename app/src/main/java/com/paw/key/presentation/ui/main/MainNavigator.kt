@@ -19,9 +19,11 @@ import com.paw.key.presentation.ui.login.navigation.navigateLogin
 import com.paw.key.presentation.ui.mypage.courseinfo.model.CourseType
 import com.paw.key.presentation.ui.mypage.courseinfo.navigation.navigateToCourseInfo
 import com.paw.key.presentation.ui.mypage.main.navigation.navigateMyPage
-import com.paw.key.presentation.ui.mypage.petinfo.navigation.navigatePetProfile
-import com.paw.key.presentation.ui.mypage.petinfo.navigation.navigatePetProfileList
-import com.paw.key.presentation.ui.mypage.userinfo.navigation.navigateUserProfile
+import com.paw.key.presentation.ui.mypage.route.courseinfo.model.CourseType
+import com.paw.key.presentation.ui.mypage.route.courseinfo.navigation.navigateCourseInfo
+import com.paw.key.presentation.ui.mypage.route.petinfo.navigation.navigatePetProfile
+import com.paw.key.presentation.ui.mypage.route.petinfo.navigation.navigatePetProfileList
+import com.paw.key.presentation.ui.mypage.route.userinfo.navigation.navigateUserProfile
 import com.paw.key.presentation.ui.onboard.navigation.navigateOnboarding
 import com.paw.key.presentation.ui.region.navigation.navigateRegional
 import com.paw.key.presentation.ui.signup.navigation.navigateSignUp
@@ -115,8 +117,14 @@ class MainNavigator(
     }
 
     // walk course
-    fun navigateWalkCourse(navOptions: NavOptions? = null) {
-        navController.navigateWalkCourse(navOptions = navOptions)
+    fun navigateWalkCourse(
+        navOptions: NavOptions? = null,
+        routeId: String
+    ) {
+        navController.navigateWalkCourse(
+            navOptions = navOptions,
+            routeId = routeId
+        )
     }
 
     fun navigateWalkReview(

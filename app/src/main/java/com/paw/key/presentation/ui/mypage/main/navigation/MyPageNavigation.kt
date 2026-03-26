@@ -1,15 +1,14 @@
 package com.paw.key.presentation.ui.mypage.main.navigation
 
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
 import com.paw.key.core.navigation.MainTabRoute
-import com.paw.key.presentation.ui.mypage.courseinfo.model.CourseType
 import com.paw.key.presentation.ui.mypage.main.MyPageRoute
+import com.paw.key.presentation.ui.mypage.route.courseinfo.model.CourseType
 import kotlinx.serialization.Serializable
 
 fun NavController.navigateMyPage(
@@ -25,6 +24,7 @@ fun NavGraphBuilder.myPageNavGraph(
     navigateCourseInfo: (CourseType) -> Unit,
     navigatePetProfileList: () -> Unit,
     navigateUserProfile: () -> Unit,
+    navigateLogin: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     composable<MyPage> {
@@ -35,6 +35,7 @@ fun NavGraphBuilder.myPageNavGraph(
             navigateCourseInfo = navigateCourseInfo,
             navigatePetProfileList = navigatePetProfileList,
             navigateUserProfile = navigateUserProfile,
+            navigateToLogin = navigateLogin,
             modifier = modifier
         )
     }

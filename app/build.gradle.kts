@@ -26,6 +26,8 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         buildConfigField("String", "BASE_URL", properties["base.url"].toString())
+        buildConfigField("String", "DEBUG_BASE_URL", properties["debug.base.url"].toString())
+
         buildConfigField("String", "DEBUG_BASE_URL", properties["debug.base.url"].toString())  // ✅ 여기로
         buildConfigField("String", "KAKAO_NATIVE_KEY", properties["kakao.native.key"].toString())
         buildConfigField("String", "KAKAO_REST_API_KEY", properties["kakao.rest.api"].toString())
@@ -57,17 +59,10 @@ android {
         compose = true
         buildConfig = true
     }
-    signingConfigs {
-        getByName("debug") {
-            keyAlias = "androiddebugkey"
-            keyPassword = "android"
-            storeFile = File("${project.rootDir.absolutePath}/keystore/debug.keystore")
-            storePassword = "android"
-        }
-    }
 }
 
 dependencies {
+
     testImplementation(libs.junit)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.bundles.test)
@@ -88,22 +83,32 @@ dependencies {
     ksp(libs.hilt.compiler)
 
     implementation(libs.coil.compose)
+
     implementation(libs.timber)
+
     implementation(libs.accompanist.systemuicontroller)
+
     implementation(libs.androidx.datastore.preferences)
 
+    //카카오
     implementation(libs.kakaoMaps)
     implementation(libs.v2.all)
 
+    //실시간 위치
     implementation(libs.play.services.location)
+
+    //로띠 - 애니메이션
     implementation(libs.lottie.compose)
 
+    // 네이버
     implementation(libs.bundles.naverMaps)
 
+    //구글
     implementation(libs.androidx.credentials)
     implementation(libs.googleid)
     implementation(libs.androidx.credentials.play.services.auth)
     coreLibraryDesugaring(libs.desugar.jdk.libs)
 
+    // 암호화
     implementation(libs.androidx.security)
 }

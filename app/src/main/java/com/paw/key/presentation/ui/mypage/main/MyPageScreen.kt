@@ -1,5 +1,6 @@
 package com.paw.key.presentation.ui.mypage.main
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -10,21 +11,23 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.paw.key.core.designsystem.component.TopBar
 import com.paw.key.core.designsystem.theme.PawKeyTheme
-import com.paw.key.core.extension.noRippleClickable
-import com.paw.key.presentation.ui.mypage.courseinfo.model.CourseType
+import com.paw.key.core.extension.collectSideEffect
 import com.paw.key.presentation.ui.mypage.main.component.MyList
 import com.paw.key.presentation.ui.mypage.main.component.MyPageCard
 import com.paw.key.presentation.ui.mypage.main.component.OwnerCard
 import com.paw.key.presentation.ui.mypage.main.component.SettingList
 import com.paw.key.presentation.ui.mypage.main.model.MyListState
+import com.paw.key.presentation.ui.mypage.main.model.MyPageSideEffect
 import com.paw.key.presentation.ui.mypage.main.model.MyPageState
 import com.paw.key.presentation.ui.mypage.main.viewmodel.MyPageViewModel
+import com.paw.key.presentation.ui.mypage.route.courseinfo.model.CourseType
 
 @Composable
 fun MyPageRoute(
@@ -34,14 +37,28 @@ fun MyPageRoute(
     navigateCourseInfo: (CourseType) -> Unit,
     navigatePetProfileList: () -> Unit,
     navigateUserProfile: () -> Unit,
+    navigateToLogin: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: MyPageViewModel = hiltViewModel(),
 ) {
+    val context = LocalContext.current
     val state by viewModel.state.collectAsStateWithLifecycle()
+
+    viewModel.sideEffect.collectSideEffect {
+        when(it) {
+            MyPageSideEffect.NavigateNext -> TODO()
+            MyPageSideEffect.NavigateToLogin -> navigateToLogin()
+            MyPageSideEffect.NavigateUp -> TODO()
+            else -> {
+                Toast.makeText(context, "오류가 발생했습니다.", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
 
     MyPageScreen(
         state = state,
         paddingValues = paddingValues,
+        deleteUser = viewModel::removeUser,
         navigateUp = navigateUp,
         navigatePetProfile = navigatePetProfile,
         navigateCourseInfo = navigateCourseInfo,
@@ -55,6 +72,7 @@ fun MyPageRoute(
 fun MyPageScreen(
     state: MyPageState,
     paddingValues: PaddingValues,
+    deleteUser: () -> Unit,
     navigateUp: () -> Unit,
     navigatePetProfile: () -> Unit,
     navigateCourseInfo: (CourseType) -> Unit,
@@ -71,7 +89,8 @@ fun MyPageScreen(
         TopBar(
             title = "마이페이지",
             onBackClick = navigateUp,
-            isBackVisible = false
+            isBackVisible = false,
+            onClickTitle = deleteUser
         )
 
         LazyColumn(
@@ -81,24 +100,25 @@ fun MyPageScreen(
                 .padding(horizontal = 16.dp, vertical = 18.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-
             item {
                 OwnerCard(
                     ownerName = state.ownerName,
-                    ownerEmail = state.petName,
+                    ownerEmail = "",
                     navigateUserProfile = navigateUserProfile
                 )
             }
 
             item {
-                MyPageCard(
-                    userName = state.petName.ifBlank { "단지" },
-                    userAge = state.petAge.ifBlank { "6개월" },
-                    userGender = state.petGender.ifBlank { "여아" },
-                    dogBreed = "우지",
-                    buttonTitle = "DBTI검사하러 가기",
-                    modifier = Modifier.noRippleClickable { navigatePetProfile() }
-                )
+                with(state.petInfo) {
+                    MyPageCard(
+                        userName = petName,
+                        userAge = "6개월",
+                        userGender = petGender,
+                        dogBreed = petBreed,
+                        buttonTitle = "DBTI검사하러 가기",
+                        dogImage = petImageUrl
+                    )
+                }
             }
 
             item {
@@ -136,9 +156,6 @@ private fun MyPageScreenPreview() {
         MyPageScreen(
             state = MyPageState(
                 ownerName = "키큰오팔전차님",
-                petName = "포비",
-                petAge = "12세",
-                petGender = "여아",
                 petTags = listOf("조금 느긋해요", "#오토바이소리", "#대형견"),
                 walkCount = 7,
                 totalDistance = "14km"
@@ -149,6 +166,7 @@ private fun MyPageScreenPreview() {
             navigateCourseInfo = {},
             navigatePetProfileList = {},
             navigateUserProfile = {},
+            deleteUser = {}
         )
     }
 }

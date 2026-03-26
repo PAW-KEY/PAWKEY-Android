@@ -18,11 +18,11 @@ import com.paw.key.presentation.ui.course.walkreview.navigation.walkReviewNavGra
 import com.paw.key.presentation.ui.home.navigation.homeLocationSettingNavGraph
 import com.paw.key.presentation.ui.home.navigation.homeNavGraph
 import com.paw.key.presentation.ui.login.navigation.loginNavGraph
-import com.paw.key.presentation.ui.mypage.courseinfo.navigation.courseInfoNavGraph
 import com.paw.key.presentation.ui.mypage.main.navigation.myPageNavGraph
-import com.paw.key.presentation.ui.mypage.petinfo.navigation.petProfileListNavGraph
-import com.paw.key.presentation.ui.mypage.petinfo.navigation.petProfileNavGraph
-import com.paw.key.presentation.ui.mypage.userinfo.navigation.userProfileNavGraph
+import com.paw.key.presentation.ui.mypage.route.courseinfo.navigation.courseInfoNavGraph
+import com.paw.key.presentation.ui.mypage.route.petinfo.navigation.petProfileListNavGraph
+import com.paw.key.presentation.ui.mypage.route.petinfo.navigation.petProfileNavGraph
+import com.paw.key.presentation.ui.mypage.route.userinfo.navigation.userProfileNavGraph
 import com.paw.key.presentation.ui.onboard.navigation.onboardingNavGraph
 import com.paw.key.presentation.ui.region.navigation.regionalNavGraph
 import com.paw.key.presentation.ui.signup.navigation.signUpNavGraph
@@ -101,7 +101,7 @@ fun PawKeyNavHost(
         walkReviewNavGraph(
             paddingValues = paddingValues,
             navigateHome = navigator::navigateHome,
-            navigateWalkDetail = navigator::navigateWalkCourse, // Todo 상세 정보 뷰로
+            navigateWalkDetail = {}, // Todo 상세 정보 뷰로
         )
 
         communityNavGraph(
@@ -120,6 +120,9 @@ fun PawKeyNavHost(
             },
             navigatePetProfileList = navigator::navigatePetProfileList,
             navigateUserProfile = navigator::navigateUserProfile,
+            navigateLogin = {
+                navigator.navigateLogin(clearStackNavOptions)
+            }
         )
 
         courseInfoNavGraph(
@@ -162,7 +165,10 @@ fun PawKeyNavHost(
                     launchSingleTop = true
                 }
                 navigator.navigateOnboarding(navOptions = options)
-            }
+            },
+            navigateToHome = {
+                navigator.navigateHome(clearStackNavOptions)
+            },
         )
 
         onboardingNavGraph(
@@ -187,7 +193,7 @@ fun PawKeyNavHost(
             },
             // Todo: Home 으로 수정
             navigateHome = {
-                navigator.navigateSignUp(clearStackNavOptions)
+                navigator.navigateHome(clearStackNavOptions)
             },
             snackBarHostState = snackbarHostState
         )
@@ -200,7 +206,13 @@ fun PawKeyNavHost(
         )
 
         signUpNavGraph(
-            navigateUp = navigator::navigateUp,
+            navigateUp = {
+                val options = navOptions {
+                    popUpTo(0) { inclusive = true }
+                    launchSingleTop = true
+                }
+                navigator.navigateLogin(options)
+            },
             navigateToHome = {
                 val options = navOptions {
                     popUpTo(0) { inclusive = true }

@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.paw.key.core.extension.toBirthDateFormat
 import com.paw.key.core.util.UiState
+import com.paw.key.core.util.file.ImageUriManager
 import com.paw.key.core.util.flattenCoordinatesToLatLng
 import com.paw.key.core.util.handleError
 import com.paw.key.domain.entity.user.PetInfoEntity
@@ -12,7 +13,7 @@ import com.paw.key.domain.entity.user.UserInfoEntity
 import com.paw.key.domain.repository.RegionRepository
 import com.paw.key.domain.repository.localstorage.LocalStorageRepository
 import com.paw.key.domain.repository.user.UserRepository
-import com.paw.key.domain.usecase.PostCreateUserUseCase
+import com.paw.key.domain.usecase.user.PostCreateUserUseCase
 import com.paw.key.presentation.ui.region.state.DrawType
 import com.paw.key.presentation.ui.signup.model.DongModel
 import com.paw.key.presentation.ui.signup.model.GuModel
@@ -25,10 +26,16 @@ import com.paw.key.presentation.ui.signup.state.SignUpStateType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.collections.immutable.toPersistentList
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -36,18 +43,33 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 
+@OptIn(FlowPreview::class)
 @HiltViewModel
 class SignUpViewModel @Inject constructor(
     private val regionRepository: RegionRepository,
     private val userRepository: UserRepository,
-    private val localRepository: LocalStorageRepository,
+    private val localStorageRepository: LocalStorageRepository,
     private val postCreateUserUseCase: PostCreateUserUseCase,
+    private val imageUriManager: ImageUriManager
 ) : ViewModel() {
     private val _state = MutableStateFlow(SignUpState())
     val state: StateFlow<SignUpState> = _state.asStateFlow()
 
     private val _sideEffect = MutableSharedFlow<SignUpSideEffect>()
     val sideEffect: MutableSharedFlow<SignUpSideEffect> = _sideEffect
+
+    init {
+        viewModelScope.launch {
+            state
+                .map { it.userInfo.nickName }
+                .debounce(500L)
+                .filter { it.isNotBlank() }
+                .distinctUntilChanged()
+                .collectLatest { nickname ->
+                    checkNicknameDuplicate(nickname)
+                }
+        }
+    }
 
     fun deniedPermission() {
         viewModelScope.launch {
@@ -128,14 +150,12 @@ class SignUpViewModel @Inject constructor(
                     if (_state.value.isRegionComplete && _state.value.locationInfo.selectedGu.name.isNotBlank() && _state.value.locationInfo.selectedDong.name.isNotBlank()) {
                         postCreateUser()
                     } else {
-                        // Todo: 좌표값이 없어서 우선 여기서 종료
-                        /*updateState {
+                        updateState {
                             it.copy(
                                 signUpState = SignUpStateType.REGION_MANAGEMENT,
                             )
                         }
-                        _sideEffect.emit(SignUpSideEffect.NavigateNext)*/
-                        postCreateUser()
+                        _sideEffect.emit(SignUpSideEffect.NavigateNext)
                     }
                 }
 
@@ -195,64 +215,11 @@ class SignUpViewModel @Inject constructor(
                 ),
                 petImageUri = _state.value.petInfo.petImage?.toString()
             ).onSuccess {
+                localStorageRepository.savePetName(_state.value.petInfo.petName)
 
                 _state.update { it.copy(isLoading = false) }
                 _sideEffect.emit(SignUpSideEffect.NavigateHome)
             }.onFailure(Timber::e)
-
-            /*suspendRunCatching {
-                val currentState = _state.value
-                val petImageUri = currentState.petInfo.petImage
-
-                val finalImageId: Int = if (petImageUri != null) {
-                    val presignedResult = imageRepository.presignedImage(
-                        presignedEntity = ImagePresignedEntity(
-                            domain = ImageDomainType.PET_PROFILE,
-                            contentType = "image/webp"
-                        )
-                    ).getOrThrow()
-
-                    val registerImage = imageRepository.registerImage(
-                        uriString = "${presignedResult.imageUrl}#${_state.value.petInfo.petImage}",
-                        domainType = ImageDomainType.PET_PROFILE,
-                    ).onFailure(Timber::e)
-
-                    if (!registerImage.isSuccess) {
-                        throw Exception("이미지 업로드에 실패했습니다.")
-                    }
-
-                    registerImage.getOrThrow().imageId
-                } else {
-                    -1
-                }
-
-                userRepository.createUser(
-                    userInfoEntity = UserInfoEntity(
-                        name = _state.value.userInfo.nickName,
-                        birth = _state.value.userInfo.birthDate.toBirthDateFormat(),
-                        gender = _state.value.userInfo.gender.value,
-                        dongId = _state.value.locationInfo.selectedDong.id,
-                        pet = PetInfoEntity(
-                            name = _state.value.petInfo.petName,
-                            birth = _state.value.petInfo.petBirthDate.toBirthDateFormat(),
-                            gender = _state.value.petInfo.petGender.value,
-                            isNeutered = _state.value.petInfo.petNeutered,
-                            breedId = _state.value.petInfo.petBreed.id,
-                            imageId = finalImageId
-                        )
-                    )
-                ).onSuccess {
-                    UserDataStore.saveUserId(context, it.userId)
-                    UserDataStore.savePetId(context, it.petId)
-                }
-            }.onSuccess {
-                Timber.e("postCreateUser success")
-                _sideEffect.emit(SignUpSideEffect.NavigateHome)
-            }.onFailure {
-                Timber.e(it)
-                _sideEffect.emit(SignUpSideEffect.ShowSnackBar(it.message ?: "알 수 없는 오류가 발생했습니다."))
-            }
-        }*/
         }
     }
 
@@ -265,6 +232,22 @@ class SignUpViewModel @Inject constructor(
                 )
             }
         }
+    }
+
+    private suspend fun checkNicknameDuplicate(nickname: String) {
+        updateState { it.copy(userInfo = it.userInfo.copy(isDuplicate = false)) }
+
+        userRepository.checkNickname(nickname)
+            .onSuccess { isDuplicate ->
+                updateState {
+                    it.copy(
+                        userInfo = it.userInfo.copy(isDuplicate = isDuplicate)
+                    )
+                }
+            }
+            .onFailure {
+                updateState { it.copy(userInfo = it.userInfo.copy(isDuplicate = false)) }
+            }
     }
 
     fun updateBirthDate(birthDate: String) {
@@ -413,16 +396,16 @@ class SignUpViewModel @Inject constructor(
         viewModelScope.launch {
             val dongId = _state.value.locationInfo.selectedDong.id
             getRegionGeometry(
-                userId = localRepository.getUserId(),
                 regionId = dongId,
             )
             onNextClick()
         }
     }
 
-    fun getRegionGeometry(userId: Int, regionId: Int?) = viewModelScope.launch {
-        regionRepository.getRegionGeometry(userId, regionId!!)
+    fun getRegionGeometry(regionId: Int?) = viewModelScope.launch {
+        regionRepository.getRegionGeometry(regionId!!)
             .onSuccess { data ->
+                Timber.e("getRegionGeometry $data")
                 val coordinates = data.geometry.coordinates
                 val flattenedLatLng = flattenCoordinatesToLatLng(coordinates)
 
@@ -466,6 +449,7 @@ class SignUpViewModel @Inject constructor(
                 }
             }
             .onFailure { throwable ->
+                Timber.e("getRegionGeometry $throwable")
                 val errorMessage = handleError(throwable)
                 _state.update { currentState ->
                     currentState.copy(
@@ -483,7 +467,7 @@ class SignUpViewModel @Inject constructor(
                 // UserInfo 확인
                 state.userInfo.nickName.isNotBlank() && state.userInfo.nickName.length <= 8 &&
                         state.userInfo.birthDate.length == 8 && state.userInfo.birthDate.isValidDate() &&
-                        state.userInfo.gender != Gender.UNKNOWN
+                        state.userInfo.gender != Gender.UNKNOWN && !state.userInfo.isDuplicate
             }
 
             SignUpStateType.PET_INFO -> {
@@ -500,6 +484,17 @@ class SignUpViewModel @Inject constructor(
                         state.locationInfo.selectedGu.name.isNotBlank() &&
                         state.locationInfo.selectedDong.id != 0 &&
                         state.locationInfo.selectedDong.name.isNotBlank()
+            }
+        }
+    }
+
+    fun createCameraUri() {
+        viewModelScope.launch {
+            val uriString = imageUriManager.createTempImageUri()
+            if (uriString != null) {
+                _sideEffect.emit(SignUpSideEffect.LaunchCamera(uriString))
+            } else {
+                _sideEffect.emit(SignUpSideEffect.ShowSnackBar("카메라를 실행할 수 없습니다"))
             }
         }
     }

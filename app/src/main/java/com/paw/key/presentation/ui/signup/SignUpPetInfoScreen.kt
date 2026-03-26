@@ -40,6 +40,7 @@ import com.paw.key.core.extension.noRippleClickable
 import com.paw.key.core.util.DateVisualTransformation
 import com.paw.key.presentation.ui.signup.component.FormField
 import com.paw.key.presentation.ui.signup.component.GenderSelector
+import com.paw.key.presentation.ui.signup.component.ImageTypeSelectDialog
 import com.paw.key.presentation.ui.signup.component.PetBreedSearchContent
 import com.paw.key.presentation.ui.signup.component.SignUpNeuteringCheckRadio
 import com.paw.key.presentation.ui.signup.component.SignUpPetImageHolder
@@ -63,9 +64,12 @@ fun SignUpPetInfoScreen(
     onPetNeuteredChanged : (Boolean) -> Unit,
     onPetBreedChanged : (PetInfoItemModel) -> Unit,
     onSelectedImage: (Uri?) -> Unit,
+    createCameraUri: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     var isSheetOpen by remember { mutableStateOf(false) }
+    var isImageTypeDialogOpen by remember { mutableStateOf(false) }
+
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     val scope = rememberCoroutineScope()
 
@@ -93,7 +97,18 @@ fun SignUpPetInfoScreen(
             if (isGranted) {
                 legacyGalleryLauncher.launch("image/*")
             } else {
-                deniedPermission
+                deniedPermission()
+            }
+        }
+    )
+
+    val cameraPermissionLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestPermission(),
+        onResult = { isGranted ->
+            if (isGranted) {
+                createCameraUri()
+            } else {
+                deniedPermission()
             }
         }
     )
@@ -116,13 +131,7 @@ fun SignUpPetInfoScreen(
             uri = petInfo.petImage,
             modifier = Modifier
                 .noRippleClickable {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                        photoPickerLauncher.launch(
-                            PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
-                        )
-                    } else {
-                        permissionLauncher.launch(Manifest.permission.READ_EXTERNAL_STORAGE)
-                    }
+                    isImageTypeDialogOpen = true
                 }
         )
 
@@ -257,5 +266,26 @@ fun SignUpPetInfoScreen(
                 )
             }
         }
+    }
+
+    if (isImageTypeDialogOpen) {
+        ImageTypeSelectDialog(
+            onCameraClick = {
+                cameraPermissionLauncher.launch(Manifest.permission.CAMERA)
+            },
+            onGalleryClick = {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    photoPickerLauncher.launch(
+                        PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+                    )
+                } else {
+                    permissionLauncher.launch(Manifest.permission.READ_EXTERNAL_STORAGE)
+                }
+            },
+            onDefaultClick = {
+                onSelectedImage(null)
+            },
+            onDismissRequest = { isImageTypeDialogOpen = false }
+        )
     }
 }

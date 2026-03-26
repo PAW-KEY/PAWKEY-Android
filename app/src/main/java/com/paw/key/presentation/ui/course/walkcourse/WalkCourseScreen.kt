@@ -95,7 +95,7 @@ fun WalkCourseRoute(
     paddingValues: PaddingValues,
     navigateUp: () -> Unit = {},
     navigateReview: () -> Unit = {},
-    navigateWalkComplete: () -> Unit = {},
+    navigateWalkComplete: (routeId: String) -> Unit = {},
     viewModel: WalkCourseViewModel = hiltViewModel(),
 ) {
     val lifecycleOwner = LocalLifecycleOwner.current
@@ -134,7 +134,7 @@ fun WalkCourseRoute(
 
                     WalkCourseSideEffect.NavigateReview -> navigateReview()
 
-                    WalkCourseSideEffect.NavigateComplete -> navigateWalkComplete()
+                    is WalkCourseSideEffect.NavigateComplete -> navigateWalkComplete(sideEffect.routeId)
 
                     else -> {}
                 }

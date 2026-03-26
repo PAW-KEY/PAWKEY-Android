@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
@@ -21,12 +20,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.paw.key.R
 import com.paw.key.core.designsystem.theme.PawKeyTheme
 import com.paw.key.core.extension.disableNestedScroll
 import com.paw.key.core.extension.noRippleClickable
@@ -35,7 +31,6 @@ import com.paw.key.presentation.ui.signup.model.DongModel
 import com.paw.key.presentation.ui.signup.model.GuModel
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
-import kotlinx.collections.immutable.toImmutableList
 
 @Composable
 fun RegionSearchContent(
@@ -45,27 +40,6 @@ fun RegionSearchContent(
     onRegionSelected: (GuModel, DongModel) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    var searchText by remember { mutableStateOf("") }
-
-    var currentGu by remember(selectedGu) {
-        mutableStateOf(if (selectedGu.id != 0) selectedGu else regionList.firstOrNull()?.gu ?: GuModel(0, ""))
-    }
-
-    val filteredRegionList = remember(searchText, regionList) {
-        if (searchText.isBlank()) {
-            regionList
-        } else {
-            regionList.filter {
-                it.gu.name.contains(searchText, ignoreCase = true)
-            }.toImmutableList()
-        }
-    }
-
-    val currentDongList = remember(currentGu, filteredRegionList) {
-        // 전체 리스트에서 찾아야 동 정보가 유실되지 않음
-        regionList.find { it.gu.id == currentGu.id }?.dongs ?: persistentListOf()
-    }
-
     Column(
         modifier = modifier
             .clip(RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp))
@@ -90,7 +64,7 @@ fun RegionSearchContent(
             textAlign = TextAlign.Center
         )
 
-        SignUpTextField(
+        /*SignUpTextField(
             value = searchText,
             onValueChange = {
                 searchText = it
@@ -103,10 +77,10 @@ fun RegionSearchContent(
                     tint = PawKeyTheme.colors.contents
                 )
             }
-        )
+        )*/
 
         RegionSearchList(
-            regionList = filteredRegionList,
+            regionList = regionList,
             selectedGu = selectedGu,
             selectedDong = selectedDong,
             onRegionSelected = onRegionSelected,

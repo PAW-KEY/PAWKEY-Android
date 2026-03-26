@@ -3,6 +3,7 @@ package com.paw.key.presentation.ui.course.walkcourse.state
 import androidx.annotation.StringRes
 import androidx.compose.runtime.Immutable
 import com.paw.key.R
+import com.paw.key.domain.entity.walk.WalkFinish
 import com.paw.key.presentation.ui.course.walkcourse.model.MapState
 import com.paw.key.presentation.ui.course.walkcourse.model.RecordingState
 import com.paw.key.presentation.ui.course.walkcourse.model.StepCounterState
@@ -22,6 +23,13 @@ data class WalkCourseState(
 
     val formattedDistance: String
         get() = formatDistance(this.mapState.totalDistance)
+
+    fun toEntity() = WalkFinish(
+        distance = this.mapState.totalDistance.toInt(),
+        duration = this.totalTimeMillis.toInt(),
+        stepCount = this.stepCounterState.sessionSteps.toInt(),
+        endedAt = this.recordingState.endedAt
+    )
 }
 
 sealed interface WalkCourseSideEffect {
@@ -31,7 +39,7 @@ sealed interface WalkCourseSideEffect {
     data class NavigateNext(val regionId: Int): WalkCourseSideEffect
 
     data object NavigateReview: WalkCourseSideEffect
-    data object NavigateComplete: WalkCourseSideEffect
+    data class NavigateComplete(val routeId: String): WalkCourseSideEffect
 }
 
 sealed class WalkCourseRecord (
