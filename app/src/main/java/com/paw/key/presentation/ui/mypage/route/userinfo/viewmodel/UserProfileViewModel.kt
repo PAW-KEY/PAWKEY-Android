@@ -4,9 +4,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.paw.key.domain.repository.localstorage.LocalStorageRepository
 import com.paw.key.domain.repository.mypage.MypageRepository
-import com.paw.key.domain.repository.userprofile.UserProfileRepository
-import com.paw.key.presentation.ui.mypage.userinfo.model.UserProfileSideEffect
-import com.paw.key.presentation.ui.mypage.userinfo.model.UserProfileState
 import com.paw.key.domain.repository.user.UserRepository
 import com.paw.key.presentation.ui.mypage.route.userinfo.model.UserProfileSideEffect
 import com.paw.key.presentation.ui.mypage.route.userinfo.model.UserProfileState
@@ -14,7 +11,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -24,9 +20,7 @@ import javax.inject.Inject
 class UserProfileViewModel @Inject constructor(
 
     private val userRepository: UserRepository,
-    private val userProfileRepository: UserProfileRepository,
     private val mypageRepository: MypageRepository,
-    private val localRepository: LocalStorageRepository,
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(UserProfileState())
@@ -53,7 +47,7 @@ class UserProfileViewModel @Inject constructor(
                             name = result.name,
                             gender = result.gender,
                             birth = result.birth.orEmpty(),
-                            email = result.email
+//                            email = result.email
                         )
                     }
                 }

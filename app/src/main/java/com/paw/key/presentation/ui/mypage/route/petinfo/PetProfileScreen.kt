@@ -48,8 +48,7 @@ import com.paw.key.core.designsystem.component.PawkeyButton
 import com.paw.key.core.designsystem.component.TopBar
 import com.paw.key.core.designsystem.theme.PawKeyTheme
 import com.paw.key.core.extension.noRippleClickable
-import com.paw.key.presentation.ui.mypage.petinfo.model.PetProfileSideEffect
-import com.paw.key.presentation.ui.mypage.petinfo.viewmodel.PetProfileViewModel
+import com.paw.key.presentation.ui.mypage.route.petinfo.viewmodel.PetProfileViewModel
 import com.paw.key.presentation.ui.mypage.route.petinfo.model.PetProfileSideEffect
 import com.paw.key.presentation.ui.signup.component.FormField
 import com.paw.key.presentation.ui.signup.component.GenderSelector

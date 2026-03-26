@@ -2,6 +2,7 @@ package com.paw.key.presentation.ui.mypage.route.petinfo.model
 
 import android.net.Uri
 import androidx.compose.runtime.Immutable
+import com.paw.key.presentation.ui.mypage.model.PetInfoModel
 import com.paw.key.presentation.ui.signup.state.Gender
 
 @Immutable
@@ -18,6 +19,7 @@ data class PetProfileState(
     val energyLevel: String = "",
     val socialLevel: String = "",
     val isLoading: Boolean = false,
+    val petInfo: PetInfoModel = PetInfoModel()
 )
 
 sealed interface PetProfileSideEffect {

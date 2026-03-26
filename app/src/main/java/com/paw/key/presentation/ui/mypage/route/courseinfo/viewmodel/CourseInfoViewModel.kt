@@ -9,6 +9,7 @@ import com.paw.key.domain.repository.mypage.MypageRepository
 import com.paw.key.presentation.ui.mypage.route.courseinfo.model.CourseInfoSideEffect
 import com.paw.key.presentation.ui.mypage.route.courseinfo.model.CourseInfoState
 import com.paw.key.presentation.ui.mypage.route.courseinfo.model.CourseType
+import com.paw.key.presentation.ui.mypage.route.courseinfo.model.toCourseData
 import com.paw.key.presentation.ui.mypage.route.courseinfo.navigation.CourseInfoNavRoute
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -55,7 +56,6 @@ class CourseInfoViewModel @Inject constructor(
                 }
                 .onFailure { e ->
                     _state.update { it.copy(courses = UiState.Failure(e.message ?: "불러오기 실패")) }
-                    _sideEffect.emit(ShowSnackBar(e.message ?: "불러오기 실패"))
                 }
         }
     }

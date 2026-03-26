@@ -5,9 +5,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.paw.key.domain.repository.localstorage.LocalStorageRepository
 import com.paw.key.domain.repository.mypage.MypageRepository
-import com.paw.key.domain.repository.petprofile.PetProfileRepository
-import com.paw.key.presentation.ui.mypage.petinfo.model.PetProfileSideEffect
-import com.paw.key.presentation.ui.mypage.petinfo.model.PetProfileState
+import com.paw.key.domain.repository.user.UserRepository
+import com.paw.key.presentation.ui.mypage.model.toUiModel
+import com.paw.key.presentation.ui.mypage.route.petinfo.model.PetProfileSideEffect
+import com.paw.key.presentation.ui.mypage.route.petinfo.model.PetProfileState
 import com.paw.key.presentation.ui.signup.state.Gender
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -21,8 +22,9 @@ import javax.inject.Inject
 
 @HiltViewModel
 class PetProfileViewModel @Inject constructor(
-    private val petProfileRepository: PetProfileRepository,
     private val mypageRepository: MypageRepository,
+
+    private val userRepository: UserRepository,
     private val localRepository: LocalStorageRepository,
 ) : ViewModel() {
 
@@ -34,7 +36,7 @@ class PetProfileViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            getPetProfiles(localRepository.getUserId())
+            getPetProfiles()
         }
     }
 
@@ -45,26 +47,19 @@ class PetProfileViewModel @Inject constructor(
     fun onBreedChange(breedName: String, breedId: Int) = _state.update { it.copy(breed = breedName, breedId = breedId) }
     fun onImageChange(uri: Uri?) = _state.update { it.copy(imageUrl = uri) }
 
-    private fun getPetProfiles(userId: Int) {
+    fun getPetProfiles() {
         viewModelScope.launch {
-            petProfileRepository.getPetProfiles(userId)
+            val petId = localRepository.getPetId()
+
+            userRepository.getPetProfiles(petId)
                 .onSuccess { result ->
-                    result.firstOrNull()?.let { pet ->
-                        _state.update {
-                            it.copy(
-                                name        = pet.name,
-                                gender      = if (pet.gender == "M") Gender.MALE else Gender.FEMALE,
-                                breed       = pet.breed,
-                                age         = pet.age.toString(),
-                                isNeutered  = pet.isNeutered,
-                                energyLevel = pet.traits.firstOrNull()?.option.orEmpty(),
-                                socialLevel = pet.traits.getOrNull(1)?.option.orEmpty(),
-                            )
-                        }
+                    _state.update { currentState ->
+                        currentState.copy(
+                            petInfo = result.toUiModel()
+                        )
                     }
-                }
-                .onFailure { e ->
-                    _sideEffect.emit(PetProfileSideEffect.ShowSnackBar(e.message ?: "프로필을 불러오지 못했습니다"))
+                }.onFailure {
+                    _sideEffect.emit(PetProfileSideEffect.ShowSnackBar("펫 프로필 불러오기 실패"))
                 }
         }
     }

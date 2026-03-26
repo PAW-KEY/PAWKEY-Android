@@ -33,10 +33,8 @@ import com.paw.key.domain.repository.home.RegionCurrentRepository
 import com.paw.key.domain.repository.image.ImageRepository
 import com.paw.key.domain.repository.localstorage.LocalStorageRepository
 import com.paw.key.domain.repository.login.AuthRepository
-import com.paw.key.domain.repository.posts.PostsRepository
 import com.paw.key.domain.repository.mypage.MypageRepository
-import com.paw.key.domain.repository.petprofile.PetProfileRepository
-import com.paw.key.domain.repository.sharedwalk.SharedWalkRepository
+import com.paw.key.domain.repository.posts.PostsRepository
 import com.paw.key.domain.repository.user.UserRepository
 import com.paw.key.domain.repository.walk.WalkRepository
 import com.paw.key.domain.repository.walkpreparation.WalkPreparationRepository
@@ -166,4 +164,5 @@ interface RepositoryModule {
     fun bindWalkRepository(
         impl: WalkRepositoryImpl
     ) : WalkRepository
+
 }

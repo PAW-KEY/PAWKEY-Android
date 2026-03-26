@@ -48,16 +48,6 @@ object ServiceModule {
     fun provideHomeRegionService(retrofit: Retrofit): HomeRegionService =
         retrofit.create()
 
-    //마이페이지
-    @Provides
-    @Singleton
-    fun provideUserProfileService(retrofit: Retrofit): UserProfileService =
-        retrofit.create()
-
-    @Provides
-    @Singleton
-    fun providePetProfileService(retrofit: Retrofit): PetProfileService =
-        retrofit.create()
 
     @Provides
     @Singleton
