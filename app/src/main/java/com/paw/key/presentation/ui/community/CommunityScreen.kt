@@ -38,7 +38,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.NestedScrollSource
@@ -137,6 +137,9 @@ fun CommunityScreen(
     val topImageHeight = 200.dp
     val topImageHeightPx = with(LocalDensity.current) { topImageHeight.toPx() }
     var topImageOffset by remember { mutableFloatStateOf(0f) }
+    val currentImageHeight = with(LocalDensity.current) {
+        (topImageHeightPx + topImageOffset).coerceAtLeast(0f).toDp()
+    }
 
     val nestedScrollConnection = remember {
         object : NestedScrollConnection {
@@ -195,8 +198,8 @@ fun CommunityScreen(
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(topImageHeight)
-                    .graphicsLayer { translationY = topImageOffset }
+                    .height(currentImageHeight)
+                    .clip(RectangleShape)
             ) {
                 CommunityTopImageHolder(imageList = persistentListOf())
             }
