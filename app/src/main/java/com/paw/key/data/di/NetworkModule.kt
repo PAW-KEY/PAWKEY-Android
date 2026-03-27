@@ -51,8 +51,10 @@ object NetworkModule {
         client: OkHttpClient,
         converterFactory: Converter.Factory
     ): Retrofit = Retrofit.Builder()
-        .baseUrl(BuildConfig.BASE_URL)
+        .baseUrl(if (BuildConfig.DEBUG) BuildConfig.DEBUG_BASE_URL else BuildConfig.BASE_URL)
         .addConverterFactory(converterFactory)
         .client(client)
         .build()
+
+
 }

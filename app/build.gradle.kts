@@ -31,6 +31,8 @@ android {
         buildConfigField("String", "NAVERMAP_CLIENT_SECRET", properties["NAVERMAP_CLIENT_SECRET"].toString())
         buildConfigField("String", "NAVERMAP_CLIENT_ID", properties["NAVERMAP_CLIENT_ID"].toString())
         buildConfigField("String","GOOGLE_WEB_CLIENT_ID",properties["google.client.id"].toString())
+        buildConfigField("String", "DEBUG_BASE_URL", properties["debug.base.url"].toString())
+
 
         manifestPlaceholders["KAKAO_NATIVE_KEY"] = properties["kakao.native.key"].toString()
     }
@@ -54,6 +56,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
     buildFeatures {
         compose = true

@@ -26,6 +26,7 @@ import com.paw.key.presentation.ui.onboard.navigation.navigateOnboarding
 import com.paw.key.presentation.ui.region.navigation.navigateRegional
 import com.paw.key.presentation.ui.signup.navigation.navigateSignUp
 import com.paw.key.presentation.ui.splash.navigation.Splash
+import com.paw.key.presentation.ui.dbti.navigation.navigateDbtiStart
 
 class MainNavigator(
     val navController: NavHostController,
@@ -141,6 +142,10 @@ class MainNavigator(
 
     fun navigateRegional(regionId: Int, navOptions: NavOptions? = null) {
         navController.navigateRegional(regionId, navOptions)
+    }
+
+    fun navigateDbtiStart(navOptions: NavOptions? = null) {
+        navController.navigateDbtiStart(navOptions)
     }
 
 

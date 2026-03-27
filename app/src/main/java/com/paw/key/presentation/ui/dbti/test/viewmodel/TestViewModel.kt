@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.paw.key.domain.entity.dbti.DbtiQuestionEntity
 import com.paw.key.domain.usecase.GetDbtiQuestionsUseCase
+import com.paw.key.domain.usecase.SubmitDbtiResultUseCase
 import com.paw.key.presentation.ui.dbti.test.model.TestOptionModel
 import com.paw.key.presentation.ui.dbti.test.state.TestUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -14,7 +15,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class TestViewModel @Inject constructor(
-    private val getDbtiQuestionsUseCase: GetDbtiQuestionsUseCase
+    private val getDbtiQuestionsUseCase: GetDbtiQuestionsUseCase,
+    private val submitDbtiResultUseCase: SubmitDbtiResultUseCase
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow<TestUiState>(TestUiState.Loading)
@@ -59,8 +61,35 @@ class TestViewModel @Inject constructor(
         if (currentIndex < questions.size - 1) {
             currentIndex++
             updateCurrentQuestion()
+        } else {
+            // 마지막 질문 → 결과 제출
+            submitResult()
         }
-        // TODO: 마지막 질문이면 결과 제출 API 호출
+    }
+
+    private fun submitResult() {
+        viewModelScope.launch {
+            _uiState.value = TestUiState.Loading
+
+            // 순서대로 optionId 리스트 생성
+            val optionIds = questions.map { question ->
+                selectedAnswers[question.id] ?: 0
+            }
+
+            submitDbtiResultUseCase(
+                petId = 2L, // TODO: 실제 petId로 변경
+                optionIds = optionIds
+            )
+                .onSuccess { result ->
+                    // TODO: ResultScreen으로 이동하면서 결과 전달
+                    // navigateToResult(result)
+                }
+                .onFailure { error ->
+                    _uiState.value = TestUiState.Error(
+                        error.message ?: "결과 제출에 실패했습니다"
+                    )
+                }
+        }
     }
 
     fun previousQuestion() {
