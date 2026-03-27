@@ -13,7 +13,7 @@ data class FilterCategoryUiModel(
     val id: Int,
     val name: String,
     val selectionType: SelectionType,
-    val options: List<FilterOptionUiModel>
+    val options: ImmutableList<FilterOptionUiModel>
 )
 
 data class FilterOptionUiModel(
@@ -34,7 +34,7 @@ fun FilterItemEntity.toUiModel() = FilterCategoryUiModel(
     id = id,
     name = name,
     selectionType = if (selectionType == "SINGLE") SelectionType.SINGLE else SelectionType.MULTI,
-    options = options.map { FilterOptionUiModel(id = it.id, text = it.text) }
+    options = options.map { FilterOptionUiModel(id = it.id, text = it.text) }.toImmutableList()
 )
 
 data class PostsFilterUiModel(
