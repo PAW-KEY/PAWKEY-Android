@@ -142,10 +142,33 @@ fun CommunityScreen(
         object : NestedScrollConnection {
             override fun onPreScroll(available: Offset, source: NestedScrollSource): Offset {
                 val delta = available.y
-                val newOffset = (topImageOffset + delta).coerceIn(-topImageHeightPx, 0f)
-                val consumed = newOffset - topImageOffset
-                topImageOffset = newOffset
-                return Offset(0f, consumed)
+                return if (delta < 0) {
+                    // 아래로 스크롤 → TopImage 먼저 접기
+                    val newOffset = (topImageOffset + delta).coerceIn(-topImageHeightPx, 0f)
+                    val consumed = newOffset - topImageOffset
+                    topImageOffset = newOffset
+                    Offset(0f, consumed)
+                } else {
+                    // 위로 스크롤 → grid가 처리하도록 소비 안 함
+                    Offset.Zero
+                }
+            }
+
+            override fun onPostScroll(
+                consumed: Offset,
+                available: Offset,
+                source: NestedScrollSource
+            ): Offset {
+                val delta = available.y
+                return if (delta > 0) {
+                    // grid가 더 이상 위로 스크롤 못할 때 (available.y > 0) → TopImage 펼치기
+                    val newOffset = (topImageOffset + delta).coerceIn(-topImageHeightPx, 0f)
+                    val consumed2 = newOffset - topImageOffset
+                    topImageOffset = newOffset
+                    Offset(0f, consumed2)
+                } else {
+                    Offset.Zero
+                }
             }
         }
     }
@@ -165,7 +188,7 @@ fun CommunityScreen(
 
         Box(
             modifier = Modifier
-                .fillMaxSize()
+                .weight(1f)
                 .nestedScroll(nestedScrollConnection)
         ) {
             // 접히는 TopImage
