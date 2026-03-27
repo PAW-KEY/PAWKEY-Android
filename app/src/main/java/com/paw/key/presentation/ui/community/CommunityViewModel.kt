@@ -85,7 +85,7 @@ class CommunityViewModel @Inject constructor(
         fetchPosts(cursor = null)
     }
 
-    fun loadMore() {
+    fun onLoadMore() {
         if (_state.value.hasNext) {
             fetchPosts(cursor = _state.value.nextCursor)
         }
