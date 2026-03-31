@@ -3,23 +3,26 @@ package com.paw.key.presentation.ui.mypage.route.petinfo.model
 import android.net.Uri
 import androidx.compose.runtime.Immutable
 import com.paw.key.presentation.ui.mypage.model.PetInfoModel
+import com.paw.key.presentation.ui.signup.state.Gender
 
 @Immutable
 data class PetProfileState(
+    val name: String = "",
+    val birthday: String = "",
+    val gender: Gender = Gender.MALE,
+    val isNeutered: Boolean = false,
+    val breed: String = "",
+    val breedId: Int = 0,
     val imageUrl: Uri? = null,
-    val name: String = "까루",
-    val gender: String = "남아",
-    val birthday : String = "2020/01/01",
-    val breed: String = "코리안 숏헤어",
-    val age: String = "4세",
-    val isNeutered: Boolean = true,
-    val energyLevel: String = "활동적이에요",
-    val socialLevel: String = "불편해해요",
-
+    val imageId: Int = 0,
+    val age: String = "",
+    val energyLevel: String = "",
+    val socialLevel: String = "",
+    val isLoading: Boolean = false,
     val petInfo: PetInfoModel = PetInfoModel()
 )
-sealed class PetProfileSideEffect {
-    data class ShowSnackBar(val message: String) : PetProfileSideEffect()
-    data object NavigateUp : PetProfileSideEffect()
-    data object NavigateNext : PetProfileSideEffect()
+
+sealed interface PetProfileSideEffect {
+    data class ShowSnackBar(val message: String) : PetProfileSideEffect
+    data object NavigateUp : PetProfileSideEffect
 }

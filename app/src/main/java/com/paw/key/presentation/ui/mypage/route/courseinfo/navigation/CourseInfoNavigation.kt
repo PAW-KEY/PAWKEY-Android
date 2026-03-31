@@ -4,32 +4,27 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
+import androidx.navigation.toRoute
 import com.paw.key.presentation.ui.mypage.route.courseinfo.CourseInfoRoute
 import com.paw.key.presentation.ui.mypage.route.courseinfo.model.CourseType
 import kotlinx.serialization.Serializable
 
+@Serializable
+data class CourseInfoNavRoute(val courseType: CourseType)
 
-fun NavController.navigateCourseInfo(
+fun NavController.navigateToCourseInfo(
     courseType: CourseType,
     navOptions: NavOptions? = null,
-) {
-    navigate(
-        CourseInfo(courseType = courseType.name),
-        navOptions
-    )
-}
+) = navigate(CourseInfoNavRoute(courseType), navOptions)
 
 fun NavGraphBuilder.courseInfoNavGraph(
     navigateUp: () -> Unit,
 ) {
-    composable<CourseInfo> {
+    composable<CourseInfoNavRoute> { backStackEntry ->
+        val route = backStackEntry.toRoute<CourseInfoNavRoute>()
         CourseInfoRoute(
             navigateUp = navigateUp,
+            courseType = route.courseType,
         )
     }
 }
-
-@Serializable
-data class CourseInfo(
-    val courseType: String,
-)

@@ -10,6 +10,7 @@ import com.paw.key.data.service.image.S3Service
 import com.paw.key.data.service.login.LoginService
 import com.paw.key.data.service.posts.PostsService
 import com.paw.key.data.service.region.RegionService
+import com.paw.key.data.service.mypage.MypageService
 import com.paw.key.data.service.sharedwalk.SharedWalkService
 import com.paw.key.data.service.user.UserService
 import com.paw.key.data.service.walk.WalkService
@@ -47,7 +48,7 @@ object ServiceModule {
     fun provideHomeRegionService(retrofit: Retrofit): HomeRegionService =
         retrofit.create()
 
-    //마이페이지
+
     @Provides
     @Singleton
     fun provideSavedListService(retrofit: Retrofit): SavedListService =
@@ -96,5 +97,11 @@ object ServiceModule {
     @Provides
     @Singleton
     fun providePostsService(retrofit: Retrofit): PostsService =
+        retrofit.create()
+
+
+    @Provides
+    @Singleton
+    fun provideMypageService(retrofit: Retrofit): MypageService =
         retrofit.create()
 }

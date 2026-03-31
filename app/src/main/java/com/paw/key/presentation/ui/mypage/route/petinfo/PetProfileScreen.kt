@@ -20,8 +20,10 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -47,6 +49,7 @@ import com.paw.key.core.designsystem.component.TopBar
 import com.paw.key.core.designsystem.theme.PawKeyTheme
 import com.paw.key.core.extension.noRippleClickable
 import com.paw.key.presentation.ui.mypage.route.petinfo.viewmodel.PetProfileViewModel
+import com.paw.key.presentation.ui.mypage.route.petinfo.model.PetProfileSideEffect
 import com.paw.key.presentation.ui.signup.component.FormField
 import com.paw.key.presentation.ui.signup.component.GenderSelector
 import com.paw.key.presentation.ui.signup.component.PetBreedSearchContent
@@ -61,26 +64,37 @@ import kotlinx.coroutines.launch
 @Composable
 fun PetProfileRoute(
     navigateUp: () -> Unit,
+    snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
     viewModel: PetProfileViewModel = hiltViewModel(),
 ) {
-    val state = viewModel.state.collectAsStateWithLifecycle()
+    val state by viewModel.state.collectAsStateWithLifecycle()
 
+    LaunchedEffect(Unit) {
+        viewModel.sideEffect.collect { effect ->
+            when (effect) {
+                is PetProfileSideEffect.ShowSnackBar -> snackbarHostState.showSnackbar(effect.message)
+                PetProfileSideEffect.NavigateUp      -> navigateUp()
+            }
+        }
+    }
 
     PetProfileScreen(
-        petName = state.value.name,
-        petBirthDate = state.value.birthday,
-        petGender = Gender.MALE,
-        petNeutered = state.value.isNeutered,
-        petBreed = state.value.breed,
-        selectedImageUri = state.value.imageUrl,
-        navigateUp = navigateUp,
-        deniedPermission = {},
-        onPetNameChanged = {},
-        onPetBirthDateChanged = {},
-        onPetGenderChanged = {},
-        onPetNeuteredChanged = {},
-        onPetBreedChanged = {},
-        onSelectedImage = {}
+        petName            = state.name,
+        petBirthDate       = state.birthday,
+        petGender          = state.gender,
+        petNeutered        = state.isNeutered,
+        petBreed           = state.breed,
+        selectedImageUri   = state.imageUrl,
+        isLoading          = state.isLoading,
+        navigateUp         = navigateUp,
+        deniedPermission   = {},
+        onPetNameChanged   = viewModel::onNameChange,
+        onPetBirthDateChanged = viewModel::onBirthChange,
+        onPetGenderChanged = viewModel::onGenderChange,
+        onPetNeuteredChanged = viewModel::onNeuteredChange,
+        onPetBreedChanged  = { viewModel.onBreedChange(it.name, it.id) },
+        onSelectedImage    = viewModel::onImageChange,
+        onSaveClick        = viewModel::updatePet,
     )
 }
 
@@ -93,6 +107,7 @@ fun PetProfileScreen(
     petNeutered: Boolean,
     petBreed: String,
     selectedImageUri: Uri?,
+    isLoading: Boolean,
     navigateUp: () -> Unit,
     deniedPermission: () -> Unit,
     onPetNameChanged: (String) -> Unit,
@@ -101,6 +116,7 @@ fun PetProfileScreen(
     onPetNeuteredChanged: (Boolean) -> Unit,
     onPetBreedChanged: (PetInfoItemModel) -> Unit,
     onSelectedImage: (Uri?) -> Unit,
+    onSaveClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     var isSheetOpen by remember { mutableStateOf(false) }
@@ -112,70 +128,52 @@ fun PetProfileScreen(
 
     val photoPickerLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.PickVisualMedia(),
-        onResult = { uri ->
-            onSelectedImage(uri)
-        }
+        onResult = onSelectedImage,
     )
 
-    // 구버전 권한 요청용
     val legacyGalleryLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent(),
-        onResult = { uri ->
-            onSelectedImage(uri)
-        }
+        onResult = onSelectedImage,
     )
 
     val permissionLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestPermission(),
         onResult = { isGranted ->
-            if (isGranted) {
-                legacyGalleryLauncher.launch("image/*")
-            } else {
-                deniedPermission
-            }
-        }
+            if (isGranted) legacyGalleryLauncher.launch("image/*")
+            else deniedPermission()
+        },
     )
-
-
 
     Column(
         modifier = modifier
             .fillMaxSize()
-            .background(color = PawKeyTheme.colors.background)
+            .background(PawKeyTheme.colors.background),
     ) {
-        TopBar(
-            title = " 반려견 정보 수정",
-            onBackClick = navigateUp,
-            modifier = Modifier,
-        )
+        TopBar(title = "반려견 정보 수정", onBackClick = navigateUp)
 
         HorizontalDivider(
-            modifier = Modifier
-                .fillMaxWidth(),
+            modifier  = Modifier.fillMaxWidth(),
             thickness = 2.dp,
-            color = PawKeyTheme.colors.defaultButton
+            color     = PawKeyTheme.colors.defaultButton,
         )
 
         LazyColumn(
-            modifier = Modifier
-                .padding(horizontal = 16.dp, vertical = 18.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+            modifier = Modifier.padding(horizontal = 16.dp, vertical = 18.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             item {
                 SignUpPetImageHolder(
                     uri = selectedImageUri,
-                    modifier = Modifier
-                        .noRippleClickable {
-                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                                photoPickerLauncher.launch(
-                                    PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
-                                )
-                            } else {
-                                permissionLauncher.launch(Manifest.permission.READ_EXTERNAL_STORAGE)
-                            }
+                    modifier = Modifier.noRippleClickable {
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                            photoPickerLauncher.launch(
+                                PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+                            )
+                        } else {
+                            permissionLauncher.launch(Manifest.permission.READ_EXTERNAL_STORAGE)
                         }
+                    },
                 )
-
             }
 
             item {
@@ -183,23 +181,15 @@ fun PetProfileScreen(
                     label = "이름",
                     content = {
                         SignUpTextField(
-                            value = petName,
-                            onValueChange = {
-                                if (it.length <= 8) {
-                                    onPetNameChanged(it)
-                                }
-                            },
-                            placeholder = "최대 8글자 이내로 입력해주세요",
-                            keyboardOptions = KeyboardOptions(
-                                imeAction = ImeAction.Next
-                            ),
+                            value         = petName,
+                            onValueChange = { if (it.length <= 8) onPetNameChanged(it) },
+                            placeholder   = "최대 8글자 이내로 입력해주세요",
+                            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
                             keyboardActions = KeyboardActions(
-                                onDone = {
-                                    petBirthDateFocusRequester.requestFocus()
-                                }
+                                onNext = { petBirthDateFocusRequester.requestFocus() }
                             ),
                         )
-                    }
+                    },
                 )
             }
 
@@ -208,99 +198,81 @@ fun PetProfileScreen(
                     label = "생년월일",
                     content = {
                         SignUpTextField(
-                            modifier = Modifier
-                                .focusRequester(petBirthDateFocusRequester),
-                            value = petBirthDate,
-                            onValueChange = {
-                                if (it.length <= 8) {
-                                    onPetBirthDateChanged(it)
-                                }
-                            },
-                            placeholder = "YYYYMMDD",
+                            modifier      = Modifier.focusRequester(petBirthDateFocusRequester),
+                            value         = petBirthDate,
+                            onValueChange = { if (it.length <= 8) onPetBirthDateChanged(it) },
+                            placeholder   = "YYYYMMDD",
                             keyboardOptions = KeyboardOptions(
                                 keyboardType = KeyboardType.Number,
-                                imeAction = ImeAction.Done
+                                imeAction    = ImeAction.Done,
                             ),
                             keyboardActions = KeyboardActions(
-                                onDone = {
-                                    focusManager.clearFocus()
-                                }
+                                onDone = { focusManager.clearFocus() }
                             ),
-//                    visualTransformation = DateVisualTransformation()
                         )
-                    }
+                    },
                 )
-
             }
+
             item {
                 FormField(
                     label = "성별",
                     content = {
                         GenderSelector(
-                            selectedGender = petGender,
+                            selectedGender   = petGender,
                             onGenderSelected = onPetGenderChanged,
-                            type = "반려 동물"
+                            type             = "반려 동물",
                         )
-                    }
+                    },
                 )
-
             }
 
             item {
                 SignUpNeuteringCheckRadio(
                     isNeutered = petNeutered,
-                    onToggle = { onPetNeuteredChanged(!petNeutered) },
-                    modifier = Modifier
-                        .padding(top = 8.dp)
+                    onToggle   = { onPetNeuteredChanged(!petNeutered) },
+                    modifier   = Modifier.padding(top = 8.dp),
                 )
-
             }
 
             item {
-
                 FormField(
                     label = "견종",
                     content = {
                         SignUpTextField(
-                            value = petBreed,
+                            value         = petBreed,
                             onValueChange = {},
-                            enabled = false,
-                            placeholder = "견종을 검색해보세요",
+                            enabled       = false,
+                            placeholder   = "견종을 검색해보세요",
                             suffix = {
                                 Icon(
-                                    imageVector = ImageVector.vectorResource(R.drawable.ic_signup_search),
+                                    imageVector     = ImageVector.vectorResource(R.drawable.ic_signup_search),
                                     contentDescription = "breed search",
-                                    tint = Color.Unspecified
+                                    tint            = Color.Unspecified,
                                 )
                             },
-                            modifier = Modifier
-                                .noRippleClickable {
-                                    scope.launch {
-                                        isSheetOpen = true
-                                    }
-                                }
+                            modifier = Modifier.noRippleClickable {
+                                scope.launch { isSheetOpen = true }
+                            },
                         )
-                    }
+                    },
                 )
+
                 if (isSheetOpen) {
                     PawKeyBottomSheet(
                         onDismissRequest = { isSheetOpen = false },
-                        sheetState = sheetState,
-                        //sheetGesturesEnabled = false,
-                    ) { sheetState ->
+                        sheetState       = sheetState,
+                    ) { state ->
                         PetBreedSearchContent(
-                            petBreedList = persistentListOf(),
-                            sheetState = sheetState,
+                            petBreedList  = persistentListOf(),
+                            sheetState    = state,
                             selectedBreed = petBreed,
-                            onBreedSelected = {
-                                onPetBreedChanged(it)
+                            onBreedSelected = { breed ->
+                                onPetBreedChanged(breed)
                                 scope.launch {
-
-                                    sheetState.hide()
+                                    state.hide()
                                 }.invokeOnCompletion {
-                                    if (!sheetState.isVisible) {
-                                        isSheetOpen = false
-                                    }
+                                    if (!state.isVisible) isSheetOpen = false
                                 }
                             },
                         )
@@ -309,18 +281,16 @@ fun PetProfileScreen(
             }
         }
 
-        Spacer(modifier = Modifier.weight(1F))
+        Spacer(modifier = Modifier.weight(1f))
 
         PawkeyButton(
-            text = "저장하기",
-            enabled = true,
-            onClick = { },
-            modifier = Modifier
-                .padding(horizontal = 16.dp)
+            text     = "저장하기",
+            enabled  = !isLoading,
+            onClick  = onSaveClick,
+            modifier = Modifier.padding(horizontal = 16.dp),
         )
 
         Spacer(modifier = Modifier.height(34.dp))
-
     }
 }
 
@@ -329,20 +299,22 @@ fun PetProfileScreen(
 private fun PetProfileScreenPreview() {
     PawKeyTheme {
         PetProfileScreen(
-            petName = "꾸꾸",
-            petBirthDate = "꾸꾸",
-            petGender = Gender.MALE,
-            petNeutered = true,
-            petBreed = "꾸꾸",
-            selectedImageUri = null,
-            navigateUp = {},
-            deniedPermission = {},
-            onPetNameChanged = {},
+            petName              = "꾸꾸",
+            petBirthDate         = "20220101",
+            petGender            = Gender.MALE,
+            petNeutered          = true,
+            petBreed             = "말티즈",
+            selectedImageUri     = null,
+            isLoading            = false,
+            navigateUp           = {},
+            deniedPermission     = {},
+            onPetNameChanged     = {},
             onPetBirthDateChanged = {},
-            onPetGenderChanged = {},
+            onPetGenderChanged   = {},
             onPetNeuteredChanged = {},
-            onPetBreedChanged = {},
-            onSelectedImage = {}
+            onPetBreedChanged    = {},
+            onSelectedImage      = {},
+            onSaveClick          = {},
         )
     }
 }
