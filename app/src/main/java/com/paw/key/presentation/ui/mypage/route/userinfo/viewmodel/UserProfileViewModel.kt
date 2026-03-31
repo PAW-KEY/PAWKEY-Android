@@ -1,8 +1,9 @@
 package com.paw.key.presentation.ui.mypage.route.userinfo.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.paw.key.domain.repository.localstorage.LocalStorageRepository
+import com.paw.key.domain.repository.mypage.MypageRepository
 import com.paw.key.domain.repository.user.UserRepository
 import com.paw.key.presentation.ui.mypage.route.userinfo.model.UserProfileSideEffect
 import com.paw.key.presentation.ui.mypage.route.userinfo.model.UserProfileState
@@ -17,7 +18,9 @@ import javax.inject.Inject
 
 @HiltViewModel
 class UserProfileViewModel @Inject constructor(
+
     private val userRepository: UserRepository,
+    private val mypageRepository: MypageRepository,
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(UserProfileState())
@@ -30,6 +33,9 @@ class UserProfileViewModel @Inject constructor(
         getUserProfiles()
     }
 
+    fun onNameChange(value: String) = _state.update { it.copy(name = value) }
+    fun onBirthChange(value: String) = _state.update { it.copy(birth = value) }
+    fun onGenderChange(value: String) = _state.update { it.copy(gender = value) }
     fun getUserProfiles() {
         viewModelScope.launch {
             userRepository.getUserProfiles()
@@ -41,14 +47,43 @@ class UserProfileViewModel @Inject constructor(
                             name = result.name,
                             gender = result.gender,
                             birth = result.birth.orEmpty(),
-                            email = result.email
+//                            email = result.email
                         )
                     }
                 }
                 .onFailure { e ->
-                    Log.e("UserProfileViewModel", "유저 프로필 불러오기 실패", e)
-                    _sideEffect.emit(UserProfileSideEffect.ShowSnackBar(e.message ?: "알 수 없는 오류"))
+                    _sideEffect.emit(UserProfileSideEffect.ShowSnackBar(e.message ?: "프로필을 불러오지 못했습니다"))
                 }
+        }
+    }
+
+    fun updateUser() {
+        if (_state.value.isLoading) return
+        val s = _state.value
+
+        if (s.name.isBlank() || s.birth.isBlank() || s.gender.isBlank()) {
+            viewModelScope.launch {
+                _sideEffect.emit(UserProfileSideEffect.ShowSnackBar("모든 정보를 입력해주세요."))
+            }
+            return
+        }
+
+        val formattedBirth = s.birth.replace(".", "-").replace("/", "-")
+
+        viewModelScope.launch {
+            _state.update { it.copy(isLoading = true) }
+            mypageRepository.updateUser(
+                name = s.name,
+                birth = formattedBirth,
+                gender = s.gender
+            ).onSuccess {
+                _sideEffect.emit(UserProfileSideEffect.ShowSnackBar("프로필이 수정되었습니다"))
+                _sideEffect.emit(UserProfileSideEffect.NavigateUp)
+                _state.update { it.copy(isLoading = false) }
+            }.onFailure { e ->
+                _sideEffect.emit(UserProfileSideEffect.ShowSnackBar(e.message ?: "수정에 실패했습니다"))
+                _state.update { it.copy(isLoading = false) }
+            }
         }
     }
 }

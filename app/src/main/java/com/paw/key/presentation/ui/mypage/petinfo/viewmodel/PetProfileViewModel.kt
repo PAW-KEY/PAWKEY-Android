@@ -1,4 +1,4 @@
-package com.paw.key.presentation.ui.mypage.route.petinfo.viewmodel
+package com.paw.key.presentation.ui.mypage.petinfo.viewmodel
 
 import android.net.Uri
 import androidx.lifecycle.ViewModel
@@ -23,8 +23,9 @@ import javax.inject.Inject
 @HiltViewModel
 class PetProfileViewModel @Inject constructor(
     private val mypageRepository: MypageRepository,
-    private val localRepository: LocalStorageRepository,
+
     private val userRepository: UserRepository,
+    private val localRepository: LocalStorageRepository,
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(PetProfileState())
@@ -43,9 +44,7 @@ class PetProfileViewModel @Inject constructor(
     fun onBirthChange(value: String) = _state.update { it.copy(birthday = value) }
     fun onGenderChange(value: Gender) = _state.update { it.copy(gender = value) }
     fun onNeuteredChange(value: Boolean) = _state.update { it.copy(isNeutered = value) }
-    fun onBreedChange(breedName: String, breedId: Int) =
-        _state.update { it.copy(breed = breedName, breedId = breedId) }
-
+    fun onBreedChange(breedName: String, breedId: Int) = _state.update { it.copy(breed = breedName, breedId = breedId) }
     fun onImageChange(uri: Uri?) = _state.update { it.copy(imageUrl = uri) }
 
     fun getPetProfiles() {
@@ -77,12 +76,7 @@ class PetProfileViewModel @Inject constructor(
         }
 
         val formattedBirth = if (s.birthday.length == 8 && !s.birthday.contains("-")) {
-            "${s.birthday.substring(0, 4)}-${s.birthday.substring(4, 6)}-${
-                s.birthday.substring(
-                    6,
-                    8
-                )
-            }"
+            "${s.birthday.substring(0, 4)}-${s.birthday.substring(4, 6)}-${s.birthday.substring(6, 8)}"
         } else {
             s.birthday.replace(".", "-").replace("/", "-")
         }
@@ -91,12 +85,12 @@ class PetProfileViewModel @Inject constructor(
             _state.update { it.copy(isLoading = true) }
 
             mypageRepository.updatePet(
-                name = s.name,
-                birth = formattedBirth,
-                gender = if (s.gender == Gender.MALE) "M" else "F",
+                name       = s.name,
+                birth      = formattedBirth,
+                gender     = if (s.gender == Gender.MALE) "M" else "F",
                 isNeutered = s.isNeutered,
-                breedId = s.breedId,
-                imageId = s.imageId
+                breedId    = s.breedId,
+                imageId    = s.imageId
             )
                 .onSuccess {
                     _sideEffect.emit(PetProfileSideEffect.ShowSnackBar("반려견 정보가 수정되었습니다"))

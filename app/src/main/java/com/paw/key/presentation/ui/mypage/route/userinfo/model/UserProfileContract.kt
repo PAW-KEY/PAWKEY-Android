@@ -4,14 +4,16 @@ import androidx.compose.runtime.Immutable
 
 @Immutable
 data class UserProfileState(
-    val name: String = "김도기",
-    val gender: String = "여성",
-    val email: String = "",
-    val birth: String = ""
+    val name: String = "",
+    val birth: String = "",
+    val gender: String = "",
+    val age: Int = 0,
+    val activeRegion: String = "",
+    val isLoading: Boolean = false,
 )
 
-sealed class UserProfileSideEffect{
-    data class ShowSnackBar(val message: String) : UserProfileSideEffect()
-    data object NavigateUp : UserProfileSideEffect()
-    data object NavigateNext : UserProfileSideEffect()
+sealed interface UserProfileSideEffect {
+    data class ShowSnackBar(val message: String) : UserProfileSideEffect
+    data object NavigateUp : UserProfileSideEffect
+    data object NavigateNext : UserProfileSideEffect
 }
