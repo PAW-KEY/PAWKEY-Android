@@ -32,7 +32,7 @@ sealed interface CourseInfoSideEffect {
 }
 
 
-fun RoutePostEntity.toCourseData() = CourseData(
+fun RoutePostEntity.toUiModel() = CourseData(
     postId    = postId,
     location  = regionName,
     title     = title,
