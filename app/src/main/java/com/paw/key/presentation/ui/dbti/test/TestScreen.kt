@@ -17,16 +17,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import androidx.compose.material3.Text
 import com.paw.key.core.designsystem.component.DokiButton
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.paw.key.core.designsystem.component.DokiButton
+import com.paw.key.core.designsystem.component.LoadingScreen
 import com.paw.key.core.designsystem.component.TopBar
 import com.paw.key.core.designsystem.theme.PawKeyTheme
 import com.paw.key.presentation.ui.dbti.component.SelectCard
-import com.paw.key.presentation.ui.dbti.test.model.TestOptionModel
 import com.paw.key.presentation.ui.dbti.test.state.TestUiState
 import com.paw.key.presentation.ui.dbti.test.viewmodel.TestViewModel
 
@@ -117,7 +114,7 @@ fun TestScreen(
             }
         }
         else -> {
-            // TODO: 나중에 로딩/에러 처리
+            LoadingScreen()
         }
     }
 }

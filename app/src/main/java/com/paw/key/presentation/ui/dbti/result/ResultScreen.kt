@@ -7,6 +7,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.paw.key.core.designsystem.component.DokiBorderButton
 import com.paw.key.core.designsystem.component.DokiButton
 import com.paw.key.core.designsystem.component.TopBar
 import com.paw.key.core.designsystem.theme.PawKeyTheme
@@ -62,12 +63,11 @@ fun ResultScreen(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-                DokiButton(
+                DokiBorderButton(
                     text = "다시 테스트하기",
                     onClick = onRetakeTest,
                     modifier = Modifier.weight(1f),
                     enabled = true
-                    // TODO: 버튼 바꾸기
                 )
 
                 DokiButton(
