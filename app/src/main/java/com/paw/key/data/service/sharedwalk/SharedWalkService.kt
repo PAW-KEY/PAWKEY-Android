@@ -2,7 +2,6 @@ package com.paw.key.data.service.sharedwalk
 
 import com.paw.key.data.dto.request.sharedwalk.SharedWalkReviewRequestDto
 import com.paw.key.data.dto.response.BaseResponse
-import com.paw.key.data.dto.response.sharedwalk.SharedWalkResponseDto
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Header
@@ -14,7 +13,7 @@ interface SharedWalkService {
     suspend fun getSharedWalkTrack(
         @Header("X-USER-ID") userId: Int,
         @Path("routeId") routeId: Int,
-    ) : BaseResponse<SharedWalkResponseDto>
+    ) : BaseResponse<Unit>
 
     @POST("reviews")
     suspend fun postSharedWalkReview(

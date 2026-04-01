@@ -4,6 +4,7 @@ import android.graphics.Bitmap
 import androidx.compose.runtime.Immutable
 import com.naver.maps.geometry.LatLng
 import com.paw.key.core.util.UiState
+import com.paw.key.domain.entity.walk.WalkPoint
 import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.persistentListOf
 
@@ -17,3 +18,15 @@ data class MapState(
     val shouldCaptureMap: Boolean = false,
     val capturedMapBitmap: Bitmap? = null
 )
+
+fun LatLng.toEntity(
+    routeId: String,
+    timestamp: Int
+): WalkPoint {
+    return WalkPoint(
+        routeId = routeId,
+        lat = this.latitude,
+        lng = this.longitude,
+        timestamp = timestamp
+    )
+}

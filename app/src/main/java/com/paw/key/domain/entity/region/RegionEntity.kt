@@ -1,8 +1,8 @@
 package com.paw.key.domain.entity.region
 
 data class RegionDataEntity(
-    val regionName: String,
-    val preRegionName : String,
+    val regionId: Int,
+    val regionName : String,
     val geometry: GeometryEntity
 )
 

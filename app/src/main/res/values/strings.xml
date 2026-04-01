@@ -29,7 +29,7 @@
     <string name="ic_onboadring_pager_title3">기록한 산책길을 이웃과 나누세요</string>
     <string name="ic_onboadring_pager_title4">공유된 산책길을 따라 걸어보세요</string>
 
-    <string name="ic_onboarding_pager_subtext1">DOGKY와 즐거운 산책을 시작해봐요!</string>
+    <string name="ic_onboarding_pager_subtext1">DOKI와 즐거운 산책을 시작해봐요!</string>
     <string name="ic_onboarding_pager_subtext2">산책의 거리, 분위기, 활동 등을 카테고리에 따라\n특별한 일상으로 저장할 수 있어요</string>
     <string name="ic_onboarding_pager_subtext3">내가 걸었던 루트를 공유하고\n다른 보호자들과 함께 즐길 수 있어요</string>
     <string name="ic_onboarding_pager_subtext4">이웃들이 남긴 루프를 걸으며\n해당 루트에 대한 유용한 정보를 얻을 수 있어요</string>

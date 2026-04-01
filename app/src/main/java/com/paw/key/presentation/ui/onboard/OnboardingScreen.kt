@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Icon
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -22,6 +23,7 @@ import androidx.compose.ui.unit.dp
 import com.paw.key.R
 import com.paw.key.core.designsystem.component.DokiButton
 import com.paw.key.core.designsystem.theme.PawKeyTheme
+import com.paw.key.core.extension.noRippleClickable
 import com.paw.key.presentation.ui.onboard.component.OnboardPager
 import com.paw.key.presentation.ui.onboard.component.OnboardingPosting
 
@@ -78,19 +80,20 @@ fun OnboardingScreen(
         Spacer(modifier = Modifier.height(40.dp))
 
         Icon(
-            imageVector = ImageVector.vectorResource(id = R.drawable.ic_onboard_main_logo),
+            imageVector = ImageVector.vectorResource(id = R.drawable.ic_logo),
             contentDescription = stringResource(id = R.string.ic_onboarding_top_icon),
             tint = Color.Unspecified
         )
 
-        Spacer(modifier = Modifier.height(13.dp))
+        Spacer(modifier = Modifier.height(40.dp))
 
         OnboardPager(
             jobList = listOf(
                 OnboardingPosting(
                     title = stringResource(id = R.string.ic_onboadring_pager_title1),
                     subtitle = stringResource(id = R.string.ic_onboarding_pager_subtext1),
-                    backImg = R.drawable.img_onboarding_1
+                    backImg = R.drawable.doki_welcome,
+                    isLarge = true
                 ),
                 OnboardingPosting(
                     title = stringResource(id = R.string.ic_onboadring_pager_title2),
@@ -100,18 +103,31 @@ fun OnboardingScreen(
                 OnboardingPosting(
                     title = stringResource(id = R.string.ic_onboadring_pager_title3),
                     subtitle = stringResource(id = R.string.ic_onboarding_pager_subtext3),
-                    backImg = R.drawable.img_onboarding_2
+                    backImg = R.drawable.img_onboarding_3
                 ),
                 OnboardingPosting(
                     title = stringResource(id = R.string.ic_onboadring_pager_title4),
                     subtitle = stringResource(id = R.string.ic_onboarding_pager_subtext4),
-                    backImg = R.drawable.img_onboarding_2
+                    backImg = R.drawable.img_onboarding_4
                 ),
-            )
+            ),
+            modifier = Modifier.weight(1f)
         )
 
+        Spacer(modifier = Modifier.height(26.dp))
+
+        Text (
+            text = "건너뛰기",
+            style = PawKeyTheme.typography.subButtonActive,
+            color = PawKeyTheme.colors.defaultDark,
+            modifier = Modifier
+                .noRippleClickable(onClick = navigateSignUp)
+        )
+
+        Spacer(modifier = Modifier.height(8.dp))
+
         DokiButton(
-            text = stringResource(id = R.string.ic_onboarding_button),
+            text = "시작하기",
             enabled = true,
             onClick = navigateNext,
             modifier = Modifier

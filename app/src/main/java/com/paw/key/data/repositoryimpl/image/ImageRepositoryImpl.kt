@@ -5,6 +5,7 @@ import com.paw.key.data.dto.image.presigned.toDto
 import com.paw.key.data.dto.image.register.toDto
 import com.paw.key.data.remote.datasource.image.ImageDataSource
 import com.paw.key.data.remote.datasource.image.ImageLocalDataSource
+import com.paw.key.data.remote.datasource.image.S3DataSource
 import com.paw.key.domain.entity.image.ImageDomainType
 import com.paw.key.domain.entity.image.ImagePresignedEntity
 import com.paw.key.domain.entity.image.ImagePresignedResultEntity
@@ -13,10 +14,12 @@ import com.paw.key.domain.entity.image.ImageRegisterResultEntity
 import com.paw.key.domain.repository.image.ImageRepository
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody.Companion.asRequestBody
+import timber.log.Timber
 import javax.inject.Inject
 
 class ImageRepositoryImpl @Inject constructor(
     private val imageDataSource: ImageDataSource,
+    private val s3DataSource: S3DataSource,
     private val imageLocalDataSource: ImageLocalDataSource
 ) : ImageRepository {
     override suspend fun registerImage(
@@ -24,25 +27,33 @@ class ImageRepositoryImpl @Inject constructor(
         domainType: ImageDomainType,
     ): Result<ImageRegisterResultEntity> =
         suspendRunCatching{
-            val optimizedFile = imageLocalDataSource.getOptimizedFile(uriString.split("#").last())
+            val parts = uriString.split("#")
+            val remoteImageUrl = parts.first()
+            val localUriString = parts.last()
+            Timber.e("registerImage: $parts")
+
+            val optimizedFile = imageLocalDataSource.getOptimizedFile(localUriString)
             val (width, height) = imageLocalDataSource.getImageSize(optimizedFile)
 
             try {
                 val registerEntity = ImageRegisterEntity(
-                    imageUrl = uriString.split("#").first(),
-                    contentType = optimizedFile.extension,
+                    imageUrl = remoteImageUrl,
+                    contentType = "image/${optimizedFile.extension}",
                     width = width,
                     height = height,
                     domain = domainType
                 )
 
                 imageDataSource.registerImage(
-                    dto = registerEntity
-                        .copy().toDto()
+                    dto = registerEntity.toDto()
                 ).data.toEntity()
 
             } finally {
-                imageLocalDataSource.clearCache()
+                imageLocalDataSource.deleteOriginalUri(uriString)
+
+                if (optimizedFile.exists()) {
+                    optimizedFile.delete()
+                }
             }
         }
 
@@ -61,13 +72,13 @@ class ImageRepositoryImpl @Inject constructor(
 
         val requestBody = file.asRequestBody("image/webp".toMediaTypeOrNull())
 
-        val response = imageDataSource.uploadS3(presignedUrl, requestBody)
-
-        imageLocalDataSource.clearCache()
+        val response = s3DataSource.uploadS3(presignedUrl, requestBody)
 
         if (!response.isSuccessful) {
             throw Exception("S3 Upload Failed: ${response.code()}")
         }
+
+        imageLocalDataSource.clearCache()
     }
 
 }

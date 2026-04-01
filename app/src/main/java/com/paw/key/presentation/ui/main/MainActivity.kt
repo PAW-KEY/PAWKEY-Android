@@ -28,7 +28,7 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             PawKeyTheme {
-                MainRoute()
+                MainScreen()
             }
         }
     }

@@ -6,12 +6,14 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -20,21 +22,20 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.dropShadow
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.shadow.Shadow
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import coil.compose.AsyncImage
 import com.paw.key.R
 import com.paw.key.core.designsystem.component.DokiButton
 import com.paw.key.core.designsystem.component.TopBar
+import com.paw.key.core.designsystem.component.UrlImage
 import com.paw.key.core.designsystem.theme.PawKeyTheme
 import com.paw.key.presentation.ui.course.walkcourse.component.WalkRecordItem
-import com.paw.key.presentation.ui.course.walkcourse.model.WalkInfoState
+import com.paw.key.presentation.ui.course.walkcourse.walkcomplete.model.WalkInfoModel
 import com.paw.key.presentation.ui.course.walkcourse.walkcomplete.state.WalkCompleteState
 
 // Todo : 나중에 서버에서 줌
@@ -93,15 +94,13 @@ private fun WalkCompleteScreen(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 // 프로필사진
-                /*AsyncImage(
-                    model = "",
-                    contentDescription = null,
+                UrlImage(
+                    url = "",
                     modifier = Modifier
-                        .clip(CircleShape)
-                        .background(
-                            color = PawKeyTheme.colors.defaultMiddle
-                        )
-                )*/
+                        .size(36.dp)
+                        .aspectRatio(1f)
+                        .clip(RoundedCornerShape(50.dp))
+                )
 
                 Spacer(modifier = Modifier.width(10.dp))
 
@@ -121,26 +120,37 @@ private fun WalkCompleteScreen(
             }
 
             // 지도 사진
+            UrlImage(
+                url = "",
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .fillMaxHeight(0.87f)
+                    .padding(horizontal = 16.dp)
+                    .clip(RoundedCornerShape(16.dp))
+            )
 
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 32.dp, start = 16.dp, end = 16.dp),
+                    .padding(horizontal = 16.dp, vertical = 14.dp),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceAround
             ) {
-                WalkRecordItem(
-                    recordTitle = R.string.course_record_distance,
-                    recordContent = state.walkInfo.distanceMeters.toString()
-                )
-                WalkRecordItem(
-                    recordTitle = R.string.course_record_time,
-                    recordContent = state.walkInfo.timeMillis.toString()
-                )
-                WalkRecordItem(
-                    recordTitle = R.string.course_record_step,
-                    recordContent = state.walkInfo.stepCount.toString()
-                )
+                with(state.walkCompleteFinishInfo) {
+                    WalkRecordItem(
+                        recordTitle = R.string.course_record_distance,
+                        recordContent = distance.toString()
+                    )
+                    WalkRecordItem(
+                        recordTitle = R.string.course_record_time,
+                        recordContent = duration.toString()
+                    )
+                    WalkRecordItem(
+                        recordTitle = R.string.course_record_step,
+                        recordContent = stepCount.toString()
+                    )
+                }
             }
         }
 
@@ -165,10 +175,10 @@ private fun WalkCompletePreview() {
         WalkCompleteScreen(
             paddingValues = PaddingValues(),
             state = WalkCompleteState(
-                walkInfo = WalkInfoState(
-                    distanceMeters = 1000f,
-                    timeMillis = 1000L,
-                    stepCount = 1
+                walkCompleteFinishInfo = WalkInfoModel(
+                    distance = 1000,
+                    duration = 1000,
+                    stepCount = 1000
                 )
             )
         )

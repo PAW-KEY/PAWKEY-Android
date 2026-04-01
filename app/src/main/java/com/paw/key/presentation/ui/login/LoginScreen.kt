@@ -1,5 +1,6 @@
 package com.paw.key.presentation.ui.login
 
+import android.app.Activity
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -10,6 +11,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
@@ -76,7 +78,7 @@ fun LoginRoute(
     LoginScreen(
         paddingValues = paddingValues,
         onGoogleSignIn = {
-            viewModel.onGoogleSignIn(context = context, onSuccess = navigateHome)
+            viewModel.onGoogleSignIn(context = context as Activity)
         },
         onKakaoSignIn = {
             viewModel.onKakaoSignIn(context = context)
@@ -139,7 +141,11 @@ fun LoginScreen(
                 Image(
                     painter = painterResource(R.drawable.img_login_sub),
                     contentDescription = stringResource(R.string.ic_login_sub_image),
-                    contentScale = ContentScale.Crop,
+                    contentScale = ContentScale.Fit,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(34.dp)
+                        .padding(horizontal = 100.dp)
                 )
 
                 LoginSocialButton(
@@ -178,7 +184,7 @@ fun LoginScreen(
             modifier = Modifier
                 .size(370.dp)
                 .align(Alignment.CenterEnd)
-                .offset(x = 70.dp),
+                .offset(x = 10.dp)
         )
     }
 }

@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -25,7 +24,8 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.paw.key.R
 import com.paw.key.core.designsystem.theme.PawKeyTheme
-import com.paw.key.presentation.ui.splash.state.SplashContract
+import com.paw.key.core.extension.collectSingleEvent
+import com.paw.key.presentation.ui.splash.state.SplashSideEffect
 import com.paw.key.presentation.ui.splash.viewmodel.SplashViewModel
 
 @Preview(showBackground = true)
@@ -43,10 +43,10 @@ private fun PreviewSplashScreen() {
 fun SplashRoute(
     paddingValues: PaddingValues,
     navigateLogin: () -> Unit,
+    navigateToHome: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: SplashViewModel = hiltViewModel(),
 ) {
-    val effectFlow = viewModel.sideeffect
     val statusBarColor = PawKeyTheme.colors.green500
 
     val context = LocalContext.current
@@ -64,11 +64,11 @@ fun SplashRoute(
         }
     }
 
-    LaunchedEffect(Unit) {
-        effectFlow.collect { effect ->
-            when (effect) {
-                is SplashContract.SplashSideEffect.NavigateToLogin -> navigateLogin()
-            }
+    viewModel.sideEffect.collectSingleEvent {
+        when (it) {
+            SplashSideEffect.NavigateToLogin -> navigateLogin()
+
+            SplashSideEffect.NavigateToHome -> navigateToHome()
         }
     }
 

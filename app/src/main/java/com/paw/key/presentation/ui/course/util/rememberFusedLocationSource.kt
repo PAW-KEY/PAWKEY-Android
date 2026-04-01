@@ -10,7 +10,10 @@ import androidx.annotation.UiThread
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.app.ActivityCompat
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -28,6 +31,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -76,9 +80,10 @@ fun rememberCustomFusedLocationSource(
         FusedLocationSource(context, fusedLocationClient, useTestPoints)
     }
 
+    var hasMovedToInitialLocation by remember { mutableStateOf(false) }
+
     LaunchedEffect(hasLocationPermission) {
-        if (hasLocationPermission) {
-            Log.d("rememberCustomFusedLocationSource", "hasLocationPermission: $hasLocationPermission")
+        if (hasLocationPermission && !hasMovedToInitialLocation) {
             if (ActivityCompat.checkSelfPermission(
                     context,
                     Manifest.permission.ACCESS_FINE_LOCATION
@@ -92,9 +97,11 @@ fun rememberCustomFusedLocationSource(
 
             fusedLocationClient.lastLocation.addOnSuccessListener { location ->
                 location?.let {
-                    Log.d("rememberCustomFusedLocationSource", "lastLocation: $it")
+                    /*Log.d("rememberCustomFusedLocationSource", "lastLocation: $it")
                     val latLng = LatLng(it.latitude, it.longitude)
-                    cameraPositionState.move(CameraUpdate.scrollTo(latLng))
+                    cameraPositionState.move(CameraUpdate.scrollTo(latLng))*/
+                    cameraPositionState.move(CameraUpdate.scrollTo(LatLng(it.latitude, it.longitude)))
+                    hasMovedToInitialLocation = true
                 }
             }
         }
@@ -118,7 +125,7 @@ class FusedLocationSource(
     private var isListening = false
 
     // 테스트를 위한 코루틴
-    private val coroutineScope = CoroutineScope(Dispatchers.Main + SupervisorJob())
+    private var coroutineScope: CoroutineScope? = null
     private var simulationJob: Job? = null
 
     private val locationCallback = object : LocationCallback() {
@@ -168,6 +175,7 @@ class FusedLocationSource(
         if (!isListening) {
             isListening = true
             if (useTestPoints) {
+                coroutineScope = CoroutineScope(Dispatchers.Main + SupervisorJob())
                 startSimulation()
             } else {
                 startRealLocationUpdates()
@@ -176,7 +184,7 @@ class FusedLocationSource(
     }
 
     private fun startSimulation() {
-        simulationJob = coroutineScope.launch {
+        simulationJob = coroutineScope?.launch {
             for (point in testPoints) {
                 val mockLocation = Location("TestProvider").apply {
                     latitude = point.latitude
@@ -213,6 +221,8 @@ class FusedLocationSource(
     override fun deactivate() {
         if (isListening) {
             if (useTestPoints) {
+                coroutineScope?.cancel()
+                coroutineScope = null
                 simulationJob?.cancel()
             } else {
                 fusedLocationClient.removeLocationUpdates(locationCallback)
@@ -224,9 +234,9 @@ class FusedLocationSource(
     }
 
     companion object {
-        private val locationRequest =
-            LocationRequest.Builder(1000)
-                .setPriority(Priority.PRIORITY_HIGH_ACCURACY)
-                .build()
+        private val locationRequest = LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, 2000L).apply {
+            setMinUpdateIntervalMillis(1000L)
+            setMinUpdateDistanceMeters(2.0f)
+        }.build()
     }
 }

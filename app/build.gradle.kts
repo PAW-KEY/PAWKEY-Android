@@ -26,13 +26,14 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         buildConfigField("String", "BASE_URL", properties["base.url"].toString())
+        buildConfigField("String", "DEBUG_BASE_URL", properties["debug.base.url"].toString())
+
+        buildConfigField("String", "DEBUG_BASE_URL", properties["debug.base.url"].toString())  // ✅ 여기로
         buildConfigField("String", "KAKAO_NATIVE_KEY", properties["kakao.native.key"].toString())
         buildConfigField("String", "KAKAO_REST_API_KEY", properties["kakao.rest.api"].toString())
         buildConfigField("String", "NAVERMAP_CLIENT_SECRET", properties["NAVERMAP_CLIENT_SECRET"].toString())
         buildConfigField("String", "NAVERMAP_CLIENT_ID", properties["NAVERMAP_CLIENT_ID"].toString())
-        buildConfigField("String","GOOGLE_WEB_CLIENT_ID",properties["google.client.id"].toString())
-        buildConfigField("String", "DEBUG_BASE_URL", properties["debug.base.url"].toString())
-
+        buildConfigField("String", "GOOGLE_WEB_CLIENT_ID", properties["google.client.id"].toString())
 
         manifestPlaceholders["KAKAO_NATIVE_KEY"] = properties["kakao.native.key"].toString()
     }
@@ -61,14 +62,6 @@ android {
     buildFeatures {
         compose = true
         buildConfig = true
-    }
-    signingConfigs {
-        getByName("debug") {
-            keyAlias = "androiddebugkey"
-            keyPassword = "android"
-            storeFile = File("${project.rootDir.absolutePath}/keystore/debug.keystore")//project.rootProject.file("debug.keystore")
-            storePassword = "android"
-        }
     }
 }
 

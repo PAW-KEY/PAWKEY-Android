@@ -446,8 +446,8 @@ fun pawKeyTypography(): PawKeyTypography {
             letterSpacing = 0.em
         ),
         subButtonActive = pawKeyTextStyle(
-            fontFamily = PretendardSemiBold,
-            fontWeight = FontWeight.SemiBold,
+            fontFamily = PretendardMedium,
+            fontWeight = FontWeight.Medium,
             fontSize = 12.sp,
             lineHeight = 16.sp,
             letterSpacing = 0.em

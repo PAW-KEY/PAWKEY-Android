@@ -22,12 +22,6 @@ import kotlinx.collections.immutable.toImmutableList
 
 @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
 @Composable
-fun MainRoute() {
-    MainScreen()
-}
-
-@RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
-@Composable
 fun MainScreen(
     navigator: MainNavigator = rememberMainNavigator(),
 ) {
