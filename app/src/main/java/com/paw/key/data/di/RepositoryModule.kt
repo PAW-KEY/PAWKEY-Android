@@ -10,6 +10,7 @@ import com.paw.key.data.remote.datasource.mypage.MypageDataSource
 import com.paw.key.data.remote.datasource.mypage.MypageDataSourceImpl
 import com.paw.key.data.repository.mypage.MypageRepositoryImpl
 import com.paw.key.data.repositoryimpl.ArchivedListRepositoryImpl
+import com.paw.key.data.repositoryimpl.DbtiRepositoryImpl
 import com.paw.key.data.repositoryimpl.LikeRepositoryImpl
 import com.paw.key.data.repositoryimpl.RegionRepositoryImpl
 import com.paw.key.data.repositoryimpl.SavedListRepositoryImpl
@@ -24,6 +25,7 @@ import com.paw.key.data.repositoryimpl.user.UserRepositoryImpl
 import com.paw.key.data.repositoryimpl.walk.WalkRepositoryImpl
 import com.paw.key.data.repositoryimpl.walkpreparation.WalkPreparationRepositoryImpl
 import com.paw.key.domain.repository.ArchivedListRepository
+import com.paw.key.domain.repository.DbtiRepository
 import com.paw.key.domain.repository.LikeRepository
 import com.paw.key.domain.repository.RegionRepository
 import com.paw.key.domain.repository.SavedListRepository
@@ -165,4 +167,11 @@ interface RepositoryModule {
         impl: WalkRepositoryImpl
     ) : WalkRepository
 
+
+    //DBTI
+    @Binds
+    @Singleton
+    abstract fun bindDbtiRepository(
+        dbtiRepositoryImpl: DbtiRepositoryImpl
+    ): DbtiRepository
 }

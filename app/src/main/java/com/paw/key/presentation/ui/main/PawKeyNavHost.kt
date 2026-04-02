@@ -27,6 +27,7 @@ import com.paw.key.presentation.ui.onboard.navigation.onboardingNavGraph
 import com.paw.key.presentation.ui.region.navigation.regionalNavGraph
 import com.paw.key.presentation.ui.signup.navigation.signUpNavGraph
 import com.paw.key.presentation.ui.splash.navigation.splashNavGraph
+import com.paw.key.presentation.ui.dbti.navigation.dbtiNavGraph
 
 @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
 @Composable
@@ -111,6 +112,11 @@ fun PawKeyNavHost(
             snackBarHostState = snackbarHostState
         )
 
+        dbtiNavGraph(
+            navController = navigator.navController,
+            navigateUp = navigator::navigateUp
+        )
+
         myPageNavGraph(
             paddingValues = paddingValues,
             navigateUp = navigator::navigateUp,
@@ -193,7 +199,7 @@ fun PawKeyNavHost(
             },
             // Todo: Home 으로 수정
             navigateHome = {
-                navigator.navigateHome(clearStackNavOptions)
+                navigator.navigateSignUp(clearStackNavOptions)
             },
             snackBarHostState = snackbarHostState
         )
