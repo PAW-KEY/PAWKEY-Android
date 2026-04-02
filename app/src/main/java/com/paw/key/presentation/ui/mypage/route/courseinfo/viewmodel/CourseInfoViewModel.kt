@@ -10,6 +10,7 @@ import com.paw.key.presentation.ui.mypage.route.courseinfo.model.CourseInfoSideE
 import com.paw.key.presentation.ui.mypage.route.courseinfo.model.CourseInfoState
 import com.paw.key.presentation.ui.mypage.route.courseinfo.model.CourseType
 import com.paw.key.presentation.ui.mypage.route.courseinfo.model.toCourseData
+import com.paw.key.presentation.ui.mypage.route.courseinfo.model.toUiModel
 import com.paw.key.presentation.ui.mypage.route.courseinfo.navigation.CourseInfoNavRoute
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -43,8 +44,8 @@ class CourseInfoViewModel @Inject constructor(
             _state.update { it.copy(courses = UiState.Loading) }
 
             val result = when (courseType) {
-                CourseType.MyCourse     -> mypageRepository.getMyRoutes().map { list -> list.map { it.toCourseData() } }
-                CourseType.AllCourse    -> mypageRepository.getLikedPosts().map { list -> list.map { it.toCourseData() } }
+                CourseType.MyCourse     -> mypageRepository.getMyRoutes().map { list -> list.map { it.toUiModel() } }
+                CourseType.AllCourse    -> mypageRepository.getLikedPosts().map { list -> list.map { it.toUiModel() } }
                 CourseType.ReviewCourse -> mypageRepository.getMyReviews().map { list -> list.map { it.toCourseData() } }
             }
 

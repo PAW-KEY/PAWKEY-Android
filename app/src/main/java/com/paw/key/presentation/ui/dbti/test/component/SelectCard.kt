@@ -2,7 +2,13 @@ package com.paw.key.presentation.ui.dbti.component
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -22,12 +28,11 @@ import com.paw.key.core.extension.noRippleClickable
 
 @Composable
 fun SelectCard(
+    text: String,
     imageUrl: String?,
-    topText: String,
-    bottomText: String,
-    isSelected: Boolean = false,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
+    isSelected: Boolean = false,
 ) {
     val backgroundColor = if (isSelected) {
         PawKeyTheme.colors.opacity5Primary
@@ -55,7 +60,7 @@ fun SelectCard(
 
     Column(
         modifier = modifier
-            .aspectRatio(159.5f / 219.31f) // 비율로 크기 조정
+            .aspectRatio(8f / 11f)
             .clip(RoundedCornerShape(8.dp))
             .background(backgroundColor)
             .border(
@@ -80,30 +85,13 @@ fun SelectCard(
             contentScale = ContentScale.Crop
         )
 
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
-        ) {
-            Text(
-                text = topText,
-                color = textColor,
-                style = textStyle,
-                textAlign = TextAlign.Center,
-                maxLines = 1,
-                modifier = Modifier.fillMaxWidth()
-            )
-
-            Spacer(modifier = Modifier.height(2.dp))
-
-            Text(
-                text = bottomText,
-                color = textColor,
-                style = textStyle,
-                textAlign = TextAlign.Center,
-                maxLines = 1,
-                modifier = Modifier.fillMaxWidth()
-            )
-        }
+        Text(
+            text = text,
+            color = textColor,
+            style = textStyle,
+            textAlign = TextAlign.Center,
+            modifier = Modifier.fillMaxWidth()
+        )
     }
 }
 
@@ -116,21 +104,19 @@ private fun SelectionCardPreview() {
             horizontalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             SelectCard(
+                text = "잠깐 눈치만 보고\n거리를 유지해요",
                 imageUrl = null,
-                topText = "잠깐 눈치만 보고",
-                bottomText = "거리를 유지해요",
-                isSelected = false,
                 onClick = {},
-                modifier = Modifier.weight(1f)
+                modifier = Modifier.weight(1f),
+                isSelected = false
             )
 
             SelectCard(
+                text = "먼저 다가가서\n인사하고 놀자고 해요",
                 imageUrl = null,
-                topText = "먼저 다가가서",
-                bottomText = "인사하고 놀자고 해요",
-                isSelected = true,
                 onClick = {},
-                modifier = Modifier.weight(1f)
+                modifier = Modifier.weight(1f),
+                isSelected = true
             )
         }
     }

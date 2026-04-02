@@ -1,6 +1,7 @@
 package com.paw.key.data.di
 
 import com.paw.key.data.service.ArchivedListService
+import com.paw.key.data.service.DbtiService
 import com.paw.key.data.service.LikeService
 import com.paw.key.data.service.SavedListService
 import com.paw.key.data.service.auth.ReissueService
@@ -79,6 +80,7 @@ object ServiceModule {
     fun provideImageS3Service(@Named("s3") retrofit: Retrofit): S3Service =
         retrofit.create()
 
+    // 리뷰
     @Provides
     @Singleton
     fun provideWalkPreparationService(retrofit: Retrofit): WalkPreparationService =
@@ -103,5 +105,10 @@ object ServiceModule {
     @Provides
     @Singleton
     fun provideMypageService(retrofit: Retrofit): MypageService =
+        retrofit.create()
+
+    @Provides
+    @Singleton
+    fun provideDbtiService(retrofit: Retrofit): DbtiService =
         retrofit.create()
 }
