@@ -10,20 +10,27 @@ import com.paw.key.presentation.ui.detail.DetailRoute
 import kotlinx.serialization.Serializable
 
 fun NavController.navigateDetail(
-    navOptions: NavOptions?
+    navOptions: NavOptions?,
+    postId: Int,
 ) {
-    navigate(Detail, navOptions)
+    navigate(Detail(postId), navOptions)
 }
 
 fun NavGraphBuilder.detailNavGraph(
     paddingValues: PaddingValues,
+    navigateToSharedCourse: (routeId: String, isShared: Boolean) -> Unit,
 ) {
     composable<Detail> {
         DetailRoute(
             paddingValues = paddingValues,
+            navigateToSharedCourse = {
+                navigateToSharedCourse(it, true)
+            }
         )
     }
 }
 
 @Serializable
-data object Detail : Route
+data class Detail(
+    val postId : Int
+) : Route

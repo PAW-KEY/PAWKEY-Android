@@ -46,38 +46,32 @@ import com.paw.key.presentation.ui.detail.component.DetailImageHolder
 import com.paw.key.presentation.ui.detail.component.DetailTopReview
 import com.paw.key.presentation.ui.detail.component.DokiDeleteButton
 import com.paw.key.presentation.ui.detail.component.FilterChipDivider
-import kotlinx.collections.immutable.persistentListOf
 
 @Composable
 fun DetailRoute(
     paddingValues: PaddingValues,
+    navigateToSharedCourse: (routeId: String) -> Unit = {},
     viewModel: DetailViewModel = hiltViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
 
     DetailScreen(
         paddingValues = paddingValues,
-        state = state
+        state = state,
+        navigateToSharedCourse = navigateToSharedCourse
     )
 }
 @Composable
 private fun DetailScreen(
     paddingValues: PaddingValues,
-    state: DetailState
+    state: DetailState,
+    navigateToSharedCourse: (routeId: String) -> Unit = {}
 ) {
     var isExpanded by remember { mutableStateOf(false) }
 
-    // Todo : 서버 내용으로 변경
-    val allItems = listOf(
-        "중요도 낮음", "교육행정", "보도/자료 분석", "보도 일정",
-        "키보드/자판자 공지", "의전 방문", "행사", "비밀 방문 쓰여기둥",
-        "현미경", "번역본 용어 번역", "간단한", "공연", "프로젝트",
-        "농이티/관리"
-    )
-
     val maxVisibleItems = 5
-    val visibleItems = if (isExpanded) allItems else allItems.take(maxVisibleItems)
-    val hiddenCount = allItems.size - maxVisibleItems
+    val visibleItems = if (isExpanded) state.postDetail.categoryTagTexts else state.postDetail.categoryTagTexts.take(maxVisibleItems)
+    val hiddenCount = state.postDetail.categoryTagTexts.size - maxVisibleItems
 
     Column(
         modifier = Modifier
@@ -94,7 +88,7 @@ private fun DetailScreen(
                 .fillMaxSize()
         ) {
             UrlImage(
-                url = "",
+                url = state.postDetail.routeDisplay.routeImageUrl,
                 modifier = Modifier
                     .fillMaxWidth()
                     .fillMaxHeight(0.4f)
@@ -121,7 +115,7 @@ private fun DetailScreen(
                     )
             ) {
                 Text(
-                    text = "단지와 룰루랄라 룰루랄라 룰루랄라",
+                    text = state.postDetail.title,
                     style = PawKeyTheme.typography.header3,
                     color = PawKeyTheme.colors.contents,
                     modifier = Modifier.padding(16.dp)
@@ -139,14 +133,14 @@ private fun DetailScreen(
                     horizontalArrangement = Arrangement.spacedBy(10.dp),
                 ) {
                     UrlImage(
-                        url = "",
+                        url = state.postDetail.authorInfo.petProfileImage,
                         modifier = Modifier
                             .size(43.dp)
                             .clip(RoundedCornerShape(50.dp))
                     )
 
                     Text(
-                        text = "단지",
+                        text = state.postDetail.authorInfo.petName,
                         style = PawKeyTheme.typography.subTitle,
                         color = PawKeyTheme.colors.defaultDark
                     )
@@ -160,7 +154,7 @@ private fun DetailScreen(
 
                 WalkReviewInfoHolder(
                     icon = R.drawable.ic_walk_review_location,
-                    content = "서울시 강남구 역삼동",
+                    content = state.postDetail.routeDisplay.locationText,
                     modifier = Modifier
                         .padding(top = 8.dp)
                         .padding(horizontal = 16.dp)
@@ -168,14 +162,14 @@ private fun DetailScreen(
 
                 WalkReviewInfoHolder(
                     icon = R.drawable.ic_walk_review_time,
-                    content = "2025.10.11 | 오후 11:30",
+                    content = state.postDetail.routeDisplay.dateTimeText,
                     modifier = Modifier
                         .padding(horizontal = 16.dp)
                 )
 
                 WalkReviewInfoHolder(
                     icon = R.drawable.ic_walk_review_course_info,
-                    content = "2025.10.11 | 오후 11:30 | 걸음수",
+                    content = state.postDetail.routeDisplay.metaTagTexts.joinToString(separator = " | "),
                     modifier = Modifier
                         .padding(bottom = 8.dp)
                         .padding(horizontal = 16.dp)
@@ -220,15 +214,14 @@ private fun DetailScreen(
                 )
 
                 DetailImageHolder(
-                    imageUrls = persistentListOf("", "", "", ""),
+                    imageUrls = state.postDetail.walkImages,
                     modifier = Modifier
                         .padding(horizontal = 16.dp)
                         .padding(top = 20.dp, bottom = 12.dp)
                 )
 
                 Text(
-                    text = "후기 글 본문 후기 글 본문 후기 글 본문ㅇ\n" +
-                            "후기 글 본문 후기 글 본문 후기 글 본문ㅇ후기 글 본문 후기 글 본문 후기 글 본문ㅇ후기 글 본문 후기 글 본문 후기 글 본문ㅇ후기 글 본문 후기 글 본문 후기 글 본문ㅇ후기 글 본문 후기 글 본문 후기 글 본문ㅇ후기 글 본문 후기 글 본문 후기 글 본문ㅇ후기 글 본문 후기 글 본문 후기 글 본문ㅇ후기 글 본문 후기 글 본문 후기 글 본문ㅇ후기 글 본문 후기 글 본문 후기 글 본문ㅇ",
+                    text = state.postDetail.description,
                     color = PawKeyTheme.colors.contents,
                     style = PawKeyTheme.typography.bodyDefault,
                     modifier = Modifier.padding(horizontal = 16.dp)
@@ -248,8 +241,8 @@ private fun DetailScreen(
                 )
 
                 DetailTopReview(
-                    reviewCount = 30,
-                    isShared = true
+                    reviewData = state.reviewDetail,
+                    isShared = state.postDetail.isPublic
                 )
 
                 Spacer(
@@ -273,8 +266,7 @@ private fun DetailScreen(
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    // Todo : State의 isMine으로 설정하기
-                    if (state.isMine) {
+                    if (state.postDetail.isMine) {
                         DokiDeleteButton(
                             text = "삭제하기",
                             onClick = {},
@@ -290,7 +282,9 @@ private fun DetailScreen(
                         DokiButton(
                             text = "해당 루트로 산책하기",
                             enabled = true,
-                            onClick = {},
+                            onClick = {
+                                navigateToSharedCourse(state.postDetail.routeDisplay.routeId.toString())
+                            },
                             modifier = Modifier.weight(1f)
                         )
                     }
