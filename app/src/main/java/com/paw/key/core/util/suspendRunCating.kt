@@ -5,7 +5,7 @@ import kotlinx.coroutines.ensureActive
 import kotlin.coroutines.cancellation.CancellationException
 import kotlin.coroutines.coroutineContext
 
-suspend fun <R> suspendRunCatching(block: suspend () -> R): Result<R> {
+suspend inline fun <R> suspendRunCatching(block: suspend () -> R): Result<R> {
     return try {
         Result.success(block())
     } catch (t: TimeoutCancellationException) {
