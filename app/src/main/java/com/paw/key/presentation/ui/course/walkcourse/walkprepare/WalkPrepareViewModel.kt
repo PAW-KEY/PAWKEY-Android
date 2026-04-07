@@ -34,6 +34,30 @@ class WalkPrepareViewModel @Inject constructor(
 
     init {
         fetchWalkPreparationMessage()
+        fetchWalkPreparation()
+    }
+
+    fun fetchWalkPreparation() {
+        viewModelScope.launch {
+            preparationRepository.getWalkPreparation()
+                .onSuccess { result ->
+                    _state.update { currentState ->
+                        currentState.copy(
+                            walkPrepareItemList = result.preparationList
+                                .mapIndexed { index, text ->
+                                    WalkPrepareItemModel(
+                                        id = index + 1,
+                                        walkItem = TextFieldState(text)
+                                    )
+                                }
+                                .toPersistentList()
+                        )
+                    }
+                }
+                .onFailure {
+                    Timber.e(it)
+                }
+        }
     }
 
     fun fetchWalkPreparationMessage() {
