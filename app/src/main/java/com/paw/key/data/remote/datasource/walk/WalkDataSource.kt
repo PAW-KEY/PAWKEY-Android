@@ -30,7 +30,7 @@ class WalkDataSource @Inject constructor(
     )
 
     suspend fun completeWalk(
-        routeId : String
+        routeId : Int
     ) = walkService.getRouteGeometry(
         routeId = routeId
     )

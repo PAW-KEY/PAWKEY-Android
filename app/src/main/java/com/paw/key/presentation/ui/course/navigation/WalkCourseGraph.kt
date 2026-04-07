@@ -16,7 +16,8 @@ data object WalkCourseGraph : WalkRoute
 fun NavGraphBuilder.walkCourseGraph(
     paddingValues: PaddingValues,
     navController: NavController,
-    navigateWalkReview : () -> Unit
+    navigateWalkReview : () -> Unit,
+    navigateWalkReviewWithId : (Int, Int) -> Unit = {_, _ ->} // routeId, routeImageId를 가지고 review로
 ) {
     navigation<WalkCourseGraph>(
         startDestination = WalkPrepare
@@ -34,8 +35,11 @@ fun NavGraphBuilder.walkCourseGraph(
             WalkCourseRoute(
                 paddingValues = paddingValues,
                 navigateUp = navController::navigateUp,
-                navigateWalkComplete = {
-                    navController.navigateWalkComplete(routeId = it)
+                navigateWalkComplete = { routeId, routeImageId ->
+                    navController.navigateWalkComplete(
+                        routeId = routeId,
+                        routeImageId = routeImageId
+                    )
                 },
                 navigateReview = navigateWalkReview
             )
@@ -44,7 +48,9 @@ fun NavGraphBuilder.walkCourseGraph(
         composable<WalkComplete> {
             WalkCompleteRoute(
                 paddingValues = paddingValues,
-                navigateReview = navigateWalkReview
+                navigateReview = { routeId, routeImageId ->
+                    navigateWalkReviewWithId(routeId, routeImageId)
+                }
             )
         }
     }

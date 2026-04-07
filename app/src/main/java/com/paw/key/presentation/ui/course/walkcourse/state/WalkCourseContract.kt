@@ -16,7 +16,8 @@ data class WalkCourseState(
     val mapState: MapState = MapState(),
     val stepCounterState: StepCounterState = StepCounterState(),
     val totalTimeMillis: Long = 0L,
-    val isStopTracking: Boolean = false // true는 stop됨, false는 다시 시작
+    val isStopTracking: Boolean = false, // true는 stop됨, false는 다시 시작
+    val snapshotUri: String? = null
 ) {
     val formattedTime: String
         get() = formatTime(this.totalTimeMillis)
@@ -28,7 +29,7 @@ data class WalkCourseState(
         distance = this.mapState.totalDistance.toInt(),
         duration = this.totalTimeMillis.toInt(),
         stepCount = this.stepCounterState.sessionSteps.toInt(),
-        endedAt = this.recordingState.endedAt
+        endedAt = this.recordingState.endedAt,
     )
 }
 
@@ -39,7 +40,7 @@ sealed interface WalkCourseSideEffect {
     data class NavigateNext(val regionId: Int): WalkCourseSideEffect
 
     data object NavigateReview: WalkCourseSideEffect
-    data class NavigateComplete(val routeId: String): WalkCourseSideEffect
+    data class NavigateComplete(val routeId: Int, val routeImageId: Int? = null): WalkCourseSideEffect
 }
 
 sealed class WalkCourseRecord (

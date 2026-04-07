@@ -5,9 +5,11 @@ import androidx.navigation.NavOptions
 
 fun NavController.navigateWalkCourse(
     navOptions: NavOptions? = null,
-    routeId: String
+    routeId: String,
+    infoRouteId: Int? = null,
+    isShared: Boolean = false
 ) {
-    navigate(WalkCourse(routeId), navOptions)
+    navigate(WalkCourse(routeId, infoRouteId, isShared), navOptions)
 }
 
 fun NavController.navigateWalkPrepare(
@@ -16,9 +18,10 @@ fun NavController.navigateWalkPrepare(
     navigate(WalkPrepare, navOptions)
 }
 
-fun NavController.navigateWalkComplete(
+fun NavController.navigateWalkComplete( // complete 후 routeId는 int
     navOptions: NavOptions? = null,
-    routeId: String
+    routeId: Int,
+    routeImageId: Int
 ) {
-    navigate(WalkComplete(routeId), navOptions)
+    navigate(WalkComplete(routeId, routeImageId), navOptions)
 }
