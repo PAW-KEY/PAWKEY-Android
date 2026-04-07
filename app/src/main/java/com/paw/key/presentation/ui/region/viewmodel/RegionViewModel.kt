@@ -1,25 +1,27 @@
 package com.paw.key.presentation.ui.region.viewmodel
 
-import android.util.Log
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.navigation.toRoute
 import com.paw.key.core.util.UiState
 import com.paw.key.core.util.flattenCoordinatesToLatLng
 import com.paw.key.core.util.handleError
 import com.paw.key.domain.repository.RegionRepository
 import com.paw.key.domain.repository.home.HomeRepository
 import com.paw.key.domain.repository.localstorage.LocalStorageRepository
-import com.paw.key.presentation.ui.region.navigation.Regional
+import com.paw.key.presentation.ui.region.model.RegionDongModel
+import com.paw.key.presentation.ui.region.model.RegionGuModel
+import com.paw.key.presentation.ui.region.model.RegionStep
+import com.paw.key.presentation.ui.region.model.toState
 import com.paw.key.presentation.ui.region.state.DrawType
 import com.paw.key.presentation.ui.region.state.RegionSideEffect
 import com.paw.key.presentation.ui.region.state.RegionState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.collections.immutable.toImmutableList
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -28,7 +30,6 @@ import javax.inject.Inject
 
 @HiltViewModel
 class RegionViewModel @Inject constructor(
-    savedStateHandle: SavedStateHandle,
     private val regionRepository: RegionRepository,
     private val homeRepository: HomeRepository,
     private val localStorageRepository: LocalStorageRepository
@@ -37,28 +38,22 @@ class RegionViewModel @Inject constructor(
     val state: StateFlow<RegionState> = _state.asStateFlow()
 
     private val _sideEffect = MutableSharedFlow<RegionSideEffect>()
-    val sideEffect : MutableSharedFlow<RegionSideEffect>
-        get() = _sideEffect
-
-
-
-    private val regionIdState = savedStateHandle.toRoute<Regional>()
+    val sideEffect = _sideEffect.asSharedFlow()
 
     init {
-        if (regionIdState.regionId != -1) {
-            viewModelScope.launch {
-                getRegionGeometry(
-                    regionId = regionIdState.regionId,
-                )
+        fetchRegionList()
+    }
+
+    private fun fetchRegionList() = viewModelScope.launch {
+        regionRepository.getRegionList()
+            .onSuccess { data ->
+                _state.update { currentState ->
+                    currentState.copy(
+                        regionList = data.map { it.toState() }.toImmutableList(),
+                    )
+                }
             }
-        } else {
-            viewModelScope.launch {
-                Timber.e("RegionViewModel test용 regionId: ${regionIdState.regionId}")
-                getRegionGeometry(
-                    regionId = 2,
-                )
-            }
-        }
+            .onFailure(Timber::e)
     }
 
     fun getRegionGeometry(regionId: Int?) = viewModelScope.launch {
@@ -83,8 +78,6 @@ class RegionViewModel @Inject constructor(
                             uiState = UiState.Success(flattenedLatLng),
                             entireCoordinates = allPoints,
                             drawType = DrawType.SINGLE,
-                            preRegionName = data.regionName,
-                            regionName = data.regionName
                         )
                     }
                 } else {
@@ -94,8 +87,6 @@ class RegionViewModel @Inject constructor(
                             uiState = UiState.Success(flattenedLatLng),
                             entireCoordinates = allPoints,
                             drawType = DrawType.MULTIPLE,
-                            preRegionName = data.regionName,
-                            regionName = data.regionName
                         )
                     }
                 }
@@ -111,45 +102,44 @@ class RegionViewModel @Inject constructor(
     }
 
     fun patchRegion() {
-        if (regionIdState.regionId != -1) {
-            viewModelScope.launch {
-                homeRepository.patchRegion(localStorageRepository.getUserId(), regionIdState.regionId!!)
-                    .onSuccess { data ->
-                        Log.d("RegionViewModel", "API 응답 성공: $data")
-                        _sideEffect.emit(
-                            RegionSideEffect.ShowSnackBar("지역을 ${state.value.regionName ?: "역삼동"}으로 변경했어요.")
-                        )
-                    }
-                    .onFailure { throwable ->
-                        Log.e("RegionViewModel", "API 호출 실패", throwable)
-                        val errorMessage = handleError(throwable)
-                        _sideEffect.emit(
-                            RegionSideEffect.ShowSnackBar(errorMessage)
-                        )
-                    }
-            }
+        viewModelScope.launch {
+            homeRepository.patchRegion(localStorageRepository.getUserId(), _state.value.selectedDong.id)
+                .onSuccess { data ->
+                    _sideEffect.emit(
+                        RegionSideEffect.ShowSnackBar("지역을 ${(state.value.selectedGu.name + " " + state.value.selectedDong.name)}으로 변경했어요.")
+                    )
+                }
+                .onFailure { throwable ->
+                    val errorMessage = handleError(throwable)
+                    _sideEffect.emit(
+                        RegionSideEffect.ShowSnackBar(errorMessage)
+                    )
+                }
         }
     }
 
-    /*fun onChangeRegion() {
-        viewModelScope.launch {
-            _sideEffect.emit(
-                RegionContract.RegionSideEffect.ShowSnackBar("지역을 ${state.value.selectedRegion ?: "역삼동"}으로 변경했어요.")
+    // 구/동을 선택했을 때 호출되는 함수
+    fun onRegionSelected(gu: RegionGuModel, dong: RegionDongModel) {
+        _state.update {
+            it.copy(
+                selectedGu = gu,
+                selectedDong = dong,
+                currentStep = RegionStep.MAP
             )
         }
-    }*/
-}
+        getRegionGeometry(dong.id)
+    }
 
-/*
-private fun flattenCoordinatesToLatLng(
-    coordinates: List<List<List<Pair<Double, Double>>>>
-): ImmutableList<LatLng> {
-    return coordinates.flatMap { polygon ->
-        val outerRing = polygon.firstOrNull().orEmpty()
-        outerRing.map { point ->
-            LatLng(point.first, point.second)
+    fun onBackPressedToSearch() {
+        _state.update { it.copy(currentStep = RegionStep.SEARCH) }
+    }
+
+    fun onBackPressed() {
+        when (_state.value.currentStep) {
+            RegionStep.MAP -> onBackPressedToSearch()
+            RegionStep.SEARCH -> viewModelScope.launch {
+                _sideEffect.emit(RegionSideEffect.NavigateUp)
+            }
         }
-    }.toImmutableList()
+    }
 }
-*/
-

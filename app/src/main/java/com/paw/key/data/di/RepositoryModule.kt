@@ -11,9 +11,7 @@ import com.paw.key.data.remote.datasource.mypage.MypageDataSourceImpl
 import com.paw.key.data.repository.mypage.MypageRepositoryImpl
 import com.paw.key.data.repositoryimpl.ArchivedListRepositoryImpl
 import com.paw.key.data.repositoryimpl.DbtiRepositoryImpl
-import com.paw.key.data.repositoryimpl.LikeRepositoryImpl
 import com.paw.key.data.repositoryimpl.RegionRepositoryImpl
-import com.paw.key.data.repositoryimpl.SavedListRepositoryImpl
 import com.paw.key.data.repositoryimpl.WalkSharedResultRepositoryImpl
 import com.paw.key.data.repositoryimpl.home.HomeRepositoryImpl
 import com.paw.key.data.repositoryimpl.home.RegionCurrentRepositoryImpl
@@ -26,9 +24,7 @@ import com.paw.key.data.repositoryimpl.walk.WalkRepositoryImpl
 import com.paw.key.data.repositoryimpl.walkpreparation.WalkPreparationRepositoryImpl
 import com.paw.key.domain.repository.ArchivedListRepository
 import com.paw.key.domain.repository.DbtiRepository
-import com.paw.key.domain.repository.LikeRepository
 import com.paw.key.domain.repository.RegionRepository
-import com.paw.key.domain.repository.SavedListRepository
 import com.paw.key.domain.repository.WalkSharedResultRepository
 import com.paw.key.domain.repository.home.HomeRepository
 import com.paw.key.domain.repository.home.RegionCurrentRepository
@@ -98,25 +94,11 @@ interface RepositoryModule {
         impl: HomeRepositoryImpl
     ): HomeRepository
 
-    //마이페이지
-    @Binds
-    @Singleton
-    fun bindSavedListRepository(
-        impl: SavedListRepositoryImpl
-    ): SavedListRepository
-
     @Binds
     @Singleton
     fun bindArchivedListRepository(
         impl: ArchivedListRepositoryImpl
     ): ArchivedListRepository
-
-    @Binds
-    @Singleton
-    fun bindLikeRepository(
-        impl: LikeRepositoryImpl
-    ): LikeRepository
-
 
     //게시물 리스트
     @Binds
