@@ -7,6 +7,7 @@ import com.paw.key.data.dto.response.BaseResponse
 import com.paw.key.data.dto.response.walk.WalkCompleteResponseDto
 import com.paw.key.data.dto.response.walk.WalkFinishResponseDto
 import com.paw.key.data.dto.response.walk.WalkStartResponseDto
+import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
@@ -21,7 +22,7 @@ interface WalkService {
     @POST("walks/stream/point")
     suspend fun pointWalk(
         @Body body : WalkPointRequestDto
-    ) : BaseResponse<Unit>
+    ) : Response<Unit>
 
     @POST("routes/{routeId}/finish")
     suspend fun finishWalk(
@@ -32,7 +33,7 @@ interface WalkService {
     // 산책 완료 후 complete용 좌표
     @GET("routes/{routeId}/geometry")
     suspend fun getRouteGeometry(
-        @Path("routeId") routeId : String
+        @Path("routeId") routeId : Int
     ) : BaseResponse<WalkCompleteResponseDto>
 
 
