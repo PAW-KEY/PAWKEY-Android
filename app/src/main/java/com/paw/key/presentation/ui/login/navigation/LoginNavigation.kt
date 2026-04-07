@@ -3,7 +3,6 @@ package com.paw.key.presentation.ui.login.navigation
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.material3.SnackbarHostState
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
@@ -21,20 +20,14 @@ fun NavController.navigateLogin(
 @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
 fun NavGraphBuilder.loginNavGraph(
     paddingValues: PaddingValues,
-    navigateUp: () -> Unit,
-    navigateNext: () -> Unit,
     navigateHome: () -> Unit,
     navigateSignUp: () -> Unit,
-    snackBarHostState: SnackbarHostState
 ) {
     composable<Login> {
         LoginRoute(
             paddingValues = paddingValues,
-            navigateUp = navigateUp,
-            navigateNext = navigateNext,
             navigateHome = navigateHome,
             navigateSignUp = navigateSignUp,
-            snackBarHostState = snackBarHostState
         )
     }
 }
