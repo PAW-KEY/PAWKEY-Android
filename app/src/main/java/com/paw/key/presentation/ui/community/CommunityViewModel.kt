@@ -26,6 +26,7 @@ class CommunityViewModel @Inject constructor(
 
     init {
         fetchPostsFilter()
+        fetchPosts()
     }
 
     fun fetchPosts(
@@ -61,7 +62,7 @@ class CommunityViewModel @Inject constructor(
                 .onSuccess { result ->
                     _state.update {
                         it.copy(
-                           filterUiModel = result.toUiModel()
+                            filterUiModel = result.toUiModel()
                         )
                     }
                 }
@@ -88,6 +89,27 @@ class CommunityViewModel @Inject constructor(
     fun onLoadMore() {
         if (_state.value.hasNext) {
             fetchPosts(cursor = _state.value.nextCursor)
+        }
+    }
+
+    fun addRouteLike(postId: Int) {
+        viewModelScope.launch {
+            postsRepository.postLike(postId)
+                .onSuccess { result ->
+                    val liked = result.status == "LIKE_SUCCESS"
+                    _state.update { currentState ->
+                        currentState.copy(
+                            communityRouteList = currentState.communityRouteList.map { route ->
+                                if (route.postId == postId) {
+                                    route.copy(
+                                        isLiked = liked,
+                                    )
+                                } else route
+                            }.toPersistentList()
+                        )
+                    }
+                }
+                .onFailure(Timber::e)
         }
     }
 }

@@ -59,6 +59,7 @@ import com.paw.key.presentation.ui.community.component.FilterScreen
 import com.paw.key.presentation.ui.community.model.SortedType
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.distinctUntilChanged
 
 /**
@@ -68,6 +69,7 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 @Composable
 fun CommunityRoute( // 루트 추천
     paddingValues: PaddingValues,
+    navigateDetail: (Int) -> Unit,
     viewModel: CommunityViewModel = hiltViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -89,7 +91,7 @@ fun CommunityRoute( // 루트 추천
     LaunchedEffect(gridState) {
         snapshotFlow { gridState.layoutInfo.visibleItemsInfo.lastOrNull()?.index }
             .distinctUntilChanged()
-            .collect { lastIndex ->
+            .collectLatest { lastIndex ->
                 if (lastIndex != null && lastIndex >= state.communityRouteList.size - 3) {
                     viewModel.onLoadMore()
                 }
@@ -116,7 +118,9 @@ fun CommunityRoute( // 루트 추천
             state = state,
             gridState = gridState,
             onShowFilterSheet = { isFilterSheetVisible = true },
-            onClickSort = viewModel::onSortTypeChanged
+            onClickSort = viewModel::onSortTypeChanged,
+            onClickHeart = viewModel::addRouteLike,
+            onClickRoute = navigateDetail
         )
     }
 }
@@ -127,14 +131,16 @@ fun CommunityScreen(
     state: CommunityState,
     gridState: LazyGridState,
     onShowFilterSheet: () -> Unit = {},
-    onClickSort: (SortedType) -> Unit = {}
+    onClickSort: (SortedType) -> Unit = {},
+    onClickHeart: (Int) -> Unit = {},
+    onClickRoute: (Int) -> Unit = {}
 ) {
     val filterList = state.filterUiModel.allCategories.map { it.name }.toImmutableList()
 
     var selectedFilters by remember { mutableStateOf(setOf<String>()) }
     var isSortMenuExpanded by remember { mutableStateOf(false) }
 
-    val topImageHeight = 200.dp
+    val topImageHeight = 140.dp
     val topImageHeightPx = with(LocalDensity.current) { topImageHeight.toPx() }
     var topImageOffset by remember { mutableFloatStateOf(0f) }
     val currentImageHeight = with(LocalDensity.current) {
@@ -186,7 +192,7 @@ fun CommunityScreen(
             title = "루트 추천",
             onBackClick = {},
             isBackVisible = false,
-            thickness = 0
+            thickness = 2
         )
 
         Box(
@@ -201,7 +207,7 @@ fun CommunityScreen(
                     .height(currentImageHeight)
                     .clip(RectangleShape)
             ) {
-                CommunityTopImageHolder(imageList = persistentListOf())
+                CommunityTopImageHolder(imageList = persistentListOf("https://picsum.photos/200/300", "https://picsum.photos/200/300"))
             }
 
             Column(
@@ -263,7 +269,6 @@ fun CommunityScreen(
                     }
                 }
 
-                // 정렬 Row
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
@@ -326,7 +331,6 @@ fun CommunityScreen(
                     }
                 }
 
-                // Grid
                 LazyVerticalGrid(
                     state = gridState,
                     columns = GridCells.Fixed(2),
@@ -342,8 +346,13 @@ fun CommunityScreen(
                             routeDate = state.communityRouteList[index].date,
                             location = state.communityRouteList[index].regionName,
                             routeImage = state.communityRouteList[index].imageUrl ?: "",
-                            onClickHeart = {},
-                            onClick = {}
+                            isLiked = state.communityRouteList[index].isLiked,
+                            onClickHeart = {
+                                onClickHeart(state.communityRouteList[index].postId)
+                            },
+                            onClick = {
+                                onClickRoute(state.communityRouteList[index].postId)
+                            }
                         )
                     }
                 }
