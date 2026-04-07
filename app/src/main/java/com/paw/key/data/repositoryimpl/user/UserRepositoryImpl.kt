@@ -31,6 +31,12 @@ class UserRepositoryImpl @Inject constructor(
             )
         }
 
+    override suspend fun logOutUser(deviceId: String) : Result<Unit> = suspendRunCatching {
+        userDataSource.logOutUser(
+            deviceId = deviceId
+        )
+    }
+
     override suspend fun getPetBreeds(): Result<PetBreedsEntity> =
         suspendRunCatching {
             userDataSource.getPetBreeds().data.toEntity()
