@@ -5,7 +5,9 @@ import com.paw.key.data.dto.request.posts.PostsFilterRequestDto
 import com.paw.key.data.dto.response.BaseResponse
 import com.paw.key.data.dto.response.posts.CategoryListResponseDto
 import com.paw.key.data.dto.response.posts.FilterOptionResponseDto
+import com.paw.key.data.dto.response.posts.LikeResponseDto
 import com.paw.key.data.dto.response.posts.PostDetailResponseDto
+import com.paw.key.data.dto.response.posts.PostRouteSummaryResponseDto
 import com.paw.key.data.dto.response.posts.PostsFilterListResponseDto
 import com.paw.key.data.dto.response.posts.PostsResponseDto
 import com.paw.key.data.dto.response.posts.PostsTop3ReviewResponseDto
@@ -24,8 +26,9 @@ interface PostsService {
 
     // Todo : 게시물 수정, 삭제 3스 때..
 
+    // 게시물 작성할 때 필터링 카테고리 조회
     @GET("posts/categories")
-    suspend fun getCategories(): BaseResponse<CategoryListResponseDto> // 게시물 작성할 때 필터링 카테고리 조회
+    suspend fun getCategories(): BaseResponse<CategoryListResponseDto>
 
     @GET("posts/{postId}")
     suspend fun getPostsDetail(
@@ -45,11 +48,17 @@ interface PostsService {
         @Body request: PostsFilterRequestDto
     ): BaseResponse<PostsFilterListResponseDto>
 
-    @GET("posts/filter")
+    @GET("posts/categories/filter")
     suspend fun getCategoriesFilter(): BaseResponse<FilterOptionResponseDto> // 커뮤니티 화면에서 필터링 카테고리 조회
 
     @POST("posts/{postId}/likes")
     suspend fun postLike(
         @Path("postId") postId: Int
-    ): BaseResponse<Unit>
+    ): BaseResponse<LikeResponseDto>
+
+    // 게시물 만들 때 - 산책 완료 후 넘어간 뷰
+    @GET("routes/{routeId}/summary")
+    suspend fun getRouteSummary(
+        @Path("routeId") routeId: Int
+    ): BaseResponse<PostRouteSummaryResponseDto>
 }

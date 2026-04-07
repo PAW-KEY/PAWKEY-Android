@@ -1,6 +1,8 @@
 package com.paw.key.domain.repository.posts
 
 import com.paw.key.domain.entity.posts.FilterSelectedItemEntity
+import com.paw.key.domain.entity.posts.LikeEntity
+import com.paw.key.domain.entity.posts.PostRouteSummaryEntity
 import com.paw.key.domain.entity.posts.PostsCategoryEntity
 import com.paw.key.domain.entity.posts.PostsDetailEntity
 import com.paw.key.domain.entity.posts.PostsEntity
@@ -24,9 +26,11 @@ interface PostsRepository {
     /** 커뮤니티 화면에서 필터링 카테고리 조회 */
     suspend fun getCategoriesFilter(): Result<PostsFilterEntity>
 
-    suspend fun postLike(postId: Int): Result<Unit>
+    suspend fun postLike(postId: Int): Result<LikeEntity>
 
     suspend fun getTop3Reviews(routeId: Int): Result<PostsTop3Entity>
 
     suspend fun getCategories(): Result<PostsCategoryEntity> // 사용자가 게시물 작성할 때 사용
+
+    suspend fun getPostSummary(routeId: Int): Result<PostRouteSummaryEntity>
 }

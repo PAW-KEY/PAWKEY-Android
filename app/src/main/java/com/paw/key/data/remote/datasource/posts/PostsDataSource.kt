@@ -31,4 +31,6 @@ class PostsDataSource @Inject constructor(
     suspend fun getCategoriesFilter() = service.getCategoriesFilter()
 
     suspend fun postLike(postId: Int) = service.postLike(postId)
+
+    suspend fun getRouteSummary(routeId: Int) = service.getRouteSummary(routeId)
 }
