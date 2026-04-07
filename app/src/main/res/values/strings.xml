@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">PawKey</string>
+    <string name="app_name">DOKI</string>
     <string name="empty_string">데이터가 없습니다.</string>
     <string name="loading_string">로딩 중...</string>
 
@@ -10,7 +10,7 @@
     <string name="main_bottom_bar_animation_label">바텀 바 라벨</string>
 
     <!--Splash-->
-    <string name="ic_logo">PAWKEY</string>
+    <string name="ic_logo">DOKI</string>
     <!--Login-->
     <string name="ic_login_new">신규계정으로 회원가입</string>
     <string name="ic_login_old">기존 계정으로 회원가입</string>

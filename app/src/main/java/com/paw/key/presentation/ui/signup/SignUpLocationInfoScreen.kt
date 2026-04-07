@@ -65,7 +65,7 @@ fun SignUpLocationInfoScreen(
                     suffix = {
                         Icon(
                             imageVector = ImageVector.vectorResource(R.drawable.ic_signup_search),
-                            contentDescription = "breed search",
+                            contentDescription = "region search",
                             tint = Color.Unspecified
                         )
                     },

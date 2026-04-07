@@ -8,6 +8,7 @@ import com.paw.key.presentation.ui.signup.state.Gender
 @Immutable
 data class SignUpPetInfo(
     val petImage : Uri? = null,
+    val cameraUri : Uri? = null,
     val petName : String = "",
     val petBirthDate : String = "",
     val petGender : Gender = Gender.UNKNOWN,

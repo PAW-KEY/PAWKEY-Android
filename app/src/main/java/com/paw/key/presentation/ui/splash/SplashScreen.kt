@@ -3,17 +3,18 @@ package com.paw.key.presentation.ui.splash
 import android.app.Activity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
@@ -88,15 +89,28 @@ fun SplashScreen(
         modifier = modifier
             .fillMaxSize()
             .padding(paddingValues)
-            .background(color = PawKeyTheme.colors.green500),
+            .background(color = PawKeyTheme.colors.background),
         contentAlignment = Alignment.Center
     ) {
+        Column (
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
             Icon(
-                imageVector = ImageVector.vectorResource(id = R.drawable.ic_splash_logo),
+                imageVector = ImageVector.vectorResource(id = R.drawable.ic_walk_review_dialog_paw),
                 contentDescription = stringResource(id = R.string.ic_logo),
-                tint = Color.Unspecified,
-                modifier = Modifier.size(154.dp)
+                tint = PawKeyTheme.colors.primary,
+                modifier = Modifier
+                    .size(154.dp)
             )
+
+            Text(
+                text = stringResource(id = R.string.app_name),
+                style = PawKeyTheme.typography.header1,
+                color = PawKeyTheme.colors.primary,
+                modifier = Modifier
+                    .padding(top = 42.dp)
+            )
+        }
     }
 }
 

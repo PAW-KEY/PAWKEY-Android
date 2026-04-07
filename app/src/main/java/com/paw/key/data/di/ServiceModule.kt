@@ -2,16 +2,14 @@ package com.paw.key.data.di
 
 import com.paw.key.data.service.ArchivedListService
 import com.paw.key.data.service.DbtiService
-import com.paw.key.data.service.LikeService
-import com.paw.key.data.service.SavedListService
 import com.paw.key.data.service.auth.ReissueService
 import com.paw.key.data.service.home.HomeRegionService
 import com.paw.key.data.service.image.ImageService
 import com.paw.key.data.service.image.S3Service
 import com.paw.key.data.service.login.LoginService
+import com.paw.key.data.service.mypage.MypageService
 import com.paw.key.data.service.posts.PostsService
 import com.paw.key.data.service.region.RegionService
-import com.paw.key.data.service.mypage.MypageService
 import com.paw.key.data.service.sharedwalk.SharedWalkService
 import com.paw.key.data.service.user.UserService
 import com.paw.key.data.service.walk.WalkService
@@ -49,20 +47,9 @@ object ServiceModule {
     fun provideHomeRegionService(retrofit: Retrofit): HomeRegionService =
         retrofit.create()
 
-
-    @Provides
-    @Singleton
-    fun provideSavedListService(retrofit: Retrofit): SavedListService =
-        retrofit.create()
-
     @Provides
     @Singleton
     fun provideArchivedListService(retrofit: Retrofit): ArchivedListService =
-        retrofit.create()
-
-    @Provides
-    @Singleton
-    fun provideLikeService(retrofit: Retrofit): LikeService =
         retrofit.create()
 
     @Provides
