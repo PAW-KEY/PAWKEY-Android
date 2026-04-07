@@ -41,7 +41,8 @@ fun RouteItem(
     routeDate: String,
     onClickHeart: () -> Unit,
     onClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    isLiked: Boolean = false
 ) {
     Column(
         modifier = modifier
@@ -81,7 +82,7 @@ fun RouteItem(
                 Spacer(modifier = Modifier.weight(1f))
 
                 Icon(
-                    imageVector = ImageVector.vectorResource(R.drawable.ic_heart_default),
+                    imageVector = if (isLiked) ImageVector.vectorResource(R.drawable.ic_heart_filled) else ImageVector.vectorResource(R.drawable.ic_heart_default),
                     contentDescription = "heart",
                     tint = Color.Unspecified,
                     modifier = Modifier
