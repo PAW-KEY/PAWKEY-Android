@@ -2,6 +2,7 @@ package com.paw.key.presentation.ui.home.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.paw.key.core.extension.updateOrCreate
 import com.paw.key.core.extension.updateSuccess
 import com.paw.key.core.util.UiState
 import com.paw.key.domain.repository.home.HomeRepository
@@ -31,6 +32,10 @@ class HomeViewModel @Inject constructor(
     private val _sideEffect = MutableSharedFlow<HomeSideEffect>()
     val sideEffect = _sideEffect.asSharedFlow()
 
+    init {
+        fetchHomeWeather()
+    }
+
     fun fetchHomeInfo() {
         viewModelScope.launch {
             repository.getHomeInfo()
@@ -54,10 +59,8 @@ class HomeViewModel @Inject constructor(
     fun fetchPetName() {
         viewModelScope.launch {
             val petName = localStorageRepository.getPetName()
-            _state.updateSuccess {
-                it.copy(
-                    petName = petName
-                )
+            _state.updateOrCreate(default = { HomeState() }) {
+                it.copy(petName = petName)
             }
         }
     }
@@ -65,14 +68,21 @@ class HomeViewModel @Inject constructor(
     fun fetchHomeWeather() {
         viewModelScope.launch {
             repository.getHomeWeather()
-                .onSuccess { result ->
-                    _state.updateSuccess {
-                        it.copy(
-                            homeInfo = result.toUiModel()
-                        )
-                    }
+                .collect { result ->
+                    result.onSuccess { response ->
+                        _state.update { currentState ->
+                            when (currentState) {
+                                is UiState.Loading -> UiState.Success(
+                                    HomeState(homeInfo = response.toUiModel())
+                                )
+                                is UiState.Success -> currentState.copy(
+                                    data = currentState.data.copy(homeInfo = response.toUiModel())
+                                )
+                                else -> currentState
+                            }
+                        }
+                    }.onFailure(Timber::e)
                 }
-                .onFailure(Timber::e)
         }
     }
 

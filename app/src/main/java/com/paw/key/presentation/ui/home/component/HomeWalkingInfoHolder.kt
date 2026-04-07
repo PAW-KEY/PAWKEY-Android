@@ -75,7 +75,7 @@ fun HomeWalkingInfoHolder(
 
         HomeWalkingInfoHolderItem(
             text = "산책 횟수",
-            value = "${walkingInfo.walkingCount} KM",
+            value = "${walkingInfo.walkingCount} 회",
             modifier = Modifier.weight(1f)
         )
     }
