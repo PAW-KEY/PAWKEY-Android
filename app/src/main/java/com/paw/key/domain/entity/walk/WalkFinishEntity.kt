@@ -12,7 +12,7 @@ data class WalkPetProfileEntity(
 )
 
 data class WalkInfoEntity(
-    val startAt: String
+    val startedAt: String
 )
 
 data class WalkFinish(

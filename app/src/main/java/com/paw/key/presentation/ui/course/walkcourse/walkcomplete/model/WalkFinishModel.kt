@@ -4,14 +4,14 @@ import com.paw.key.domain.entity.walk.WalkFinishEntity
 import com.paw.key.domain.entity.walk.WalkInfoEntity
 import com.paw.key.domain.entity.walk.WalkPetProfileEntity
 
-data class WalkFinishModel(
+data class WalkInfoModel(
     val routeId: Int = -1,
     val petProfile: WalkCompletePetProfileModel = WalkCompletePetProfileModel(),
     val walkInfo: WalkCompleteInfoModel = WalkCompleteInfoModel()
 )
 
-fun WalkFinishEntity.toUiModel(): WalkFinishModel {
-    return WalkFinishModel(
+fun WalkFinishEntity.toUiModel(): WalkInfoModel {
+    return WalkInfoModel(
         routeId = routeId,
         petProfile = petProfile.toUiModel(),
         walkInfo = walkInfo.toUiModel()
@@ -37,6 +37,6 @@ data class WalkCompleteInfoModel(
 
 fun WalkInfoEntity.toUiModel() : WalkCompleteInfoModel {
     return WalkCompleteInfoModel(
-        startedAt = startAt
+        startedAt = startedAt
     )
 }

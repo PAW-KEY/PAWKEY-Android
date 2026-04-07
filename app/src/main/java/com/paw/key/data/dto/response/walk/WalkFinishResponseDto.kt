@@ -24,11 +24,11 @@ data class WalkFinishResponseDto(
 
 @Serializable
 data class WalkInfoResponseDto(
-    @SerialName("startAt")
-    val startAt: String
+    @SerialName("startedAt")
+    val startedAt: String
 ) {
     fun toEntity() = WalkInfoEntity(
-        startAt = startAt
+        startedAt = startedAt
     )
 }
 
