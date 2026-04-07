@@ -7,6 +7,7 @@ import com.paw.key.core.util.UiState
 import com.paw.key.domain.entity.walk.WalkPoint
 import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.toPersistentList
 
 @Immutable
 data class MapState(
@@ -29,4 +30,19 @@ fun LatLng.toEntity(
         lng = this.longitude,
         timestamp = timestamp
     )
+}
+
+// 서버에서 온 [경도, 위도] 리스트를 Naver Map LatLng 불변 리스트로 변환
+fun List<List<Double>>.toPersistentLatLngList(): PersistentList<LatLng> {
+    return this.mapNotNull { coord ->
+        // 안전하게 데이터가 2개 이상일 때만 처리
+        if (coord.size >= 2) {
+            val lng = coord[0] // (경도)
+            val lat = coord[1] // (위도)
+
+            LatLng(lat, lng)
+        } else {
+            null
+        }
+    }.toPersistentList()
 }

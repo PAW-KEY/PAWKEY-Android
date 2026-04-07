@@ -6,6 +6,7 @@ import com.paw.key.presentation.ui.mypage.model.PetInfoModel
 @Immutable
 data class MyPageState(
     val ownerName: String = "님",
+    val ownerEmail: String = "",
 
     val petInfo : PetInfoModel = PetInfoModel(),
     val petTags: List<String> = emptyList(),
