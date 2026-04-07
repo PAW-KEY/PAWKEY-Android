@@ -8,7 +8,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class WalkCompleteResponseDto(
     @SerialName("routeId")
-    val routeId: String,
+    val routeId: Int,
     @SerialName("geometry")
     val geometry: WalkCompleteGeometryDto
 ) {

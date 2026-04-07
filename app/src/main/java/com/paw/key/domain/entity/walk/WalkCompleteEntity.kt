@@ -1,7 +1,7 @@
 package com.paw.key.domain.entity.walk
 
 data class WalkCompleteEntity(
-    val routeId: String,
+    val routeId: Int,
     val geometry: WalkCompleteGeometryEntity
 )
 

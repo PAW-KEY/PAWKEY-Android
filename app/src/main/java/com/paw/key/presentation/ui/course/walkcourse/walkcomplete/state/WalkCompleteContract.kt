@@ -7,7 +7,8 @@ import com.paw.key.presentation.ui.course.walkcourse.walkcomplete.model.WalkMapI
 
 @Immutable
 data class WalkCompleteState(
-    val walkCompleteUserInfo: WalkFinishModel = WalkFinishModel(),
-    val walkCompleteFinishInfo: WalkInfoModel = WalkInfoModel(),
-    val walkCompleteMapInfo: WalkMapInfoModel = WalkMapInfoModel()
+    val walkCompleteUserInfo: WalkInfoModel = WalkInfoModel(),
+    val walkCompleteFinishInfo: WalkFinishModel = WalkFinishModel(),
+    val walkCompleteMapInfo: WalkMapInfoModel = WalkMapInfoModel(),
+    val routeImageId: Int = 0
 )

@@ -14,9 +14,11 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -29,37 +31,64 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.naver.maps.geometry.LatLng
+import com.naver.maps.map.CameraUpdate
+import com.naver.maps.map.compose.ExperimentalNaverMapApi
+import com.naver.maps.map.compose.NaverMap
+import com.naver.maps.map.compose.PathOverlay
+import com.naver.maps.map.compose.rememberCameraPositionState
 import com.paw.key.R
 import com.paw.key.core.designsystem.component.DokiButton
 import com.paw.key.core.designsystem.component.TopBar
 import com.paw.key.core.designsystem.component.UrlImage
 import com.paw.key.core.designsystem.theme.PawKeyTheme
 import com.paw.key.presentation.ui.course.walkcourse.component.WalkRecordItem
-import com.paw.key.presentation.ui.course.walkcourse.walkcomplete.model.WalkInfoModel
+import com.paw.key.presentation.ui.course.walkcourse.walkcomplete.model.WalkFinishModel
 import com.paw.key.presentation.ui.course.walkcourse.walkcomplete.state.WalkCompleteState
+import java.util.Locale
 
-// Todo : 나중에 서버에서 줌
 @Composable
 fun WalkCompleteRoute(
     paddingValues: PaddingValues,
-    navigateReview: () -> Unit = {},
+    navigateReview: (routeId: Int, routeImageId: Int) -> Unit = {_, _ ->},
     viewModel: WalkCompleteViewModel = hiltViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
 
+    LaunchedEffect(Unit) {
+        viewModel.fetchWalkComplete()
+    }
+
     WalkCompleteScreen(
         paddingValues = paddingValues,
         state = state,
-        navigateReview = navigateReview
+        navigateReview = {
+            navigateReview(state.walkCompleteUserInfo.routeId, state.routeImageId)
+        }
     )
 }
 
+@OptIn(ExperimentalNaverMapApi::class)
 @Composable
 private fun WalkCompleteScreen(
     paddingValues: PaddingValues,
     state: WalkCompleteState,
     navigateReview: () -> Unit = {}
 ) {
+    val cameraPositionState = rememberCameraPositionState()
+    val coordinates = state.walkCompleteMapInfo.coordinates
+
+    LaunchedEffect(coordinates) {
+        if (coordinates.size >= 2) {
+            val startLat = coordinates[0][1]
+            val startLng = coordinates[0][0]
+            val startLatLng = LatLng(startLat, startLng)
+
+            cameraPositionState.move(CameraUpdate.scrollTo(startLatLng))
+            cameraPositionState.move(CameraUpdate.zoomTo(16.0))
+        }
+    }
+
     Column (
         modifier = Modifier
             .fillMaxSize()
@@ -95,24 +124,25 @@ private fun WalkCompleteScreen(
             ) {
                 // 프로필사진
                 UrlImage(
-                    url = "",
+                    url = state.walkCompleteUserInfo.petProfile.petImage,
                     modifier = Modifier
                         .size(36.dp)
                         .aspectRatio(1f)
-                        .clip(RoundedCornerShape(50.dp))
+                        .clip(CircleShape),
+                    contentScale = ContentScale.Crop
                 )
 
                 Spacer(modifier = Modifier.width(10.dp))
 
                 Column {
                     Text(
-                        text = "단지",
+                        text = state.walkCompleteUserInfo.petProfile.petName,
                         style = PawKeyTheme.typography.subTitle,
                         color = PawKeyTheme.colors.contents
                     )
 
                     Text(
-                        text = "2025.06.26(금) | 오후 11:50",
+                        text = state.walkCompleteUserInfo.walkInfo.startedAt,
                         style = PawKeyTheme.typography.subButtonDefault,
                         color = PawKeyTheme.colors.contents
                     )
@@ -120,15 +150,23 @@ private fun WalkCompleteScreen(
             }
 
             // 지도 사진
-            UrlImage(
-                url = "",
-                contentScale = ContentScale.Crop,
+            NaverMap (
+                cameraPositionState = cameraPositionState,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .fillMaxHeight(0.87f)
+                    .fillMaxHeight(0.8f)
                     .padding(horizontal = 16.dp)
                     .clip(RoundedCornerShape(16.dp))
-            )
+            ) {
+                if (coordinates.size >= 2) {
+                    PathOverlay(
+                        coords = coordinates.map { LatLng(it[1], it[0]) },
+                        width = 5.dp,
+                        color = PawKeyTheme.colors.primary,
+                        outlineWidth = 0.dp
+                    )
+                }
+            }
 
             Row(
                 modifier = Modifier
@@ -138,13 +176,20 @@ private fun WalkCompleteScreen(
                 horizontalArrangement = Arrangement.SpaceAround
             ) {
                 with(state.walkCompleteFinishInfo) {
+                    val formattedDistance = String.format(Locale.getDefault(), "%.2f", distance / 1000.0)
+
+                    val totalSeconds = duration / 1000
+                    val hours = totalSeconds / 3600
+                    val minutes = (totalSeconds % 3600) / 60
+                    val formattedTime = String.format(Locale.getDefault(), "%02d:%02d",hours, minutes)
+
                     WalkRecordItem(
                         recordTitle = R.string.course_record_distance,
-                        recordContent = distance.toString()
+                        recordContent = formattedDistance
                     )
                     WalkRecordItem(
                         recordTitle = R.string.course_record_time,
-                        recordContent = duration.toString()
+                        recordContent = formattedTime
                     )
                     WalkRecordItem(
                         recordTitle = R.string.course_record_step,
@@ -175,7 +220,7 @@ private fun WalkCompletePreview() {
         WalkCompleteScreen(
             paddingValues = PaddingValues(),
             state = WalkCompleteState(
-                walkCompleteFinishInfo = WalkInfoModel(
+                walkCompleteFinishInfo = WalkFinishModel(
                     distance = 1000,
                     duration = 1000,
                     stepCount = 1000
