@@ -114,7 +114,8 @@ fun PawKeyNavHost(
 
         dbtiNavGraph(
             navController = navigator.navController,
-            navigateUp = navigator::navigateUp
+            navigateUp = navigator::navigateUp,
+            navigateHome = navigator::navigateHome
         )
 
         myPageNavGraph(
@@ -209,7 +210,8 @@ fun PawKeyNavHost(
             paddingValues = paddingValues,
             navigateUp = navigator::navigateUp,
             navigateNext = navigator::navigateHome,
-            snackBarHostState = snackbarHostState
+            snackBarHostState = snackbarHostState,
+            navigateDbtiStart = navigator::navigateDbtiStart
         )
 
         signUpNavGraph(
