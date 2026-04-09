@@ -65,7 +65,11 @@ fun RegionalManagementRoute(
     snackBarHostState: SnackbarHostState,
     navigateUp: () -> Unit,
     navigateNext: () -> Unit,
-    viewModel: RegionViewModel = hiltViewModel()
+    viewModel: RegionViewModel = hiltViewModel(),
+    modifier: Modifier = Modifier,
+    regionId: Int? = -1,
+    viewModel: RegionViewModel = hiltViewModel(),
+    navigateDbtiStart: () -> Unit
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     val lifecycleOwner = LocalLifecycleOwner.current
@@ -85,10 +89,10 @@ fun RegionalManagementRoute(
                         snackBarHostState.showSnackbar(
                             sideEffect.message
                         )
-                        navigateNext()
+                        navigateDbtiStart()
                     }
 
-                    RegionSideEffect.NavigateNext -> navigateNext()
+                    RegionSideEffect.NavigateNext -> navigateDbtiStart()
                     RegionSideEffect.NavigateUp -> navigateUp()
                 }
             }

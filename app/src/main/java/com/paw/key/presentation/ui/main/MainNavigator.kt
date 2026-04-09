@@ -162,8 +162,11 @@ class MainNavigator(
         navController.navigateRegional(navOptions)
     }
 
-    fun navigateDbtiStart(navOptions: NavOptions? = null) {
-        navController.navigateDbtiStart(navOptions)
+    fun navigateDbtiStart(
+        showSkip: Boolean = false,
+        navOptions: NavOptions? = null
+    ) {
+        navController.navigateDbtiStart(showSkip = showSkip, navOptions = navOptions)
     }
 
 

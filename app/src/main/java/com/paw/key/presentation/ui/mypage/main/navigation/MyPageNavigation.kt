@@ -26,6 +26,7 @@ fun NavGraphBuilder.myPageNavGraph(
     navigateUserProfile: () -> Unit,
     navigateLogin: () -> Unit,
     navigateToRegionSetting: () -> Unit,
+    navigateDbtiStart: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     composable<MyPage> {
@@ -38,6 +39,7 @@ fun NavGraphBuilder.myPageNavGraph(
             navigateUserProfile = navigateUserProfile,
             navigateToLogin = navigateLogin,
             navigateToRegionSetting = navigateToRegionSetting,
+            navigateDbtiStart = navigateDbtiStart,
             modifier = modifier
         )
     }

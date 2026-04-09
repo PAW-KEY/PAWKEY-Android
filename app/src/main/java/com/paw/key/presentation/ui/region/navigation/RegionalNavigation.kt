@@ -20,6 +20,7 @@ fun NavGraphBuilder.regionalNavGraph(
     paddingValues: PaddingValues,
     navigateUp: () -> Unit,
     navigateNext: () -> Unit,
+    navigateDbtiStart: () -> Unit,
     snackBarHostState: SnackbarHostState,
 ) {
     composable<Regional> {
@@ -28,6 +29,8 @@ fun NavGraphBuilder.regionalNavGraph(
             snackBarHostState = snackBarHostState,
             navigateUp = navigateUp,
             navigateNext = navigateNext,
+            navigateDbtiStart = navigateDbtiStart,
+            modifier = modifier
         )
     }
 }

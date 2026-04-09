@@ -33,7 +33,6 @@ import com.paw.key.presentation.ui.mypage.main.model.MyPageSideEffect
 import com.paw.key.presentation.ui.mypage.main.model.MyPageState
 import com.paw.key.presentation.ui.mypage.main.viewmodel.MyPageViewModel
 import com.paw.key.presentation.ui.mypage.route.courseinfo.model.CourseType
-
 @Composable
 fun MyPageRoute(
     paddingValues: PaddingValues,
@@ -44,6 +43,7 @@ fun MyPageRoute(
     navigateUserProfile: () -> Unit,
     navigateToLogin: () -> Unit,
     navigateToRegionSetting: () -> Unit,
+    navigateDbtiStart: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: MyPageViewModel = hiltViewModel(),
 ) {
@@ -77,6 +77,7 @@ fun MyPageRoute(
         onLogOutClick = { isShowLogOutDialog = true },
         onWithDrawClick = { isShowWithDrawDialog = true },
         onUpdateRegion = navigateToRegionSetting,
+        navigateDbtiStart = navigateDbtiStart,
         modifier = modifier
     )
 
@@ -126,10 +127,10 @@ fun MyPageScreen(
     navigateCourseInfo: (CourseType) -> Unit,
     navigatePetProfileList: () -> Unit,
     navigateUserProfile: () -> Unit,
-
     onLogOutClick: () -> Unit,
     onWithDrawClick: () -> Unit,
     onUpdateRegion: () -> Unit,
+    navigateDbtiStart: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -168,7 +169,8 @@ fun MyPageScreen(
                         userGender = petGender,
                         dogBreed = petBreed,
                         buttonTitle = "DBTI검사하러 가기",
-                        dogImage = petImageUrl
+                        dogImage = petImageUrl,
+                        onButtonClick = navigateDbtiStart
                     )
                 }
             }
@@ -206,7 +208,6 @@ fun MyPageScreen(
     }
 }
 
-
 @Preview(showBackground = true)
 @Composable
 private fun MyPageScreenPreview() {
@@ -228,6 +229,8 @@ private fun MyPageScreenPreview() {
             onLogOutClick = {},
             onWithDrawClick = {},
             onUpdateRegion = {}
+            navigateDbtiStart = {},
+            deleteUser = {},
         )
     }
 }

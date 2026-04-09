@@ -121,7 +121,8 @@ fun PawKeyNavHost(
 
         dbtiNavGraph(
             navController = navigator.navController,
-            navigateUp = navigator::navigateUp
+            navigateUp = navigator::navigateUp,
+            navigateHome = navigator::navigateHome
         )
 
         myPageNavGraph(
@@ -136,7 +137,8 @@ fun PawKeyNavHost(
             navigateToRegionSetting = navigator::navigateRegional,
             navigateLogin = {
                 navigator.navigateLogin(clearStackNavOptions)
-            }
+            },
+            navigateDbtiStart = navigator::navigateDbtiStart
         )
 
         courseInfoNavGraph(
@@ -208,7 +210,8 @@ fun PawKeyNavHost(
             paddingValues = paddingValues,
             navigateUp = navigator::navigateUp,
             navigateNext = navigator::navigateHome,
-            snackBarHostState = snackbarHostState
+            snackBarHostState = snackbarHostState,
+            navigateDbtiStart = navigator::navigateDbtiStart
         )
 
         signUpNavGraph(
