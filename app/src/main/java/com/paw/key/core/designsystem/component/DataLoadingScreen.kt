@@ -28,7 +28,7 @@ fun DataLoadingScreen() {
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             CircularProgressIndicator(
-                color = PawKeyTheme.colors.green500
+                color = PawKeyTheme.colors.primary
             )
 
             Spacer(modifier = Modifier.height(8.dp))

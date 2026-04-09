@@ -42,6 +42,7 @@ import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.flowWithLifecycle
 import com.paw.key.R
+import com.paw.key.core.designsystem.component.LoadingScreen
 import com.paw.key.core.designsystem.theme.PawKeyTheme
 import com.paw.key.presentation.ui.login.component.LoginSocialButton
 import com.paw.key.presentation.ui.login.state.LoginSideEffect
@@ -50,16 +51,11 @@ import com.paw.key.presentation.ui.login.viewmodel.LoginViewModel
 @Composable
 fun LoginRoute(
     paddingValues: PaddingValues,
-    navigateUp: () -> Unit,
-    navigateNext: () -> Unit,
     navigateHome: () -> Unit,
     navigateSignUp: () -> Unit,
-    snackBarHostState: SnackbarHostState,
-    modifier: Modifier = Modifier,
     viewModel: LoginViewModel = hiltViewModel(),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
-    val isLoginFormValid = viewModel.state.collectAsStateWithLifecycle().value.isLoginValid
     val context = LocalContext.current
     val lifeCycle = LocalLifecycleOwner.current
 
@@ -75,16 +71,25 @@ fun LoginRoute(
             }
     }
 
-    LoginScreen(
-        paddingValues = paddingValues,
-        onGoogleSignIn = {
-            viewModel.onGoogleSignIn(context = context as Activity)
-        },
-        onKakaoSignIn = {
-            viewModel.onKakaoSignIn(context = context)
-        },
-        navigateHome = navigateHome
-    )
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+    ) {
+        LoginScreen(
+            paddingValues = paddingValues,
+            onGoogleSignIn = {
+                viewModel.onGoogleSignIn(context = context as Activity)
+            },
+            onKakaoSignIn = {
+                viewModel.onKakaoSignIn(context = context)
+            },
+            navigateHome = navigateHome
+        )
+
+        if (state.isLoading) {
+            LoadingScreen()
+        }
+    }
 }
 
 @OptIn(ExperimentalFoundationApi::class)

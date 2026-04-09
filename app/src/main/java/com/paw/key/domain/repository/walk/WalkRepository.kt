@@ -22,7 +22,7 @@ interface WalkRepository {
     ) : Result<WalkFinishEntity>
 
     suspend fun completeWalk(
-        routeId: String
+        routeId: Int
     ) : Result<WalkCompleteEntity>
 
     val finishResult: StateFlow<WalkFinishEntity?>

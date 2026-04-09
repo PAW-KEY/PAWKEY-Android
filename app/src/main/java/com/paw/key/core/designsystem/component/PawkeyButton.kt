@@ -85,7 +85,6 @@ private fun PreviewPawkeyButton() {
     }
 }
 
-// Todo : 이 더러운 분기의 버튼 제거예정
 @Composable
 fun PawkeyButton(
     text: String,

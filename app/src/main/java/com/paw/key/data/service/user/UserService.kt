@@ -1,6 +1,7 @@
 package com.paw.key.data.service.user
 
 import com.paw.key.data.dto.request.user.UserInfoRequestDto
+import com.paw.key.data.dto.request.user.UserLogOutRequestDto
 import com.paw.key.data.dto.request.user.UserWithDrawRequestDto
 import com.paw.key.data.dto.response.BaseResponse
 import com.paw.key.data.dto.response.petprofile.PetProfileResponseDto
@@ -25,6 +26,11 @@ interface UserService {
     suspend fun deleteUser(
         @Body request: UserWithDrawRequestDto
     ) : Response<Unit>
+
+    @POST("auth/logout")
+    suspend fun logOutUser(
+        @Body body: UserLogOutRequestDto
+    ): Response<Unit>
 
     @GET("pets/breeds")
     suspend fun getPetBreeds(): BaseResponse<PetBreedsResponseDto>

@@ -15,12 +15,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.paw.key.core.designsystem.component.UrlImage
 import com.paw.key.core.designsystem.theme.PawKeyTheme
+import com.paw.key.presentation.ui.detail.model.WalkImageUiModel
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 
 @Composable
 fun DetailImageHolder(
-    imageUrls: ImmutableList<String>,
+    imageUrls: ImmutableList<WalkImageUiModel>,
     modifier: Modifier = Modifier
 ) {
     BoxWithConstraints(modifier = modifier.fillMaxWidth()) {
@@ -32,7 +33,7 @@ fun DetailImageHolder(
         ) {
             items(imageUrls.size) {
                 UrlImage(
-                    url = imageUrls[it],
+                    url = imageUrls[it].imageUrl,
                     contentScale = ContentScale.Crop,
                     modifier = Modifier
                         .size(imageWidth)
@@ -49,7 +50,7 @@ fun DetailImageHolder(
 private fun DetailImageHolderPreview() {
     PawKeyTheme {
         DetailImageHolder(
-            imageUrls = persistentListOf("", "", "")
+            imageUrls = persistentListOf()
         )
     }
 }

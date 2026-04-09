@@ -13,8 +13,9 @@ import com.paw.key.presentation.ui.community.navigation.navigateCommunity
 import com.paw.key.presentation.ui.course.navigation.navigateWalkCourse
 import com.paw.key.presentation.ui.course.navigation.navigateWalkPrepare
 import com.paw.key.presentation.ui.course.walkreview.navigation.navigateWalkReview
+import com.paw.key.presentation.ui.dbti.navigation.navigateDbtiStart
+import com.paw.key.presentation.ui.detail.navigation.navigateDetail
 import com.paw.key.presentation.ui.home.navigation.navigateHome
-import com.paw.key.presentation.ui.home.navigation.navigateHomeLocationSetting
 import com.paw.key.presentation.ui.login.navigation.navigateLogin
 import com.paw.key.presentation.ui.mypage.main.navigation.navigateMyPage
 import com.paw.key.presentation.ui.mypage.route.courseinfo.model.CourseType
@@ -26,7 +27,6 @@ import com.paw.key.presentation.ui.onboard.navigation.navigateOnboarding
 import com.paw.key.presentation.ui.region.navigation.navigateRegional
 import com.paw.key.presentation.ui.signup.navigation.navigateSignUp
 import com.paw.key.presentation.ui.splash.navigation.Splash
-import com.paw.key.presentation.ui.dbti.navigation.navigateDbtiStart
 
 class MainNavigator(
     val navController: NavHostController,
@@ -111,26 +111,38 @@ class MainNavigator(
         navController.navigateHome(navOptions = navOptions)
     }
 
-    fun navigateHomeLocationSetting(navOptions: NavOptions? = null) {
-        navController.navigateHomeLocationSetting(navOptions = navOptions)
+    fun navigateDetail(
+        navOptions: NavOptions? = null,
+        postId: Int
+    ) {
+        navController.navigateDetail(
+            navOptions = navOptions,
+            postId = postId
+        )
     }
 
     // walk course
     fun navigateWalkCourse(
         navOptions: NavOptions? = null,
-        routeId: String
+        routeId: String,
+        isShared: Boolean = false
     ) {
         navController.navigateWalkCourse(
             navOptions = navOptions,
-            routeId = routeId
+            routeId = routeId,
+            isShared = isShared
         )
     }
 
     fun navigateWalkReview(
-        navOptions: NavOptions? = null
+        navOptions: NavOptions? = null,
+        routeId: Int? = null,
+        routeImageId: Int? = null
     ) {
         navController.navigateWalkReview(
-            navOptions = navOptions
+            navOptions = navOptions,
+            routeId = routeId,
+            routeImageId = routeImageId
         )
     }
 
@@ -146,8 +158,8 @@ class MainNavigator(
         navController.navigateUp()
     }
 
-    fun navigateRegional(regionId: Int, navOptions: NavOptions? = null) {
-        navController.navigateRegional(regionId, navOptions)
+    fun navigateRegional(navOptions: NavOptions? = null) {
+        navController.navigateRegional(navOptions)
     }
 
     fun navigateDbtiStart(

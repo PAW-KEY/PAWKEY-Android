@@ -1,6 +1,5 @@
 package com.paw.key.presentation.ui.detail.component
 
-import androidx.annotation.ColorRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -24,10 +23,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.paw.key.R
 import com.paw.key.core.designsystem.theme.PawKeyTheme
+import com.paw.key.presentation.ui.detail.model.ReviewUiModel
 
 @Composable
 fun DetailTopReview(
-    reviewCount: Int,
+    reviewData: ReviewUiModel,
     modifier: Modifier = Modifier,
     isShared: Boolean = false, // 공유 여부
 ) {
@@ -59,14 +59,13 @@ fun DetailTopReview(
             Spacer(modifier = Modifier.width(4.dp))
 
             Text(
-                text = "$reviewCount",
+                text = "${reviewData.totalReviewCount}",
                 style = PawKeyTheme.typography.bodySmall,
                 color = PawKeyTheme.colors.defaultMiddle
             )
         }
 
-        // Todo: 서버 기준으로 변경
-        if (reviewCount == 0) {
+        if (reviewData.totalReviewCount == 0) {
             Text(
                 text = emptyReviewText,
                 style = PawKeyTheme.typography.subTitle,
@@ -82,23 +81,21 @@ fun DetailTopReview(
                     .padding(16.dp),
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                PercentageItem(
-                    text = "~가 좋아요",
-                    widthPercent = 1f,
-                    backgroundColor = PawKeyTheme.colors.primaryGra5
-                )
+                reviewData.top3ReviewOptions.forEach { option ->
+                    val widthPercent = (option.percentage / 100.0).toFloat().coerceIn(0f, 1f)
 
-                PercentageItem(
-                    text = "후기 업선",
-                    widthPercent = 0.75f,
-                    backgroundColor = PawKeyTheme.colors.primaryGra2
-                )
+                    val backgroundColor = if (option.rank == 1) {
+                        PawKeyTheme.colors.primaryGra5
+                    } else {
+                        PawKeyTheme.colors.primaryGra2
+                    }
 
-                PercentageItem(
-                    text = "후기 업선",
-                    widthPercent = 0.55f,
-                    backgroundColor = PawKeyTheme.colors.primaryGra2
-                )
+                    PercentageItem(
+                        text = option.reviewOptionName,
+                        widthPercent = widthPercent,
+                        backgroundColor = backgroundColor
+                    )
+                }
             }
         }
     }
@@ -108,7 +105,7 @@ fun DetailTopReview(
 private fun PercentageItem(
     text: String,
     widthPercent: Float,
-    @ColorRes backgroundColor: Color
+    backgroundColor: Color
 ) {
     Box(
         modifier = Modifier
@@ -135,7 +132,7 @@ private fun PercentageItem(
 private fun DetailTopReviewPreview() {
     PawKeyTheme {
         DetailTopReview(
-            reviewCount = 30
+            reviewData = ReviewUiModel()
         )
     }
 }

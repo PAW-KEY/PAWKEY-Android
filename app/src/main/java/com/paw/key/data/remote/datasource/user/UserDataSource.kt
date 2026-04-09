@@ -1,9 +1,10 @@
 package com.paw.key.data.remote.datasource.user
 
-import com.paw.key.core.util.suspendRunCatching
 import com.paw.key.data.dto.request.user.UserInfoRequestDto
+import com.paw.key.data.dto.request.user.UserLogOutRequestDto
 import com.paw.key.data.dto.request.user.UserWithDrawRequestDto
 import com.paw.key.data.service.user.UserService
+import retrofit2.HttpException
 import javax.inject.Inject
 
 class UserDataSource @Inject constructor(
@@ -22,9 +23,26 @@ class UserDataSource @Inject constructor(
         }
     }
 
+    suspend fun logOutUser(deviceId: String) {
+        val response = userService.logOutUser(
+            body = UserLogOutRequestDto(
+                deviceId = deviceId
+            )
+        )
+        if (!response.isSuccessful) {
+            throw Exception("로그아웃 실패: ${response.code()}")
+        }
+    }
+
     suspend fun getUserProfiles() = userService.getUserProfiles()
 
-    suspend fun getNicknameDifference(nickname: String): Boolean = suspendRunCatching {
-        userService.getNicknameDifference(nickname).code == "U40901"
-    }.getOrDefault(false)
+    suspend fun getNicknameDifference(nickname: String): Boolean {
+        return try {
+            val response = userService.getNicknameDifference(nickname)
+            response.code == "U40901"
+        } catch (e: Exception) {
+            val errorBody = (e as? HttpException)?.response()?.errorBody()?.string()
+            errorBody?.contains("U40901") == true
+        }
+    }
 }

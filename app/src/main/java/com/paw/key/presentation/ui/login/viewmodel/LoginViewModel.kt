@@ -32,6 +32,7 @@ class LoginViewModel @Inject constructor(
     fun onGoogleSignIn(
         context: Context,
     ) {
+        _state.update { it.copy(isLoading = true) }
         viewModelScope.launch {
             loginUseCase.invokeGoogleLogin(context)
                 .onSuccess {
@@ -42,6 +43,8 @@ class LoginViewModel @Inject constructor(
                     } else {
                         _sideEffect.emit(LoginSideEffect.NavigateToHome)
                     }
+
+                    _state.update { it.copy(isLoading = false) }
                 }
                 .onFailure { e ->
                     Timber.e(e, "Google sign-in failed")
@@ -52,6 +55,7 @@ class LoginViewModel @Inject constructor(
     fun onKakaoSignIn(
         context: Context,
     ) {
+        _state.update { it.copy(isLoading = true) }
         viewModelScope.launch {
             loginUseCase.invokeKakaoLogin(context)
                 .onSuccess {
@@ -62,19 +66,12 @@ class LoginViewModel @Inject constructor(
                     } else {
                         _sideEffect.emit(LoginSideEffect.NavigateToHome)
                     }
+
+                    _state.update { it.copy(isLoading = false) }
+                }
+                .onFailure { e ->
+                    Timber.e(e, "Kakao sign-in failed")
                 }
         }
-    }
-
-    fun onEmailChanged(email: String) {
-        _state.update { it.copy(email = email) }
-    }
-
-    fun onPasswordChanged(password: String) {
-        _state.update { it.copy(password = password) }
-    }
-
-    fun onPasswordVisibilityChanged() {
-        _state.update { it.copy(isPasswordVisible = !it.isPasswordVisible) }
     }
 }

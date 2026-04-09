@@ -19,6 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.paw.key.R
@@ -49,7 +50,8 @@ fun WalkPrepareWeatherInfo(
         Column(
             modifier = Modifier
                 .padding(vertical = 16.dp)
-                .padding(start = 16.dp),
+                .padding(start = 16.dp)
+                .weight(0.6f),
             horizontalAlignment = Alignment.Start,
             verticalArrangement = Arrangement.Center
         ) {
@@ -71,7 +73,9 @@ fun WalkPrepareWeatherInfo(
             Text(
                 text = walkPreparationMessage.subMessage,
                 style = PawKeyTheme.typography.bodySmall,
-                color = PawKeyTheme.colors.contents
+                color = PawKeyTheme.colors.contents,
+                overflow = TextOverflow.Ellipsis,
+                maxLines = 2
             )
         }
         
@@ -82,6 +86,7 @@ fun WalkPrepareWeatherInfo(
             contentDescription = null,
             contentScale = ContentScale.Crop,
             modifier = Modifier
+                .weight(0.4f)
                 .padding(top = 8.dp, end = 16.dp)
         )
     }
@@ -92,7 +97,10 @@ fun WalkPrepareWeatherInfo(
 private fun WalkPrepareWeatherInfoPreview() {
     PawKeyTheme {
         WalkPrepareWeatherInfo(
-            walkPreparationMessage = WalkPreparationMessageModel()
+            walkPreparationMessage = WalkPreparationMessageModel(
+                mainMessage = "반려견과 함께 즐거운 산책 시간 되세요!",
+                subMessage = "현재 날씨 정보를 불러올 수 없지만, 산책하기 좋은 날이에요."
+            )
         )
     }
 }

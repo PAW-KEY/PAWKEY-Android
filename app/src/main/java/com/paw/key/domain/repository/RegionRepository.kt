@@ -6,4 +6,5 @@ import com.paw.key.domain.entity.signup.DistrictEntity
 interface RegionRepository {
     suspend fun getRegionGeometry(regionId: Int): Result<RegionDataEntity>
     suspend fun getRegionList(): Result<List<DistrictEntity>>
+    suspend fun patchUserRegions(regionId: Int): Result<Unit>
 }

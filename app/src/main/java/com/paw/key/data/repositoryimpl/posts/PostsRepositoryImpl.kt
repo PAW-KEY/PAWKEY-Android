@@ -5,6 +5,8 @@ import com.paw.key.core.util.suspendRunCatching
 import com.paw.key.data.dto.request.posts.toDto
 import com.paw.key.data.remote.datasource.posts.PostsDataSource
 import com.paw.key.domain.entity.posts.FilterSelectedItemEntity
+import com.paw.key.domain.entity.posts.LikeEntity
+import com.paw.key.domain.entity.posts.PostRouteSummaryEntity
 import com.paw.key.domain.entity.posts.PostsCategoryEntity
 import com.paw.key.domain.entity.posts.PostsDetailEntity
 import com.paw.key.domain.entity.posts.PostsEntity
@@ -46,8 +48,8 @@ class PostsRepositoryImpl @Inject constructor(
         dataSource.getCategoriesFilter().data.toEntity()
     }
 
-    override suspend fun postLike(postId: Int): Result<Unit> = suspendRunCatching {
-        dataSource.postLike(postId).data
+    override suspend fun postLike(postId: Int): Result<LikeEntity> = suspendRunCatching {
+        dataSource.postLike(postId).data.toEntity()
     }
 
     override suspend fun getTop3Reviews(routeId: Int): Result<PostsTop3Entity> = suspendRunCatching {
@@ -56,5 +58,9 @@ class PostsRepositoryImpl @Inject constructor(
 
     override suspend fun getCategories(): Result<PostsCategoryEntity> = suspendRunCatching {
         dataSource.getCategories().data.toEntity()
+    }
+
+    override suspend fun getPostSummary(routeId: Int): Result<PostRouteSummaryEntity> = suspendRunCatching{
+        dataSource.getRouteSummary(routeId).data.toEntity()
     }
 }

@@ -1,7 +1,6 @@
 package com.paw.key.presentation.ui.community.navigation
 
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.material3.SnackbarHostState
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
@@ -18,13 +17,12 @@ fun NavController.navigateCommunity(
 
 fun NavGraphBuilder.communityNavGraph(
     paddingValues: PaddingValues,
-    navigateUp: () -> Unit,
-    navigateNext: () -> Unit,
-    snackBarHostState: SnackbarHostState,
+    navigateDetail: (Int) -> Unit,
 ) {
     composable<Community> {
         CommunityRoute(
             paddingValues = paddingValues,
+            navigateDetail = navigateDetail
         )
     }
 }

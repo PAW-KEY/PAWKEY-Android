@@ -1,21 +1,20 @@
 package com.paw.key.presentation.ui.course.walkreview.navigation
 
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
-import com.paw.key.core.navigation.MainTabRoute
 import com.paw.key.core.navigation.Route
 import com.paw.key.presentation.ui.course.walkreview.WalkReviewRoute
-import com.paw.key.presentation.ui.home.HomeRoute
 import kotlinx.serialization.Serializable
 
 fun NavController.navigateWalkReview(
     navOptions: NavOptions?,
+    routeId: Int? = null,
+    routeImageId: Int? = null
 ) {
-    navigate(WalkReview, navOptions)
+    navigate(WalkReview(routeId, routeImageId), navOptions)
 }
 
 fun NavGraphBuilder.walkReviewNavGraph(
@@ -33,4 +32,7 @@ fun NavGraphBuilder.walkReviewNavGraph(
 }
 
 @Serializable
-data object WalkReview : Route
+data class WalkReview(
+    val routeId: Int? = null,
+    val routeImageId: Int? = null
+) : Route

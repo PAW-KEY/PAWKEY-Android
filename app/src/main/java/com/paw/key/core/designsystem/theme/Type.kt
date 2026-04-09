@@ -404,8 +404,8 @@ fun pawKeyTypography(): PawKeyTypography {
             letterSpacing = 0.em
         ),
         bodyActive = pawKeyTextStyle(
-            fontFamily = PretendardRegular,
-            fontWeight = FontWeight.Normal,
+            fontFamily = PretendardMedium,
+            fontWeight = FontWeight.Medium,
             fontSize = 14.sp,
             lineHeight = 20.sp,
             letterSpacing = 0.em

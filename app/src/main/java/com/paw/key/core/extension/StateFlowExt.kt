@@ -15,3 +15,16 @@ inline fun <T> MutableStateFlow<UiState<T>>.updateSuccess(
         }
     }
 }
+
+inline fun <T> MutableStateFlow<UiState<T>>.updateOrCreate(
+    default: () -> T,
+    crossinline onUpdate: (T) -> T
+) {
+    update { currentState ->
+        when (currentState) {
+            is UiState.Loading -> UiState.Success(onUpdate(default()))
+            is UiState.Success -> currentState.copy(data = onUpdate(currentState.data))
+            else -> currentState
+        }
+    }
+}

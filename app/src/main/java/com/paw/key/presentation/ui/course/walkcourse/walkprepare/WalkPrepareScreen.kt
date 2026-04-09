@@ -113,7 +113,7 @@ private fun WalkPrepareScreen(
         Spacer(modifier = Modifier.height(16.dp))
 
         DokiBorderButton(
-            text = "산책 기록하기",
+            text = "산책 시작하기",
             enabled = true,
             onClick = startWalkCourse,
             modifier = Modifier

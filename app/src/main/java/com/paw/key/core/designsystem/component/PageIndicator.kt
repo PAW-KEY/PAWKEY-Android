@@ -121,7 +121,7 @@ private fun IndicatorPreview() {
             selectedLength = 16.dp,             // ← 선택된 인디케이터 길이
             space = 8.dp,                       // ← 인디케이터 간 간격
             animationDurationInMillis = 300,
-            selectedColor = PawKeyTheme.colors.green500,
+            selectedColor = PawKeyTheme.colors.primary,
             defaultColor = PawKeyTheme.colors.green200,
             modifier = Modifier
                 .padding(bottom = 20.dp)

@@ -7,6 +7,7 @@ import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKey
 import com.paw.key.domain.repository.localstorage.LocalStorageRepository
 import dagger.hilt.android.qualifiers.ApplicationContext
+import timber.log.Timber
 import java.io.File
 import java.util.UUID
 import javax.inject.Inject
@@ -108,6 +109,17 @@ class LocalStorageRepositoryImpl @Inject constructor(
             .getString(USER_PROVIDER, "").orEmpty()
     }
 
+    override suspend fun saveUserRegionId(regionId: Int) {
+        sharedPreferences.edit().apply {
+            putInt(USER_REGION_ID, regionId)
+            apply()
+        }
+    }
+
+    override suspend fun getUserRegionId(): Int {
+        return sharedPreferences.getInt(USER_REGION_ID, -1)
+    }
+
     override suspend fun savePetId(petId: Int) {
         sharedPreferences.edit().apply {
             putInt(PET_ID, petId)
@@ -121,6 +133,7 @@ class LocalStorageRepositoryImpl @Inject constructor(
 
     override suspend fun savePetName(petName: String) {
         sharedPreferences.edit().apply {
+            Timber.e("savePetName $petName")
             putString(PET_NAME, petName)
             apply()
         }
@@ -171,6 +184,7 @@ class LocalStorageRepositoryImpl @Inject constructor(
         private const val REFRESH_TOKEN = "REFRESH_TOKEN"
         private const val DEVICE_ID = "device_id"
         private const val USER_ID = "user_id"
+        private const val USER_REGION_ID = "user_region_id"
         private const val PET_ID = "pet_id"
         private const val USER_PROVIDER = "user_provider"
         private const val PET_NAME = "pet_name"

@@ -15,7 +15,8 @@ import androidx.navigation.navOptions
 import com.paw.key.presentation.ui.community.navigation.communityNavGraph
 import com.paw.key.presentation.ui.course.navigation.walkCourseGraph
 import com.paw.key.presentation.ui.course.walkreview.navigation.walkReviewNavGraph
-import com.paw.key.presentation.ui.home.navigation.homeLocationSettingNavGraph
+import com.paw.key.presentation.ui.dbti.navigation.dbtiNavGraph
+import com.paw.key.presentation.ui.detail.navigation.detailNavGraph
 import com.paw.key.presentation.ui.home.navigation.homeNavGraph
 import com.paw.key.presentation.ui.login.navigation.loginNavGraph
 import com.paw.key.presentation.ui.mypage.main.navigation.myPageNavGraph
@@ -27,7 +28,6 @@ import com.paw.key.presentation.ui.onboard.navigation.onboardingNavGraph
 import com.paw.key.presentation.ui.region.navigation.regionalNavGraph
 import com.paw.key.presentation.ui.signup.navigation.signUpNavGraph
 import com.paw.key.presentation.ui.splash.navigation.splashNavGraph
-import com.paw.key.presentation.ui.dbti.navigation.dbtiNavGraph
 
 @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
 @Composable
@@ -80,23 +80,17 @@ fun PawKeyNavHost(
             navigateToCourse = navigator::navigateWalkPrepare
         )
 
-        homeLocationSettingNavGraph(
-            paddingValues = paddingValues,
-            navigateUp = navigator::navigateUp,
-            navigateNext = {
-                navigator.navigateRegional(
-                    regionId = it,
-                    navOptions = null
-                )
-            },
-            navigateHomeLocationSetting = navigator::navigateHomeLocationSetting,
-            modifier = modifier,
-        )
-
         walkCourseGraph(
             paddingValues = paddingValues,
             navController = navigator.navController,
-            navigateWalkReview = navigator::navigateWalkReview
+            navigateWalkReview = navigator::navigateWalkReview,
+            navigateWalkReviewWithId = { routeId, routeImageId ->
+                navigator.navigateWalkReview(
+                    routeId = routeId,
+                    routeImageId = routeImageId,
+                    navOptions = null
+                )
+            }
         )
 
         walkReviewNavGraph(
@@ -107,9 +101,22 @@ fun PawKeyNavHost(
 
         communityNavGraph(
             paddingValues = paddingValues,
-            navigateUp = navigator::navigateUp,
-            navigateNext = {},
-            snackBarHostState = snackbarHostState
+            navigateDetail = {
+                navigator.navigateDetail(
+                    postId = it,
+                    navOptions = null
+                )
+            }
+        )
+
+        detailNavGraph(
+            paddingValues = paddingValues,
+            navigateToSharedCourse = { routeId, isShared ->
+                navigator.navigateWalkCourse(
+                    routeId = routeId,
+                    isShared = isShared
+                )
+            }
         )
 
         dbtiNavGraph(
@@ -127,6 +134,7 @@ fun PawKeyNavHost(
             },
             navigatePetProfileList = navigator::navigatePetProfileList,
             navigateUserProfile = navigator::navigateUserProfile,
+            navigateToRegionSetting = navigator::navigateRegional,
             navigateLogin = {
                 navigator.navigateLogin(clearStackNavOptions)
             },
@@ -190,20 +198,12 @@ fun PawKeyNavHost(
 
         loginNavGraph(
             paddingValues = paddingValues,
-            navigateUp = {
-                navigator.navigateUp()
-            },
-            navigateNext = {
-                //navigator.navigateSignUpFlow()
-            },
             navigateSignUp = {
                 navigator.navigateSignUp(clearStackNavOptions)
             },
-            // Todo: Home 으로 수정
             navigateHome = {
-                navigator.navigateSignUp(clearStackNavOptions)
+                navigator.navigateHome(clearStackNavOptions)
             },
-            snackBarHostState = snackbarHostState
         )
 
         regionalNavGraph(

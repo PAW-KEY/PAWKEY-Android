@@ -27,6 +27,8 @@ class WalkCompleteViewModel @Inject constructor(
     private val finishWalkInfoUseCase: GetWalkInfoUseCase
 ) : ViewModel() {
     private val routeId = savedStateHandle.toRoute<WalkComplete>().routeId
+    private val routeImageId = savedStateHandle.toRoute<WalkComplete>().routeImageId
+
     private val _state = MutableStateFlow(WalkCompleteState())
     val state: StateFlow<WalkCompleteState> = _state.asStateFlow()
 
@@ -39,12 +41,18 @@ class WalkCompleteViewModel @Inject constructor(
 
     private fun fetchWalkCompleteData() {
         viewModelScope.launch {
+            _state.update {
+                it.copy(
+                    routeImageId = routeImageId
+                )
+            }
+
             launch {
                 finishResultUseCase().collect { entity ->
                     entity?.let {
                         _state.update { currentState ->
                             currentState.copy(
-                                walkCompleteUserInfo = it.toUiModel() // WalkFinishEntity -> WalkFinishModel
+                                walkCompleteUserInfo = it.toUiModel()
                             )
                         }
                     }
@@ -56,7 +64,7 @@ class WalkCompleteViewModel @Inject constructor(
                     walkFinish?.let {
                         _state.update { currentState ->
                             currentState.copy(
-                                walkCompleteFinishInfo = it.toUiModel() // WalkFinish -> WalkInfoModel
+                                walkCompleteFinishInfo = it.toUiModel()
                             )
                         }
                     }
@@ -67,16 +75,19 @@ class WalkCompleteViewModel @Inject constructor(
 
     fun fetchWalkComplete() {
         viewModelScope.launch {
+            Timber.e("fetchWalkComplete $routeId")
             walkCompleteRepository.completeWalk(routeId)
                 .onSuccess { result ->
+                    Timber.e("complete $result")
                     _state.update {
                         it.copy(
-                            walkCompleteMapInfo = result.geometry.toUiModel()
+                            walkCompleteMapInfo = result.geometry.toUiModel(),
                         )
                     }
                 }
                 .onFailure {
-                    Timber.e(it)
+                    it.printStackTrace()
+                    Timber.e("complete $it")
                 }
         }
     }

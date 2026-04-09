@@ -1,5 +1,7 @@
 package com.paw.key.presentation.ui.signup
 
+import android.Manifest
+import android.content.pm.PackageManager
 import android.net.Uri
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -16,11 +18,10 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.LocalLifecycleOwner
@@ -44,6 +45,7 @@ import com.paw.key.presentation.ui.signup.state.SignUpSideEffect
 import com.paw.key.presentation.ui.signup.state.SignUpState
 import com.paw.key.presentation.ui.signup.state.SignUpStateType
 import com.paw.key.presentation.ui.signup.viewmodel.SignUpViewModel
+import timber.log.Timber
 
 @Composable
 fun SignUpRoute(
@@ -53,16 +55,35 @@ fun SignUpRoute(
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     val lifecycleOwner = LocalLifecycleOwner.current
-    var cameraImageUri by remember { mutableStateOf<Uri?>(null) }
+    val context = LocalContext.current
 
-    val cameraLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.TakePicture(),
-        onResult = { success ->
-            if (success) {
-                viewModel.updatePetImage(cameraImageUri)
-            }
+    val takePictureLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.TakePicture()
+    ) { success ->
+        Timber.e("촬영 결과: $success")
+        if (success) {
+            state.petInfo.cameraUri?.let { viewModel.onPetImageChanged(it) }
         }
-    )
+    }
+
+    val cameraPermissionLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestPermission()
+    ) { isGranted ->
+        Timber.e("권한 런처 결과 수신: isGranted = $isGranted") // 👈 로그 확인!
+        if (isGranted) {
+            viewModel.createCameraUri()
+        } else {
+            Timber.e("카메라 권한이 거부되어 진행할 수 없습니다.")
+        }
+    }
+
+    LaunchedEffect(state.petInfo.cameraUri) {
+        Timber.e("LaunchedEffect 감지됨! 현재 cameraUri = ${state.petInfo.cameraUri}")
+        state.petInfo.cameraUri?.let { uri ->
+            Timber.e("카메라 앱 진짜 실행합니다: $uri")
+            takePictureLauncher.launch(uri)
+        }
+    }
 
     BackHandler(enabled = true) {
         viewModel.onBackPressed()
@@ -87,8 +108,6 @@ fun SignUpRoute(
 
                     is SignUpSideEffect.LaunchCamera -> {
                         val uri = it.uriString.toUri()
-                        cameraImageUri = uri
-                        cameraLauncher.launch(uri)
                     }
             }
         }
@@ -122,7 +141,21 @@ fun SignUpRoute(
             deniedPermission = viewModel::deniedPermission,
             onSelectedImage = viewModel::updatePetImage,
             requestPetInfo = viewModel::getPetInfo,
-            createCameraUri = viewModel::createCameraUri,
+            onCameraClick = {
+                val hasPermission = ContextCompat.checkSelfPermission(
+                    context,
+                    Manifest.permission.CAMERA
+                ) == PackageManager.PERMISSION_GRANTED
+
+                if (hasPermission) {
+                    Timber.e("👉 권한 이미 있음! 런처 안 거치고 바로 URI 생성 요청")
+                    viewModel.createCameraUri()
+                } else {
+                    Timber.e("👉 권한 없음! 권한 요청 런처 실행")
+                    cameraPermissionLauncher.launch(Manifest.permission.CAMERA)
+                }
+            },
+
 
             locationInfo = state.locationInfo,
             getRegions = viewModel::getRegions,
@@ -156,7 +189,7 @@ fun SignUpScreen(
     onPetBreedChanged : (PetInfoItemModel) -> Unit,
     onSelectedImage: (Uri?) -> Unit,
     requestPetInfo : () -> Unit,
-    createCameraUri: () -> Unit,
+    onCameraClick: () -> Unit,
 
     locationInfo : SignUpLocationInfo,
     getRegions: () -> Unit,
@@ -265,8 +298,10 @@ fun SignUpScreen(
                                     onSelectedImage(it)
                                 },
                                 requestPetInfo = requestPetInfo,
-                                createCameraUri = createCameraUri,
-                                modifier = Modifier
+                                onCameraClick = {
+                                    Timber.e("oncameraclick signupscreen")
+                                    onCameraClick()
+                                }
                             )
                         }
 

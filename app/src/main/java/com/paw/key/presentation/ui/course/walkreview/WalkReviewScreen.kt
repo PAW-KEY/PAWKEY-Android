@@ -36,12 +36,16 @@ import com.paw.key.core.designsystem.component.DokiButton
 import com.paw.key.core.designsystem.component.TopBar
 import com.paw.key.core.designsystem.component.walk.WalkReviewInfoHolder
 import com.paw.key.core.designsystem.theme.PawKeyTheme
+import com.paw.key.presentation.ui.community.model.FilterCategoryUiModel
+import com.paw.key.presentation.ui.community.model.SelectionType
 import com.paw.key.presentation.ui.course.walkreview.component.WalkReviewDialog
 import com.paw.key.presentation.ui.course.walkreview.component.WalkReviewImageRow
 import com.paw.key.presentation.ui.course.walkreview.component.WalkReviewMultipleFilter
 import com.paw.key.presentation.ui.course.walkreview.component.WalkReviewSingleFilter
 import com.paw.key.presentation.ui.course.walkreview.state.WalkReviewState
 import com.paw.key.presentation.ui.course.walkreview.viewmodel.WalkReviewViewModel
+import kotlinx.collections.immutable.toImmutableList
+import kotlinx.collections.immutable.toPersistentList
 
 @Composable
 fun WalkReviewRoute(
@@ -122,7 +126,7 @@ private fun WalkReviewScreen(
     navigateWalkDetail: () -> Unit = {},
     onClickImage: () -> Unit = {},
     onImageDelete: (Int) -> Unit = {},
-    onFilterClick: (String, List<String>, Boolean) -> Unit = { _, _, _ -> },
+    onFilterClick: (Int, FilterCategoryUiModel) -> Unit = {_, _ ->},
     onTitleValueChange: (String) -> Unit = {},
     onContentValueChange: (String) -> Unit = {},
     onClickComplete: (Boolean) -> Unit = {}
@@ -158,7 +162,6 @@ private fun WalkReviewScreen(
 
         Spacer(modifier = Modifier.height(20.dp))
 
-        // Todo : 서버 내용으로 변경
         Column (
             modifier = Modifier
                 .fillMaxWidth()
@@ -166,94 +169,51 @@ private fun WalkReviewScreen(
         ) {
             WalkReviewInfoHolder(
                 icon = R.drawable.ic_walk_review_location,
-                content = "서울시 강남구 역삼동"
+                content = state.routeSummary.routeDisplay.locationText
             )
 
             WalkReviewInfoHolder(
                 icon = R.drawable.ic_walk_review_time,
-                content = "2025.10.11 | 오후 11:30"
+                content = state.routeSummary.routeDisplay.dateTimeText
             )
 
             WalkReviewInfoHolder(
                 icon = R.drawable.ic_walk_review_course_info,
-                content = "2025.10.11 | 오후 11:30 | 걸음수"
+                content = state.routeSummary.routeDisplay.metaTagTexts.joinToString(separator = " | ")
             )
 
             Spacer(modifier = Modifier.height(40.dp))
 
-            WalkReviewSingleFilter(
-                title = "혼잡도",
-                filterList = state.walkReviewFilterModel.confusionSingleFilterList,
-                selectedItem = state.getSingleFilterSelection(state.walkReviewFilterModel.confusionSingleFilterList),
-                onItemSelected = {
-                    onFilterClick(
-                        it,
-                        state.walkReviewFilterModel.confusionSingleFilterList,
-                        true
+            state.filterUiModel.allCategories.forEach { category ->
+                val selectedIds = state.getSelectedOptionIds(category)
+
+                if (category.selectionType == SelectionType.SINGLE) {
+                    WalkReviewSingleFilter(
+                        title = category.name,
+                        filterList = category.options.map { it.text }.toImmutableList(),
+                        selectedItem = category.options
+                            .firstOrNull { selectedIds.contains(it.id) }?.text.orEmpty(),
+                        onItemSelected = { selectedText ->
+                            val optionId = category.options.first { it.text == selectedText }.id
+                            onFilterClick(optionId, category)
+                        }
+                    )
+                } else { // MULTI
+                    WalkReviewMultipleFilter(
+                        title = category.name,
+                        filterList = category.options.map { it.text }.toImmutableList(),
+                        selectedItems = selectedIds
+                            .mapNotNull { id -> category.options.firstOrNull { it.id == id }?.text }
+                            .toPersistentList(),
+                        onItemClick = { selectedText ->
+                            val optionId = category.options.first { it.text == selectedText }.id
+                            onFilterClick(optionId, category)
+                        }
                     )
                 }
-            )
 
-            Spacer(modifier = Modifier.height(40.dp))
-
-            WalkReviewSingleFilter(
-                title = "강아지 교류 빈도",
-                filterList = state.walkReviewFilterModel.frequencySingleFilterList,
-                selectedItem = state.getSingleFilterSelection(state.walkReviewFilterModel.frequencySingleFilterList),
-                onItemSelected = {
-                    onFilterClick(
-                        it,
-                        state.walkReviewFilterModel.frequencySingleFilterList,
-                        true
-                    )
-                }
-            )
-
-            Spacer(modifier = Modifier.height(40.dp))
-
-            // Todo : 어떻게 필터값을 받을 지 몰라서 보류
-            WalkReviewMultipleFilter(
-                title = "안전",
-                filterList = state.walkReviewFilterModel.safetyMultipleFilterList,
-                selectedItems = state.walkReviewSelectedFilterData,
-                onItemClick = {
-                    onFilterClick(
-                        it,
-                        state.walkReviewFilterModel.safetyMultipleFilterList,
-                        false
-                    )
-                }
-            )
-
-            Spacer(modifier = Modifier.height(40.dp))
-
-            WalkReviewMultipleFilter(
-                title = "편의성",
-                filterList = state.walkReviewFilterModel.comfortMultipleFilterList,
-                selectedItems = state.walkReviewSelectedFilterData,
-                onItemClick = {
-                    onFilterClick(
-                        it,
-                        state.walkReviewFilterModel.comfortMultipleFilterList,
-                        false
-                    )
-                }
-            )
-
-            Spacer(modifier = Modifier.height(40.dp))
-
-            WalkReviewMultipleFilter(
-                title = "환경",
-                filterList = state.walkReviewFilterModel.environmentMultipleFilterList,
-                selectedItems = state.walkReviewSelectedFilterData,
-                onItemClick = {
-                    onFilterClick(
-                        it,
-                        state.walkReviewFilterModel.environmentMultipleFilterList,
-                        false
-                    )
-                }
-            )
+                Spacer(modifier = Modifier.height(24.dp))
+            }
 
             Spacer(modifier = Modifier.height(40.dp))
 
@@ -265,7 +225,6 @@ private fun WalkReviewScreen(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // 텍필 넣기
             BasicTextField(
                 value = state.walkReviewTitle,
                 onValueChange = {

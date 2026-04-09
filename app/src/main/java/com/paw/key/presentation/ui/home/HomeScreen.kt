@@ -50,7 +50,6 @@ fun HomeRoute(
     LaunchedEffect(Unit) {
         viewModel.fetchPetName()
         viewModel.fetchHomeInfo()
-        viewModel.fetchHomeWeather()
 
         // Todo: 서버 부담이 있어 추후 변경하고 호출할 예정
         //viewModel.fetchHomeRoute()

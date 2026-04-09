@@ -1,6 +1,7 @@
 package com.paw.key.presentation.ui.signup.viewmodel
 
 import android.net.Uri
+import androidx.core.net.toUri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.paw.key.core.extension.toBirthDateFormat
@@ -219,7 +220,11 @@ class SignUpViewModel @Inject constructor(
 
                 _state.update { it.copy(isLoading = false) }
                 _sideEffect.emit(SignUpSideEffect.NavigateHome)
-            }.onFailure(Timber::e)
+            }.onFailure {
+                Timber.e(it)
+                _state.update { it.copy(isLoading = false) }
+                _sideEffect.emit(SignUpSideEffect.ShowSnackBar("회원가입에 실패했습니다."))
+            }
         }
     }
 
@@ -489,13 +494,28 @@ class SignUpViewModel @Inject constructor(
     }
 
     fun createCameraUri() {
+        Timber.e("createCameraUri() 호출됨")
         viewModelScope.launch {
             val uriString = imageUriManager.createTempImageUri()
-            if (uriString != null) {
-                _sideEffect.emit(SignUpSideEffect.LaunchCamera(uriString))
-            } else {
-                _sideEffect.emit(SignUpSideEffect.ShowSnackBar("카메라를 실행할 수 없습니다"))
+
+            if (uriString == null) {
+                Timber.e("🚨 앗! imageUriManager에서 URI 생성 실패 (null 반환)")
+                return@launch
             }
+
+            val uri = uriString.toUri()
+            Timber.e("✅ 임시 파일 생성 성공: $uri")
+
+            updateState {
+                it.copy(petInfo = it.petInfo.copy(cameraUri = uri))
+            }
+            Timber.e("✅ State 업데이트 완료! 이제 LaunchedEffect가 반응해야 합니다.")
+        }
+    }
+
+    fun onPetImageChanged(uri: Uri?) {
+        updateState {
+            it.copy(petInfo = it.petInfo.copy(petImage = uri, cameraUri = null)) // 사용 후 임시 URI는 초기화
         }
     }
 }

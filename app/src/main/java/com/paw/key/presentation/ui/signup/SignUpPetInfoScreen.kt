@@ -50,6 +50,7 @@ import com.paw.key.presentation.ui.signup.model.SignUpPetInfo
 import com.paw.key.presentation.ui.signup.state.Gender
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -64,7 +65,7 @@ fun SignUpPetInfoScreen(
     onPetNeuteredChanged : (Boolean) -> Unit,
     onPetBreedChanged : (PetInfoItemModel) -> Unit,
     onSelectedImage: (Uri?) -> Unit,
-    createCameraUri: () -> Unit,
+    onCameraClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     var isSheetOpen by remember { mutableStateOf(false) }
@@ -96,17 +97,6 @@ fun SignUpPetInfoScreen(
         onResult = { isGranted ->
             if (isGranted) {
                 legacyGalleryLauncher.launch("image/*")
-            } else {
-                deniedPermission()
-            }
-        }
-    )
-
-    val cameraPermissionLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.RequestPermission(),
-        onResult = { isGranted ->
-            if (isGranted) {
-                createCameraUri()
             } else {
                 deniedPermission()
             }
@@ -271,7 +261,9 @@ fun SignUpPetInfoScreen(
     if (isImageTypeDialogOpen) {
         ImageTypeSelectDialog(
             onCameraClick = {
-                cameraPermissionLauncher.launch(Manifest.permission.CAMERA)
+                Timber.e("oncameraclick")
+                onCameraClick()
+                isImageTypeDialogOpen = false
             },
             onGalleryClick = {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {

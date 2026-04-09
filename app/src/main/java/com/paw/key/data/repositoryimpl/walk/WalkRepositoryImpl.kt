@@ -34,7 +34,7 @@ class WalkRepositoryImpl @Inject constructor(
         suspendRunCatching {
             dataSource.pointWalk(
                 dto = walkPoint.toDto()
-            ).data
+            )
         }
 
     override suspend fun finishWalk(
@@ -52,7 +52,7 @@ class WalkRepositoryImpl @Inject constructor(
         result
     }
 
-    override suspend fun completeWalk(routeId: String): Result<WalkCompleteEntity> =
+    override suspend fun completeWalk(routeId: Int): Result<WalkCompleteEntity> =
         suspendRunCatching {
             dataSource.completeWalk(
                 routeId = routeId

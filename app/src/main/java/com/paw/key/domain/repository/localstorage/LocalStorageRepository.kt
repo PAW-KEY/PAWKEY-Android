@@ -12,6 +12,8 @@ interface LocalStorageRepository {
     suspend fun getUserId(): Int
     suspend fun saveUserProvider(provider: String)
     suspend fun getUserProvider(): String
+    suspend fun saveUserRegionId(regionId: Int)
+    suspend fun getUserRegionId(): Int
 
     // 펫 정보 관련
     suspend fun savePetId(petId: Int)

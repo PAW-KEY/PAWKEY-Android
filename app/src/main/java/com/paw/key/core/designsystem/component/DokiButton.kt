@@ -29,6 +29,8 @@ fun DokiButton(
     }
 
     val textColor = when {
+        isDialog && enabled -> PawKeyTheme.colors.background
+        isDialog -> PawKeyTheme.colors.defaultDark
         enabled -> PawKeyTheme.colors.background
         else -> PawKeyTheme.colors.defaultMiddle
     }

@@ -7,11 +7,15 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.paw.key.core.extension.toLatLng
 import com.paw.key.core.util.UiState
-import com.paw.key.domain.repository.WalkSharedResultRepository
+import com.paw.key.domain.entity.image.ImageDomainType
+import com.paw.key.domain.entity.image.ImagePresignedEntity
+import com.paw.key.domain.repository.image.ImageRepository
 import com.paw.key.domain.repository.walk.WalkRepository
+import com.paw.key.domain.usecase.walk.GetWalkGeometryUseCase
 import com.paw.key.presentation.ui.course.navigation.WalkCourse
 import com.paw.key.presentation.ui.course.util.RealTimeLocationListener
 import com.paw.key.presentation.ui.course.walkcourse.model.toEntity
+import com.paw.key.presentation.ui.course.walkcourse.model.toPersistentLatLngList
 import com.paw.key.presentation.ui.course.walkcourse.state.WalkCourseSideEffect
 import com.paw.key.presentation.ui.course.walkcourse.state.WalkCourseState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -33,10 +37,17 @@ import javax.inject.Inject
 class WalkCourseViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val walkRepository: WalkRepository,
-    private val walkSharedResultRepository: WalkSharedResultRepository,
+    private val imageRepository: ImageRepository,
+    private val getWalkGeometryUseCase: GetWalkGeometryUseCase,
 ) : ViewModel(), RealTimeLocationListener {
-    // Todo : saveStateHandle로 isShared 받아서 처리하기
+
+    // 세션용 routeId => String
     private val routeId = savedStateHandle.toRoute<WalkCourse>().routeId
+
+    // 일반용 routeId => Int
+    private val infoRouteId = savedStateHandle.toRoute<WalkCourse>().infoRouteId
+    private val isShared = savedStateHandle.toRoute<WalkCourse>().isShared
+
     private val _state = MutableStateFlow(WalkCourseState())
     val state: StateFlow<WalkCourseState> = _state.asStateFlow()
 
@@ -48,6 +59,27 @@ class WalkCourseViewModel @Inject constructor(
 
     private var initialSensorSteps: Long = -1L
     private var lastLocation: Location? = null
+
+    init {
+        if (isShared) {
+            fetchWalkGeometry()
+        }
+    }
+
+    fun fetchWalkGeometry() {
+        viewModelScope.launch {
+            getWalkGeometryUseCase(infoRouteId ?: -1)
+                .onSuccess { result ->
+                    _state.update { currentState ->
+                        currentState.copy(
+                            mapState = currentState.mapState.copy(
+                                poiPoints = result.geometry.coordinates.toPersistentLatLngList()
+                            )
+                        )
+                    }
+                }
+        }
+    }
 
     fun onPermissionsGranted() {
         if (_state.value.mapState.initialState is UiState.Loading) {
@@ -118,6 +150,8 @@ class WalkCourseViewModel @Inject constructor(
 
     // 5초마다 좌표 서버 전송 타이머 시작
     private fun startPointSyncTimer() {
+        if (isShared) return
+
         if (pointSyncJob?.isActive == true) return
 
         pointSyncJob = viewModelScope.launch {
@@ -200,39 +234,69 @@ class WalkCourseViewModel @Inject constructor(
         }
     }
 
-    // Todo: 서버 내용 확인하고 넘기기
-    fun stopTracking() {
+    fun stopTracking(snapshotUri: String?) {
         viewModelScope.launch {
             _state.update { currentState ->
                 currentState.copy(
                     recordingState = currentState.recordingState.copy(
                         isRecording = false,
                         endedAt = LocalDateTime.now().toString()
-                    )
+                    ),
+                    snapshotUri = snapshotUri
                 )
+            }
+
+            if (isShared) {
+                _state.update { it.copy(isStopTracking = true) }
+                _sideEffect.emit(WalkCourseSideEffect.NavigateComplete(infoRouteId ?:-1, null))
+                return@launch
             }
 
             val currentState = _state.value
 
+            val routeImage = currentState.snapshotUri?.let { uri ->
+                val presignedResult = imageRepository.presignedImage(
+                    ImagePresignedEntity(
+                        domain = ImageDomainType.ROUTE,
+                        contentType = "image/webp"
+                    )
+                ).getOrElse {
+                    _sideEffect.emit(WalkCourseSideEffect.ShowSnackBar("이미지 업로드 준비 실패"))
+                    return@launch
+                }
+
+                imageRepository.uploadS3(
+                    presignedUrl = presignedResult.uploadUrl,
+                    uriString = uri
+                ).getOrElse {
+                    _sideEffect.emit(WalkCourseSideEffect.ShowSnackBar("이미지 업로드 실패"))
+                    return@launch
+                }
+
+                val registerImage = imageRepository.registerImage(
+                    uriString = "${presignedResult.imageUrl}#${uri}",
+                    domainType = ImageDomainType.ROUTE,
+                ).onFailure{Timber.e(it)}.getOrThrow()
+
+                registerImage
+            }
+
             walkRepository.finishWalk(
                 routeId = routeId,
                 walkFinish = currentState.toEntity()
-            ).onSuccess {
-                _state.update {
-                    it.copy(
-                        isStopTracking = true
-                    )
-                }
-
-                if (_state.value.isStopTracking) {
-                    _sideEffect.emit(WalkCourseSideEffect.NavigateComplete(routeId))
-                }
+            ).onSuccess { result ->
+                _state.update { it.copy(isStopTracking = true) }
+                _sideEffect.emit(WalkCourseSideEffect.NavigateComplete(result.routeId, routeImage?.imageId ?: -1))
             }.onFailure {
                 Timber.e(it)
                 _sideEffect.emit(WalkCourseSideEffect.ShowSnackBar("산책 종료 실패"))
             }
-
         }
+    }
+
+    fun onStopTrackingCancelled() {
+        _state.update { it.copy(isStopTracking = false) }
+        startTracking()
     }
 
     override fun onLocationChanged(location: Location) {
@@ -250,7 +314,7 @@ class WalkCourseViewModel @Inject constructor(
                 it.copy(
                     mapState = it.mapState.copy(
                         currentLocation = newLatLng,
-                        poiPoints = it.mapState.poiPoints.add(newLatLng)
+                        poiPoints = if (isShared) it.mapState.poiPoints else it.mapState.poiPoints.add(newLatLng)
                     )
                 )
             }
@@ -283,6 +347,11 @@ class WalkCourseViewModel @Inject constructor(
                 )
             }
         }
+    }
+
+    fun onStopTrackingRequested() {
+        pauseTracking()
+        _state.update { it.copy(isStopTracking = true) }
     }
 
     override fun onCleared() {

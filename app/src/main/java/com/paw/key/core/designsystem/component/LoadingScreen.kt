@@ -20,7 +20,7 @@ fun LoadingScreen() {
         modifier = Modifier
             .fillMaxSize()
             .background(
-                color = PawKeyTheme.colors.contents.copy(alpha = 0.5f)
+                color = PawKeyTheme.colors.contents.copy(alpha = 0.1f)
             ),
         contentAlignment = Alignment.Center
     ) {

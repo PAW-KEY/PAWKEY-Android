@@ -22,10 +22,17 @@ fun DokiBorderButton(
     enabled: Boolean,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
+    isDialog: Boolean = false,
 ) {
     val textColor = when {
         enabled -> PawKeyTheme.colors.primary
         else -> PawKeyTheme.colors.defaultMiddle
+    }
+
+    val textStyle = when {
+        isDialog -> PawKeyTheme.typography.subTitle
+        enabled -> PawKeyTheme.typography.mainButtonActive
+        else -> PawKeyTheme.typography.mainButtonDefault
     }
 
     Box(
@@ -48,7 +55,7 @@ fun DokiBorderButton(
     ) {
         Text(
             text = text,
-            style = PawKeyTheme.typography.mainButtonActive,
+            style = textStyle,
             color = textColor,
             modifier = Modifier.fillMaxWidth(),
             textAlign = TextAlign.Center

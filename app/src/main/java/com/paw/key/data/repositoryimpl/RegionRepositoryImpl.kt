@@ -19,4 +19,8 @@ class RegionRepositoryImpl @Inject constructor(
     override suspend fun getRegionList(): Result<List<DistrictEntity>> = suspendRunCatching {
         regionDataSource.getRegionsList().data.districtDtos.map { it.toEntity() }
     }
+
+    override suspend fun patchUserRegions(regionId: Int): Result<Unit> = suspendRunCatching{
+        regionDataSource.patchUserRegions(regionId)
+    }
 }

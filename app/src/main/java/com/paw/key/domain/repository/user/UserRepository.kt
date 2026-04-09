@@ -15,6 +15,10 @@ interface UserRepository {
         provider: String
     ): Result<Unit>
 
+    suspend fun logOutUser(
+        deviceId: String
+    ) : Result<Unit>
+
     suspend fun getPetBreeds(): Result<PetBreedsEntity>
 
     suspend fun getPetProfiles(petId: Int): Result<PetProfileEntity>

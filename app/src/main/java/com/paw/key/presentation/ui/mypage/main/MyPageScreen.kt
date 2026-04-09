@@ -10,6 +10,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
@@ -17,12 +20,14 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.paw.key.core.designsystem.component.TopBar
+import com.paw.key.core.designsystem.component.dialog.DokiDialog
 import com.paw.key.core.designsystem.theme.PawKeyTheme
 import com.paw.key.core.extension.collectSideEffect
 import com.paw.key.presentation.ui.mypage.main.component.MyList
 import com.paw.key.presentation.ui.mypage.main.component.MyPageCard
 import com.paw.key.presentation.ui.mypage.main.component.OwnerCard
 import com.paw.key.presentation.ui.mypage.main.component.SettingList
+import com.paw.key.presentation.ui.mypage.main.component.WithdrawalReasonDialog
 import com.paw.key.presentation.ui.mypage.main.model.MyListState
 import com.paw.key.presentation.ui.mypage.main.model.MyPageSideEffect
 import com.paw.key.presentation.ui.mypage.main.model.MyPageState
@@ -37,12 +42,17 @@ fun MyPageRoute(
     navigatePetProfileList: () -> Unit,
     navigateUserProfile: () -> Unit,
     navigateToLogin: () -> Unit,
+    navigateToRegionSetting: () -> Unit,
     navigateDbtiStart: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: MyPageViewModel = hiltViewModel(),
 ) {
     val context = LocalContext.current
     val state by viewModel.state.collectAsStateWithLifecycle()
+
+    var isShowLogOutDialog by remember { mutableStateOf(false) }
+    var isShowWithDrawDialog by remember { mutableStateOf(false) }
+    var isShowDeleteDialog by remember { mutableStateOf(false) }
 
     viewModel.sideEffect.collectSideEffect {
         when(it) {
@@ -64,9 +74,47 @@ fun MyPageRoute(
         navigateCourseInfo = navigateCourseInfo,
         navigatePetProfileList = navigatePetProfileList,
         navigateUserProfile = navigateUserProfile,
+        onLogOutClick = { isShowLogOutDialog = true },
+        onWithDrawClick = { isShowWithDrawDialog = true },
+        onUpdateRegion = navigateToRegionSetting,
         navigateDbtiStart = navigateDbtiStart,
         modifier = modifier
     )
+
+    if (isShowLogOutDialog) {
+        DokiDialog(
+            onDismiss = { isShowLogOutDialog = false },
+            onConfirm = viewModel::logOutUser,
+            title = "로그아웃",
+            subDescription = "진짜로 로그아웃 하시게요?",
+            confirmText = "로그아웃",
+            dismissText = "취소"
+        )
+    }
+
+    if (isShowDeleteDialog) {
+        DokiDialog(
+            onDismiss = { isShowDeleteDialog = false },
+            onConfirm = viewModel::removeUser,
+            title = "탈퇴하기",
+            subDescription = "진짜로 탈퇴하시게요?",
+            confirmText = "탈퇴하기",
+            dismissText = "취소"
+        )
+    }
+
+    if (isShowWithDrawDialog) {
+        WithdrawalReasonDialog(
+            onDismiss = { isShowWithDrawDialog = false },
+            onNextStep = {
+                isShowWithDrawDialog = false
+                isShowDeleteDialog = true
+            },
+            onKeepUsing = {
+                isShowWithDrawDialog = false
+            }
+        )
+    }
 }
 
 @Composable
@@ -79,7 +127,10 @@ fun MyPageScreen(
     navigateCourseInfo: (CourseType) -> Unit,
     navigatePetProfileList: () -> Unit,
     navigateUserProfile: () -> Unit,
-    navigateDbtiStart: () -> Unit,  // ← 추가!
+    onLogOutClick: () -> Unit,
+    onWithDrawClick: () -> Unit,
+    onUpdateRegion: () -> Unit,
+    navigateDbtiStart: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -92,7 +143,7 @@ fun MyPageScreen(
             title = "마이페이지",
             onBackClick = navigateUp,
             isBackVisible = false,
-            onClickTitle = deleteUser
+            onClickTitle = {}
         )
 
         LazyColumn(
@@ -105,7 +156,7 @@ fun MyPageScreen(
             item {
                 OwnerCard(
                     ownerName = state.ownerName,
-                    ownerEmail = "",
+                    ownerEmail = state.ownerEmail,
                     navigateUserProfile = navigateUserProfile
                 )
             }
@@ -114,7 +165,7 @@ fun MyPageScreen(
                 with(state.petInfo) {
                     MyPageCard(
                         userName = petName,
-                        userAge = "6개월",
+                        userAge = petAge,
                         userGender = petGender,
                         dogBreed = petBreed,
                         buttonTitle = "DBTI검사하러 가기",
@@ -144,7 +195,13 @@ fun MyPageScreen(
                 SettingList(
                     listTitle = "설정",
                     listContent = MyListState(),
-                    onListClick = { }
+                    onListClick = {
+                        when(it) {
+                            0 -> onUpdateRegion() // 산책 지역 설정
+                            2 -> onLogOutClick() // 로그아웃
+                            3 -> onWithDrawClick() // 탈퇴하기
+                        }
+                    }
                 )
             }
         }
@@ -168,6 +225,10 @@ private fun MyPageScreenPreview() {
             navigateCourseInfo = {},
             navigatePetProfileList = {},
             navigateUserProfile = {},
+            deleteUser = {},
+            onLogOutClick = {},
+            onWithDrawClick = {},
+            onUpdateRegion = {}
             navigateDbtiStart = {},
             deleteUser = {},
         )

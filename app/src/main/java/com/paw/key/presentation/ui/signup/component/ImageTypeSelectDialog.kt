@@ -46,11 +46,12 @@ fun ImageTypeSelectDialog(
                 .fillMaxSize()
                 .background(color = PawKeyTheme.colors.black.copy(alpha = 0.75f))
                 .padding(horizontal = 16.dp),
-            contentAlignment = Alignment.Center
+            contentAlignment = Alignment.BottomCenter
         ) {
             Column (
                 modifier = Modifier
-                    .fillMaxSize()
+                    .fillMaxWidth()
+                    .padding(bottom = 32.dp)
             ) {
                 Column(
                     modifier = Modifier
@@ -155,11 +156,12 @@ private fun ImageTypeSelectPreview() {
                 .fillMaxSize()
                 .background(color = PawKeyTheme.colors.black.copy(alpha = 0.75f))
                 .padding(horizontal = 16.dp),
-            contentAlignment = Alignment.Center
+            contentAlignment = Alignment.BottomCenter
         ) {
             Column (
                 modifier = Modifier
-                    .fillMaxSize()
+                    .fillMaxWidth()
+                    .padding(bottom = 32.dp)
             ) {
                 Column(
                     modifier = Modifier

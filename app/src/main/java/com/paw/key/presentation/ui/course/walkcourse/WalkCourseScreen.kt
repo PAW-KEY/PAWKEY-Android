@@ -1,7 +1,6 @@
 package com.paw.key.presentation.ui.course.walkcourse
 
 import android.Manifest
-import android.graphics.Bitmap
 import android.os.Build
 import android.view.Gravity
 import android.widget.Toast
@@ -54,6 +53,7 @@ import com.naver.maps.map.compose.CameraUpdateReason
 import com.naver.maps.map.compose.ExperimentalNaverMapApi
 import com.naver.maps.map.compose.LocationOverlay
 import com.naver.maps.map.compose.LocationTrackingMode
+import com.naver.maps.map.compose.MapEffect
 import com.naver.maps.map.compose.MapProperties
 import com.naver.maps.map.compose.MapUiSettings
 import com.naver.maps.map.compose.NaverMap
@@ -68,6 +68,7 @@ import com.paw.key.core.designsystem.theme.PawKeyTheme
 import com.paw.key.core.extension.noRippleClickable
 import com.paw.key.core.util.PermissionRequestEffect
 import com.paw.key.core.util.UiState
+import com.paw.key.core.util.saveBitmapToCache
 import com.paw.key.presentation.ui.course.util.FusedLocationSource
 import com.paw.key.presentation.ui.course.util.StepCountListener
 import com.paw.key.presentation.ui.course.util.rememberCustomFusedLocationSource
@@ -95,7 +96,7 @@ fun WalkCourseRoute(
     paddingValues: PaddingValues,
     navigateUp: () -> Unit = {},
     navigateReview: () -> Unit = {},
-    navigateWalkComplete: (routeId: String) -> Unit = {},
+    navigateWalkComplete: (routeId: Int, routeImageId: Int) -> Unit = {_, _ ->},
     viewModel: WalkCourseViewModel = hiltViewModel(),
 ) {
     val lifecycleOwner = LocalLifecycleOwner.current
@@ -134,7 +135,7 @@ fun WalkCourseRoute(
 
                     WalkCourseSideEffect.NavigateReview -> navigateReview()
 
-                    is WalkCourseSideEffect.NavigateComplete -> navigateWalkComplete(sideEffect.routeId)
+                    is WalkCourseSideEffect.NavigateComplete -> navigateWalkComplete(sideEffect.routeId, sideEffect.routeImageId ?: -1)
 
                     else -> {}
                 }
@@ -227,12 +228,15 @@ fun WalkCourseRoute(
                 onStartTracking = { // 계속하기
                     viewModel.startTracking()
                 },
-                onStopTracking = { // 종료 후 넘어가기 -> 서버 전송 후 완료 뷰로 넘어가기
-                    viewModel.stopTracking()
+                onStopTracking = {
+                    viewModel.onStopTrackingRequested()
                 },
-                onCaptured = { bitmap ->
-                    // Todo : bitmap 안쓸거임
+                onConfirmStop = { uri ->
+                    viewModel.stopTracking(snapshotUri = uri)
                 },
+                onCancelStop = {
+                    viewModel.onStopTrackingCancelled()
+                }
             )
         }
     }
@@ -251,11 +255,15 @@ fun WalkCourseScreen(
     isTracking: Boolean, // 포커싱 여부
     isRecording: Boolean, // 산책 중단, 계속 여부
     onClickTracking: () -> Unit, // 따라다니기
-    onStartTracking: () -> Unit, // 계속하기
     onPauseTracking: () -> Unit, // 잠시 중단
-    onStopTracking: () -> Unit, // 종료하기
-    onCaptured: (Bitmap?) -> Unit,
+    onStopTracking: () -> Unit,              // 산책 중단하기/종료하기 1차 클릭
+    onConfirmStop: (snapshotUri: String?) -> Unit,  // 종료 확인 "예"
+    onCancelStop: () -> Unit,                // 종료 취소 "아니오"
+    onStartTracking: () -> Unit,             // 일시정지 상태에서 "이어서 하기"
 ) {
+    val context = LocalContext.current
+    var naverMapInstance by remember { mutableStateOf<com.naver.maps.map.NaverMap?>(null) }
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -274,12 +282,16 @@ fun WalkCourseScreen(
             ),
             properties = mapProperties,
         ) {
+            MapEffect { map ->
+                naverMapInstance = map
+            }
+
             if (currentLocation != null) {
                 LocationOverlay(
                     position = currentLocation,
                     icon = OverlayImage.fromResource(R.drawable.user_poi),
-                    iconWidth = 24,
-                    iconHeight = 24,
+                    iconWidth = 36,
+                    iconHeight = 36,
                 )
             }
 
@@ -287,7 +299,7 @@ fun WalkCourseScreen(
                 PathOverlay(
                     coords = routeLineCoords,
                     width = 5.dp,
-                    color = PawKeyTheme.colors.green500,
+                    color = PawKeyTheme.colors.primary,
                     outlineWidth = 0.dp
                 )
             }
@@ -383,7 +395,9 @@ fun WalkCourseScreen(
                             DokiButton(
                                 text = "산책 종료하기",
                                 enabled = true,
-                                onClick = onStopTracking,
+                                onClick = {
+                                    onStopTracking()
+                                },
                                 modifier = Modifier
                                     .weight(1f)
                             )
@@ -438,7 +452,7 @@ fun WalkCourseScreen(
                     DokiBorderButton(
                         text = if (state.isStopTracking) "아니오" else "이어서 하기",
                         enabled = true,
-                        onClick = onStartTracking,
+                        onClick = if (state.isStopTracking) onCancelStop else onStartTracking,
                         modifier = Modifier
                             .weight(1f)
                             .background(Color.White, RoundedCornerShape(8.dp))
@@ -449,7 +463,23 @@ fun WalkCourseScreen(
                     DokiButton(
                         text = if (state.isStopTracking) "예" else "산책 종료하기",
                         enabled = true,
-                        onClick = onStopTracking,
+                        onClick = {
+                            if (state.isStopTracking) {
+                                naverMapInstance?.takeSnapshot(false) { bitmap ->
+                                    val uri = saveBitmapToCache(
+                                        context = context,
+                                        bitmap = bitmap,
+                                        childName = "walk_snapshot_"
+                                    ).getOrNull()?.toString()
+
+                                    bitmap.recycle()
+
+                                    onConfirmStop(uri)
+                                } ?: onConfirmStop(null)
+                            } else {
+                                onStopTracking()
+                            }
+                        },
                         modifier = Modifier.weight(1f)
                     )
                 }

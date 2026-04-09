@@ -27,7 +27,7 @@ class MyPageViewModel @Inject constructor(
 ) : ViewModel() {
     private val _state = MutableStateFlow(MyPageState())
     val state: StateFlow<MyPageState>
-        get() = _state.asStateFlow() //get할때마다 업데이트
+        get() = _state.asStateFlow()
 
     private val _sideEffect = MutableSharedFlow<MyPageSideEffect>()
     val sideEffect = _sideEffect.asSharedFlow()
@@ -46,6 +46,7 @@ class MyPageViewModel @Inject constructor(
                     _state.update { state ->
                         state.copy(
                             ownerName = "${user.name}님",
+                            ownerEmail = user.email
                         )
                     }
                 }.onFailure { e ->
@@ -71,6 +72,23 @@ class MyPageViewModel @Inject constructor(
                 }.onFailure {
                     Timber.e("getPetProfiles: $it")
                     _sideEffect.emit(MyPageSideEffect.ShowSnackBar("펫 프로필 불러오기 실패"))
+                }
+        }
+    }
+
+    fun logOutUser() {
+        viewModelScope.launch {
+            val deviceId = localRepository.getDeviceId()
+
+            userRepository.logOutUser(deviceId = deviceId)
+                .onSuccess {
+                    Timber.e("로그아웃 성공")
+                    localRepository.clearInfo()
+                    appRestarter.restartApp()
+                }
+                .onFailure {
+                    Timber.e(it)
+                    _sideEffect.emit(MyPageSideEffect.ShowSnackBar("로그아웃에 실패했어요 다시 시도해주세요"))
                 }
         }
     }
