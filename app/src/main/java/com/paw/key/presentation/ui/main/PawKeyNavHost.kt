@@ -128,7 +128,8 @@ fun PawKeyNavHost(
             navigateUserProfile = navigator::navigateUserProfile,
             navigateLogin = {
                 navigator.navigateLogin(clearStackNavOptions)
-            }
+            },
+            navigateDbtiStart = navigator::navigateDbtiStart
         )
 
         courseInfoNavGraph(
