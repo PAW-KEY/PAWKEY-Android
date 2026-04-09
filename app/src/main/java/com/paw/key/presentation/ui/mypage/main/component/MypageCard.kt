@@ -31,6 +31,7 @@ fun MyPageCard(
     dogBreed: String,
     dogImage: String?,
     buttonTitle: String,
+    onButtonClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -59,10 +60,9 @@ fun MyPageCard(
 
         CardButton(
             text = buttonTitle,
-            onClick = {}
+            onClick = onButtonClick
         )
     }
-
 }
 
 
@@ -145,7 +145,8 @@ private fun MyPageCardPreview() {
             userGender = "남",
             dogBreed = "견종 이름",
             buttonTitle = "DBTI 검사하러 가기",
-            dogImage = null
+            dogImage = null,
+            onButtonClick = {}
         )
     }
 }

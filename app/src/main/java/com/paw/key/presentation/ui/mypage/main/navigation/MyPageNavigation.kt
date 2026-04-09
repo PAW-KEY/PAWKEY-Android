@@ -25,6 +25,7 @@ fun NavGraphBuilder.myPageNavGraph(
     navigatePetProfileList: () -> Unit,
     navigateUserProfile: () -> Unit,
     navigateLogin: () -> Unit,
+    navigateDbtiStart: () -> Unit,  // ← 추가!
     modifier: Modifier = Modifier
 ) {
     composable<MyPage> {
@@ -36,6 +37,7 @@ fun NavGraphBuilder.myPageNavGraph(
             navigatePetProfileList = navigatePetProfileList,
             navigateUserProfile = navigateUserProfile,
             navigateToLogin = navigateLogin,
+            navigateDbtiStart = navigateDbtiStart,
             modifier = modifier
         )
     }
