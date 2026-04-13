@@ -219,7 +219,7 @@ class SignUpViewModel @Inject constructor(
                 localStorageRepository.savePetName(_state.value.petInfo.petName)
 
                 _state.update { it.copy(isLoading = false) }
-                _sideEffect.emit(SignUpSideEffect.NavigateHome)
+                _sideEffect.emit(SignUpSideEffect.NavigateDBTI())
             }.onFailure {
                 Timber.e(it)
                 _state.update { it.copy(isLoading = false) }
