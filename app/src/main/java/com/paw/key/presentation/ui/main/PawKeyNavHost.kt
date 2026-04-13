@@ -112,9 +112,9 @@ fun PawKeyNavHost(
 
         detailNavGraph(
             paddingValues = paddingValues,
-            navigateToSharedCourse = { routeId, isShared ->
+            navigateToSharedCourse = { infoRouteId, isShared ->
                 navigator.navigateWalkCourse(
-                    routeId = routeId,
+                    infoRouteId = infoRouteId.toInt(),
                     isShared = isShared
                 )
             },
@@ -211,9 +211,8 @@ fun PawKeyNavHost(
         regionalNavGraph(
             paddingValues = paddingValues,
             navigateUp = navigator::navigateUp,
-            navigateNext = navigator::navigateHome,
+            navigateNext = navigator::navigateMyPage,
             snackBarHostState = snackbarHostState,
-            navigateDbtiStart = navigator::navigateDbtiStart
         )
 
         signUpNavGraph(
@@ -224,12 +223,12 @@ fun PawKeyNavHost(
                 }
                 navigator.navigateLogin(options)
             },
-            navigateToHome = {
+            navigateToDBTI = {
                 val options = navOptions {
                     popUpTo(0) { inclusive = true }
                     launchSingleTop = true
                 }
-                navigator.navigateHome(options)
+                navigator.navigateDbtiStart(showSkip = it, navOptions = options)
             }
         )
     }

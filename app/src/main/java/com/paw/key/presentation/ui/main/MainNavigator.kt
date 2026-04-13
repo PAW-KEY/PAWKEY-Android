@@ -124,12 +124,14 @@ class MainNavigator(
     // walk course
     fun navigateWalkCourse(
         navOptions: NavOptions? = null,
-        routeId: String,
+        routeId: String? = null,
+        infoRouteId: Int? = null,
         isShared: Boolean = false
     ) {
         navController.navigateWalkCourse(
             navOptions = navOptions,
             routeId = routeId,
+            infoRouteId = infoRouteId,
             isShared = isShared
         )
     }
