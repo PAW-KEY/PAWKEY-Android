@@ -30,7 +30,6 @@ fun NavGraphBuilder.regionalNavGraph(
             navigateUp = navigateUp,
             navigateNext = navigateNext,
             navigateDbtiStart = navigateDbtiStart,
-            modifier = modifier
         )
     }
 }

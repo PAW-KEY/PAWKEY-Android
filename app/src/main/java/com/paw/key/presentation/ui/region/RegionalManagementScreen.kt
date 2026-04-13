@@ -65,8 +65,6 @@ fun RegionalManagementRoute(
     snackBarHostState: SnackbarHostState,
     navigateUp: () -> Unit,
     navigateNext: () -> Unit,
-    viewModel: RegionViewModel = hiltViewModel(),
-    modifier: Modifier = Modifier,
     regionId: Int? = -1,
     viewModel: RegionViewModel = hiltViewModel(),
     navigateDbtiStart: () -> Unit
