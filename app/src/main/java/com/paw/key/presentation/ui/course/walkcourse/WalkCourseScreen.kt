@@ -79,6 +79,7 @@ import com.paw.key.presentation.ui.course.walkcourse.state.WalkCourseState
 import com.paw.key.presentation.ui.course.walkcourse.viewmodel.WalkCourseViewModel
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.coroutines.flow.drop
+import timber.log.Timber
 import java.util.Locale
 
 private val REQUIRED_PERMISSIONS = mutableListOf(
@@ -171,11 +172,21 @@ fun WalkCourseRoute(
         }
     }
 
-    LaunchedEffect(state.mapState.poiPoints.size) {
-        if (state.mapState.poiPoints.size >= 2) {
+    LaunchedEffect(state.mapState.poiPoints.size, state.isShared) {
+        if (state.isShared && state.mapState.poiPoints.size >= 2) {
+            Timber.e("course isShared")
             val bounds = LatLngBounds.from(state.mapState.poiPoints)
             cameraPositionState.animate(
-                CameraUpdate.fitBounds(bounds, 300)
+                update = CameraUpdate.fitBounds(bounds, 250),
+                durationMs = 1000
+            )
+        }
+
+        else if (!state.isShared && state.mapState.poiPoints.size >= 2) {
+            Timber.e("course not isShared")
+            val bounds = LatLngBounds.from(state.mapState.poiPoints)
+            cameraPositionState.animate(
+                update = CameraUpdate.fitBounds(bounds, 250)
             )
         }
     }

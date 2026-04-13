@@ -17,7 +17,8 @@ data class WalkCourseState(
     val stepCounterState: StepCounterState = StepCounterState(),
     val totalTimeMillis: Long = 0L,
     val isStopTracking: Boolean = false, // true는 stop됨, false는 다시 시작
-    val snapshotUri: String? = null
+    val snapshotUri: String? = null,
+    val isShared: Boolean = false,
 ) {
     val formattedTime: String
         get() = formatTime(this.totalTimeMillis)

@@ -5,7 +5,7 @@ import androidx.navigation.NavOptions
 
 fun NavController.navigateWalkCourse(
     navOptions: NavOptions? = null,
-    routeId: String,
+    routeId: String?,
     infoRouteId: Int? = null,
     isShared: Boolean = false
 ) {

@@ -10,7 +10,7 @@ data object WalkPrepare: WalkRoute
 
 @Serializable
 data class WalkCourse(
-    val routeId: String, // 세션용
+    val routeId: String? = null, // 세션용
     val infoRouteId: Int? = null, // 일반용 - 좌표 조회, 리뷰 등록, detail 조회 등
     val isShared: Boolean = false
 ): WalkRoute

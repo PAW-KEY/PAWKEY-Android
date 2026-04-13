@@ -68,6 +68,11 @@ class WalkCourseViewModel @Inject constructor(
 
     fun fetchWalkGeometry() {
         viewModelScope.launch {
+            _state.update {
+                it.copy(
+                    isShared = true
+                )
+            }
             getWalkGeometryUseCase(infoRouteId ?: -1)
                 .onSuccess { result ->
                     _state.update { currentState ->
@@ -221,7 +226,7 @@ class WalkCourseViewModel @Inject constructor(
 
         val currentTimestamp = (System.currentTimeMillis() / 1000).toInt()
         val walkPointEntity = currentLocation.toEntity(
-            routeId = routeId,
+            routeId = routeId!!,
             timestamp = currentTimestamp
         )
 
@@ -282,7 +287,7 @@ class WalkCourseViewModel @Inject constructor(
             }
 
             walkRepository.finishWalk(
-                routeId = routeId,
+                routeId = routeId!!,
                 walkFinish = currentState.toEntity()
             ).onSuccess { result ->
                 _state.update { it.copy(isStopTracking = true) }
