@@ -8,6 +8,7 @@ import com.paw.key.domain.repository.posts.PostsRepository
 import com.paw.key.presentation.ui.detail.model.toUiModel
 import com.paw.key.presentation.ui.detail.navigation.Detail
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -25,9 +26,10 @@ class DetailViewModel @Inject constructor(
     private val _state = MutableStateFlow(DetailState())
     val state = _state.asStateFlow()
 
+    private val routeIdDeferred = CompletableDeferred<Int>()
+
     init {
         fetchDetail(postId)
-        fetchTopReview()
     }
 
     fun fetchDetail(
@@ -36,18 +38,22 @@ class DetailViewModel @Inject constructor(
         viewModelScope.launch {
             postsRepository.getPostsDetail(postId = postId)
                 .onSuccess { result ->
+                    val uiModel = result.toUiModel()
+
                     _state.update { currentState ->
                         currentState.copy(
-                            postDetail = result.toUiModel(),
+                            postDetail = uiModel,
                         )
                     }
+                    routeIdDeferred.complete(uiModel.routeDisplay.routeId)
+                    fetchTopReview(routeId = uiModel.routeDisplay.routeId)
                 }
                 .onFailure(Timber::e)
         }
     }
 
-    fun fetchTopReview() {
-        val routeId = _state.value.postDetail.routeDisplay.routeId
+    fun fetchTopReview(routeId: Int) {
+        Timber.e("fetchTop $routeId")
         viewModelScope.launch {
             postsRepository.getTop3Reviews(routeId = routeId)
                 .onSuccess { result ->

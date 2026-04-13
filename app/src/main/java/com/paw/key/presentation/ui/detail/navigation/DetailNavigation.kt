@@ -8,6 +8,7 @@ import androidx.navigation.compose.composable
 import com.paw.key.core.navigation.Route
 import com.paw.key.presentation.ui.detail.DetailRoute
 import kotlinx.serialization.Serializable
+import timber.log.Timber
 
 fun NavController.navigateDetail(
     navOptions: NavOptions?,
@@ -18,13 +19,14 @@ fun NavController.navigateDetail(
 
 fun NavGraphBuilder.detailNavGraph(
     paddingValues: PaddingValues,
-    navigateToSharedCourse: (routeId: String, isShared: Boolean) -> Unit,
+    navigateToSharedCourse: (infoRouteId: String, isShared: Boolean) -> Unit,
     navigateUp: () -> Unit
 ) {
     composable<Detail> {
         DetailRoute(
             paddingValues = paddingValues,
             navigateToSharedCourse = {
+                Timber.e("navigateToSharedCourse $it")
                 navigateToSharedCourse(it, true)
             },
             navigateUp = navigateUp

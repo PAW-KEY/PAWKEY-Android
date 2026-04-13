@@ -207,7 +207,7 @@ private fun DetailScreen(
                     Spacer(modifier = Modifier.height(11.dp))
 
 
-                    if (!isExpanded) {
+                    if (!isExpanded && hiddenCount > 0) {
                         FilterChipDivider(
                             hiddenCount = hiddenCount,
                             onClick = { isExpanded = !isExpanded },
@@ -292,7 +292,7 @@ private fun DetailScreen(
                         } else {
                             DokiButton(
                                 text = "해당 루트로 산책하기",
-                                enabled = true,
+                                enabled = state.postDetail.routeDisplay.routeId != -1,
                                 onClick = {
                                     navigateToSharedCourse(state.postDetail.routeDisplay.routeId.toString())
                                 },
