@@ -1,5 +1,6 @@
 package com.paw.key.presentation.ui.dbti.test
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -17,26 +18,29 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.paw.key.core.designsystem.component.DokiButton
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.paw.key.core.designsystem.component.DokiButton
 import com.paw.key.core.designsystem.component.LoadingScreen
 import com.paw.key.core.designsystem.component.TopBar
 import com.paw.key.core.designsystem.theme.PawKeyTheme
 import com.paw.key.presentation.ui.dbti.component.SelectCard
 import com.paw.key.presentation.ui.dbti.test.state.TestUiState
-import com.paw.key.presentation.ui.dbti.test.viewmodel.TestViewModel
+import com.paw.key.presentation.ui.dbti.viewmodel.DbtiViewModel
 
 @Composable
 fun TestScreen(
     onBackClick: () -> Unit,
-    viewModel: TestViewModel = hiltViewModel()
+    navigateToResult : () -> Unit,
+    viewModel: DbtiViewModel,
 ) {
-    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val uiState by viewModel.testUiState.collectAsStateWithLifecycle()
 
     when (val state = uiState) {
         is TestUiState.Success -> {
-            Box(modifier = Modifier.fillMaxSize()) {
+            Box(modifier = Modifier.fillMaxSize()
+                .background(
+                    color = PawKeyTheme.colors.background
+                )) {
                 Column(modifier = Modifier.fillMaxSize()) {
                     TopBar(
                         title = "프로필 설정",
@@ -85,7 +89,7 @@ fun TestScreen(
 
                         DokiButton(
                             text = "다음으로",
-                            onClick = { viewModel.nextQuestion() },
+                            onClick = { viewModel.nextQuestion(onNavigateToResult = navigateToResult) },
                             enabled = state.selectedOptionId != null,
                             modifier = Modifier.fillMaxWidth()
                         )
@@ -158,7 +162,7 @@ private fun TestScreenPreview() {
                         Spacer(modifier = Modifier.height(16.dp))
 
                         Text(
-                            text = "산책 나가면 우리 강아지는...",
+                            text = "산책 중 다른 강아지를 만나면\n우리 강아지는...",
                             color = PawKeyTheme.colors.contents,
                             textAlign = TextAlign.Center,
                             style = PawKeyTheme.typography.header3,
@@ -166,7 +170,7 @@ private fun TestScreenPreview() {
                         )
                     }
 
-                    Spacer(modifier = Modifier.weight(30f))
+                    Spacer(modifier = Modifier.weight(48f))
                     Spacer(modifier = Modifier.weight(219.31f))
                     Spacer(modifier = Modifier.weight(1f))
 
