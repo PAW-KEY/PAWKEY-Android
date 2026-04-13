@@ -100,14 +100,14 @@ class RegionViewModel @Inject constructor(
                 }
             }
     }
-
+    fun confirmRegionOnMap() {
+        _state.update { it.copy(currentStep = RegionStep.SEARCH) }
+    }
     fun patchRegion() {
         viewModelScope.launch {
             homeRepository.patchRegion(localStorageRepository.getUserId(), _state.value.selectedDong.id)
                 .onSuccess { data ->
-                    _sideEffect.emit(
-                        RegionSideEffect.ShowSnackBar("지역을 ${(state.value.selectedGu.name + " " + state.value.selectedDong.name)}으로 변경했어요.")
-                    )
+                    _sideEffect.emit(RegionSideEffect.NavigateNext)
                 }
                 .onFailure { throwable ->
                     val errorMessage = handleError(throwable)
