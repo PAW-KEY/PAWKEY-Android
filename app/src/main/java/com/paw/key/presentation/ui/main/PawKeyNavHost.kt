@@ -77,7 +77,8 @@ fun PawKeyNavHost(
         homeNavGraph(
             paddingValues = paddingValues,
             navigateUp = navigator::navigateUp,
-            navigateToCourse = navigator::navigateWalkPrepare
+            navigateToCourse = navigator::navigateWalkPrepare,
+            navigateToDbti = navigator::navigateDbtiStart
         )
 
         walkCourseGraph(
@@ -116,7 +117,8 @@ fun PawKeyNavHost(
                     routeId = routeId,
                     isShared = isShared
                 )
-            }
+            },
+            navigateUp = navigator::navigateUp
         )
 
         dbtiNavGraph(

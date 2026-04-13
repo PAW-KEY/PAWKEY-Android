@@ -1,4 +1,4 @@
-package com.paw.key.domain.repository
+package com.paw.key.domain.repository.DBTI
 
 import com.paw.key.domain.entity.DBTI.DbtiResultEntity
 import com.paw.key.domain.entity.dbti.DbtiQuestionEntity

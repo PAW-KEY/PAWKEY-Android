@@ -19,13 +19,15 @@ fun NavController.navigateDetail(
 fun NavGraphBuilder.detailNavGraph(
     paddingValues: PaddingValues,
     navigateToSharedCourse: (routeId: String, isShared: Boolean) -> Unit,
+    navigateUp: () -> Unit
 ) {
     composable<Detail> {
         DetailRoute(
             paddingValues = paddingValues,
             navigateToSharedCourse = {
                 navigateToSharedCourse(it, true)
-            }
+            },
+            navigateUp = navigateUp
         )
     }
 }
