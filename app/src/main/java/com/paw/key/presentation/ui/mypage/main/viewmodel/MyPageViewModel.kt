@@ -83,6 +83,7 @@ class MyPageViewModel @Inject constructor(
                     .onSuccess { result ->
                         _state.update { currentState ->
                             currentState.copy(
+                                dbtiType = result.type,
                                 petInfo = currentState.petInfo.copy(
                                     petDbtiName = result.name,
                                     petDbtiDescription = result.description
