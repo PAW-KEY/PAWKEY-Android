@@ -1,6 +1,6 @@
 package com.paw.key.presentation.ui.dbti.result.model
 
-import com.paw.key.domain.entity.DBTI.DbtiResultEntity
+import com.paw.key.domain.entity.dbti.DbtiResultEntity
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList

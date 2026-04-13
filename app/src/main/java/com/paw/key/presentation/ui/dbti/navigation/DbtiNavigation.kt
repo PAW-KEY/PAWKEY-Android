@@ -8,6 +8,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
+import androidx.navigation.navOptions
 import androidx.navigation.toRoute
 import com.paw.key.presentation.ui.dbti.StartScreen
 import com.paw.key.presentation.ui.dbti.result.ResultScreen
@@ -37,10 +38,13 @@ fun NavGraphBuilder.dbtiNavGraph(
 ) {
     composable<DbtiStart> { backStackEntry ->
         val args = backStackEntry.toRoute<DbtiStart>()
-
+        val viewModel = hiltViewModel<DbtiViewModel>(backStackEntry)
         StartScreen(
             navigateUp = navigateUp,
-            navigateToTest = { navController.navigateDbtiTest() },
+            navigateToTest = {
+                viewModel.resetTest()
+                navController.navigateDbtiTest()
+            },
             showSkipButton = args.showSkip,
             onSkip = if (args.showSkip) navigateHome else null
         )
@@ -54,7 +58,16 @@ fun NavGraphBuilder.dbtiNavGraph(
         TestScreen(
             viewModel = viewModel,
             onBackClick = navigateUp,
-            navigateToResult = { navController.navigateDbtiResult() }
+            navigateToResult = {
+                val options = navOptions {
+                    popUpTo<DbtiTest> {
+                        inclusive = true
+                    }
+                    launchSingleTop = true
+                }
+
+                navController.navigateDbtiResult(options)
+            }
         )
     }
 
@@ -73,7 +86,9 @@ fun NavGraphBuilder.dbtiNavGraph(
                     navController.navigateDbtiTest()
                 },
                 onGoHome = navigateHome,
-                navigateUp = navigateUp
+                navigateUp = {
+                    navController.popBackStack()
+                }
             )
         }
     }

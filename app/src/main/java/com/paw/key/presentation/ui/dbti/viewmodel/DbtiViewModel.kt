@@ -34,7 +34,9 @@ class DbtiViewModel @Inject constructor(
     private var questions: List<DbtiQuestionEntity> = emptyList()
     private var currentIndex = 0
     private val selectedAnswers = mutableMapOf<Int, Int>()
-
+    init {
+        resetTest()
+    }
     fun loadQuestions() {
         viewModelScope.launch {
             _testUiState.value = TestUiState.Loading

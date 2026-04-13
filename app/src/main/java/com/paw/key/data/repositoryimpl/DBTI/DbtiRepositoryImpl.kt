@@ -1,8 +1,8 @@
 package com.paw.key.data.repositoryimpl.DBTI
 
 import com.paw.key.data.remote.datasource.DBTI.DbtiDataSource
-import com.paw.key.domain.entity.DBTI.DbtiAnalysisEntity
-import com.paw.key.domain.entity.DBTI.DbtiResultEntity
+import com.paw.key.domain.entity.dbti.DbtiAnalysisEntity
+import com.paw.key.domain.entity.dbti.DbtiResultEntity
 import com.paw.key.domain.entity.dbti.DbtiOptionEntity
 import com.paw.key.domain.entity.dbti.DbtiQuestionEntity
 import com.paw.key.domain.repository.DBTI.DbtiRepository
