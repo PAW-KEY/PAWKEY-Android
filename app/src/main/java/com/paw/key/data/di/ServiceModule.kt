@@ -1,7 +1,7 @@
 package com.paw.key.data.di
 
 import com.paw.key.data.service.ArchivedListService
-import com.paw.key.data.service.DbtiService
+import com.paw.key.data.service.DBTI.DbtiService
 import com.paw.key.data.service.auth.ReissueService
 import com.paw.key.data.service.home.HomeRegionService
 import com.paw.key.data.service.image.ImageService
