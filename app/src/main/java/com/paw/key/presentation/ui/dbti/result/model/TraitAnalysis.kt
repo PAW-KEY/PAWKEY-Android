@@ -1,6 +1,6 @@
 package com.paw.key.presentation.ui.dbti.result.model
 
-import com.paw.key.domain.entity.DBTI.DbtiAnalysisEntity
+import com.paw.key.domain.entity.dbti.DbtiAnalysisEntity
 
 // TraitAnalysis 데이터 클래스 정의
 data class TraitAnalysis(

@@ -1,6 +1,6 @@
 package com.paw.key.domain.usecase
 
-import com.paw.key.domain.entity.DBTI.DbtiResultEntity
+import com.paw.key.domain.entity.dbti.DbtiResultEntity
 import com.paw.key.domain.repository.DBTI.DbtiRepository
 import javax.inject.Inject
 

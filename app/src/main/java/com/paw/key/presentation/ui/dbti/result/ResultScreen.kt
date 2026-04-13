@@ -9,6 +9,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -18,8 +20,8 @@ import com.paw.key.core.designsystem.component.DokiBorderButton
 import com.paw.key.core.designsystem.component.DokiButton
 import com.paw.key.core.designsystem.component.TopBar
 import com.paw.key.core.designsystem.theme.PawKeyTheme
-import com.paw.key.presentation.ui.dbti.result.model.DbtiResultUiModel
 import com.paw.key.presentation.ui.dbti.result.component.ResultBox
+import com.paw.key.presentation.ui.dbti.result.model.DbtiResultUiModel
 import com.paw.key.presentation.ui.dbti.result.model.TraitAnalysis
 import kotlinx.collections.immutable.persistentListOf
 
@@ -44,11 +46,14 @@ fun ResultScreen(
 
         Column(
             modifier = Modifier
-                .fillMaxSize()
+                .fillMaxWidth()
+                .weight(1f)
+                .verticalScroll(rememberScrollState())
                 .padding(horizontal = 16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
         ) {
-            Spacer(modifier = Modifier.weight(20f))
+            Spacer(modifier = Modifier.height(24.dp))
 
             with(resultUiModel) {
                 ResultBox(
@@ -61,28 +66,29 @@ fun ResultScreen(
                 )
             }
 
-            Spacer(modifier = Modifier.weight(20f))
-
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
-                DokiBorderButton(
-                    text = "다시 테스트하기",
-                    onClick = onRetakeTest,
-                    modifier = Modifier.weight(1f),
-                    enabled = true
-                )
-
-                DokiButton(
-                    text = "홈으로 가기",
-                    onClick = onGoHome,
-                    modifier = Modifier.weight(1f),
-                    enabled = true
-                )
-            }
-
             Spacer(modifier = Modifier.height(24.dp))
+        }
+
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp)
+                .padding(bottom = 24.dp),
+            horizontalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            DokiBorderButton(
+                text = "다시 테스트하기",
+                onClick = onRetakeTest,
+                modifier = Modifier.weight(1f),
+                enabled = true
+            )
+
+            DokiButton(
+                text = "홈으로 가기",
+                onClick = onGoHome,
+                modifier = Modifier.weight(1f),
+                enabled = true
+            )
         }
     }
 }
