@@ -21,7 +21,7 @@ interface MypageService {
         @Body body: UpdatePetRequestDto,
     ): BaseResponse<Unit>
 
-    @GET("users/me/routes")
+    @GET("users/me/posts")
     suspend fun getMyRoutes(): BaseResponse<RoutePostListResponseDto>
 
     @GET("users/me/likes")

@@ -5,7 +5,9 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
@@ -150,7 +152,8 @@ fun MyPageScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .background(PawKeyTheme.colors.defaultButton)
-                .padding(horizontal = 16.dp, vertical = 18.dp),
+                .padding(horizontal = 16.dp)
+                .padding(top = 18.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             item {
@@ -168,7 +171,8 @@ fun MyPageScreen(
                         userAge = petAge,
                         userGender = petGender,
                         dogBreed = petBreed,
-                        buttonTitle = "DBTI검사하러 가기",
+                        buttonTitle = if (petDbtiName.isEmpty()) "DBTI검사하러 가기"
+                                    else "$petDbtiName | $petDbtiDescription",
                         dogImage = petImageUrl,
                         onButtonClick = navigateDbtiStart
                     )
@@ -203,6 +207,8 @@ fun MyPageScreen(
                         }
                     }
                 )
+
+                Spacer(modifier = Modifier.height(18.dp))
             }
         }
     }
@@ -228,9 +234,8 @@ private fun MyPageScreenPreview() {
             deleteUser = {},
             onLogOutClick = {},
             onWithDrawClick = {},
-            onUpdateRegion = {}
+            onUpdateRegion = {},
             navigateDbtiStart = {},
-            deleteUser = {},
         )
     }
 }
