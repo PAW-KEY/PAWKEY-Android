@@ -87,6 +87,7 @@ private fun MyPageCardContent(
                 .size(64.dp)
                 .clip(CircleShape),
             contentScale = ContentScale.Crop,
+            isUserIcon = true
         )
 
         Column(
