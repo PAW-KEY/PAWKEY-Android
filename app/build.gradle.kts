@@ -98,7 +98,6 @@ dependencies {
     implementation(libs.androidx.datastore.preferences)
 
     //카카오
-    implementation(libs.kakaoMaps)
     implementation(libs.v2.all)
 
     //실시간 위치

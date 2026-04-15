@@ -51,7 +51,6 @@ coil = "2.6.0"
 timber = "5.0.1"
 
 # Kakao
-kakaoMaps = "2.9.5"
 v2All = "2.20.1"
 
 # Google
@@ -125,7 +124,6 @@ material = { group = "com.google.android.material", name = "material", version.r
 timber = { group = "com.jakewharton.timber", name = "timber", version.ref = "timber" }
 
 # Kakao
-kakaoMaps = { group = "com.kakao.maps.open", name = "android", version.ref = "kakaoMaps" }
 v2-all = { module = "com.kakao.sdk:v2-all", version.ref = "v2All" }
 
 # Naver Libraries
