@@ -156,8 +156,6 @@ private fun WalkReviewScreen(
         if (state.isShared) {
             WalkSharedReviewHeader(
                 item = state.sharedReviewHeader,
-                modifier = Modifier
-                    .padding(start = 16.dp)
             )
         } else {
             WalkReviewImageRow(
@@ -338,7 +336,6 @@ private fun WalkReviewScreen(
 
     if (state.isComplete) {
         WalkReviewDialog(
-            isShared = state.isShared,
             navigateHome = navigateHome,
             navigateWalkDetail = navigateWalkDetail
         )

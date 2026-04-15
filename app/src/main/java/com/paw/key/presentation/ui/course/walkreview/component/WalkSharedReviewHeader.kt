@@ -33,7 +33,7 @@ fun WalkSharedReviewHeader(
             text = item.postTitle,
             style = PawKeyTheme.typography.header3,
             color = PawKeyTheme.colors.contents,
-            modifier = Modifier.padding(bottom = 16.dp)
+            modifier = Modifier.padding(start = 16.dp, bottom = 16.dp)
         )
 
         HorizontalDivider(
@@ -66,7 +66,7 @@ fun WalkSharedReviewHeader(
         HorizontalDivider(
             thickness = 1.dp,
             color = PawKeyTheme.colors.defaultButton,
-            modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp)
+            modifier = Modifier.fillMaxWidth()
         )
     }
 }
