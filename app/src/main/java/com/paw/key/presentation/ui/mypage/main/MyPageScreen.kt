@@ -171,7 +171,7 @@ fun MyPageScreen(
                         userAge = petAge,
                         userGender = petGender,
                         dogBreed = petBreed,
-                        buttonTitle = if (petDbtiName.isEmpty()) "DBTI검사하러 가기"
+                        buttonTitle = if (petDbtiName.isEmpty()) "DBTI 검사하러 가기"
                                     else "${state.dbtiType} | $petDbtiName",
                         dogImage = petImageUrl,
                         onButtonClick = navigateDbtiStart

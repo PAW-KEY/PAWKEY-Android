@@ -1,5 +1,6 @@
 package com.paw.key.presentation.ui.region
 
+import android.view.Gravity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -37,6 +38,7 @@ import com.naver.maps.geometry.LatLngBounds
 import com.naver.maps.map.CameraUpdate
 import com.naver.maps.map.compose.CameraPositionState
 import com.naver.maps.map.compose.ExperimentalNaverMapApi
+import com.naver.maps.map.compose.MapUiSettings
 import com.naver.maps.map.compose.NaverMap
 import com.naver.maps.map.compose.PolygonOverlay
 import com.naver.maps.map.compose.rememberCameraPositionState
@@ -222,7 +224,12 @@ fun RegionalManagementScreen(
                     NaverMap(
                         modifier = Modifier
                             .align(Alignment.Center),
-                        cameraPositionState = cameraPositionState
+                        cameraPositionState = cameraPositionState,
+                        uiSettings = MapUiSettings(
+                            logoGravity = Gravity.TOP or Gravity.END,
+                            isZoomControlEnabled = false,
+                            isLogoClickEnabled = true
+                        ),
                     ) {
                         when (type) {
                             DrawType.SINGLE -> {

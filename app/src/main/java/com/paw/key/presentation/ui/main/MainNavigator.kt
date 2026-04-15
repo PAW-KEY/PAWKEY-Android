@@ -113,11 +113,13 @@ class MainNavigator(
 
     fun navigateDetail(
         navOptions: NavOptions? = null,
-        postId: Int
+        postId: Int,
+        routeId: Int? = null
     ) {
         navController.navigateDetail(
             navOptions = navOptions,
-            postId = postId
+            postId = postId,
+            routeId = routeId
         )
     }
 
@@ -126,12 +128,16 @@ class MainNavigator(
         navOptions: NavOptions? = null,
         routeId: String? = null,
         infoRouteId: Int? = null,
+        postId: Int? = null,
+        userId: Int? = null,
         isShared: Boolean = false
     ) {
         navController.navigateWalkCourse(
             navOptions = navOptions,
             routeId = routeId,
             infoRouteId = infoRouteId,
+            postId = postId,
+            userId = userId,
             isShared = isShared
         )
     }
@@ -139,12 +145,18 @@ class MainNavigator(
     fun navigateWalkReview(
         navOptions: NavOptions? = null,
         routeId: Int? = null,
-        routeImageId: Int? = null
+        routeImageId: Int? = null,
+        isShared: Boolean = false,
+        postId: Int? = null,
+        userId: Int? = null
     ) {
         navController.navigateWalkReview(
             navOptions = navOptions,
             routeId = routeId,
-            routeImageId = routeImageId
+            isShared = isShared,
+            routeImageId = routeImageId,
+            postId = postId,
+            userId = userId
         )
     }
 

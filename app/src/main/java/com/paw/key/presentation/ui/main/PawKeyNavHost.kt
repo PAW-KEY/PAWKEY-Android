@@ -14,6 +14,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.navOptions
 import com.paw.key.presentation.ui.community.navigation.communityNavGraph
 import com.paw.key.presentation.ui.course.navigation.walkCourseGraph
+import com.paw.key.presentation.ui.course.walkreview.navigation.WalkReview
 import com.paw.key.presentation.ui.course.walkreview.navigation.walkReviewNavGraph
 import com.paw.key.presentation.ui.dbti.navigation.dbtiNavGraph
 import com.paw.key.presentation.ui.detail.navigation.detailNavGraph
@@ -84,12 +85,34 @@ fun PawKeyNavHost(
         walkCourseGraph(
             paddingValues = paddingValues,
             navController = navigator.navController,
-            navigateWalkReview = navigator::navigateWalkReview,
+            navigateSharedReview = { routeId, isShared, postId, userId ->
+                val options = navOptions {
+                    popUpTo<WalkReview> {
+                        inclusive = true
+                    }
+                    launchSingleTop = true
+                }
+
+                navigator.navigateWalkReview(
+                    routeId = routeId,
+                    isShared = isShared,
+                    navOptions = options,
+                    postId = postId,
+                    userId = userId
+                )
+            },
             navigateWalkReviewWithId = { routeId, routeImageId ->
+                val options = navOptions {
+                    popUpTo<WalkReview> {
+                        inclusive = true
+                    }
+                    launchSingleTop = true
+                }
+
                 navigator.navigateWalkReview(
                     routeId = routeId,
                     routeImageId = routeImageId,
-                    navOptions = null
+                    navOptions = options
                 )
             }
         )
@@ -97,7 +120,13 @@ fun PawKeyNavHost(
         walkReviewNavGraph(
             paddingValues = paddingValues,
             navigateHome = navigator::navigateHome,
-            navigateWalkDetail = {}, // Todo 상세 정보 뷰로
+            navigateWalkDetail = { postId, routeId ->
+                navigator.navigateDetail(
+                    postId = postId,
+                    routeId = routeId,
+                    navOptions = null
+                )
+            },
         )
 
         communityNavGraph(
@@ -112,10 +141,12 @@ fun PawKeyNavHost(
 
         detailNavGraph(
             paddingValues = paddingValues,
-            navigateToSharedCourse = { infoRouteId, isShared ->
+            navigateToSharedCourse = { infoRouteId, isShared, postId, userId ->
                 navigator.navigateWalkCourse(
                     infoRouteId = infoRouteId.toInt(),
-                    isShared = isShared
+                    isShared = isShared,
+                    postId = postId,
+                    userId = userId
                 )
             },
             navigateUp = navigator::navigateUp
