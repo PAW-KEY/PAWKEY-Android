@@ -13,21 +13,22 @@ import timber.log.Timber
 fun NavController.navigateDetail(
     navOptions: NavOptions?,
     postId: Int,
+    routeId: Int? = null
 ) {
-    navigate(Detail(postId), navOptions)
+    navigate(Detail(postId, routeId), navOptions)
 }
 
 fun NavGraphBuilder.detailNavGraph(
     paddingValues: PaddingValues,
-    navigateToSharedCourse: (infoRouteId: String, isShared: Boolean) -> Unit,
+    navigateToSharedCourse: (infoRouteId: String, isShared: Boolean, postId: Int, userId: Int) -> Unit,
     navigateUp: () -> Unit
 ) {
     composable<Detail> {
         DetailRoute(
             paddingValues = paddingValues,
-            navigateToSharedCourse = {
+            navigateToSharedCourse = { routeId, postId, userId ->
                 Timber.e("navigateToSharedCourse $it")
-                navigateToSharedCourse(it, true)
+                navigateToSharedCourse(routeId, true, postId, userId)
             },
             navigateUp = navigateUp
         )
@@ -36,5 +37,6 @@ fun NavGraphBuilder.detailNavGraph(
 
 @Serializable
 data class Detail(
-    val postId : Int
+    val postId : Int,
+    val routeId : Int? = null
 ) : Route

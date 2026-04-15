@@ -11,5 +11,5 @@ data class DetailState(
 )
 
 sealed interface DetailSideEffect {
-
+    data object navigateToCommunity: DetailSideEffect
 }

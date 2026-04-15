@@ -9,7 +9,9 @@ import com.paw.key.presentation.ui.detail.model.toUiModel
 import com.paw.key.presentation.ui.detail.navigation.Detail
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CompletableDeferred
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -22,9 +24,13 @@ class DetailViewModel @Inject constructor(
     private val postsRepository: PostsRepository
 ) : ViewModel() {
     private val postId = savedStateHandle.toRoute<Detail>().postId
+    private val routeId = savedStateHandle.toRoute<Detail>().routeId
 
     private val _state = MutableStateFlow(DetailState())
     val state = _state.asStateFlow()
+
+    private val _sideEffect = MutableSharedFlow<DetailSideEffect>()
+    val sideEffect = _sideEffect.asSharedFlow()
 
     private val routeIdDeferred = CompletableDeferred<Int>()
 
@@ -46,7 +52,7 @@ class DetailViewModel @Inject constructor(
                         )
                     }
                     routeIdDeferred.complete(uiModel.routeDisplay.routeId)
-                    fetchTopReview(routeId = uiModel.routeDisplay.routeId)
+                    //fetchTopReview(routeId = uiModel.routeDisplay.routeId)
                 }
                 .onFailure(Timber::e)
         }
@@ -64,6 +70,19 @@ class DetailViewModel @Inject constructor(
                     }
                 }
                 .onFailure(Timber::e)
+        }
+    }
+
+    fun removePosts() {
+        viewModelScope.launch {
+            postsRepository.deletePosts(postId = postId)
+                .onSuccess {
+                    Timber.e("삭제 성공")
+                    _sideEffect.emit(DetailSideEffect.navigateToCommunity)
+                }
+                .onFailure {
+                    Timber.e(it)
+                }
         }
     }
 }

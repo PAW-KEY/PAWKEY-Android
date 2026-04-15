@@ -43,33 +43,41 @@ import com.paw.key.core.designsystem.component.TopBar
 import com.paw.key.core.designsystem.component.UrlImage
 import com.paw.key.core.designsystem.component.walk.WalkReviewInfoHolder
 import com.paw.key.core.designsystem.theme.PawKeyTheme
+import com.paw.key.core.extension.collectSideEffect
 import com.paw.key.presentation.ui.detail.component.DetailImageHolder
-import com.paw.key.presentation.ui.detail.component.DetailTopReview
 import com.paw.key.presentation.ui.detail.component.DokiDeleteButton
 import com.paw.key.presentation.ui.detail.component.FilterChipDivider
 
 @Composable
 fun DetailRoute(
     paddingValues: PaddingValues,
-    navigateToSharedCourse: (routeId: String) -> Unit = {},
+    navigateToSharedCourse: (routeId: String, postId : Int, userId: Int) -> Unit = {_, _, _ -> },
     navigateUp: () -> Unit = {},
     viewModel: DetailViewModel = hiltViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
 
+    viewModel.sideEffect.collectSideEffect {
+        when (it) {
+            DetailSideEffect.navigateToCommunity -> navigateUp()
+        }
+    }
+
     DetailScreen(
         paddingValues = paddingValues,
         state = state,
         navigateToSharedCourse = navigateToSharedCourse,
-        onBackClick = navigateUp
+        onBackClick = navigateUp,
+        onDeletePosts = viewModel::removePosts
     )
 }
 @Composable
 private fun DetailScreen(
     paddingValues: PaddingValues,
     state: DetailState,
-    navigateToSharedCourse: (routeId: String) -> Unit = {},
-    onBackClick: () -> Unit = {}
+    navigateToSharedCourse: (routeId: String, postId : Int, userId: Int) -> Unit = {_, _, _ -> },
+    onBackClick: () -> Unit = {},
+    onDeletePosts: () -> Unit = {}
 ) {
     var isExpanded by remember { mutableStateOf(false) }
 
@@ -147,7 +155,8 @@ private fun DetailScreen(
                             modifier = Modifier
                                 .size(43.dp)
                                 .clip(RoundedCornerShape(50.dp)),
-                            contentScale = ContentScale.Crop
+                            contentScale = ContentScale.Crop,
+                            isUserIcon = true
                         )
 
                         Text(
@@ -251,7 +260,7 @@ private fun DetailScreen(
                             )
                     )
 
-                    DetailTopReview(
+                    /*DetailTopReview(
                         reviewData = state.reviewDetail,
                         isShared = state.postDetail.isPublic
                     )
@@ -263,7 +272,7 @@ private fun DetailScreen(
                             .background(
                                 color = PawKeyTheme.colors.defaultButton,
                             )
-                    )
+                    )*/
 
                     Spacer(
                         modifier = Modifier.height(40.dp)
@@ -280,7 +289,7 @@ private fun DetailScreen(
                         if (state.postDetail.isMine) {
                             DokiDeleteButton(
                                 text = "삭제하기",
-                                onClick = {},
+                                onClick = onDeletePosts,
                                 modifier = Modifier.weight(1f)
                             )
                             DokiButton(
@@ -294,7 +303,11 @@ private fun DetailScreen(
                                 text = "해당 루트로 산책하기",
                                 enabled = state.postDetail.routeDisplay.routeId != -1,
                                 onClick = {
-                                    navigateToSharedCourse(state.postDetail.routeDisplay.routeId.toString())
+                                    navigateToSharedCourse(
+                                        state.postDetail.routeDisplay.routeId.toString(),
+                                        state.postDetail.postId,
+                                        state.postDetail.authorInfo.authorId
+                                    )
                                 },
                                 modifier = Modifier.weight(1f)
                             )
