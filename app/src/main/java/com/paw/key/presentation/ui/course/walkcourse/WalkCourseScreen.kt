@@ -96,7 +96,7 @@ private val REQUIRED_PERMISSIONS = mutableListOf(
 fun WalkCourseRoute(
     paddingValues: PaddingValues,
     navigateUp: () -> Unit = {},
-    navigateReview: () -> Unit = {},
+    navigateSharedReview: (routeId: Int, isShared: Boolean, postId: Int, userId: Int) -> Unit = {_, _,_,_ -> },
     navigateWalkComplete: (routeId: Int, routeImageId: Int) -> Unit = {_, _ ->},
     viewModel: WalkCourseViewModel = hiltViewModel(),
 ) {
@@ -126,7 +126,7 @@ fun WalkCourseRoute(
         viewModel.sideEffect.flowWithLifecycle(lifecycleOwner.lifecycle)
             .collect { sideEffect ->
                 when (sideEffect) {
-                    is WalkCourseSideEffect.NavigateNext -> navigateReview()
+                    is WalkCourseSideEffect.NavigateNext -> {}
 
                     WalkCourseSideEffect.NavigateUp -> navigateUp()
 
@@ -134,7 +134,7 @@ fun WalkCourseRoute(
                         Toast.makeText(context, sideEffect.message, Toast.LENGTH_SHORT).show()
                     }
 
-                    WalkCourseSideEffect.NavigateReview -> navigateReview()
+                    is WalkCourseSideEffect.NavigateSharedReview -> navigateSharedReview(sideEffect.routeId, sideEffect.isShared, sideEffect.postId, sideEffect.userId)
 
                     is WalkCourseSideEffect.NavigateComplete -> navigateWalkComplete(sideEffect.routeId, sideEffect.routeImageId ?: -1)
 
@@ -301,8 +301,8 @@ fun WalkCourseScreen(
                 LocationOverlay(
                     position = currentLocation,
                     icon = OverlayImage.fromResource(R.drawable.user_poi),
-                    iconWidth = 36,
-                    iconHeight = 36,
+                    iconWidth = 72,
+                    iconHeight = 72,
                 )
             }
 

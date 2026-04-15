@@ -47,6 +47,8 @@ class WalkCourseViewModel @Inject constructor(
     // 일반용 routeId => Int
     private val infoRouteId = savedStateHandle.toRoute<WalkCourse>().infoRouteId
     private val isShared = savedStateHandle.toRoute<WalkCourse>().isShared
+    private val postId = savedStateHandle.toRoute<WalkCourse>().postId
+    private val userId = savedStateHandle.toRoute<WalkCourse>().userId
 
     private val _state = MutableStateFlow(WalkCourseState())
     val state: StateFlow<WalkCourseState> = _state.asStateFlow()
@@ -253,7 +255,7 @@ class WalkCourseViewModel @Inject constructor(
 
             if (isShared) {
                 _state.update { it.copy(isStopTracking = true) }
-                _sideEffect.emit(WalkCourseSideEffect.NavigateComplete(infoRouteId ?:-1, null))
+                _sideEffect.emit(WalkCourseSideEffect.NavigateSharedReview(infoRouteId ?:-1, true, postId ?: -1, userId ?: -1))
                 return@launch
             }
 
