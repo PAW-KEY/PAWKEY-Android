@@ -12,12 +12,12 @@ enum class CourseType(val courseType: String) {
 }
 
 data class CourseData(
-    val postId: Int,
-    val location: String,
-    val title: String,
-    val imageUrl: String,
-    val time: String,
-    val date: String,
+    val postId: Int = -1,
+    val location: String = "",
+    val title: String = "",
+    val imageUrl: String = "",
+    val time: String = "",
+    val date: String = "",
     val isLiked: Boolean = false,
     val categoryOptionSummary: List<String> = emptyList(),
 )
@@ -38,7 +38,7 @@ fun RoutePostEntity.toUiModel() = CourseData(
     title     = title,
     imageUrl  = imageUrl,
     time      = "${durationMinutes}분",
-    date      = date.take(10),
+    date      = date,
     isLiked   = isLiked,
 )
 
@@ -48,6 +48,6 @@ fun ReviewPostEntity.toCourseData() = CourseData(
     title                 = title,
     imageUrl              = "",
     time                  = "",
-    date                  = date.take(10),
+    date                  = date,
     categoryOptionSummary = categoryOptionSummary,
 )

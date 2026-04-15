@@ -36,6 +36,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.keepScreenOn
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.style.TextAlign
@@ -279,6 +280,9 @@ fun WalkCourseScreen(
         modifier = Modifier
             .fillMaxSize()
             .padding(paddingValues)
+            .then(
+                if (isRecording && !state.isStopTracking) Modifier.keepScreenOn() else Modifier
+            )
     ) {
         NaverMap(
             modifier = Modifier

@@ -114,7 +114,7 @@ fun CourseInfoScreen(
                         ) {
                             items(items = uiState.data, key = { it.postId }) { course ->
                                 MyReviewCard(
-                                    cardTitle = course.title,
+                                    course = course,
                                 )
                             }
                         }
