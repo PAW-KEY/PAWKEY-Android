@@ -10,7 +10,7 @@ import com.paw.key.data.service.login.LoginService
 import com.paw.key.data.service.mypage.MypageService
 import com.paw.key.data.service.posts.PostsService
 import com.paw.key.data.service.region.RegionService
-import com.paw.key.data.service.sharedwalk.SharedWalkService
+import com.paw.key.data.service.reviews.ReviewsService
 import com.paw.key.data.service.user.UserService
 import com.paw.key.data.service.walk.WalkService
 import com.paw.key.data.service.walkpreparation.WalkPreparationService
@@ -35,11 +35,6 @@ object ServiceModule {
     @Provides
     @Singleton
     fun provideUserInfoService(retrofit: Retrofit): UserService =
-        retrofit.create()
-
-    @Provides
-    @Singleton
-    fun provideSharedWalkService(retrofit: Retrofit): SharedWalkService =
         retrofit.create()
 
     @Provides
@@ -97,5 +92,10 @@ object ServiceModule {
     @Provides
     @Singleton
     fun provideDbtiService(retrofit: Retrofit): DbtiService =
+        retrofit.create()
+
+    @Provides
+    @Singleton
+    fun provideReviewService(retrofit: Retrofit): ReviewsService =
         retrofit.create()
 }
