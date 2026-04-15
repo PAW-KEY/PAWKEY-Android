@@ -41,7 +41,7 @@ class PostCreateUserUseCase @Inject constructor(
             registerImage.imageId
         } else {
             Timber.e("petImageUri is null")
-            -1
+            0
         }
 
         val finalPetInfo = userInfoEntity.pet.copy(

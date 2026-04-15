@@ -11,7 +11,9 @@ import com.paw.key.data.dto.response.posts.PostRouteSummaryResponseDto
 import com.paw.key.data.dto.response.posts.PostsFilterListResponseDto
 import com.paw.key.data.dto.response.posts.PostsResponseDto
 import com.paw.key.data.dto.response.posts.PostsTop3ReviewResponseDto
+import retrofit2.Response
 import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Path
@@ -24,7 +26,12 @@ interface PostsService {
         @Body request: PostsDataRequestDto
     ): BaseResponse<PostsResponseDto>
 
-    // Todo : 게시물 수정, 삭제 3스 때..
+    // Todo : 게시물 수정, 3스 때..
+
+    @DELETE("posts/{postId}")
+    suspend fun deletePosts(
+        @Path("postId") postId: Int
+    ) : Response<Unit>
 
     // 게시물 작성할 때 필터링 카테고리 조회
     @GET("posts/categories")

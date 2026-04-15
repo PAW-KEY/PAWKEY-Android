@@ -26,6 +26,10 @@ class PostsRepositoryImpl @Inject constructor(
         dataSource.postPosts(postsInfo.toDto()).data.toEntity()
     }
 
+    override suspend fun deletePosts(postId: Int) : Result<Unit> = suspendRunCatching{
+        dataSource.deletePosts(postId)
+    }
+
     override suspend fun getPostsDetail(postId: Int): Result<PostsDetailEntity> = suspendRunCatching {
         dataSource.getPostsDetail(postId).data.toEntity()
     }

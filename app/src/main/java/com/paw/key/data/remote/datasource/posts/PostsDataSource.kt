@@ -10,6 +10,8 @@ class PostsDataSource @Inject constructor(
 ) {
     suspend fun postPosts(request: PostsDataRequestDto) = service.postPosts(request)
 
+    suspend fun deletePosts(postId: Int) = service.deletePosts(postId)
+
     suspend fun getCategories() = service.getCategories()
 
     suspend fun getPostsDetail(postId: Int) = service.getPostsDetail(postId)
