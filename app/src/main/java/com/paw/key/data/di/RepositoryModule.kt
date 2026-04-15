@@ -19,6 +19,7 @@ import com.paw.key.data.repositoryimpl.image.ImageRepositoryImpl
 import com.paw.key.data.repositoryimpl.localstorage.LocalStorageRepositoryImpl
 import com.paw.key.data.repositoryimpl.login.AuthRepositoryImpl
 import com.paw.key.data.repositoryimpl.posts.PostsRepositoryImpl
+import com.paw.key.data.repositoryimpl.reviews.ReviewsRepositoryImpl
 import com.paw.key.data.repositoryimpl.user.UserRepositoryImpl
 import com.paw.key.data.repositoryimpl.walk.WalkRepositoryImpl
 import com.paw.key.data.repositoryimpl.walkpreparation.WalkPreparationRepositoryImpl
@@ -33,6 +34,7 @@ import com.paw.key.domain.repository.localstorage.LocalStorageRepository
 import com.paw.key.domain.repository.login.AuthRepository
 import com.paw.key.domain.repository.mypage.MypageRepository
 import com.paw.key.domain.repository.posts.PostsRepository
+import com.paw.key.domain.repository.reviews.ReviewsRepository
 import com.paw.key.domain.repository.user.UserRepository
 import com.paw.key.domain.repository.walk.WalkRepository
 import com.paw.key.domain.repository.walkpreparation.WalkPreparationRepository
@@ -153,7 +155,15 @@ interface RepositoryModule {
     //DBTI
     @Binds
     @Singleton
-    abstract fun bindDbtiRepository(
+    fun bindDbtiRepository(
         dbtiRepositoryImpl: DbtiRepositoryImpl
     ): DbtiRepository
+
+    @Binds
+    @Singleton
+    fun bindReviewRepository(
+        impl: ReviewsRepositoryImpl
+    ) : ReviewsRepository
+
+
 }
