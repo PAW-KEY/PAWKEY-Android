@@ -91,7 +91,10 @@ fun RegionalManagementRoute(
                         )
                     }
 
-                    RegionSideEffect.NavigateNext -> navigateNext()
+                    RegionSideEffect.NavigateNext -> {
+                        Timber.e("region next")
+                        navigateNext()
+                    }
                     RegionSideEffect.NavigateUp -> navigateUp()
                 }
             }
@@ -111,7 +114,7 @@ fun RegionalManagementRoute(
                 onSizeChanged = { bottomPanelHeightPx.intValue = it },
                 onBackClick = { viewModel.onBackPressed() },
                 onRegionSelected = { gu, dong -> viewModel.onRegionSelected(gu, dong) },
-                onSaveRegionClick = { navigateNext() },
+                onSaveRegionClick = { viewModel.patchRegion() },
                 modifier = Modifier
             )
         }
@@ -137,12 +140,12 @@ fun RegionalManagementRoute(
                         regionCoordinates = uiState.data,
                         type = state.drawType,
                         state = state,
-                        onClickButton = { viewModel.patchRegion() },
+                        onClickButton = { viewModel.confirmRegionOnMap() },
                         onModifyClick = { viewModel.onBackPressedToSearch() },
                         onSizeChanged = { bottomPanelHeightPx.intValue = it },
                         onBackClick = { viewModel.onBackPressed() },
                         onRegionSelected = { gu, dong -> viewModel.onRegionSelected(gu, dong) },
-                        onSaveRegionClick = { navigateNext() },
+                        onSaveRegionClick = { viewModel.patchRegion() },
                         modifier = Modifier
                     )
                 }
