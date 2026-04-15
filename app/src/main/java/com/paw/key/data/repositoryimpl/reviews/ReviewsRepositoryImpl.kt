@@ -11,9 +11,8 @@ import javax.inject.Inject
 class ReviewsRepositoryImpl @Inject constructor(
     private val dataSource: ReviewsDataSource
 ) : ReviewsRepository {
-    override suspend fun postReview(reviewEntity: ReviewEntity, userId: Int): Result<String> = suspendRunCatching {
+    override suspend fun postReview(reviewEntity: ReviewEntity, userId: Int): Result<Unit> = suspendRunCatching {
         dataSource.postReview(reviewEntity.toDto(), userId)
-            .data
     }
 
     override suspend fun getReviewHeader(postId: Int): Result<ReviewHeaderEntity> = suspendRunCatching{
