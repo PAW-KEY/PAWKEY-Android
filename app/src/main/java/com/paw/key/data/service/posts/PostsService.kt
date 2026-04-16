@@ -11,7 +11,6 @@ import com.paw.key.data.dto.response.posts.PostRouteSummaryResponseDto
 import com.paw.key.data.dto.response.posts.PostsFilterListResponseDto
 import com.paw.key.data.dto.response.posts.PostsResponseDto
 import com.paw.key.data.dto.response.posts.PostsTop3ReviewResponseDto
-import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
@@ -31,7 +30,7 @@ interface PostsService {
     @DELETE("posts/{postId}")
     suspend fun deletePosts(
         @Path("postId") postId: Int
-    ) : Response<Unit>
+    )
 
     // 게시물 작성할 때 필터링 카테고리 조회
     @GET("posts/categories")
