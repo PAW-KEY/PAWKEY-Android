@@ -41,6 +41,7 @@ import com.paw.key.core.designsystem.component.DokiButton
 import com.paw.key.core.designsystem.component.SubChip
 import com.paw.key.core.designsystem.component.TopBar
 import com.paw.key.core.designsystem.component.UrlImage
+import com.paw.key.core.designsystem.component.dialog.DokiDialog
 import com.paw.key.core.designsystem.component.walk.WalkReviewInfoHolder
 import com.paw.key.core.designsystem.theme.PawKeyTheme
 import com.paw.key.core.extension.collectSideEffect
@@ -57,6 +58,8 @@ fun DetailRoute(
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
 
+    var isShowDialog by remember { mutableStateOf(false) }
+
     viewModel.sideEffect.collectSideEffect {
         when (it) {
             DetailSideEffect.navigateToCommunity -> navigateUp()
@@ -68,8 +71,21 @@ fun DetailRoute(
         state = state,
         navigateToSharedCourse = navigateToSharedCourse,
         onBackClick = navigateUp,
-        onDeletePosts = viewModel::removePosts
+        onDeletePosts = {
+            isShowDialog = true
+        }
     )
+
+    if (isShowDialog) {
+        DokiDialog(
+            onDismiss = { isShowDialog = false },
+            onConfirm = viewModel::removePosts,
+            title = "삭제하시겠어요?",
+            subDescription = "삭제된 게시글은 복구할 수 없어요",
+            confirmText = "삭제하기",
+            dismissText = "취소"
+        )
+    }
 }
 @Composable
 private fun DetailScreen(

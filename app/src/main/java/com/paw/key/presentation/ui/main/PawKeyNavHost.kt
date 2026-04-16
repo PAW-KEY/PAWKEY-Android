@@ -176,6 +176,12 @@ fun PawKeyNavHost(
 
         courseInfoNavGraph(
             navigateUp = navigator::navigateUp,
+            navigateToDetail = {
+                navigator.navigateDetail(
+                    postId = it,
+                    navOptions = null
+                )
+            }
             /*navigateDetail = {
                 navigator.navController.navigateCourse(index = 1, navOptions = null)
             },*/
