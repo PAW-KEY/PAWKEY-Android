@@ -28,6 +28,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.paw.key.core.designsystem.component.TopBar
 import com.paw.key.core.designsystem.component.routeitem.RouteItem
 import com.paw.key.core.designsystem.theme.PawKeyTheme
+import com.paw.key.core.extension.collectSideEffect
 import com.paw.key.core.util.UiState
 import com.paw.key.presentation.ui.mypage.route.courseinfo.component.MyReviewCard
 import com.paw.key.presentation.ui.mypage.route.courseinfo.model.CourseData
@@ -45,12 +46,14 @@ fun CourseInfoRoute(
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
 
-    LaunchedEffect(Unit) {
-        viewModel.sideEffect.collect { effect ->
-            when (effect) {
-                is CourseInfoSideEffect.ShowSnackBar -> snackbarHostState.showSnackbar(effect.message)
-            }
+    viewModel.sideEffect.collectSideEffect {
+        when (it) {
+            is CourseInfoSideEffect.ShowSnackBar -> snackbarHostState.showSnackbar(it.message)
         }
+    }
+
+    LaunchedEffect(Unit) {
+        viewModel.fetchCourses()
     }
 
     CourseInfoScreen(
@@ -87,7 +90,9 @@ fun CourseInfoScreen(
         when (uiState) {
             is UiState.Loading -> {
                 Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    CircularProgressIndicator()
+                    CircularProgressIndicator(
+                        color = PawKeyTheme.colors.primary
+                    )
                 }
             }
 
