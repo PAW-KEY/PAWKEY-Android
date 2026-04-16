@@ -221,6 +221,9 @@ fun PawKeyNavHost(
                 }
                 navigator.navigateOnboarding(navOptions = options)
             },
+            navigateToSignUp = {
+                navigator.navigateSignUp(clearStackNavOptions)
+            },
             navigateToHome = {
                 navigator.navigateHome(clearStackNavOptions)
             },

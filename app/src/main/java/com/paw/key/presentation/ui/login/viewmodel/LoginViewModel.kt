@@ -35,10 +35,12 @@ class LoginViewModel @Inject constructor(
         _state.update { it.copy(isLoading = true) }
         viewModelScope.launch {
             loginUseCase.invokeGoogleLogin(context)
-                .onSuccess {
+                .onSuccess { isNewUser ->
                     localStorageRepository.saveUserProvider("GOOGLE")
 
-                    if (it) {
+                    val petId = localStorageRepository.getPetId()
+
+                    if (isNewUser || petId == -1) {
                         _sideEffect.emit(LoginSideEffect.NavigateToSignUp)
                     } else {
                         _sideEffect.emit(LoginSideEffect.NavigateToHome)
@@ -58,10 +60,12 @@ class LoginViewModel @Inject constructor(
         _state.update { it.copy(isLoading = true) }
         viewModelScope.launch {
             loginUseCase.invokeKakaoLogin(context)
-                .onSuccess {
+                .onSuccess { isNewUser ->
                     localStorageRepository.saveUserProvider("KAKAO")
                     // isNewUser가 true이면이니 signup false는 home
-                    if (it) {
+                    val petId = localStorageRepository.getPetId()
+
+                    if (isNewUser || petId == -1) {
                         _sideEffect.emit(LoginSideEffect.NavigateToSignUp)
                     } else {
                         _sideEffect.emit(LoginSideEffect.NavigateToHome)
