@@ -33,21 +33,21 @@ sealed interface CourseInfoSideEffect {
 
 
 fun RoutePostEntity.toUiModel() = CourseData(
-    postId    = postId,
-    location  = regionName,
-    title     = title,
-    imageUrl  = imageUrl,
-    time      = "${durationMinutes}분",
-    date      = date,
-    isLiked   = isLiked,
+    postId = postId,
+    location = regionName,
+    title = title,
+    imageUrl = imageUrl,
+    time = "${durationMinutes}분",
+    date = date.split("T").first().replace("-", "/"),
+    isLiked = isLiked,
 )
 
 fun ReviewPostEntity.toCourseData() = CourseData(
-    postId                = postId,
-    location              = regionName,
-    title                 = title,
-    imageUrl              = "",
-    time                  = "",
-    date                  = date,
+    postId = postId,
+    location = regionName,
+    title = title,
+    imageUrl = "",
+    time = "",
+    date = date.split("T").first().replace("-", "/"),
     categoryOptionSummary = categoryOptionSummary,
 )

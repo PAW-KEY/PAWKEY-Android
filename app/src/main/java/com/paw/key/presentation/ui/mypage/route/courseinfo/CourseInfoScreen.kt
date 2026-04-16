@@ -38,6 +38,7 @@ import com.paw.key.presentation.ui.mypage.route.courseinfo.viewmodel.CourseInfoV
 @Composable
 fun CourseInfoRoute(
     navigateUp: () -> Unit,
+    navigateToDetail: (Int) -> Unit,
     courseType: CourseType,
     snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
     viewModel: CourseInfoViewModel = hiltViewModel(),
@@ -57,6 +58,7 @@ fun CourseInfoRoute(
         uiState    = state.courses,
         courseType = viewModel.courseType,
         navigateUp = navigateUp,
+        navigateToDetail = navigateToDetail,
     )
 }
 
@@ -66,6 +68,7 @@ fun CourseInfoScreen(
     courseType: CourseType,
     uiState: UiState<List<CourseData>>,
     navigateUp: () -> Unit,
+    navigateToDetail: (Int) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -134,7 +137,9 @@ fun CourseInfoScreen(
                                     routeImage   = course.imageUrl,
                                     routeTime    = course.time,
                                     routeDate    = course.date,
-                                    onClick      = {},
+                                    onClick      = {
+                                        navigateToDetail(course.postId, /*course.routeId*/)
+                                    },
                                     onClickHeart = {},
                                 )
                             }
