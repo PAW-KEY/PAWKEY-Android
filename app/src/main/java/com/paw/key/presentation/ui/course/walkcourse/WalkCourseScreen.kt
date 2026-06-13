@@ -26,6 +26,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -43,12 +44,15 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.flowWithLifecycle
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.geometry.LatLngBounds
 import com.naver.maps.map.CameraUpdate
+import com.naver.maps.map.compose.ArrowheadPathOverlay
 import com.naver.maps.map.compose.CameraPositionState
 import com.naver.maps.map.compose.CameraUpdateReason
 import com.naver.maps.map.compose.ExperimentalNaverMapApi
@@ -77,7 +81,6 @@ import com.paw.key.presentation.ui.course.util.rememberStepCounter
 import com.paw.key.presentation.ui.course.walkcourse.component.WalkRecordItem
 import com.paw.key.presentation.ui.course.walkcourse.state.WalkCourseSideEffect
 import com.paw.key.presentation.ui.course.walkcourse.state.WalkCourseState
-import com.paw.key.presentation.ui.course.walkcourse.viewmodel.WalkCourseViewModel
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.coroutines.flow.drop
 import timber.log.Timber
@@ -212,6 +215,23 @@ fun WalkCourseRoute(
             }
     }
 
+    DisposableEffect(lifecycleOwner) {
+        val observer = LifecycleEventObserver { _, event ->
+            // ON_DESTROY: 화면을 뒤로가기로 벗어나거나 앱 프로세스가 종료될 때
+            if (event == Lifecycle.Event.ON_DESTROY) {
+                if (state.recordingState.isRecording && !state.isStopTracking) {
+                    viewModel.stopTracking(snapshotUri = null)
+                }
+            }
+        }
+
+        lifecycleOwner.lifecycle.addObserver(observer)
+
+        onDispose {
+            lifecycleOwner.lifecycle.removeObserver(observer)
+        }
+    }
+
     when (state.mapState.initialState) {
         is UiState.Empty -> Unit
         is UiState.Failure -> Unit
@@ -318,6 +338,7 @@ fun WalkCourseScreen(
                     outlineWidth = 0.dp
                 )
             }
+            ArrowheadPathOverlay()
         }
 
         Column(

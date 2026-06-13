@@ -29,7 +29,11 @@ data class WalkCourseState(
 
     fun toEntity() = WalkFinish(
         distance = this.mapState.totalDistance.toInt(),
-        duration = TimeUnit.MILLISECONDS.toMinutes(this.totalTimeMillis).toInt(),
+        duration = if (TimeUnit.MILLISECONDS.toMinutes(this.totalTimeMillis).toInt() > 0) {
+            TimeUnit.MILLISECONDS.toMinutes(this.totalTimeMillis).toInt()
+        } else {
+            1
+        },
         stepCount = this.stepCounterState.sessionSteps.toInt(),
         endedAt = this.recordingState.endedAt,
     )

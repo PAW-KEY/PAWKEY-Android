@@ -88,7 +88,6 @@ class WalkCompleteViewModel @Inject constructor(
                     }
                 }
                 .onFailure {
-                    it.printStackTrace()
                     Timber.e("complete $it")
                 }
         }
