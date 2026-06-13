@@ -34,10 +34,6 @@ class MyPageViewModel @Inject constructor(
     private val _sideEffect = MutableSharedFlow<MyPageSideEffect>()
     val sideEffect = _sideEffect.asSharedFlow()
 
-    init {
-        getUserProfiles()
-        getPetProfiles()
-    }
 
     fun getUserProfiles() {
         Timber.e("getUserProfiles")

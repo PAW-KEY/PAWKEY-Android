@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -65,6 +66,11 @@ fun MyPageRoute(
                 Toast.makeText(context, "오류가 발생했습니다.", Toast.LENGTH_SHORT).show()
             }
         }
+    }
+
+    LaunchedEffect(Unit) {
+        viewModel.getUserProfiles()
+        viewModel.getPetProfiles()
     }
 
     MyPageScreen(
@@ -174,7 +180,8 @@ fun MyPageScreen(
                         buttonTitle = if (petDbtiName.isEmpty()) "DBTI 검사하러 가기"
                                     else "${state.dbtiType} | $petDbtiName",
                         dogImage = petImageUrl,
-                        onButtonClick = navigateDbtiStart
+                        onButtonClick = navigateDbtiStart,
+                        navigatePetProfile = navigatePetProfile
                     )
                 }
             }
