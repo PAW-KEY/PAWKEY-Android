@@ -102,7 +102,7 @@ class MainNavigator(
         navController.navigateToCourseInfo(courseType = courseType, navOptions = navOptions)
     }
 
-    // Todo : 나중에 로직 플로우 확인하고 수정예정
+
     fun navigateSignUp(navOptions: NavOptions? = null) {
         navController.navigateSignUp(navOptions)
     }

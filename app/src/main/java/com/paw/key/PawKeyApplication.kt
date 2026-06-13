@@ -18,7 +18,7 @@ import javax.inject.Named
 class PawKeyApplication : Application(), ImageLoaderFactory {
     @Inject
     @Named("kakao.native.key")
-    lateinit var kakaoNativeKey: String // BuildConfig는 컴파일 타임에 생성되는 정적 클래스이기 때문에 Mocking이 불가능 = 테스트 용이성
+    lateinit var kakaoNativeKey: String
 
     override fun onCreate() {
         super.onCreate()
