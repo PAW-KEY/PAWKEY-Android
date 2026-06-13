@@ -1,6 +1,7 @@
 package com.paw.key.data.service.posts
 
 import com.paw.key.data.dto.request.posts.PostsDataRequestDto
+import com.paw.key.data.dto.request.posts.PostsEditRequestDto
 import com.paw.key.data.dto.request.posts.PostsFilterRequestDto
 import com.paw.key.data.dto.response.BaseResponse
 import com.paw.key.data.dto.response.posts.CategoryListResponseDto
@@ -14,6 +15,7 @@ import com.paw.key.data.dto.response.posts.PostsTop3ReviewResponseDto
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
+import retrofit2.http.PATCH
 import retrofit2.http.POST
 import retrofit2.http.Path
 import retrofit2.http.Query
@@ -25,7 +27,12 @@ interface PostsService {
         @Body request: PostsDataRequestDto
     ): BaseResponse<PostsResponseDto>
 
-    // Todo : 게시물 수정, 3스 때..
+    // 게시물 수정
+    @PATCH("posts/{postId}") // route 이미지는 수정에서는 x
+    suspend fun patchPosts(
+        @Path("postId") postId: Int,
+        @Body request: PostsEditRequestDto
+    ): BaseResponse<PostsResponseDto>
 
     @DELETE("posts/{postId}")
     suspend fun deletePosts(

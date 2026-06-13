@@ -7,7 +7,7 @@ import com.paw.key.data.remote.datasource.login.AuthRemoteDataSource
 import com.paw.key.data.remote.datasource.login.GoogleAuthDataSource
 import com.paw.key.data.remote.datasource.login.KakaoAuthDataSource
 import com.paw.key.data.remote.datasource.mypage.MypageDataSource
-import com.paw.key.data.remote.datasource.mypage.MypageDataSourceImpl
+import com.paw.key.data.remote.datasource.datasourceimpl.MypageDataSourceImpl
 import com.paw.key.data.repository.mypage.MypageRepositoryImpl
 import com.paw.key.data.repositoryimpl.ArchivedListRepositoryImpl
 import com.paw.key.data.repositoryimpl.DBTI.DbtiRepositoryImpl
