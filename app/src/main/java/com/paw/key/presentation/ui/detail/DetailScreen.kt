@@ -38,6 +38,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.paw.key.R
 import com.paw.key.core.designsystem.component.DokiButton
+import com.paw.key.core.designsystem.component.ImageModal
 import com.paw.key.core.designsystem.component.SubChip
 import com.paw.key.core.designsystem.component.TopBar
 import com.paw.key.core.designsystem.component.UrlImage
@@ -48,6 +49,7 @@ import com.paw.key.core.extension.collectSideEffect
 import com.paw.key.presentation.ui.detail.component.DetailImageHolder
 import com.paw.key.presentation.ui.detail.component.DokiDeleteButton
 import com.paw.key.presentation.ui.detail.component.FilterChipDivider
+import com.paw.key.presentation.ui.detail.model.DetailViewType
 
 @Composable
 fun DetailRoute(
@@ -66,15 +68,24 @@ fun DetailRoute(
         }
     }
 
-    DetailScreen(
-        paddingValues = paddingValues,
-        state = state,
-        navigateToSharedCourse = navigateToSharedCourse,
-        onBackClick = navigateUp,
-        onDeletePosts = {
-            isShowDialog = true
+    when (state.viewType) {
+        DetailViewType.DETAIL -> {
+            DetailScreen(
+                paddingValues = paddingValues,
+                state = state,
+                navigateToSharedCourse = navigateToSharedCourse,
+                onBackClick = navigateUp,
+                onDeletePosts = {
+                    isShowDialog = true
+                },
+                onEditPosts = viewModel::editPosts
+            )
         }
-    )
+
+        DetailViewType.EDIT -> {
+
+        }
+    }
 
     if (isShowDialog) {
         DokiDialog(
@@ -93,9 +104,12 @@ private fun DetailScreen(
     state: DetailState,
     navigateToSharedCourse: (routeId: String, postId : Int, userId: Int) -> Unit = {_, _, _ -> },
     onBackClick: () -> Unit = {},
-    onDeletePosts: () -> Unit = {}
+    onDeletePosts: () -> Unit = {},
+    onEditPosts: () -> Unit = {}
 ) {
     var isExpanded by remember { mutableStateOf(false) }
+    var isShowImageDialog by remember { mutableStateOf(false) }
+    var selectedImage by remember { mutableStateOf("") }
 
     val maxVisibleItems = 5
     val visibleItems = if (isExpanded) state.postDetail.categoryTagTexts else state.postDetail.categoryTagTexts.take(maxVisibleItems)
@@ -253,7 +267,11 @@ private fun DetailScreen(
                         imageUrls = state.postDetail.walkImages,
                         modifier = Modifier
                             .padding(horizontal = 16.dp)
-                            .padding(top = 20.dp, bottom = 12.dp)
+                            .padding(top = 20.dp, bottom = 12.dp),
+                        onClickImage = {
+                            selectedImage = state.postDetail.walkImages[it].imageUrl
+                            isShowImageDialog = true
+                        }
                     )
 
                     Text(
@@ -276,6 +294,7 @@ private fun DetailScreen(
                             )
                     )
 
+                    // Todo : top 3 리뷰 구현되면 사
                     /*DetailTopReview(
                         reviewData = state.reviewDetail,
                         isShared = state.postDetail.isPublic
@@ -311,7 +330,7 @@ private fun DetailScreen(
                             DokiButton(
                                 text = "수정하기",
                                 enabled = true,
-                                onClick = {},
+                                onClick = onEditPosts,
                                 modifier = Modifier.weight(1f)
                             )
                         } else {
@@ -332,6 +351,13 @@ private fun DetailScreen(
                 }
             }
         }
+    }
+
+    if (isShowImageDialog) {
+        ImageModal(
+            imageUrl = selectedImage,
+            onDismiss = { isShowImageDialog = false }
+        )
     }
 }
 
